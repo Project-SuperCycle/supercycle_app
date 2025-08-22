@@ -1,0 +1,17 @@
+import 'package:flutter/material.dart';
+
+const double kButtonBorderRadius = 20.0;
+const double kBorderRadius = 20.0;
+
+const kGradientBackground = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [Color(0xFF3BC577), Color(0xFFFFFFFF)],
+  stops: [0.58, 1.0],
+);
+
+const kGradientButton = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [Color(0xFF3BC577), Color(0xFF078531)],
+);
