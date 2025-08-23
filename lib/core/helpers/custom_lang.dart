@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:supercycle_app/core/cubit/local_cubit.dart';
+import 'package:supercycle_app/core/cubits/local_cubit/local_cubit.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 

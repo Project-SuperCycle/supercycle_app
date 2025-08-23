@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocConsumer, BlocProvider;
 import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
 import 'package:supercycle_app/core/widgets/auth/auth_main_header.dart';
@@ -133,7 +134,8 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
     }
   }
 
-  void handleGoogleSignUp() {}
+  void handleGoogleSignUp() {
+  }
 
   void handleFacebookSignUp() {}
 

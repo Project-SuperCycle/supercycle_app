@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:supercycle_app/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle_app/core/services/api_services.dart';
 import 'package:supercycle_app/core/services/auth_services.dart' show AuthService;
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
@@ -19,6 +20,10 @@ void setupServiceLocator() {
 
   getIt.registerSingleton<SignUpRepoImp>(
     SignUpRepoImp(apiServices: getIt.get<ApiServices>()),
+  );
+
+  getIt.registerSingleton<SocialAuthRepoImp>(
+    SocialAuthRepoImp(apiServices: getIt.get<ApiServices>()),
   );
 
   getIt.registerSingleton<HomeRepoImp>(
