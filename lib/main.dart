@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,13 +14,17 @@ import 'package:supercycle_app/features/sign_up/data/managers/sign_up_cubit/sign
     show SignUpCubit;
 import 'package:supercycle_app/features/sign_up/data/repos/signup_repo_imp.dart'
     show SignUpRepoImp;
+import 'package:supercycle_app/firebase_options.dart' show DefaultFirebaseOptions;
 
 
 import 'generated/l10n.dart';
 
 void main() async {
   setupServiceLocator();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiBlocProvider(
       providers: [
