@@ -12,12 +12,10 @@ import 'package:supercycle_app/core/utils/app_assets.dart';
 class SocialAuthRow extends StatelessWidget {
   const SocialAuthRow({
     super.key,
-    required this.handleGoogleAuth,
-    required this.handleFacebookAuth,
+
   });
 
-  final VoidCallback handleGoogleAuth;
-  final VoidCallback handleFacebookAuth;
+
 
 
   void signInWithGoogle({required BuildContext context}) async {
