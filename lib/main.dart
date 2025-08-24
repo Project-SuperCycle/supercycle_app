@@ -48,13 +48,13 @@ void main() async {
         ),
       ],
 
-      child: DevicePreview(
-        enabled: true,
-        builder: (context) {
-          return const MyApp();
-        },
-      ),
-      // child: const MyApp(),
+      // child: DevicePreview(
+      //   enabled: true,
+      //   builder: (context) {
+      //     return const MyApp();
+      //   },
+      // ),
+      child: const MyApp(),
     ),
   );
 }

@@ -1,78 +1,161 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 
-class SplashView extends StatelessWidget {
+class SplashView extends StatefulWidget {
   const SplashView({super.key});
 
   @override
+  State<SplashView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashView>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize animation controller
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 2500),
+      vsync: this,
+    );
+
+    // Create fade animation (opacity: 0.0 to 1.0)
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
+    ));
+
+    // Create scale animation (scale: 0.5 to 1.0)
+    _scaleAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
+    ));
+
+    // Start animation
+    _animationController.forward();
+
+    // Navigate to onboard screen after animation completes (3000ms total)
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      if (mounted) {
+        GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width,
-          height: MediaQuery.sizeOf(context).height,
-          child: Stack(
-            children: [
-              Positioned(
-                left: 0,
-                top: 0,
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width,
-                  height: MediaQuery.sizeOf(context).height,
-                  decoration: const BoxDecoration(
-                    gradient: kGradientBackground,
-                  ),
+    final screenSize = MediaQuery.sizeOf(context);
+
+    return Scaffold(
+      body: SizedBox(
+        width: screenSize.width,
+        height: screenSize.height,
+        child: Stack(
+          children: [
+            // Background gradient
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: kGradientBackground,
                 ),
               ),
-              Positioned(
-                left: -MediaQuery.of(context).size.width * 0.4,
-                top: -MediaQuery.of(context).size.height * 0.25,
-                child: Opacity(
-                  opacity: 0.05,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(AppAssets.logoIcon),
-                        fit: BoxFit.cover,
+            ),
+
+            // Background logo - top left
+            Positioned(
+              left: -screenSize.width * 0.4,
+              top: -screenSize.height * 0.25,
+              child: AnimatedBuilder(
+                animation: _fadeAnimation,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: 0.05 * _fadeAnimation.value,
+                    child: Container(
+                      width: screenSize.width * 0.9,
+                      height: screenSize.height * 0.9,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(AppAssets.logoIcon),
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-              Positioned(
-                left: MediaQuery.of(context).size.width * 0.4,
-                top: MediaQuery.of(context).size.height * 0.3,
-                child: Opacity(
-                  opacity: 0.05,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    height: MediaQuery.of(context).size.height * 0.85,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(AppAssets.logoIcon),
-                        fit: BoxFit.cover,
+            ),
+
+            // Background logo - bottom right
+            Positioned(
+              left: screenSize.width * 0.4,
+              top: screenSize.height * 0.3,
+              child: AnimatedBuilder(
+                animation: _fadeAnimation,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: 0.05 * _fadeAnimation.value,
+                    child: Container(
+                      width: screenSize.width * 0.9,
+                      height: screenSize.height * 0.9,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(AppAssets.logoIcon),
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-              Center(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(AppAssets.logo),
-                      fit: BoxFit.contain,
+            ),
+
+            // Main logo with animation
+            Center(
+              child: AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: Container(
+                        width: screenSize.width * 0.8,
+                        height: screenSize.width * 0.8,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(AppAssets.logo),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
