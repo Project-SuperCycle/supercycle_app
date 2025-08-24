@@ -6,6 +6,7 @@ import 'package:supercycle_app/features/onboarding/presentation/views/second_onb
     show SecondOnboardingView;
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart'
     show ThirdOnboardingView;
+import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
 import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
@@ -55,6 +56,10 @@ abstract class Routes {
       GoRoute(
         path: EndPoints.signUpDetailsView,
         builder: (context, state) => const SignUpDetailsView(),
+      ),
+      GoRoute(
+        path: EndPoints.salesProcessView,
+        builder: (context, state) => const SalesProcessView(),
       ),
     ],
   );
