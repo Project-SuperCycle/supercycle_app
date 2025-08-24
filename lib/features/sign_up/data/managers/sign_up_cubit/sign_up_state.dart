@@ -49,7 +49,7 @@ class VerifyOtpFailure extends SignUpState {
   List<Object> get props => [];
 }
 
-// SignUp STEP 2
+// SignUp STEP 3
 class CompleteSignUpLoading extends SignUpState {
   @override
   List<Object> get props => [];
@@ -68,3 +68,4 @@ class CompleteSignUpFailure extends SignUpState {
   @override
   List<Object> get props => [];
 }
+

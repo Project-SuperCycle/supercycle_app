@@ -6,19 +6,14 @@ import 'package:supercycle_app/features/sign_up/data/models/otp_verification_mod
     show OtpVerificationModel;
 import 'package:supercycle_app/features/sign_up/data/models/signup_credentials_model.dart'
     show SignupCredentialsModel;
+import 'package:supercycle_app/core/models/social_auth_request_model.dart';
+import 'package:supercycle_app/core/models/social_auth_response_model.dart';
 
 abstract class SignUpRepo {
   Future<Either<Failure, String>> initiateSignup({
     required SignupCredentialsModel credentials,
   });
 
-  Future<Either<Failure, String>> googleSignup({
-    required SignupCredentialsModel credentials,
-  });
-
-  Future<Either<Failure, String>> facebookSignup({
-    required SignupCredentialsModel credentials,
-  });
 
   Future<Either<Failure, String>> verifyOtp({
     required OtpVerificationModel credentials,

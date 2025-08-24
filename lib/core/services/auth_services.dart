@@ -13,7 +13,7 @@ class AuthService {
     _user = user;
   }
 
-  void setToken(String token) {
+  void setToken(String? token) {
     _token = token;
   }
 

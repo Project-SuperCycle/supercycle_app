@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocConsumer, BlocProvider;
 import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
 import 'package:supercycle_app/core/widgets/auth/auth_main_header.dart';
@@ -10,7 +11,7 @@ import 'package:supercycle_app/core/widgets/auth/custom_password_field.dart';
 import 'package:supercycle_app/core/widgets/custom_text_form_field.dart';
 import 'package:supercycle_app/core/widgets/rounded_container.dart';
 import 'package:supercycle_app/features/sign_in/presentation/widgets/horizontal_labeled_divider.dart';
-import 'package:supercycle_app/features/sign_in/presentation/widgets/social_auth_row.dart';
+import 'package:supercycle_app/core/widgets/auth/social_auth_row.dart';
 import 'package:supercycle_app/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart'
     show
         SignUpCubit,
@@ -133,10 +134,6 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
     }
   }
 
-  void handleGoogleSignUp() {}
-
-  void handleFacebookSignUp() {}
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignUpCubit, SignUpState>(
@@ -195,10 +192,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                       const SizedBox(height: 24),
                       HorizontalLabeledDivider(),
                       const SizedBox(height: 24),
-                      SocialAuthRow(
-                        handleGoogleAuth: handleGoogleSignUp,
-                        handleFacebookAuth: handleFacebookSignUp,
-                      ),
+                      SocialAuthRow(),
                       const SizedBox(height: 30),
                       (state is InitialSignUpLoading)
                           ? const CustomLoadingIndicator()

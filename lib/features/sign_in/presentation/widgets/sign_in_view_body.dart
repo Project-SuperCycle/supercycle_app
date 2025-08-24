@@ -17,7 +17,7 @@ import 'package:supercycle_app/features/sign_in/data/managers/sign-in-cubit/sign
 import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart'
     show SigninCredentialsModel;
 import 'package:supercycle_app/features/sign_in/presentation/widgets/horizontal_labeled_divider.dart';
-import 'package:supercycle_app/features/sign_in/presentation/widgets/social_auth_row.dart';
+import 'package:supercycle_app/core/widgets/auth/social_auth_row.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 
 class SignInViewBody extends StatefulWidget {
@@ -116,9 +116,6 @@ class _SignInViewBodyState extends State<SignInViewBody> {
     return false;
   }
 
-  void handleGoogleSignIn() {}
-  void handleFacebookSignIn() {}
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignInCubit, SignInState>(
@@ -193,10 +190,7 @@ class _SignInViewBodyState extends State<SignInViewBody> {
                       const SizedBox(height: 24),
                       HorizontalLabeledDivider(),
                       const SizedBox(height: 24),
-                      SocialAuthRow(
-                        handleGoogleAuth: handleGoogleSignIn,
-                        handleFacebookAuth: handleFacebookSignIn,
-                      ),
+                      SocialAuthRow(),
                     ],
                   ),
                 ),

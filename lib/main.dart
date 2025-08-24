@@ -3,7 +3,9 @@ import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:supercycle_app/core/cubit/local_cubit.dart';
+import 'package:supercycle_app/core/cubits/local_cubit/local_cubit.dart';
+import 'package:supercycle_app/core/cubits/social_auth/social_auth_cubit.dart';
+import 'package:supercycle_app/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle_app/core/routes/routes.dart' show Routes;
 import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
@@ -38,17 +40,21 @@ void main() async {
               SignUpCubit(signUpRepo: getIt.get<SignUpRepoImp>()),
         ),
         BlocProvider(
+          create: (context) =>
+              SocialAuthCubit(socialAuthRepo: getIt.get<SocialAuthRepoImp>()),
+        ),
+        BlocProvider(
           create: (context) => HomeCubit(homeRepo: getIt.get<HomeRepoImp>()),
         ),
       ],
 
-      child: DevicePreview(
-        enabled: true,
-        builder: (context) {
-          return const MyApp();
-        },
-      ),
-      // child: const MyApp(),
+      // child: DevicePreview(
+      //   enabled: true,
+      //   builder: (context) {
+      //     return const MyApp();
+      //   },
+      // ),
+      child: const MyApp(),
     ),
   );
 }

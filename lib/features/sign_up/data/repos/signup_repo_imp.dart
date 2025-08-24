@@ -10,36 +10,14 @@ import 'package:supercycle_app/core/services/services_locator.dart' show getIt;
 import 'package:supercycle_app/features/sign_up/data/models/business_information_model.dart';
 import 'package:supercycle_app/features/sign_up/data/models/otp_verification_model.dart';
 import 'package:supercycle_app/features/sign_up/data/models/signup_credentials_model.dart';
+import 'package:supercycle_app/core/models/social_auth_request_model.dart' show SocialAuthRequestModel;
+import 'package:supercycle_app/core/models/social_auth_response_model.dart' show SocialAuthResponseModel;
 import 'package:supercycle_app/features/sign_up/data/repos/signup_repo.dart'
     show SignUpRepo;
 
 class SignUpRepoImp implements SignUpRepo {
   final ApiServices apiServices;
   SignUpRepoImp({required this.apiServices});
-
-  @override
-  Future<Either<Failure, String>> completeBusinessRegistration({
-    required BusinessInformationModel businessInfo,
-  }) {
-    // TODO: implement completeBusinessRegistration
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, String>> facebookSignup({
-    required SignupCredentialsModel credentials,
-  }) {
-    // TODO: implement facebookSignup
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, String>> googleSignup({
-    required SignupCredentialsModel credentials,
-  }) {
-    // TODO: implement googleSignup
-    throw UnimplementedError();
-  }
 
   @override
   Future<Either<Failure, String>> initiateSignup({
