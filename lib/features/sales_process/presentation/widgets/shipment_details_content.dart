@@ -1,4 +1,3 @@
-// widgets/shipment_details_content.dart
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/features/sales_process/data/models/product.dart';
 import 'product_widgets.dart';
@@ -17,7 +16,6 @@ class ShipmentDetailsContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // عنوان قائمة المنتجات
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           decoration: BoxDecoration(
@@ -46,7 +44,6 @@ class ShipmentDetailsContent extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // قائمة المنتجات
         ...products.asMap().entries.map((entry) {
           int index = entry.key;
           Product product = entry.value;
@@ -57,7 +54,6 @@ class ShipmentDetailsContent extends StatelessWidget {
         Divider(color: Colors.grey.shade300),
         const SizedBox(height: 16),
 
-        // إجمالي الشحنة
         ShipmentSummary(products: products),
 
         const SizedBox(height: 16),

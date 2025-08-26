@@ -48,7 +48,7 @@ class ProgressPoint extends StatelessWidget {
           ? const Icon(
         Icons.check,
         color: Colors.white,
-        size: 10,
+        size: 15,
       )
           : null,
     );

@@ -1,9 +1,9 @@
-// views/sales_process_view_body.dart
+// views/shipping_details_view_body.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
 import 'package:supercycle_app/features/sales_process/presentation/widgets/header/sales_process_logo.dart';
-
-// Import all the separated widgets
 import '../widgets/settings_icon.dart';
 import '../widgets/shipment_header.dart';
 import '../widgets/notes_content.dart';
@@ -11,22 +11,21 @@ import '../widgets/progress_widgets.dart';
 import '../widgets/expandable_section.dart';
 import '../widgets/shipment_details_content.dart';
 import '../widgets/client_data_content.dart';
+import 'package:supercycle_app/core/helpers/custom_back_button.dart' show CustomBackButton;
 import 'package:supercycle_app/features/sales_process/data/models/product.dart';
 import 'package:supercycle_app/core/services/data_service.dart';
 
-class SalesProcessViewBody extends StatefulWidget {
-  const SalesProcessViewBody({super.key});
+class ShippingDetalisViewBody extends StatefulWidget {
+  const ShippingDetalisViewBody({super.key});
 
   @override
-  State<SalesProcessViewBody> createState() => _SalesProcessViewBodyState();
+  State<ShippingDetalisViewBody> createState() => _ShippingDetalisViewBodyState();
 }
 
-class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
-  // حالة توسع أقسام مختلفة
+class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
 
-  // قائمة المنتجات في الشحنة
   late List<Product> shipmentProducts;
   List<String> notes = [
     '\n'
@@ -34,10 +33,10 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     'العميل طلب تأجيل التسليم ليوم الأحد القادم',
     'يفضل التعامل مع هذا العميل نقداً فقط',
   ];
+
   @override
   void initState() {
     super.initState();
-    // تحميل البيانات من الخدمة
     shipmentProducts = DataService.getSampleProducts();
   }
 
@@ -51,14 +50,33 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-
-              // شعار العملية التجارية
               const SalesProcessLogo(),
 
-              // المحتوى الرئيسي
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      textDirection: TextDirection.ltr,
+                      Icons.info_outline,
+                      color: Colors.black,
+                    ),
+                     CustomBackButton(
+                      color: Colors.black,
+                      size: 24,
+                      onPressed: () {
+                        GoRouter.of(context).pushReplacement(EndPoints.homeView);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.only(top: 60),
+                  margin: const EdgeInsets.only(top: 40),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -72,21 +90,17 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 3),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: const SettingsIcon(),
+                        ),
 
-                        // أيقونة الإعدادات
-                        const SettingsIcon(),
-                        const SizedBox(height: 5),
-
-                        // رأس الشحنة
                         const ShipmentHeader(),
                         const SizedBox(height: 20),
 
-                        // شريط التقدم
                         const ProgressBar(),
                         const SizedBox(height: 30),
 
-                        // قسم تفاصيل الشحنة
                         ExpandableSection(
                           title: 'تفاصيل الشحنة',
                           iconPath: 'assets/images/Box-Perspective2.png',
@@ -97,7 +111,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                         ),
                         const SizedBox(height: 20),
 
-                        // قسم بيانات العميل
                         ExpandableSection(
                           title: 'بيانات جهة التعامل',
                           iconPath: 'assets/images/Box-Perspective.png',
@@ -106,8 +119,10 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                           onTap: _toggleClientData,
                           content: const ClientDataContent(),
                         ),
+
                         const SizedBox(height: 30),
                         NotesContent(notes: notes),
+
                         const SizedBox(height: 50),
                       ],
                     ),
@@ -120,15 +135,12 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       ),
     );
   }
-
-  // دالة تبديل حالة توسع تفاصيل الشحنة
   void _toggleShipmentDetails() {
     setState(() {
       isShipmentDetailsExpanded = !isShipmentDetailsExpanded;
     });
   }
 
-  // دالة تبديل حالة توسع بيانات العميل
   void _toggleClientData() {
     setState(() {
       isClientDataExpanded = !isClientDataExpanded;

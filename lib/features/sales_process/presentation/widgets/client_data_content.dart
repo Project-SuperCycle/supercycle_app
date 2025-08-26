@@ -1,4 +1,3 @@
-// widgets/client_data_content.dart
 import 'package:flutter/material.dart';
 
 class ClientDataContent extends StatelessWidget {
@@ -48,42 +47,7 @@ class ClientDataContent extends StatelessWidget {
         const SizedBox(height: 12),
         DataRow(label: 'الحد الائتماني:', value: '500,000 جنيه'),
         const SizedBox(height: 20),
-        // زر إلغاء
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.red.shade50,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.red.shade200),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.close,
-                    size: 16,
-                    color: Colors.red.shade600,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'إلغاء',
-                    style: TextStyle(
-                      color: Colors.red.shade600,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+
       ],
     );
   }

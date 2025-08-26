@@ -59,7 +59,7 @@ abstract class Routes {
       ),
       GoRoute(
         path: EndPoints.salesProcessView,
-        builder: (context, state) => const SalesProcessView(),
+        builder: (context, state) => const ShippingDetailsView(),
       ),
     ],
   );

@@ -7,12 +7,10 @@ class CustomButton extends StatelessWidget {
     super.key,
     this.backgroundColor,
     this.textColor,
-    required this.title,
     required this.onPress,
-    this.enabled = true,
+    this.enabled = true, required String title,
   });
 
-  final String title;
   final VoidCallback? onPress;
   final Color? backgroundColor, textColor;
   final bool enabled;
@@ -46,14 +44,8 @@ class CustomButton extends StatelessWidget {
           backgroundColor: Colors.transparent,
           disabledBackgroundColor: Colors.transparent,
         ),
-        onPressed: enabled ? onPress : null,
-        child: Text(
-          title,
-          style: AppStyles.styleSemiBold14(context).copyWith(
-            color: enabled ? (textColor ?? Colors.white) : Colors.grey[600],
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        onPressed: enabled ? onPress : null, child: null,
+
       ),
     );
   }

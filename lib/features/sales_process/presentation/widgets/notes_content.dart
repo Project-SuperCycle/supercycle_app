@@ -1,4 +1,3 @@
-// widgets/notes_content.dart
 import 'package:flutter/material.dart';
 
 class NotesContent extends StatefulWidget {
@@ -20,7 +19,6 @@ class _NotesContentState extends State<NotesContent> {
   @override
   void initState() {
     super.initState();
-    // دمج الملاحظات الموجودة في نص واحد
     String initialNotes = widget.notes.join('\n');
     _notesController = TextEditingController(text: initialNotes);
   }
@@ -46,7 +44,6 @@ class _NotesContentState extends State<NotesContent> {
       ),
       child: Stack(
         children: [
-          // Main text area
           Padding(
             padding: const EdgeInsets.all(16),
             child: TextField(
@@ -61,7 +58,7 @@ class _NotesContentState extends State<NotesContent> {
               ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top: 40), // مساحة للهيدر
+                contentPadding: EdgeInsets.only(top: 40),
                 hintText: 'اكتب ملاحظاتك هنا...',
                 hintStyle: TextStyle(
                   color: Colors.grey,
@@ -74,7 +71,6 @@ class _NotesContentState extends State<NotesContent> {
                 });
               },
               onChanged: (value) {
-                // يمكن إضافة منطق حفظ تلقائي هنا
               },
             ),
           ),
@@ -90,18 +86,13 @@ class _NotesContentState extends State<NotesContent> {
                 // Edit icon
                 Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade100,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
                   child: Icon(
-                    Icons.edit,
-                    size: 16,
+                    Icons.edit_outlined,
+                    size: 20,
                     color: Colors.green.shade700,
                   ),
                 ),
                 const Spacer(),
-                // Title and edit status
                 Padding(
                   padding: const EdgeInsets.all(3),
                   child: Column(

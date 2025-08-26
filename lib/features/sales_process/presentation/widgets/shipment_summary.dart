@@ -1,4 +1,3 @@
-// widgets/shipment_summary.dart
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/features/sales_process/data/models/product.dart';
 
@@ -12,12 +11,10 @@ class ShipmentSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // حساب الإجماليات
     int totalQuantity = 0;
     double totalValue = 0;
 
     for (var product in products) {
-      // استخراج الأرقام من النصوص
       String qtyStr = product.quantity.replaceAll(RegExp(r'[^0-9]'), '');
       String priceStr = product.averagePrice.replaceAll(RegExp(r'[^0-9]'), '');
 

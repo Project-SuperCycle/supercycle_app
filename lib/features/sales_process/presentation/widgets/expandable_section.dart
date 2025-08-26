@@ -22,7 +22,6 @@ class ExpandableSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // شيل الـ height الثابت عشان المحتوى يتوسع
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -40,19 +39,17 @@ class ExpandableSection extends StatelessWidget {
         ],
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // إضافة هذا عشان الـ Column ياخد المساحة اللي يحتاجها بس
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // رأس القسم مع السهم
           InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(8),
             child: Container(
-              height: 60, // هنا نحط الارتفاع للهيدر بس
+              height: 60,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 textDirection: TextDirection.ltr,
                 children: [
-                  // السهم
                   AnimatedRotation(
                     turns: isExpanded ? 0.5 : 0,
                     duration: const Duration(milliseconds: 300),
@@ -63,7 +60,6 @@ class ExpandableSection extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  // العنوان والأيقونة
                   Row(
                     children: [
                       SizedBox(
@@ -88,7 +84,7 @@ class ExpandableSection extends StatelessWidget {
                         title,
                         style: AppStyles.styleSemiBold16(context).copyWith(
                           fontWeight: FontWeight.w800,
-                          color: Colors.black.withOpacity(0.8), // تصحيح withAlpha
+                          color: Colors.black.withOpacity(0.8),
                         ),
                       ),
                     ],
@@ -97,10 +93,9 @@ class ExpandableSection extends StatelessWidget {
               ),
             ),
           ),
-          // المحتوى المنسدل مع scroll
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut, // إضافة curve للحركة
+            curve: Curves.easeInOut,
             height: isExpanded ? maxHeight : 0,
             child: isExpanded
                 ? Container(

@@ -1,5 +1,5 @@
 abstract class EndPoints {
-  static const String splashView = '/';
+  static const String splashView = '/SplashView';
   static const String homeView = '/homeView';
   static const String signInView = '/signInView';
   static const String signUpView = '/signUpView';

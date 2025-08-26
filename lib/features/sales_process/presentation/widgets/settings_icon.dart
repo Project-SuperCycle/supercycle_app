@@ -1,4 +1,3 @@
-// widgets/settings_icon.dart
 import 'package:flutter/material.dart';
 
 class SettingsIcon extends StatelessWidget {

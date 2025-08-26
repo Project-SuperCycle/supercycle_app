@@ -1,4 +1,3 @@
-// widgets/product_widgets.dart
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/features/sales_process/data/models/product.dart';
 
@@ -31,8 +30,8 @@ class ProductCard extends StatelessWidget {
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // رقم المنتج ونوعه
           Row(
             children: [
               Container(
@@ -66,12 +65,11 @@ class ProductCard extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 12),
 
-          // تفاصيل المنتج
           Row(
             children: [
-              // الكمية
               Expanded(
                 child: ProductDetail(
                   icon: Icons.scale,
@@ -81,13 +79,50 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // السعر
               Expanded(
                 child: ProductDetail(
                   icon: Icons.attach_money,
                   label: 'متوسط السعر',
                   value: product.averagePrice,
                   color: Colors.blue,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.close,
+                      size: 16,
+                      color: Colors.red.shade600,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'إلغاء',
+                      style: TextStyle(
+                        color: Colors.red.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -122,11 +157,9 @@ class ProductDetail extends StatelessWidget {
         border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 18,
-          ),
+          Icon(icon, size: 18, color: color),
           const SizedBox(height: 4),
           Text(
             label,

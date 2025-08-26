@@ -1,4 +1,3 @@
-// widgets/shipment_header.dart
 import 'package:flutter/material.dart';
 
 class ShipmentHeader extends StatelessWidget {
@@ -9,7 +8,6 @@ class ShipmentHeader extends StatelessWidget {
     return Row(
       textDirection: TextDirection.ltr,
       children: [
-        // صورة الشحنة
         Container(
           width: 100,
           height: 100,
@@ -38,13 +36,11 @@ class ShipmentHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        // معلومات الشحنة
         Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // رقم الشحنة
               Row(
                 textDirection: TextDirection.rtl,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +82,6 @@ class ShipmentHeader extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              // حالة الشحنة
               const Text(
                 'يتم المراجعة',
                 style: TextStyle(
@@ -96,7 +91,6 @@ class ShipmentHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              // تاريخ الاستلام
               const Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
