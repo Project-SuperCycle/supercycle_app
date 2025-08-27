@@ -38,6 +38,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "administrator_name": MessageLookupByLibrary.simpleMessage("اسم المسؤول"),
     "administrator_phone": MessageLookupByLibrary.simpleMessage("رقم المسؤول"),
+    "alert_cancel_button": MessageLookupByLibrary.simpleMessage("إغلاق"),
+    "alert_ok_button": MessageLookupByLibrary.simpleMessage("متابعة"),
     "all": MessageLookupByLibrary.simpleMessage("الكل"),
     "already_have_an_account": MessageLookupByLibrary.simpleMessage(
       "لديك حساب بالفعل >>",
@@ -61,6 +63,19 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "delivered_shipments": MessageLookupByLibrary.simpleMessage(
       "شحنات تم تسليمها",
+    ),
+    "drawer_contact_us": MessageLookupByLibrary.simpleMessage("تواصل معنا"),
+    "drawer_home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
+    "drawer_language": MessageLookupByLibrary.simpleMessage("اللغة"),
+    "drawer_logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
+    "drawer_profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+    "drawer_sales_calender": MessageLookupByLibrary.simpleMessage(
+      "جدول الشحنات",
+    ),
+    "drawer_settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
+    "drawer_sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
+    "drawer_transactions_table": MessageLookupByLibrary.simpleMessage(
+      "جدول المعاملات",
     ),
     "driver_name": MessageLookupByLibrary.simpleMessage("اسم السائق"),
     "driver_phone": MessageLookupByLibrary.simpleMessage("هاتف السائق"),
@@ -166,6 +181,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "signUp_button": MessageLookupByLibrary.simpleMessage("تسجيل حساب"),
     "signUp_subTitle": MessageLookupByLibrary.simpleMessage("إنشاء حساب جديد"),
     "signUp_title": MessageLookupByLibrary.simpleMessage("ابدأ رحلتك معنا"),
+    "sign_in_alert_message": MessageLookupByLibrary.simpleMessage(
+      "أنت غير مسجل. يرجى تسجيل الدخول للمتابعة",
+    ),
+    "sign_in_alert_title": MessageLookupByLibrary.simpleMessage("مرحبا بك"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطى"),
     "title": MessageLookupByLibrary.simpleMessage("سوبر سايكل"),
     "transportation_data": MessageLookupByLibrary.simpleMessage("بيانات النقل"),

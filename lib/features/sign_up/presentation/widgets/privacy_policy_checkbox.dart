@@ -124,9 +124,11 @@ class _PrivacyPolicyCheckboxState extends State<PrivacyPolicyCheckbox> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
+              child:  Text(
                 'موافق',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: AppStyles.styleBold16(context).copyWith(
+                  color: AppColors.primaryColor,
+                ),
               ),
             ),
           ],

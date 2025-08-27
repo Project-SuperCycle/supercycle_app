@@ -6,7 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supercycle_app/core/cubits/local_cubit/local_cubit.dart';
 import 'package:supercycle_app/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle_app/core/repos/social_auth_repo_imp.dart';
-import 'package:supercycle_app/core/routes/routes.dart' show Routes;
+import 'package:supercycle_app/core/routes/routes.dart' show AppRouter;
 import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
       child: BlocBuilder<LocalCubit, LocalState>(
         builder: (context, state) {
           return MaterialApp.router(
-            routerConfig: Routes.router,
+            routerConfig: AppRouter.router,
             locale: (state is ChangeLocalState)
                 ? const Locale('ar')
                 : const Locale('ar'),

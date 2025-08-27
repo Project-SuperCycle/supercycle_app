@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:supercycle_app/core/services/auth_services.dart' show AuthService;
 import 'package:supercycle_app/core/services/services_locator.dart' show getIt;
+import 'package:supercycle_app/core/services/storage_services.dart';
 
 class ApiServices {
   final Dio _dio = Dio(
@@ -38,7 +38,7 @@ class ApiServices {
   }
 
   Future<String?> _getToken() async {
-    final token = getIt<AuthService>().token;
+    final token = await StorageServices.getUserToken();
     if (token != null) {
       return token;
     }

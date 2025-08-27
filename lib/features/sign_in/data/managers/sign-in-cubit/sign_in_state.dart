@@ -25,8 +25,9 @@ final class SignInSuccess extends SignInState {
 
 final class SignInFailure extends SignInState {
   final String message;
+  final int statusCode;
 
-  const SignInFailure({required this.message});
+  const SignInFailure({required this.message, required this.statusCode});
   @override
   List<Object> get props => [];
 }

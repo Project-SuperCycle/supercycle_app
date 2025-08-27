@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, BlocConsumer;
 import 'package:go_router/go_router.dart' show GoRouter;
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart'
     show CustomLoadingIndicator;
 import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
@@ -127,6 +128,13 @@ class _SignInViewBodyState extends State<SignInViewBody> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
+          Logger().e(
+            "MESSAGE : ${state.message}  | STATUS CODE : ${state.statusCode}",
+          );
+
+          if (state.statusCode == 403) {
+            GoRouter.of(context).push(EndPoints.signUpDetailsView);
+          }
         }
       },
       builder: (context, state) {

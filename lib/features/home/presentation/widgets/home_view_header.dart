@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle_app/features/home/presentation/widgets/home_header/home_header_logo.dart'
     show HomeHeaderLogo;
@@ -7,11 +8,8 @@ import 'package:supercycle_app/features/home/presentation/widgets/home_header/ro
 import 'package:supercycle_app/features/home/presentation/widgets/home_header/user_profile_welcome_card.dart';
 
 class HomeViewHeader extends StatelessWidget {
-  const HomeViewHeader({super.key});
-
-  void _onNotificationPressed() {}
-
-  void _onDrawerPressed() {}
+  const HomeViewHeader({super.key, required this.onDrawerPressed});
+  final VoidCallback onDrawerPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +49,7 @@ class HomeViewHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               UserProfileWelcomeCard(),
-              HomeHeaderNavActions(
-                onDrawerPressed: _onDrawerPressed,
-                onNotificationPressed: _onNotificationPressed,
-              ),
+              HomeHeaderNavActions(onDrawerPressed: onDrawerPressed),
             ],
           ),
           const SizedBox(height: 24),
