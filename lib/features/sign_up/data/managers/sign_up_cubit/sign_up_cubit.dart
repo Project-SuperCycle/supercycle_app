@@ -5,13 +5,13 @@ import 'package:supercycle_app/features/sign_up/data/models/business_information
 import 'package:supercycle_app/features/sign_up/data/models/otp_verification_model.dart'
     show OtpVerificationModel;
 import 'package:supercycle_app/features/sign_up/data/models/signup_credentials_model.dart';
-import 'package:supercycle_app/core/models/social_auth_response_model.dart';
 import 'package:supercycle_app/features/sign_up/data/repos/signup_repo_imp.dart';
 
 part 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
   final SignUpRepoImp signUpRepo;
+
   SignUpCubit({required this.signUpRepo}) : super(SignUpInitial());
 
   Future<void> initiateSignup(SignupCredentialsModel credentials) async {

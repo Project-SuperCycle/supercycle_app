@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart' show Cubit;
-import 'package:supercycle_app/core/services/auth_services.dart' show AuthService;
-import 'package:supercycle_app/core/services/services_locator.dart';
+
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/features/sign_in/data/managers/sign-in-cubit/sign_in_state.dart';
 import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart'
     show SigninCredentialsModel;
@@ -17,15 +17,20 @@ class SignInCubit extends Cubit<SignInState> {
       var result = await signInRepo.userSignin(credentials: credentials);
       result.fold(
         (failure) {
-          emit(SignInFailure(message: failure.errMessage));
+          emit(
+            SignInFailure(
+              message: failure.errMessage,
+              statusCode: failure.statusCode,
+            ),
+          );
         },
         (user) {
           emit(SignInSuccess(user: user));
-          getIt<AuthService>().setUser(user); // Store user globally
+          StorageServices.storeData('user', user.toJson());
         },
       );
     } catch (error) {
-      emit(SignInFailure(message: error.toString()));
+      emit(SignInFailure(message: error.toString(), statusCode: 520));
     }
   }
 }

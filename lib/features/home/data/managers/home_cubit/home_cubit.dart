@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_type_model.dart'
     show DoshTypeModel;
@@ -10,6 +10,7 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final HomeRepoImp homeRepo;
+
   HomeCubit({required this.homeRepo}) : super(HomeInitial());
 
   Future<void> fetchDoshTypes() async {

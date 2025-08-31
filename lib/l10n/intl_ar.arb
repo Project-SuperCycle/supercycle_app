@@ -92,5 +92,18 @@
   "onboarding_1" : "سوبر سايكل نمبر وان",
   "onboarding_2" : "سوبر سايكل نمبر وان",
   "onboarding_3" : "سوبر سايكل نمبر وان",
-  "privacy_policy_required": "الموافقه على جميع الشروط و الاحكام"
+  "privacy_policy_required": "الموافقه على جميع الشروط و الاحكام",
+  "sign_in_alert_title": "مرحبا بك",
+  "sign_in_alert_message": "أنت غير مسجل. يرجى تسجيل الدخول للمتابعة",
+  "alert_ok_button" : "متابعة",
+  "alert_cancel_button" : "إغلاق",
+  "drawer_home": "الرئيسية",
+  "drawer_profile": "الملف الشخصي",
+  "drawer_settings": "الإعدادات",
+  "drawer_logout": "تسجيل الخروج",
+  "drawer_sign_in": "تسجيل الدخول",
+  "drawer_contact_us": "تواصل معنا",
+  "drawer_language": "اللغة",
+  "drawer_sales_calender": "جدول الشحنات",
+  "drawer_transactions_table": "جدول المعاملات"
 }
