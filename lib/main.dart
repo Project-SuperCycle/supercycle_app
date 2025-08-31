@@ -16,17 +16,15 @@ import 'package:supercycle_app/features/sign_up/data/managers/sign_up_cubit/sign
     show SignUpCubit;
 import 'package:supercycle_app/features/sign_up/data/repos/signup_repo_imp.dart'
     show SignUpRepoImp;
-import 'package:supercycle_app/firebase_options.dart' show DefaultFirebaseOptions;
-
+import 'package:supercycle_app/firebase_options.dart'
+    show DefaultFirebaseOptions;
 
 import 'generated/l10n.dart';
 
 void main() async {
   setupServiceLocator();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiBlocProvider(
       providers: [

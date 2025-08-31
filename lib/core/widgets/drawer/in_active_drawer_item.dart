@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:supercycle_app/core/models/drawer_item_model.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 

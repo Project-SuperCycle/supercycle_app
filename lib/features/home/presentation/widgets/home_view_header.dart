@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle_app/features/home/presentation/widgets/home_header/home_header_logo.dart'
     show HomeHeaderLogo;
@@ -9,6 +8,7 @@ import 'package:supercycle_app/features/home/presentation/widgets/home_header/us
 
 class HomeViewHeader extends StatelessWidget {
   const HomeViewHeader({super.key, required this.onDrawerPressed});
+
   final VoidCallback onDrawerPressed;
 
   @override

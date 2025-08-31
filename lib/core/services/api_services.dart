@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart';
-import 'package:supercycle_app/core/services/services_locator.dart' show getIt;
 import 'package:supercycle_app/core/services/storage_services.dart';
 
 class ApiServices {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'http://10.0.2.2:4000',
+      baseUrl: 'https://localhost:4000',
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
-      headers: {'Accept': 'application/json', 'lang': 'ar'},
+      headers: {
+        'Accept': 'application/json',
+        'lang': 'ar',
+        'Content-Type': 'application/json',
+      },
     ),
   );
 

@@ -58,9 +58,7 @@ class _HomeViewState extends State<HomeView> {
           SvgPicture.asset(AppAssets.calculatorIcon, fit: BoxFit.cover),
           SvgPicture.asset(AppAssets.boxIcon, fit: BoxFit.cover),
           Image.asset(AppAssets.homeIcon, height: 30, fit: BoxFit.cover),
-          isUserLoggedIn
-              ? SvgPicture.asset(AppAssets.calendarIcon, fit: BoxFit.cover)
-              : SizedBox.shrink(),
+          SvgPicture.asset(AppAssets.calendarIcon, fit: BoxFit.cover),
           SvgPicture.asset(AppAssets.chatIcon, fit: BoxFit.cover),
         ],
         onTap: (index) {

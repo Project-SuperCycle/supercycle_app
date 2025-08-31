@@ -1,3 +1,5 @@
+import 'package:hive_flutter/adapters.dart';
+
 class LoginedUserModel {
   final String bussinessName;
   final String rawBusinessType;
@@ -14,7 +16,6 @@ class LoginedUserModel {
     required this.doshMangerPhone,
     required this.email,
   });
-
 
   // fromJson constructor
   factory LoginedUserModel.fromJson(Map<String, dynamic> json) {

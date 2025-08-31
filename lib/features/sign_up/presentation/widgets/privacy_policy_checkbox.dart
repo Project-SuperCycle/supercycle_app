@@ -124,11 +124,11 @@ class _PrivacyPolicyCheckboxState extends State<PrivacyPolicyCheckbox> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child:  Text(
+              child: Text(
                 'موافق',
-                style: AppStyles.styleBold16(context).copyWith(
-                  color: AppColors.primaryColor,
-                ),
+                style: AppStyles.styleBold16(
+                  context,
+                ).copyWith(color: AppColors.primaryColor),
               ),
             ),
           ],
@@ -194,74 +194,6 @@ class _PrivacyPolicyCheckboxState extends State<PrivacyPolicyCheckbox> {
           ),
         ),
       ],
-    );
-  }
-}
-
-// مثال على كيفية الاستخدام في الصفحة الرئيسية
-class ExampleUsage extends StatefulWidget {
-  @override
-  State<ExampleUsage> createState() => _ExampleUsageState();
-}
-
-class _ExampleUsageState extends State<ExampleUsage> {
-  bool isAgreed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('مثال على استخدام Checkbox'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-
-          // استخدام الـ Widget المخصص
-          PrivacyPolicyCheckbox(
-            initialValue: isAgreed,
-            onChanged: (bool value) {
-              setState(() {
-                isAgreed = value;
-              });
-              print('Agreement status: $value');
-            },
-          ),
-
-          const SizedBox(height: 20),
-
-          // زر للمتابعة
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ElevatedButton(
-              onPressed: isAgreed
-                  ? () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تمت الموافقة بنجاح!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'متابعة',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

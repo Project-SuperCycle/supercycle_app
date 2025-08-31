@@ -1,26 +1,26 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show DioException;
-import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/repos/social_auth_repo.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart'
-    show ApiEndpoints;
-import 'package:supercycle_app/core/services/api_services.dart';
 import 'package:supercycle_app/core/models/social_auth_request_model.dart'
     show SocialAuthRequestModel;
 import 'package:supercycle_app/core/models/social_auth_response_model.dart'
     show SocialAuthResponseModel;
+import 'package:supercycle_app/core/repos/social_auth_repo.dart';
+import 'package:supercycle_app/core/services/api_endpoints.dart'
+    show ApiEndpoints;
+import 'package:supercycle_app/core/services/api_services.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 
 class SocialAuthRepoImp implements SocialAuthRepo {
   final ApiServices apiServices;
+
   SocialAuthRepoImp({required this.apiServices});
 
   @override
   Future<Either<Failure, SocialAuthResponseModel>> socialSignup({
     required SocialAuthRequestModel credentials,
   }) async {
-    // TODO: implement googleSignup
+    // TODO: implement socialSignup
     try {
       final response = await apiServices.post(
         endPoint: ApiEndpoints.socialLogin,
@@ -62,7 +62,6 @@ class SocialAuthRepoImp implements SocialAuthRepo {
         ),
       );
     } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
       return left(
         ServerFailure(
           'Data parsing error: ${typeError.toString()}',
@@ -70,7 +69,6 @@ class SocialAuthRepoImp implements SocialAuthRepo {
         ),
       );
     } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
       return left(
         ServerFailure(
           'Unexpected error occurred: ${e.toString()}',

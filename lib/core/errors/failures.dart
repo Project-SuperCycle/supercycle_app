@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 abstract class Failure {
   final String errMessage;
   final int statusCode;
+
   const Failure(this.errMessage, this.statusCode);
 }
 
@@ -48,7 +49,6 @@ class ServerFailure extends Failure {
   }
 
   factory ServerFailure.fromResponse(int? statusCode, dynamic response) {
-    // إذا كان statusCode موجود، استخدمه
     final actualStatusCode = statusCode ?? 500;
 
     if (response is Map<String, dynamic>) {

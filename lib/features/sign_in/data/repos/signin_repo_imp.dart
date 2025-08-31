@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show DioException;
+import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/errors/failures.dart';
 import 'package:supercycle_app/core/services/api_endpoints.dart'
     show ApiEndpoints;
@@ -23,16 +25,10 @@ class SignInRepoImp implements SignInRepo {
         endPoint: ApiEndpoints.login,
         data: credentials.toJson(),
       );
-
-      // التحقق من وجود البيانات المطلوبة
-      if (response == null) {
-        return left(ServerFailure('No response received from server', 500));
-      }
-
+      Logger().i(response);
       var data = response['data'];
       var token = response['token'];
 
-      // التحقق من وجود البيانات الأساسية
       if (data == null) {
         return left(
           ServerFailure(
@@ -43,27 +39,22 @@ class SignInRepoImp implements SignInRepo {
       }
 
       if (token == null) {
-        return left(
-          ServerFailure(
-            'Invalid response: Missing authentication token',
-            422, // Unprocessable Entity
-          ),
-        );
+        if (response['Code'] == kNotVerified) {
+          return left(ServerFailure.fromResponse(403, response));
+        }
+      } else {
+        if (response['Code'] == kProfileIncomplete) {
+          return left(ServerFailure(response['message'], 200));
+        }
       }
-      LoginedUserModel loginUser = LoginedUserModel.fromJson(data);
 
+      LoginedUserModel loginUser = LoginedUserModel.fromJson(data);
       return right(loginUser);
     } on DioException catch (dioError) {
       return left(ServerFailure.fromDioError(dioError));
     } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
+      return left(ServerFailure(formatError.toString(), 422));
     } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
       return left(
         ServerFailure(
           'Data parsing error: ${typeError.toString()}',
@@ -71,7 +62,6 @@ class SignInRepoImp implements SignInRepo {
         ),
       );
     } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
       return left(
         ServerFailure(
           'Unexpected error occurred: ${e.toString()}',

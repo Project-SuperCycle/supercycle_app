@@ -1,5 +1,3 @@
-import 'dart:developer' show log;
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show DioException;
 import 'package:supercycle_app/core/errors/failures.dart';
@@ -15,6 +13,7 @@ import 'package:supercycle_app/features/sign_up/data/repos/signup_repo.dart'
 
 class SignUpRepoImp implements SignUpRepo {
   final ApiServices apiServices;
+
   SignUpRepoImp({required this.apiServices});
 
   @override
