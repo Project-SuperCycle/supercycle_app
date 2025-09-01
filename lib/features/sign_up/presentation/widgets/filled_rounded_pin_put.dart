@@ -5,13 +5,14 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class FilledRoundedPinPut extends StatefulWidget {
   final TextEditingController controller;
+
   const FilledRoundedPinPut({super.key, required this.controller});
 
   @override
-  _FilledRoundedPinPutState createState() => _FilledRoundedPinPutState();
+  FilledRoundedPinPutState createState() => FilledRoundedPinPutState();
 }
 
-class _FilledRoundedPinPutState extends State<FilledRoundedPinPut> {
+class FilledRoundedPinPutState extends State<FilledRoundedPinPut> {
   final focusNode = FocusNode();
 
   @override
@@ -28,6 +29,7 @@ class _FilledRoundedPinPutState extends State<FilledRoundedPinPut> {
     const borderColor = AppColors.primaryColor;
     const errorColor = Color.fromRGBO(255, 234, 238, 1);
     const fillColor = Color.fromRGBO(222, 231, 240, 0.75);
+
     final defaultPinTheme = PinTheme(
       width: 55,
       height: 60,

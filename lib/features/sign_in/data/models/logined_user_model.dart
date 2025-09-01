@@ -1,28 +1,30 @@
+import 'package:hive_flutter/adapters.dart';
+
 class LoginedUserModel {
-  final String businessName;
+  final String bussinessName;
   final String rawBusinessType;
-  final String businessAddress;
-  final String doshManagerName;
-  final String doshManagerPhone;
+  final String bussinessAdress;
+  final String doshMangerName;
+  final String doshMangerPhone;
   final String email;
 
   LoginedUserModel({
-    required this.businessName,
+    required this.bussinessName,
     required this.rawBusinessType,
-    required this.businessAddress,
-    required this.doshManagerName,
-    required this.doshManagerPhone,
+    required this.bussinessAdress,
+    required this.doshMangerName,
+    required this.doshMangerPhone,
     required this.email,
   });
 
   // fromJson constructor
   factory LoginedUserModel.fromJson(Map<String, dynamic> json) {
     return LoginedUserModel(
-      businessName: json['profile']['bussinessName'] as String,
+      bussinessName: json['profile']['bussinessName'] as String,
       rawBusinessType: json['profile']['rawBusinessType'] as String,
-      businessAddress: json['profile']['bussinessAdress'] as String,
-      doshManagerName: json['profile']['doshMangerName'] as String,
-      doshManagerPhone: json['profile']['doshMangerPhone'] as String,
+      bussinessAdress: json['profile']['bussinessAdress'] as String,
+      doshMangerName: json['profile']['doshMangerName'] as String,
+      doshMangerPhone: json['profile']['doshMangerPhone'] as String,
       email: json['email'] as String,
     );
   }
@@ -30,11 +32,11 @@ class LoginedUserModel {
   // toJson method
   Map<String, dynamic> toJson() {
     return {
-      'businessName': businessName,
+      'bussinessName': bussinessName,
       'rawBusinessType': rawBusinessType,
-      'businessAddress': businessAddress,
-      'doshManagerName': doshManagerName,
-      'doshManagerPhone': doshManagerPhone,
+      'bussinessAdress': bussinessAdress,
+      'doshMangerName': doshMangerName,
+      'doshMangerPhone': doshMangerPhone,
       'email': email,
     };
   }
@@ -42,24 +44,24 @@ class LoginedUserModel {
   // Optional: toString method for debugging
   @override
   String toString() {
-    return 'LoginedUserModel(businessName: $businessName, rawBusinessType: $rawBusinessType, businessAddress: $businessAddress, doshManagerName: $doshManagerName, doshManagerPhone: $doshManagerPhone, email: $email)';
+    return 'LoginedUserModel(bussinessName: $bussinessName, rawBusinessType: $rawBusinessType, bussinessAdress: $bussinessAdress, doshMangerName: $doshMangerName, doshMangerPhone: $doshMangerPhone, email: $email)';
   }
 
   // Optional: copyWith method for creating modified copies
   LoginedUserModel copyWith({
-    String? businessName,
+    String? bussinessName,
     String? rawBusinessType,
-    String? businessAddress,
-    String? doshManagerName,
-    String? doshManagerPhone,
+    String? bussinessAdress,
+    String? doshMangerName,
+    String? doshMangerPhone,
     String? email,
   }) {
     return LoginedUserModel(
-      businessName: businessName ?? this.businessName,
+      bussinessName: bussinessName ?? this.bussinessName,
       rawBusinessType: rawBusinessType ?? this.rawBusinessType,
-      businessAddress: businessAddress ?? this.businessAddress,
-      doshManagerName: doshManagerName ?? this.doshManagerName,
-      doshManagerPhone: doshManagerPhone ?? this.doshManagerPhone,
+      bussinessAdress: bussinessAdress ?? this.bussinessAdress,
+      doshMangerName: doshMangerName ?? this.doshMangerName,
+      doshMangerPhone: doshMangerPhone ?? this.doshMangerPhone,
       email: email ?? this.email,
     );
   }

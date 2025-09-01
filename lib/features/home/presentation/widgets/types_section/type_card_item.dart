@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
 import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
@@ -116,7 +117,7 @@ class TypeCardItem extends StatelessWidget {
                   SizedBox(height: 20.0),
                   CustomButton(
                     title: S.of(context).make_process,
-                    onPress: () {},
+                    onPress: () => StorageServices.clearAll(),
                   ),
                   SizedBox(height: 12.0),
                 ],

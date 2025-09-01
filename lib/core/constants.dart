@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 const double kButtonBorderRadius = 20.0;
 const double kBorderRadius = 20.0;
+const String kBoxName = 'supercycle';
+const String kNotVerified = 'NOT_VERIFIED';
+const String kProfileIncomplete = 'PROFILE_INCOMPLETE';
 
 const kGradientBackground = LinearGradient(
   begin: Alignment.topCenter,

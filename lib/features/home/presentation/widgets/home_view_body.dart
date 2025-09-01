@@ -7,36 +7,16 @@ import 'package:supercycle_app/features/home/presentation/widgets/types_section/
 import 'package:supercycle_app/features/home/presentation/widgets/types_section/types_section_header.dart'
     show TypesSectionHeader;
 
-class HomeViewBody extends StatefulWidget {
-  const HomeViewBody({super.key});
-
-  @override
-  State<HomeViewBody> createState() => _HomeViewBodyState();
-}
-
-class _HomeViewBodyState extends State<HomeViewBody> {
-  late PageController pageController;
-  int currentPageIndex = 0;
-
-  @override
-  void initState() {
-    pageController = PageController();
-
-    pageController.addListener(() {
-      currentPageIndex = pageController.page!.round();
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  final items = List.generate(10, (index) => index);
+class HomeViewBody extends StatelessWidget {
+  const HomeViewBody({super.key, required this.onDrawerPressed});
+  final VoidCallback onDrawerPressed;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          HomeViewHeader(),
+          HomeViewHeader(onDrawerPressed: onDrawerPressed),
           SizedBox(height: 20),
           SalesChartCard(),
           SizedBox(height: 30),

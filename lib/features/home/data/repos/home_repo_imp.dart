@@ -2,7 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show DioException;
 import 'package:supercycle_app/core/errors/failures.dart';
 import 'package:supercycle_app/core/services/api_endpoints.dart';
-import 'package:supercycle_app/core/services/api_services.dart' show ApiServices;
+import 'package:supercycle_app/core/services/api_services.dart'
+    show ApiServices;
 import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_type_model.dart';
 import 'package:supercycle_app/features/home/data/models/type_history_model.dart';
@@ -25,11 +26,31 @@ class HomeRepoImp implements HomeRepo {
         types.add(DoshTypeModel.fromJson(type));
       }
       return right(types);
+    } on DioException catch (dioError) {
+      return left(ServerFailure.fromDioError(dioError));
+    } on FormatException catch (formatError) {
+      return left(
+        ServerFailure(
+          formatError.toString(),
+          422, // Unprocessable Entity
+        ),
+      );
+    } on TypeError catch (typeError) {
+      // أخطاء النوع (مثل null safety)
+      return left(
+        ServerFailure(
+          'Data parsing error: ${typeError.toString()}',
+          422, // Unprocessable Entity
+        ),
+      );
     } catch (e) {
-      if (e is DioException) {
-        return left(ServerFailure.fromDioError(e));
-      }
-      return left(ServerFailure(e.toString()));
+      // أي أخطاء أخرى غير متوقعة
+      return left(
+        ServerFailure(
+          'Unexpected error occurred: ${e.toString()}',
+          520, // Unknown Error
+        ),
+      );
     }
   }
 
@@ -51,11 +72,31 @@ class HomeRepoImp implements HomeRepo {
       }
 
       return right(history);
+    } on DioException catch (dioError) {
+      return left(ServerFailure.fromDioError(dioError));
+    } on FormatException catch (formatError) {
+      return left(
+        ServerFailure(
+          formatError.toString(),
+          422, // Unprocessable Entity
+        ),
+      );
+    } on TypeError catch (typeError) {
+      // أخطاء النوع (مثل null safety)
+      return left(
+        ServerFailure(
+          'Data parsing error: ${typeError.toString()}',
+          422, // Unprocessable Entity
+        ),
+      );
     } catch (e) {
-      if (e is DioException) {
-        return left(ServerFailure.fromDioError(e));
-      }
-      return left(ServerFailure(e.toString()));
+      // أي أخطاء أخرى غير متوقعة
+      return left(
+        ServerFailure(
+          'Unexpected error occurred: ${e.toString()}',
+          520, // Unknown Error
+        ),
+      );
     }
   }
 
@@ -74,11 +115,31 @@ class HomeRepoImp implements HomeRepo {
       }
 
       return right(typesData);
+    } on DioException catch (dioError) {
+      return left(ServerFailure.fromDioError(dioError));
+    } on FormatException catch (formatError) {
+      return left(
+        ServerFailure(
+          formatError.toString(),
+          422, // Unprocessable Entity
+        ),
+      );
+    } on TypeError catch (typeError) {
+      // أخطاء النوع (مثل null safety)
+      return left(
+        ServerFailure(
+          'Data parsing error: ${typeError.toString()}',
+          422, // Unprocessable Entity
+        ),
+      );
     } catch (e) {
-      if (e is DioException) {
-        return left(ServerFailure.fromDioError(e));
-      }
-      return left(ServerFailure(e.toString()));
+      // أي أخطاء أخرى غير متوقعة
+      return left(
+        ServerFailure(
+          'Unexpected error occurred: ${e.toString()}',
+          520, // Unknown Error
+        ),
+      );
     }
   }
 }

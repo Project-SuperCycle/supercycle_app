@@ -1,4 +1,3 @@
-
 class SocialAuthRequestModel {
   final String provider;
   final String accessToken;
@@ -8,7 +7,6 @@ class SocialAuthRequestModel {
     required this.accessToken,
   });
 
-
   factory SocialAuthRequestModel.fromJson(Map<String, dynamic> json) {
     return SocialAuthRequestModel(
       provider: json['provider'] as String,
@@ -17,19 +15,13 @@ class SocialAuthRequestModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'provider': provider,
-      'accessToken': accessToken,
-    };
+    return {'provider': provider, 'accessToken': accessToken};
   }
 
-  SocialAuthRequestModel copyWith({
-    String? provider,
-    String? token,
-  }) {
+  SocialAuthRequestModel copyWith({String? provider, String? token}) {
     return SocialAuthRequestModel(
       provider: provider ?? this.provider,
-      accessToken: token ?? this.accessToken,
+      accessToken: token ?? accessToken,
     );
   }
 
@@ -37,5 +29,4 @@ class SocialAuthRequestModel {
   String toString() {
     return 'SocialAuthRequestModel(provider: $provider, token: $accessToken)';
   }
-
 }

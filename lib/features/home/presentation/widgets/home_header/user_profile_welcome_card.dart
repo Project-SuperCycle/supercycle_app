@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/services/auth_services.dart' show AuthService;
-import 'package:supercycle_app/core/services/services_locator.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
+import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
 import 'package:supercycle_app/generated/l10n.dart' show S;
 
-class UserProfileWelcomeCard extends StatelessWidget {
+class UserProfileWelcomeCard extends StatefulWidget {
   const UserProfileWelcomeCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final user = getIt.get<AuthService>().user;
+  State<UserProfileWelcomeCard> createState() => _UserProfileWelcomeCardState();
+}
 
+class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
+  late String managerName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  void getUserData() async {
+    LoginedUserModel? user = await StorageServices.getUserData();
+    setState(() {
+      managerName = (user != null) ? user.doshMangerName : '';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       textDirection: TextDirection.ltr,
@@ -42,7 +60,7 @@ class UserProfileWelcomeCard extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              user == null ? '' : user.doshManagerName,
+              managerName,
               textDirection: TextDirection.ltr,
               style: AppStyles.styleSemiBold16(context),
             ),

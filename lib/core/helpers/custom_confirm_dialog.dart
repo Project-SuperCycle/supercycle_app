@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/generated/l10n.dart';
 
 Future<void> showCustomConfirmationDialog({
   required BuildContext context,
+  required String title,
   required String message,
   required VoidCallback onConfirmed,
 }) {
@@ -14,7 +17,7 @@ Future<void> showCustomConfirmationDialog({
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-        backgroundColor: const Color(0xFF2C2E3E),
+        backgroundColor: const Color(0xFFFFFFFF),
         child: SizedBox(
           width: 400,
           child: Padding(
@@ -22,13 +25,13 @@ Future<void> showCustomConfirmationDialog({
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Row(
+                 Row(
                   children: [
-                    Icon(Icons.info_outline_rounded, color: Colors.white),
+                    Icon(Icons.info_outline_rounded, color: AppColors.primaryColor),
                     SizedBox(width: 10),
                     Text(
-                      'Are you sure?',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      title,
+                      style: AppStyles.styleMedium16(context),
                     ),
                   ],
                 ),
@@ -37,9 +40,7 @@ Future<void> showCustomConfirmationDialog({
                   alignment: Alignment.centerLeft,
                   child: Text(
                     message,
-                    style: AppStyles.styleRegular16(
-                      context,
-                    ).copyWith(color: Colors.white),
+                    style: AppStyles.styleRegular16(context),
                   ),
                 ),
                 const SizedBox(height: 25),
@@ -48,7 +49,7 @@ Future<void> showCustomConfirmationDialog({
                   children: [
                     TextButton(
                       style: TextButton.styleFrom(
-                        // backgroundColor: ColorsData.secondaryColor,
+                        backgroundColor: AppColors.primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -58,23 +59,23 @@ Future<void> showCustomConfirmationDialog({
                         Navigator.of(context).pop();
                         onConfirmed();
                       },
-                      child: const Text(
-                        'OK',
-                        style: TextStyle(color: Colors.white),
+                      child:  Text(
+                          S.of(context).alert_ok_button,
+                        style: AppStyles.styleMedium16(context),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     TextButton(
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: const Color(0xFF3A3C4A),
+                        backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                       ),
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
+                      child:  Text(S.of(context).alert_cancel_button, style: AppStyles.styleMedium14(context),
+                      ),
                     ),
                   ],
                 ),
