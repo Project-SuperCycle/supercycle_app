@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
 
-class SalesProcessLogo extends StatelessWidget {
-  const SalesProcessLogo({super.key});
+class Logo extends StatelessWidget {
+  const Logo({super.key});
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -8,7 +8,8 @@ class CustomButton extends StatelessWidget {
     this.backgroundColor,
     this.textColor,
     required this.onPress,
-    this.enabled = true, required String title,
+    this.enabled = true,
+    required String title,
   });
 
   final VoidCallback? onPress;

@@ -2,6 +2,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart'
     show CurvedNavigationBarState, CurvedNavigationBar;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
+import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
 import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle_app/features/home/presentation/widgets/home_view_body.dart'
@@ -31,7 +33,12 @@ class _HomeViewState extends State<HomeView> {
         height: 60,
         items: <Widget>[
           SvgPicture.asset(AppAssets.calculatorIcon, fit: BoxFit.cover),
-          SvgPicture.asset(AppAssets.boxIcon, fit: BoxFit.cover),
+          GestureDetector(
+            child: SvgPicture.asset(AppAssets.boxIcon, fit: BoxFit.cover),
+            onTap: () {
+              GoRouter.of(context).pushReplacement(EndPoints.salesProcessView);
+            },
+          ),
           Image.asset(AppAssets.homeIcon, height: 30, fit: BoxFit.cover),
           SvgPicture.asset(AppAssets.calendarIcon, fit: BoxFit.cover),
           SvgPicture.asset(AppAssets.chatIcon, fit: BoxFit.cover),
