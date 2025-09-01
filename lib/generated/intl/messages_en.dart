@@ -42,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "administrator_phone": MessageLookupByLibrary.simpleMessage(
       "Administrator Phone",
     ),
+    "alert_cancel_button": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "alert_ok_button": MessageLookupByLibrary.simpleMessage("OK"),
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "already_have_an_account": MessageLookupByLibrary.simpleMessage(
       "Already have an account",
@@ -65,6 +67,19 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "delivered_shipments": MessageLookupByLibrary.simpleMessage(
       "Delivered shipments",
+    ),
+    "drawer_contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "drawer_home": MessageLookupByLibrary.simpleMessage("Home"),
+    "drawer_language": MessageLookupByLibrary.simpleMessage("Language"),
+    "drawer_logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "drawer_profile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "drawer_sales_calender": MessageLookupByLibrary.simpleMessage(
+      "Sales Calendar",
+    ),
+    "drawer_settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "drawer_sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
+    "drawer_transactions_table": MessageLookupByLibrary.simpleMessage(
+      "Transactions Table",
     ),
     "driver_name": MessageLookupByLibrary.simpleMessage("Driver\'s name"),
     "driver_phone": MessageLookupByLibrary.simpleMessage("Driver\'s Phone"),
@@ -183,6 +198,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "signUp_title": MessageLookupByLibrary.simpleMessage(
       "Start your journey with us",
+    ),
+    "sign_in_alert_message": MessageLookupByLibrary.simpleMessage(
+      "You are not logined, please login to continue",
+    ),
+    "sign_in_alert_title": MessageLookupByLibrary.simpleMessage(
+      "Welcome to supercycle_app",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "title": MessageLookupByLibrary.simpleMessage("supercycle_app"),

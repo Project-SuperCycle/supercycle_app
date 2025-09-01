@@ -5,14 +5,7 @@ import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_m
     show SigninCredentialsModel;
 
 abstract class SignInRepo {
-  Future<Either<Failure, LoginedUserModel>> userSignin(
-      {required SigninCredentialsModel credentials});
-
-  Future<Either<Failure, String>> googleSignin({
-    required SigninCredentialsModel credentials,
-  });
-
-  Future<Either<Failure, String>> facebookSignin({
+  Future<Either<Failure, LoginedUserModel>> userSignin({
     required SigninCredentialsModel credentials,
   });
 }

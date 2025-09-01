@@ -29,7 +29,7 @@ class CustomTextFormField extends StatelessWidget {
       child: TextFormField(
         enabled: enabled,
         textInputAction: TextInputAction.next,
-        autofocus: true,
+        autofocus: false,
         focusNode: FocusNode(),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         minLines: 1,
