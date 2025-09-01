@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/features/sales_process/data/models/product.dart';
+import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
 
 class ShipmentSummary extends StatelessWidget {
   final List<Product> products;

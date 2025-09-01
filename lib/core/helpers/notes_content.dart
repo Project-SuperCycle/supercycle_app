@@ -58,7 +58,7 @@ class _NotesContentState extends State<NotesContent> {
               ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top: 40),
+                contentPadding: EdgeInsets.only(top: 70),
                 hintText: 'اكتب ملاحظاتك هنا...',
                 hintStyle: TextStyle(
                   color: Colors.grey,

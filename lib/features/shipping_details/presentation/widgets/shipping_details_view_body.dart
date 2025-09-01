@@ -1,18 +1,17 @@
-// views/shipping_details_view_body.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
-import 'package:supercycle_app/features/sales_process/presentation/widgets/header/sales_process_logo.dart';
+import 'package:supercycle_app/core/helpers/logo.dart';
 import '../widgets/settings_icon.dart';
 import '../widgets/shipment_header.dart';
-import '../widgets/notes_content.dart';
-import '../widgets/progress_widgets.dart';
-import '../widgets/expandable_section.dart';
+import '../../../../core/helpers/notes_content.dart';
+import '../../../../core/helpers/progress_widgets.dart';
+import '../../../../core/helpers/expandable_section.dart';
 import '../widgets/shipment_details_content.dart';
-import '../widgets/client_data_content.dart';
+import '../../../../core/helpers/client_data_content.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart' show CustomBackButton;
-import 'package:supercycle_app/features/sales_process/data/models/product.dart';
+import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
 import 'package:supercycle_app/core/services/data_service.dart';
 
 class ShippingDetalisViewBody extends StatefulWidget {
@@ -28,7 +27,6 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
 
   late List<Product> shipmentProducts;
   List<String> notes = [
-    '\n'
     'تم فحص المنتجات والتأكد من جودتها',
     'العميل طلب تأجيل التسليم ليوم الأحد القادم',
     'يفضل التعامل مع هذا العميل نقداً فقط',
@@ -50,7 +48,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              const SalesProcessLogo(),
+              const Logo(),
 
               const SizedBox(height: 20),
               Padding(
@@ -67,7 +65,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                       color: Colors.black,
                       size: 24,
                       onPressed: () {
-                        GoRouter.of(context).pushReplacement(EndPoints.homeView);
+                        GoRouter.of(context).pushReplacement(EndPoints.salesProcessView);
                       },
                     ),
                   ],
@@ -98,7 +96,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                         const ShipmentHeader(),
                         const SizedBox(height: 20),
 
-                        const ProgressBar(),
+                        const ProgressBar(completedSteps: 1),
                         const SizedBox(height: 30),
 
                         ExpandableSection(

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' hide CustomTransitionPage;
 import 'package:supercycle_app/core/helpers/page_transition.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/features/home/presentation/views/home_view.dart' show HomeView;
+import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
+import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
+import 'package:supercycle_app/features/shipping_details/presentation/views/shipping_details_view.dart';
 import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
@@ -247,10 +249,37 @@ class AppRouter {
         ),
       ),
 
-       // Sales Process View Route
+      // Sales Process View Route
       GoRoute(
         path: EndPoints.salesProcessView,
-        name: 'SalesProcess',
+        name: 'SignUpDetails',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SalesProcessView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(
+                begin: 0.8,
+                end: 1.0,
+              ).animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeInOut,
+              )),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+      
+       // Shipping Details View Route
+      GoRoute(
+        path: EndPoints.shippingDetailsView,
+        name: 'SignUpDetails',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
           child: const ShippingDetailsView(), // Replace with your actual home widget
@@ -273,6 +302,7 @@ class AppRouter {
           transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
+    
     ],
 
     // Custom error page
