@@ -13,6 +13,7 @@ import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_detai
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.dart';
 import 'package:supercycle_app/features/splash/views/splash_view.dart';
+import 'package:supercycle_app/features/calendar/presentation/view/shipments_calendar_view.dart';
 
 abstract class Routes {
   static final router = GoRouter(
@@ -65,6 +66,10 @@ abstract class Routes {
       GoRoute(
         path: EndPoints.salesProcessView,
         builder: (context, state) => const SalesProcessView(),
+      ),
+      GoRoute(
+        path: EndPoints.shipmentsCalendarView,
+        builder: (context, state) => const ShipmentsCalendarView(),
       ),
     ],
   );
