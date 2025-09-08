@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'dart:io';
 import 'image_picker.dart';
 
@@ -17,89 +19,76 @@ class SalesProcessShipmentHeader extends StatelessWidget {
       textDirection: TextDirection.ltr,
       children: [
         ImagePicker(
-          width: 100,
-          height: 100,
-          defaultImagePath: 'assets/images/photo gallery.png',
+          defaultImagePath: AppAssets.photoGallery,
           onImageChanged: _onImageChanged,
         ),
         const Spacer(),
         Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                textDirection: TextDirection.rtl,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: ClipRRect(
-                      child: Image.asset(
-                        'assets/images/Box-Perspective-Big.png',
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.inventory_2_outlined,
-                            color: Colors.orange,
-                            size: 20,
-                          );
-                        },
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  textDirection: TextDirection.rtl,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: ClipRRect(
+                        child: Image.asset(
+                          AppAssets.boxPerspective,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.inventory_2_outlined,
+                              color: Colors.orange,
+                              size: 25,
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'رقم الشحنة: ',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black87,
+                    const SizedBox(width: 8),
+                    Text(
+                      'رقم الشحنة: ',
+                      style: AppStyles.styleSemiBold18(
+                        context,
+                      ).copyWith(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  const SizedBox(width: 2),
-                  const Text(
-                    'لم يحدد بعد ',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.grey,
+                    const SizedBox(width: 2),
+                    Text(
+                      'لم يحدد بعد ',
+                      style: AppStyles.styleSemiBold12(
+                        context,
+                      ).copyWith(color: Colors.grey),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'تاريخ الاستلام: ',
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      SizedBox(width: 2),
-                      Text(
-                        '--/--/----',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Icon(
-                        Icons.edit_calendar_sharp,
-                        color: Colors.black38 ,
-                      ),
-                    ],
-                  ),
-                ],
+              const SizedBox(height: 20),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  children: [
+                    Text(
+                      'تاريخ الاستلام:',
+                      style: AppStyles.styleMedium12(
+                        context,
+                      ).copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 2),
+                    Text(
+                      '--/--/----',
+                      style: AppStyles.styleMedium12(
+                        context,
+                      ).copyWith(color: Colors.grey),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(Icons.edit_calendar_sharp, color: Colors.black38),
+                  ],
+                ),
               ),
             ],
           ),

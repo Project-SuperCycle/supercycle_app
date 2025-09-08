@@ -69,6 +69,8 @@
   "pending_shipments": "شحنات سيتم تسليمها",
   "save": "حفظ",
   "add" : "إضافة",
+  "close": "إلغاء",
+  "delete" : "حذف",
   "notes": "ملاحظات",
   "add_notes_title": "إضافة ملاحظات",
   "add_notes_hint": "يمكنك ترك ملاحظاتك هنا و سيتم مراجعتها من قبل الادارة",
@@ -105,5 +107,9 @@
   "drawer_contact_us": "تواصل معنا",
   "drawer_language": "اللغة",
   "drawer_sales_calender": "جدول الشحنات",
-  "drawer_transactions_table": "جدول المعاملات"
+  "drawer_transactions_table": "جدول المعاملات",
+  "start_date": "تاريخ بداية التعاون",
+  "payment_method": "طريقة السداد المفضلة",
+  "shipment_review": "مراجعة الشحنة"
+
 }

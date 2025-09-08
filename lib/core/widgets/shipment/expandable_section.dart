@@ -25,13 +25,10 @@ class ExpandableSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.green.shade400,
-          width: 2.0,
-        ),
+        border: Border.all(color: Colors.green.shade400, width: 2.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.4),
+            color: Colors.grey.withAlpha(150),
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, 1),
@@ -79,12 +76,12 @@ class ExpandableSection extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 8.0),
                       Text(
                         title,
                         style: AppStyles.styleSemiBold16(context).copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black.withOpacity(0.8),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black.withAlpha(250),
                         ),
                       ),
                     ],
@@ -99,22 +96,22 @@ class ExpandableSection extends StatelessWidget {
             height: isExpanded ? maxHeight : 0,
             child: isExpanded
                 ? Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
-                ),
-              ),
-              child: Scrollbar(
-                thumbVisibility: true,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  physics: const BouncingScrollPhysics(),
-                  child: content,
-                ),
-              ),
-            )
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                      ),
+                    ),
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        physics: const BouncingScrollPhysics(),
+                        child: content,
+                      ),
+                    ),
+                  )
                 : const SizedBox.shrink(),
           ),
         ],

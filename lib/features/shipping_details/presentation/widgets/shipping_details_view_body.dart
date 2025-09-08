@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart' show GoRouter;
+import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
-import 'package:supercycle_app/core/helpers/logo.dart';
-import '../widgets/settings_icon.dart';
-import '../widgets/shipment_header.dart';
-import '../../../../core/helpers/notes_content.dart';
-import '../../../../core/helpers/progress_widgets.dart';
-import '../../../../core/helpers/expandable_section.dart';
-import '../widgets/shipment_details_content.dart';
-import '../../../../core/helpers/client_data_content.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart' show CustomBackButton;
+import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
+import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
+import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
+import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
+import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
 import 'package:supercycle_app/core/services/data_service.dart';
+import 'package:supercycle_app/features/shipping_details/presentation/widgets/settings_icon.dart';
+import 'package:supercycle_app/features/shipping_details/presentation/widgets/shipment_details_content.dart';
+import 'package:supercycle_app/features/shipping_details/presentation/widgets/shipment_header.dart';
 
 class ShippingDetalisViewBody extends StatefulWidget {
   const ShippingDetalisViewBody({super.key});
 
   @override
-  State<ShippingDetalisViewBody> createState() => _ShippingDetalisViewBodyState();
+  State<ShippingDetalisViewBody> createState() =>
+      _ShippingDetalisViewBodyState();
 }
 
 class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
@@ -48,7 +49,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              const Logo(),
+              const ShipmentLogo(),
 
               const SizedBox(height: 20),
               Padding(
@@ -61,11 +62,13 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                       Icons.info_outline,
                       color: Colors.black,
                     ),
-                     CustomBackButton(
+                    CustomBackButton(
                       color: Colors.black,
                       size: 24,
                       onPressed: () {
-                        GoRouter.of(context).pushReplacement(EndPoints.salesProcessView);
+                        GoRouter.of(
+                          context,
+                        ).pushReplacement(EndPoints.salesProcessView);
                       },
                     ),
                   ],
@@ -105,7 +108,9 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                           isExpanded: isShipmentDetailsExpanded,
                           maxHeight: 220,
                           onTap: _toggleShipmentDetails,
-                          content: ShipmentDetailsContent(products: shipmentProducts),
+                          content: ShipmentDetailsContent(
+                            products: shipmentProducts,
+                          ),
                         ),
                         const SizedBox(height: 20),
 
@@ -133,6 +138,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
       ),
     );
   }
+
   void _toggleShipmentDetails() {
     setState(() {
       isShipmentDetailsExpanded = !isShipmentDetailsExpanded;

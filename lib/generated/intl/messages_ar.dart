@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "buy_title": MessageLookupByLibrary.simpleMessage("هل تريد الشراء؟"),
     "calculation": MessageLookupByLibrary.simpleMessage("احسب حسبتك"),
     "carton": MessageLookupByLibrary.simpleMessage("كرتون"),
+    "close": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "تأكيد كلمة المرور",
     ),
@@ -58,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "تاريخ آخر تعديل",
     ),
     "date_of_receipt": MessageLookupByLibrary.simpleMessage("تاريخ الاستلام"),
+    "delete": MessageLookupByLibrary.simpleMessage("حذف"),
     "delivered_shipment_hint": MessageLookupByLibrary.simpleMessage(
       "تم تسليمها خلال الشهر",
     ),
@@ -144,6 +146,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
       " كلمات المرور غير متطابقة",
     ),
+    "payment_method": MessageLookupByLibrary.simpleMessage(
+      "طريقة السداد المفضلة",
+    ),
     "pending_shipment_hint": MessageLookupByLibrary.simpleMessage(
       "سيتم تسليمها خلال الشهر",
     ),
@@ -170,6 +175,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shipment_date": MessageLookupByLibrary.simpleMessage("تاريخ الشحنة"),
     "shipment_details": MessageLookupByLibrary.simpleMessage("تفاصيل الشحنة"),
     "shipment_number": MessageLookupByLibrary.simpleMessage("رقم الشحنة"),
+    "shipment_review": MessageLookupByLibrary.simpleMessage("مراجعة الشحنة"),
     "shipment_schedule": MessageLookupByLibrary.simpleMessage("جدول الشحنات"),
     "shipment_status": MessageLookupByLibrary.simpleMessage("حالة الشحنة"),
     "show_details": MessageLookupByLibrary.simpleMessage("إظهار التفاصيل"),
@@ -186,6 +192,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sign_in_alert_title": MessageLookupByLibrary.simpleMessage("مرحبا بك"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطى"),
+    "start_date": MessageLookupByLibrary.simpleMessage("تاريخ بداية التعاون"),
     "title": MessageLookupByLibrary.simpleMessage("سوبر سايكل"),
     "transportation_data": MessageLookupByLibrary.simpleMessage("بيانات النقل"),
     "truck": MessageLookupByLibrary.simpleMessage("الشاحنة"),

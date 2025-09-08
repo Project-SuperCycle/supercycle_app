@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
 
-class Logo extends StatelessWidget {
-  const Logo({super.key});
+class ShipmentLogo extends StatelessWidget {
+  const ShipmentLogo({super.key});
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

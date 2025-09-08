@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class NotesContent extends StatefulWidget {
   final List<String> notes;
 
-  const NotesContent({
-    super.key,
-    required this.notes,
-  });
+  const NotesContent({super.key, required this.notes});
 
   @override
   State<NotesContent> createState() => _NotesContentState();
@@ -37,10 +36,7 @@ class _NotesContentState extends State<NotesContent> {
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.green.shade300,
-          width: 2,
-        ),
+        border: Border.all(color: Colors.green.shade300, width: 2),
       ),
       child: Stack(
         children: [
@@ -51,27 +47,21 @@ class _NotesContentState extends State<NotesContent> {
               maxLines: null,
               expands: true,
               textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-                height: 1.5,
-              ),
-              decoration: const InputDecoration(
+              style: AppStyles.styleRegular14(context),
+              decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 70),
                 hintText: 'اكتب ملاحظاتك هنا...',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
+                hintStyle: AppStyles.styleRegular14(
+                  context,
+                ).copyWith(color: Colors.grey),
               ),
               onTap: () {
                 setState(() {
                   isEditing = true;
                 });
               },
-              onChanged: (value) {
-              },
+              onChanged: (value) {},
             ),
           ),
 
@@ -84,13 +74,10 @@ class _NotesContentState extends State<NotesContent> {
               textDirection: TextDirection.ltr,
               children: [
                 // Edit icon
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.edit_outlined,
-                    size: 20,
-                    color: Colors.green.shade700,
-                  ),
+                Icon(
+                  Icons.mode_edit_outline_rounded,
+                  size: 25,
+                  color: AppColors.primaryColor,
                 ),
                 const Spacer(),
                 Padding(
@@ -98,22 +85,18 @@ class _NotesContentState extends State<NotesContent> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'ملاحظات :',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
                       Text(
-                        '-- --/--/----   تعديل مقبول',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.green.shade600,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        'ملاحظات :',
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        '----/--/----   تعديل مقبول',
+                        style: AppStyles.styleSemiBold12(
+                          context,
+                        ).copyWith(color: AppColors.primaryColor),
                       ),
                     ],
                   ),

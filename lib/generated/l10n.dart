@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -630,6 +629,16 @@ class S {
     return Intl.message('Add', name: 'add', desc: '', args: []);
   }
 
+  /// `close`
+  String get close {
+    return Intl.message('close', name: 'close', desc: '', args: []);
+  }
+
+  /// `delete`
+  String get delete {
+    return Intl.message('delete', name: 'delete', desc: '', args: []);
+  }
+
   /// `Notes`
   String get notes {
     return Intl.message('Notes', name: 'notes', desc: '', args: []);
@@ -945,6 +954,36 @@ class S {
     return Intl.message(
       'Transactions Table',
       name: 'drawer_transactions_table',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start date of cooperation`
+  String get start_date {
+    return Intl.message(
+      'Start date of cooperation',
+      name: 'start_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preferred payment method`
+  String get payment_method {
+    return Intl.message(
+      'Preferred payment method',
+      name: 'payment_method',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipment Review`
+  String get shipment_review {
+    return Intl.message(
+      'Shipment Review',
+      name: 'shipment_review',
       desc: '',
       args: [],
     );

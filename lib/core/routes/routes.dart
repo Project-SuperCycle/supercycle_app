@@ -12,8 +12,8 @@ import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.dart';
-import 'package:supercycle_app/features/splash/views/splash_view.dart' show SplashView;
-
+import 'package:supercycle_app/features/splash/views/splash_view.dart'
+    show SplashView;
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -46,17 +46,17 @@ class AppRouter {
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Slide transition from right to left
             return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOutCubic,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
-              ),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOutCubic,
+                    ),
+                  ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           transitionDuration: const Duration(milliseconds: 600),
@@ -73,13 +73,16 @@ class AppRouter {
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Smooth slide transition
             return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOutCubic,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOutCubic,
+                    ),
+                  ),
               child: child,
             );
           },
@@ -97,13 +100,16 @@ class AppRouter {
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Smooth slide transition
             return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOutCubic,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOutCubic,
+                    ),
+                  ),
               child: child,
             );
           },
@@ -121,17 +127,10 @@ class AppRouter {
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
               ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           transitionDuration: const Duration(milliseconds: 400),
@@ -148,17 +147,10 @@ class AppRouter {
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
               ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           transitionDuration: const Duration(milliseconds: 400),
@@ -175,17 +167,10 @@ class AppRouter {
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
               ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           transitionDuration: const Duration(milliseconds: 400),
@@ -199,27 +184,26 @@ class AppRouter {
         pageBuilder: (context, state) {
           final credential = state.extra as String;
           return CustomTransitionPage(
-          key: state.pageKey,
-          child: SignUpVerifyView(credential: credential), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
-              ),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        );
-          },
+            key: state.pageKey,
+            child: SignUpVerifyView(
+              credential: credential,
+            ), // Replace with your actual home widget
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  // Scale and fade transition
+                  return ScaleTransition(
+                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOut,
+                      ),
+                    ),
+                    child: FadeTransition(opacity: animation, child: child),
+                  );
+                },
+            transitionDuration: const Duration(milliseconds: 400),
+          );
+        },
       ),
 
       // SignUpDetails View Route
@@ -228,21 +212,15 @@ class AppRouter {
         name: 'SignUpDetails',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const SignUpDetailsView(), // Replace with your actual home widget
+          child:
+              const SignUpDetailsView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
               ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           transitionDuration: const Duration(milliseconds: 400),
@@ -252,57 +230,44 @@ class AppRouter {
       // Sales Process View Route
       GoRoute(
         path: EndPoints.salesProcessView,
-        name: 'SignUpDetails',
+        name: 'SalesProcess',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const SalesProcessView(), // Replace with your actual home widget
+          child:
+              const SalesProcessView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
               ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
-      
-       // Shipping Details View Route
+
+      // Shipping Details View Route
       GoRoute(
         path: EndPoints.shippingDetailsView,
-        name: 'SignUpDetails',
+        name: 'ShippingDetails',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const ShippingDetailsView(), // Replace with your actual home widget
+          child:
+              const ShippingDetailsView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeInOut,
-              )),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
               ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
-    
     ],
 
     // Custom error page
@@ -311,11 +276,7 @@ class AppRouter {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
               'Page not found: ${state.uri.toString()}',

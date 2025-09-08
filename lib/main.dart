@@ -42,7 +42,8 @@ void main() async {
               SocialAuthCubit(socialAuthRepo: getIt.get<SocialAuthRepoImp>()),
         ),
         BlocProvider(
-          create: (context) => HomeCubit(homeRepo: getIt.get<HomeRepoImp>()),
+          create: (context) =>
+              HomeCubit(homeRepo: getIt.get<HomeRepoImp>())..fetchTypesData(),
         ),
       ],
 
