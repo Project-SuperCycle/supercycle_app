@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
 import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart'
@@ -70,6 +71,10 @@ abstract class Routes {
       GoRoute(
         path: EndPoints.shipmentsCalendarView,
         builder: (context, state) => const ShipmentsCalendarView(),
+      ),
+      GoRoute(
+        path: EndPoints.contactUsView,
+        builder: (context, state) => const ContactUsView(),
       ),
     ],
   );

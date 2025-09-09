@@ -8,10 +8,8 @@ import 'package:supercycle_app/core/helpers/logo.dart' show Logo;
 import 'package:supercycle_app/core/helpers/notes_content.dart';
 import 'package:supercycle_app/core/helpers/progress_widgets.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/sales_process_shipment_header.dart';
-import 'package:supercycle_app/features/shipping_details/presentation/views/shipping_details_view.dart';
 
 class SalesProcessViewBody extends StatefulWidget {
   const SalesProcessViewBody({Key? key}) : super(key: key);
