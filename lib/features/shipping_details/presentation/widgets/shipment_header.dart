@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class ShipmentHeader extends StatelessWidget {
   const ShipmentHeader({super.key});
@@ -9,20 +11,16 @@ class ShipmentHeader extends StatelessWidget {
       textDirection: TextDirection.ltr,
       children: [
         Container(
-          width: 100,
-          height: 100,
+          width: 80,
+          height: 80,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              'assets/images/photoGallery.png',
+              AppAssets.photoGallery,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  decoration: BoxDecoration(color: Colors.grey.shade200),
                   child: const Icon(
                     Icons.image_outlined,
                     size: 40,
@@ -37,76 +35,60 @@ class ShipmentHeader extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 textDirection: TextDirection.rtl,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: ClipRRect(
-                      child: Image.asset(
-                        'assets/images/Box-Perspective-Big.png',
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.inventory_2_outlined,
-                            color: Colors.orange,
-                            size: 20,
-                          );
-                        },
-                      ),
+                  ClipRRect(
+                    child: Image.asset(
+                      AppAssets.boxPerspective,
+                      width: 25,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.inventory_2_outlined,
+                          color: Colors.orange,
+                          size: 20,
+                        );
+                      },
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  const Text(
+                  const SizedBox(width: 10),
+                  Text(
                     'رقم الشحنة: ',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black87,
-                    ),
+                    style: AppStyles.styleSemiBold18(
+                      context,
+                    ).copyWith(fontWeight: FontWeight.bold),
                   ),
-                  const Text(
+                  Text(
                     'U22bB',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                    style: AppStyles.styleSemiBold18(
+                      context,
+                    ).copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              const Text(
+              const SizedBox(height: 12),
+              Text(
                 'يتم المراجعة',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: AppStyles.styleSemiBold16(
+                  context,
+                ).copyWith(fontWeight: FontWeight.bold, color: Colors.blue),
               ),
-              const SizedBox(height: 8),
-              const Row(
+              const SizedBox(height: 12),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
                     'تاريخ الاستلام: ',
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: AppStyles.styleSemiBold14(context),
                   ),
                   Text(
                     '--/--/----',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: AppStyles.styleSemiBold14(
+                      context,
+                    ).copyWith(color: Colors.grey),
                   ),
                 ],
               ),

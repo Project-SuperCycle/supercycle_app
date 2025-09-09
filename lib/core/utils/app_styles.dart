@@ -5,7 +5,7 @@ import 'package:supercycle_app/core/utils/app_colors.dart';
 abstract class AppStyles {
   static const fontFamily = 'Cairo';
   static const textHeight = 1.2;
-  static const letterSpacing = 1.5;
+  static const letterSpacing = 1.2;
 
   // Styles 14
   static TextStyle styleRegular12(BuildContext context) {

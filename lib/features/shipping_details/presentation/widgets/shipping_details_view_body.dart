@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
@@ -25,7 +26,6 @@ class ShippingDetalisViewBody extends StatefulWidget {
 class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
-
   late List<Product> shipmentProducts;
   List<String> notes = [
     'تم فحص المنتجات والتأكد من جودتها',
@@ -48,10 +48,8 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 10),
               const ShipmentLogo(),
-
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
@@ -60,24 +58,24 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                     Icon(
                       textDirection: TextDirection.ltr,
                       Icons.info_outline,
-                      color: Colors.black,
+                      size: 25,
+                      color: Colors.white,
                     ),
                     CustomBackButton(
-                      color: Colors.black,
-                      size: 24,
+                      color: Colors.white,
+                      size: 25,
                       onPressed: () {
                         GoRouter.of(
                           context,
-                        ).pushReplacement(EndPoints.salesProcessView);
+                        ).pushReplacement(EndPoints.homeView);
                       },
                     ),
                   ],
                 ),
               ),
-
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 20),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -85,50 +83,58 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                       topRight: Radius.circular(50),
                     ),
                   ),
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: const SettingsIcon(),
-                        ),
-
-                        const ShipmentHeader(),
-                        const SizedBox(height: 20),
-
-                        const ProgressBar(completedSteps: 1),
-                        const SizedBox(height: 30),
-
-                        ExpandableSection(
-                          title: 'تفاصيل الشحنة',
-                          iconPath: 'assets/images/Box-Perspective2.png',
-                          isExpanded: isShipmentDetailsExpanded,
-                          maxHeight: 220,
-                          onTap: _toggleShipmentDetails,
-                          content: ShipmentDetailsContent(
-                            products: shipmentProducts,
+                  // إضافة clipBehavior لقطع أي محتوى خارج الحدود
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      // جعل المحتوى قابل للتمرير داخل Expanded
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: const SettingsIcon(),
+                              ),
+                              const ShipmentHeader(),
+                              const SizedBox(height: 16),
+                              const ProgressBar(completedSteps: 1),
+                              const SizedBox(height: 20),
+                              // تطبيق overflow constraints على ExpandableSection
+                              ClipRect(
+                                child: ExpandableSection(
+                                  title: 'تفاصيل الشحنة',
+                                  iconPath: AppAssets.boxPerspective,
+                                  isExpanded: isShipmentDetailsExpanded,
+                                  maxHeight: 320,
+                                  onTap: _toggleShipmentDetails,
+                                  content: ShipmentDetailsContent(
+                                    products: shipmentProducts,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ClipRect(
+                                child: ExpandableSection(
+                                  title: 'بيانات جهة التعامل',
+                                  iconPath: AppAssets.entityCard,
+                                  isExpanded: isClientDataExpanded,
+                                  maxHeight: 320,
+                                  onTap: _toggleClientData,
+                                  content: const ClientDataContent(),
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                              NotesContent(notes: notes),
+                              const SizedBox(height: 30),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 20),
-
-                        ExpandableSection(
-                          title: 'بيانات جهة التعامل',
-                          iconPath: 'assets/images/Box-Perspective.png',
-                          isExpanded: isClientDataExpanded,
-                          maxHeight: 220,
-                          onTap: _toggleClientData,
-                          content: const ClientDataContent(),
-                        ),
-
-                        const SizedBox(height: 30),
-                        NotesContent(notes: notes),
-
-                        const SizedBox(height: 50),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
