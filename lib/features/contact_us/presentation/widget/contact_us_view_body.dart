@@ -5,8 +5,9 @@ import 'package:supercycle_app/core/utils/contact_strings.dart';
 import 'package:supercycle_app/features/contact_us/presentation/controllers/form_controller.dart';
 import 'package:supercycle_app/features/contact_us/presentation/widget/contact_app_bar.dart';
 import 'package:supercycle_app/features/contact_us/presentation/widget/contact_body.dart';
+import 'package:supercycle_app/features/contact_us/presentation/widget/floating_button.dart';
 import 'package:supercycle_app/features/contact_us/presentation/widget/success_dialog.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsViewBody extends StatefulWidget {
   final ContactService? contactService;
@@ -153,6 +154,7 @@ class _ContactUsViewBodyState extends State<ContactUsViewBody>
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: _isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -174,7 +176,35 @@ class _ContactUsViewBodyState extends State<ContactUsViewBody>
           isLoading: _isLoading,
           onSubmit: _submitForm,
         ),
+
+        floatingActionButton: FloatingButton(
+          isArabic: _isArabic,
+          onPressed: _openWhatsApp,
+        ),
+        floatingActionButtonLocation: _isArabic
+            ? FloatingActionButtonLocation.startFloat
+            : FloatingActionButtonLocation.endFloat,
+
       ),
     );
   }
+  Future<void> _openWhatsApp() async {
+    final phone = "201017185116"; // رقمك بكود الدولة بدون +
+    final message = Uri.encodeComponent("مرحبا، أحتاج إلى المساعدة");
+
+    final whatsappUrl = Uri.parse("whatsapp://send?phone=$phone&text=$message");
+    final fallbackUrl = Uri.parse("https://wa.me/$phone?text=$message");
+
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+    } else if (await canLaunchUrl(fallbackUrl)) {
+      await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint("WhatsApp is not installed");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("من فضلك ثبّت واتساب على جهازك")),
+      );
+    }
+  }
+
 }
