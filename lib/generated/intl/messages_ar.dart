@@ -51,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "تأكيد كلمة المرور",
     ),
+    "confirm_process": MessageLookupByLibrary.simpleMessage("تأكيد العملية"),
     "contact_us": MessageLookupByLibrary.simpleMessage("تواصل معنا"),
     "create_account": MessageLookupByLibrary.simpleMessage(
       "إنشاء حساب جديد >>",

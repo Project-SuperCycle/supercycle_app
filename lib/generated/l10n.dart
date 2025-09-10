@@ -988,6 +988,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Confirm Process`
+  String get confirm_process {
+    return Intl.message(
+      'Confirm Process',
+      name: 'confirm_process',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

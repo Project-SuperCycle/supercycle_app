@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 
 import 'package:supercycle_app/features/sales_process/data/models/unit.dart';
-import 'package:supercycle_app/features/sales_process/data/models/product.dart';
+import 'package:supercycle_app/features/sales_process/data/models/product_type_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/editable_product_card.dart';
 
 class EntryShipmentDetailsContent extends StatefulWidget {
-  final List<Product> products;
+  final List<ProductTypeModel> products;
   const EntryShipmentDetailsContent({super.key, required this.products});
 
   @override
@@ -16,7 +16,7 @@ class EntryShipmentDetailsContent extends StatefulWidget {
 
 class _EntryShipmentDetailsContentState
     extends State<EntryShipmentDetailsContent> {
-  late List<Product> editableProducts;
+  late List<ProductTypeModel> editableProducts;
   final List<String> availableProductTypes = [
     'كرتون درجه تانيه',
     'كرتون درجه اولى',
@@ -31,12 +31,11 @@ class _EntryShipmentDetailsContentState
 
     if (editableProducts.isEmpty) {
       editableProducts.add(
-        Product(
+        ProductTypeModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: availableProductTypes.first,
           quantity: 0,
           unit: Unit.kg.abbreviation,
-          description: '',
         ),
       );
     }
@@ -45,12 +44,11 @@ class _EntryShipmentDetailsContentState
   void _addProduct() {
     setState(() {
       editableProducts.add(
-        Product(
+        ProductTypeModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: availableProductTypes.first,
           quantity: 0,
           unit: Unit.kg.abbreviation,
-          description: '',
         ),
       );
     });

@@ -114,6 +114,7 @@
   "drawer_transactions_table": "Transactions Table",
   "start_date": "Start date of cooperation",
   "payment_method": "Preferred payment method",
-  "shipment_review": "Shipment Review"
+  "shipment_review": "Shipment Review",
+  "confirm_process": "Confirm Process"
 }
 

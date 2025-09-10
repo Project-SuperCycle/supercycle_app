@@ -110,6 +110,8 @@
   "drawer_transactions_table": "جدول المعاملات",
   "start_date": "تاريخ بداية التعاون",
   "payment_method": "طريقة السداد المفضلة",
-  "shipment_review": "مراجعة الشحنة"
+  "shipment_review": "مراجعة الشحنة",
+  "confirm_process": "تأكيد العملية"
+
 
 }

@@ -6,13 +6,13 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_text_form_field.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart';
-import 'package:supercycle_app/features/sales_process/data/models/product.dart';
+import 'package:supercycle_app/features/sales_process/data/models/product_type_model.dart';
 import 'package:supercycle_app/features/sales_process/data/models/unit.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 
 class EditableProductCard extends StatefulWidget {
-  final Product product;
-  final Function(Product updatedProduct) onProductUpdated;
+  final ProductTypeModel product;
+  final Function(ProductTypeModel updatedProduct) onProductUpdated;
   final VoidCallback onProductDeleted;
 
   const EditableProductCard({
