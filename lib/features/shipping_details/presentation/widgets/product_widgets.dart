@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
+import 'package:supercycle_app/generated/l10n.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
   final int index;
 
-  const ProductCard({
-    super.key,
-    required this.product,
-    required this.index,
-  });
+  const ProductCard({super.key, required this.product, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +15,9 @@ class ProductCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.05),
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: const Offset(0, 1),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,10 +34,9 @@ class ProductCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '$index',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                    style: AppStyles.styleSemiBold14(context).copyWith(
                       color: Colors.orange.shade700,
-                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -56,11 +45,7 @@ class ProductCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   product.type,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
+                  style: AppStyles.styleSemiBold14(context),
                 ),
               ),
             ],
@@ -109,18 +94,16 @@ class ProductCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.close,
-                      size: 16,
+                      Icons.close_rounded,
+                      size: 18,
                       color: Colors.red.shade600,
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 6),
                     Text(
-                      'إلغاء',
-                      style: TextStyle(
-                        color: Colors.red.shade600,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      S.of(context).close,
+                      style: AppStyles.styleSemiBold12(
+                        context,
+                      ).copyWith(color: Colors.red.shade600),
                     ),
                   ],
                 ),
@@ -150,34 +133,33 @@ class ProductDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha(50),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha(100)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: color),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+          Icon(icon, size: 20, color: color),
+          const SizedBox(height: 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(label, style: AppStyles.styleMedium12(context)),
+          ),
+          const SizedBox(height: 5),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: AppStyles.styleSemiBold12(
+                context,
+              ).copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-            textAlign: TextAlign.center,
-          ),
+          const SizedBox(height: 5),
         ],
       ),
     );

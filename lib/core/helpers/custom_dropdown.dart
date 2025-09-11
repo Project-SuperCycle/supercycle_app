@@ -12,6 +12,7 @@ class CustomDropdown extends StatefulWidget {
   final double? maxHeight;
   final EdgeInsetsGeometry? padding;
   final bool isSearchable;
+  final bool showBorder;
 
   const CustomDropdown({
     super.key,
@@ -23,6 +24,7 @@ class CustomDropdown extends StatefulWidget {
     this.maxHeight = 200,
     this.padding,
     this.isSearchable = false,
+    this.showBorder = true,
   });
 
   @override
@@ -80,16 +82,22 @@ class _CustomDropdownState extends State<CustomDropdown> {
         buttonStyleData: ButtonStyleData(
           height: 40,
           padding: widget.padding ?? const EdgeInsets.only(left: 12, right: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.black26),
-            color: Colors.white,
-          ),
+          decoration: widget.showBorder
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.black26),
+                  color: Colors.white,
+                )
+              : BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white),
+                  color: Colors.white,
+                ),
         ),
-        iconStyleData: const IconStyleData(
+        iconStyleData: IconStyleData(
           icon: Icon(Icons.keyboard_arrow_down_rounded),
           iconSize: 25,
-          iconEnabledColor: AppColors.primaryColor,
+          iconEnabledColor: AppColors.primaryColor.withAlpha(150),
           iconDisabledColor: Colors.grey,
         ),
         dropdownStyleData: DropdownStyleData(

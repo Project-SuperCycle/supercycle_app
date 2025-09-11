@@ -7,11 +7,9 @@ import 'package:supercycle_app/features/home/presentation/widgets/home_header/ro
 import 'package:supercycle_app/features/home/presentation/widgets/home_header/user_profile_welcome_card.dart';
 
 class HomeViewHeader extends StatelessWidget {
-  const HomeViewHeader({super.key});
+  const HomeViewHeader({super.key, required this.onDrawerPressed});
 
-  void _onNotificationPressed() {}
-
-  void _onDrawerPressed() {}
+  final VoidCallback onDrawerPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +49,7 @@ class HomeViewHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               UserProfileWelcomeCard(),
-              HomeHeaderNavActions(
-                onDrawerPressed: _onDrawerPressed,
-                onNotificationPressed: _onNotificationPressed,
-              ),
+              HomeHeaderNavActions(onDrawerPressed: onDrawerPressed),
             ],
           ),
           const SizedBox(height: 24),

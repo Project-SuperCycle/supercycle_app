@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -630,6 +629,16 @@ class S {
     return Intl.message('Add', name: 'add', desc: '', args: []);
   }
 
+  /// `close`
+  String get close {
+    return Intl.message('close', name: 'close', desc: '', args: []);
+  }
+
+  /// `delete`
+  String get delete {
+    return Intl.message('delete', name: 'delete', desc: '', args: []);
+  }
+
   /// `Notes`
   String get notes {
     return Intl.message('Notes', name: 'notes', desc: '', args: []);
@@ -840,6 +849,151 @@ class S {
     return Intl.message(
       'You must agree to the privacy policy',
       name: 'privacy_policy_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome to supercycle_app`
+  String get sign_in_alert_title {
+    return Intl.message(
+      'Welcome to supercycle_app',
+      name: 'sign_in_alert_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are not logined, please login to continue`
+  String get sign_in_alert_message {
+    return Intl.message(
+      'You are not logined, please login to continue',
+      name: 'sign_in_alert_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get alert_ok_button {
+    return Intl.message('OK', name: 'alert_ok_button', desc: '', args: []);
+  }
+
+  /// `Cancel`
+  String get alert_cancel_button {
+    return Intl.message(
+      'Cancel',
+      name: 'alert_cancel_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get drawer_home {
+    return Intl.message('Home', name: 'drawer_home', desc: '', args: []);
+  }
+
+  /// `Profile`
+  String get drawer_profile {
+    return Intl.message('Profile', name: 'drawer_profile', desc: '', args: []);
+  }
+
+  /// `Settings`
+  String get drawer_settings {
+    return Intl.message(
+      'Settings',
+      name: 'drawer_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get drawer_logout {
+    return Intl.message('Logout', name: 'drawer_logout', desc: '', args: []);
+  }
+
+  /// `Sign In`
+  String get drawer_sign_in {
+    return Intl.message('Sign In', name: 'drawer_sign_in', desc: '', args: []);
+  }
+
+  /// `Contact Us`
+  String get drawer_contact_us {
+    return Intl.message(
+      'Contact Us',
+      name: 'drawer_contact_us',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get drawer_language {
+    return Intl.message(
+      'Language',
+      name: 'drawer_language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sales Calendar`
+  String get drawer_sales_calender {
+    return Intl.message(
+      'Sales Calendar',
+      name: 'drawer_sales_calender',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transactions Table`
+  String get drawer_transactions_table {
+    return Intl.message(
+      'Transactions Table',
+      name: 'drawer_transactions_table',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start date of cooperation`
+  String get start_date {
+    return Intl.message(
+      'Start date of cooperation',
+      name: 'start_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preferred payment method`
+  String get payment_method {
+    return Intl.message(
+      'Preferred payment method',
+      name: 'payment_method',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipment Review`
+  String get shipment_review {
+    return Intl.message(
+      'Shipment Review',
+      name: 'shipment_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Process`
+  String get confirm_process {
+    return Intl.message(
+      'Confirm Process',
+      name: 'confirm_process',
       desc: '',
       args: [],
     );

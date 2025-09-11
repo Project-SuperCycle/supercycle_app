@@ -10,8 +10,8 @@ class ImagePicker extends StatefulWidget {
 
   const ImagePicker({
     super.key,
-    this.width = 100,
-    this.height = 100,
+    this.width = 80,
+    this.height = 80,
     this.defaultImagePath,
     this.onImageChanged,
   });
@@ -19,7 +19,9 @@ class ImagePicker extends StatefulWidget {
   @override
   State<ImagePicker> createState() => _ImagePickerState();
 
-  Future<XFile?> pickImage({required ImageSource source}) async {}
+  Future<XFile?> pickImage({required ImageSource source}) async {
+    return null;
+  }
 }
 
 class _ImagePickerState extends State<ImagePicker> {
@@ -75,9 +77,9 @@ class _ImagePickerState extends State<ImagePicker> {
         widget.onImageChanged?.call(selectedImage);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('حدث خطأ في اختيار الصورة')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('حدث خطأ في اختيار الصورة')));
     }
   }
 
@@ -120,31 +122,21 @@ class _ImagePickerState extends State<ImagePicker> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _pickImage,
-      child: Container(
+      child: SizedBox(
         width: widget.width,
         height: widget.height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.grey.shade300,
-            width: 1.5,
-          ),
-        ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: selectedImage != null
-              ? Image.file(
-            selectedImage!,
-            fit: BoxFit.cover,
-          )
+              ? Image.file(selectedImage!, fit: BoxFit.cover)
               : widget.defaultImagePath != null
               ? Image.asset(
-            widget.defaultImagePath!,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return _buildPlaceholderImage();
-            },
-          )
+                  widget.defaultImagePath!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildPlaceholderImage();
+                  },
+                )
               : _buildPlaceholderImage(),
         ),
       ),

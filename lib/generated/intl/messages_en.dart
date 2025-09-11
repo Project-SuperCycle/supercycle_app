@@ -42,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "administrator_phone": MessageLookupByLibrary.simpleMessage(
       "Administrator Phone",
     ),
+    "alert_cancel_button": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "alert_ok_button": MessageLookupByLibrary.simpleMessage("OK"),
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "already_have_an_account": MessageLookupByLibrary.simpleMessage(
       "Already have an account",
@@ -49,9 +51,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "buy_title": MessageLookupByLibrary.simpleMessage("Do you want to buy?"),
     "calculation": MessageLookupByLibrary.simpleMessage("Calculator"),
     "carton": MessageLookupByLibrary.simpleMessage("Carton"),
+    "close": MessageLookupByLibrary.simpleMessage("close"),
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "Confirm Password",
     ),
+    "confirm_process": MessageLookupByLibrary.simpleMessage("Confirm Process"),
     "contact_us": MessageLookupByLibrary.simpleMessage("Contact us"),
     "create_account": MessageLookupByLibrary.simpleMessage(
       "Create New Account",
@@ -60,11 +64,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Date of last modification",
     ),
     "date_of_receipt": MessageLookupByLibrary.simpleMessage("Date of receipt"),
+    "delete": MessageLookupByLibrary.simpleMessage("delete"),
     "delivered_shipment_hint": MessageLookupByLibrary.simpleMessage(
       "It is Delivered within the month",
     ),
     "delivered_shipments": MessageLookupByLibrary.simpleMessage(
       "Delivered shipments",
+    ),
+    "drawer_contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "drawer_home": MessageLookupByLibrary.simpleMessage("Home"),
+    "drawer_language": MessageLookupByLibrary.simpleMessage("Language"),
+    "drawer_logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "drawer_profile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "drawer_sales_calender": MessageLookupByLibrary.simpleMessage(
+      "Sales Calendar",
+    ),
+    "drawer_settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "drawer_sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
+    "drawer_transactions_table": MessageLookupByLibrary.simpleMessage(
+      "Transactions Table",
     ),
     "driver_name": MessageLookupByLibrary.simpleMessage("Driver\'s name"),
     "driver_phone": MessageLookupByLibrary.simpleMessage("Driver\'s Phone"),
@@ -133,6 +151,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
     ),
+    "payment_method": MessageLookupByLibrary.simpleMessage(
+      "Preferred payment method",
+    ),
     "pending_shipment_hint": MessageLookupByLibrary.simpleMessage(
       "It will be delivered during the month",
     ),
@@ -165,6 +186,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Shipment details",
     ),
     "shipment_number": MessageLookupByLibrary.simpleMessage("Shipment number"),
+    "shipment_review": MessageLookupByLibrary.simpleMessage("Shipment Review"),
     "shipment_schedule": MessageLookupByLibrary.simpleMessage(
       "Shipment Schedule",
     ),
@@ -184,7 +206,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "signUp_title": MessageLookupByLibrary.simpleMessage(
       "Start your journey with us",
     ),
+    "sign_in_alert_message": MessageLookupByLibrary.simpleMessage(
+      "You are not logined, please login to continue",
+    ),
+    "sign_in_alert_title": MessageLookupByLibrary.simpleMessage(
+      "Welcome to supercycle_app",
+    ),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+    "start_date": MessageLookupByLibrary.simpleMessage(
+      "Start date of cooperation",
+    ),
     "title": MessageLookupByLibrary.simpleMessage("supercycle_app"),
     "transportation_data": MessageLookupByLibrary.simpleMessage(
       "Transportation data",

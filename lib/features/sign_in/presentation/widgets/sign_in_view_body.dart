@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, BlocConsumer;
 import 'package:go_router/go_router.dart' show GoRouter;
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart'
     show CustomLoadingIndicator;
 import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
@@ -9,6 +10,7 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/auth/auth_main_header.dart';
 import 'package:supercycle_app/core/widgets/auth/auth_main_layout.dart';
 import 'package:supercycle_app/core/widgets/auth/custom_password_field.dart';
+import 'package:supercycle_app/core/widgets/auth/social_auth_row.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
 import 'package:supercycle_app/core/widgets/custom_text_form_field.dart';
 import 'package:supercycle_app/core/widgets/rounded_container.dart';
@@ -17,7 +19,6 @@ import 'package:supercycle_app/features/sign_in/data/managers/sign-in-cubit/sign
 import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart'
     show SigninCredentialsModel;
 import 'package:supercycle_app/features/sign_in/presentation/widgets/horizontal_labeled_divider.dart';
-import 'package:supercycle_app/core/widgets/auth/social_auth_row.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 
 class SignInViewBody extends StatefulWidget {
@@ -127,6 +128,18 @@ class _SignInViewBodyState extends State<SignInViewBody> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
+          Logger().i(
+            "MESSAGE : ${state.message}  | STATUS CODE : ${state.statusCode}",
+          );
+
+          if (state.statusCode == 200) {
+            GoRouter.of(context).pushReplacement(EndPoints.signUpDetailsView);
+          } else if (state.statusCode == 403) {
+            GoRouter.of(context).pushReplacement(
+              EndPoints.signUpVerifyView,
+              extra: _controllers['email']!.text,
+            );
+          }
         }
       },
       builder: (context, state) {

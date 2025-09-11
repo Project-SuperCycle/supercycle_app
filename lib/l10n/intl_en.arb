@@ -73,6 +73,8 @@
   "pending_shipments" : "Shipments to be delivered",
   "save": "Save",
   "add" : "Add",
+  "close": "close",
+  "delete": "delete",
   "notes": "Notes",
   "add_notes_title": "Add Notes",
   "add_notes_hint": "You can leave your notes here and they will be reviewed by the administration",
@@ -96,6 +98,23 @@
   "onboarding_1" : "supercycle_app Number One",
   "onboarding_2" : "supercycle_app Number One",
   "onboarding_3" : "supercycle_app Number One",
-  "privacy_policy_required": "You must agree to the privacy policy"
+  "privacy_policy_required": "You must agree to the privacy policy",
+  "sign_in_alert_title": "Welcome to supercycle_app",
+  "sign_in_alert_message": "You are not logined, please login to continue",
+  "alert_ok_button" : "OK",
+  "alert_cancel_button" : "Cancel",
+  "drawer_home": "Home",
+  "drawer_profile": "Profile",
+  "drawer_settings": "Settings",
+  "drawer_logout": "Logout",
+  "drawer_sign_in": "Sign In",
+  "drawer_contact_us": "Contact Us",
+  "drawer_language": "Language",
+  "drawer_sales_calender": "Sales Calendar",
+  "drawer_transactions_table": "Transactions Table",
+  "start_date": "Start date of cooperation",
+  "payment_method": "Preferred payment method",
+  "shipment_review": "Shipment Review",
+  "confirm_process": "Confirm Process"
 }
 

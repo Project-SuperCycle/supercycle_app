@@ -8,6 +8,12 @@ abstract class AppAssets {
   static const String defaultAvatar = 'assets/images/defaultAvatar.png';
   static const String miniature = 'assets/images/miniature.jpg';
   static const String homeIcon = 'assets/images/home.png';
+  static const String loginIcon = 'assets/images/login.png';
+  static const String logoutIcon = 'assets/images/logout.png';
+  static const String settingsIcon = 'assets/images/setting.png';
+  static const String boxPerspective = 'assets/images/boxPerspective.png';
+  static const String entityCard = 'assets/images/entityCard.png';
+  static const String photoGallery = 'assets/images/photoGallery.png';
 
   static const String googleIcon = 'assets/images/Google.png';
   static const String facebookIcon = 'assets/images/Facebook.png';

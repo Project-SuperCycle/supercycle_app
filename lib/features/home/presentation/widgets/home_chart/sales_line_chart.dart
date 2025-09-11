@@ -87,7 +87,8 @@ class _LineChart extends StatelessWidget {
     lineBarsData: [lineChartBarData],
     minX: 0,
     maxX: (priceData.length - 1).toDouble(),
-    maxY: _getMaxPrice() * 1.1, // Add 10% padding
+    maxY: _getMaxPrice() * 1.1,
+    // Add 10% padding
     minY: _getMinPrice() * 0.9,
   );
 
@@ -252,7 +253,6 @@ class SalesLineChartState extends State<SalesLineChart> {
   @override
   void initState() {
     super.initState();
-    _loadDoshTypes();
   }
 
   void _loadTypeHistory({String? typeId}) {
@@ -372,7 +372,7 @@ class SalesLineChartState extends State<SalesLineChart> {
           return Container(
             height: 50,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.withOpacity(0.3)),
+              border: Border.all(color: Colors.grey.withAlpha(100)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Center(
@@ -397,36 +397,9 @@ class SalesLineChartState extends State<SalesLineChart> {
           );
         }
 
-        if (state is FetchTypesDataFailure) {
-          return Container(
-            height: 50,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.red.withOpacity(0.3)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      'Failed to load types',
-                      style: TextStyle(color: Colors.red, fontSize: 14),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.refresh, color: Colors.red),
-                  onPressed: _loadDoshTypes,
-                  tooltip: 'Retry',
-                ),
-              ],
-            ),
-          );
-        }
-
         // Fallback dropdown with default options
         return CustomDropdown(
-          options: const ["Papers", "Cartons"],
+          options: const ["ورق", "كرتون"],
           onChanged: _onDropdownChanged,
           hintText: S.of(context).select_type,
           initialValue: selectedTypeName,

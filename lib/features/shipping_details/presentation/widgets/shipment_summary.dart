@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
 
 class ShipmentSummary extends StatelessWidget {
   final List<Product> products;
 
-  const ShipmentSummary({
-    super.key,
-    required this.products,
-  });
+  const ShipmentSummary({super.key, required this.products});
 
   @override
   Widget build(BuildContext context) {
@@ -41,66 +40,65 @@ class ShipmentSummary extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.calculate,
+                Icons.calculate_rounded,
                 color: Colors.green.shade600,
-                size: 24,
+                size: 25,
               ),
               const SizedBox(width: 8),
               Text(
                 'إجمالي الشحنة',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green.shade700,
-                ),
+                style: AppStyles.styleSemiBold14(
+                  context,
+                ).copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'إجمالي الكمية',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green.shade600,
-                      fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'إجمالي الكمية',
+                      style: AppStyles.styleSemiBold14(
+                        context,
+                      ).copyWith(color: Colors.green.shade600),
                     ),
-                  ),
-                  Text(
-                    '${totalQuantity.toString()} كجم',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                    SizedBox(height: 10),
+                    Text(
+                      '${totalQuantity.toString()} كجم',
+                      style: AppStyles.styleSemiBold14(
+                        context,
+                      ).copyWith(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'إجمالي القيمة التقديرية',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green.shade600,
-                      fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'إجمالي القيمة التقديرية',
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(color: Colors.green.shade600),
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${totalValue.toStringAsFixed(0)} جنيه',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                    SizedBox(height: 10),
+                    Text(
+                      '${totalValue.toStringAsFixed(0)} جنيه',
+                      style: AppStyles.styleSemiBold14(
+                        context,
+                      ).copyWith(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

@@ -12,6 +12,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.bottomMargin = 12,
+    this.keyboardType = TextInputType.text,
   });
 
   final String labelText;
@@ -21,15 +22,18 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? onChanged;
   final double bottomMargin;
   final bool enabled;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: bottomMargin),
       child: TextFormField(
+        style: AppStyles.styleRegular14(context),
         enabled: enabled,
+        keyboardType: keyboardType,
         textInputAction: TextInputAction.next,
-        autofocus: true,
+        autofocus: false,
         focusNode: FocusNode(),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         minLines: 1,
