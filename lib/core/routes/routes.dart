@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' hide CustomTransitionPage;
 import 'package:supercycle_app/core/helpers/page_transition.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
 import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
@@ -12,8 +13,8 @@ import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.dart';
-import 'package:supercycle_app/features/splash/views/splash_view.dart'
-    show SplashView;
+import 'package:supercycle_app/features/splash/views/splash_view.dart';
+import 'package:supercycle_app/features/calendar/presentation/view/shipments_calendar_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -267,6 +268,14 @@ class AppRouter {
           },
           transitionDuration: const Duration(milliseconds: 400),
         ),
+      ),
+      GoRoute(
+        path: EndPoints.shipmentsCalendarView,
+        builder: (context, state) => const ShipmentsCalendarView(),
+      ),
+      GoRoute(
+        path: EndPoints.contactUsView,
+        builder: (context, state) => const ContactUsView(),
       ),
     ],
 
