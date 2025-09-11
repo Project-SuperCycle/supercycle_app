@@ -73,6 +73,8 @@
   "pending_shipments" : "Shipments to be delivered",
   "save": "Save",
   "add" : "Add",
+  "close": "close",
+  "delete": "delete",
   "notes": "Notes",
   "add_notes_title": "Add Notes",
   "add_notes_hint": "You can leave your notes here and they will be reviewed by the administration",
@@ -109,6 +111,10 @@
   "drawer_contact_us": "Contact Us",
   "drawer_language": "Language",
   "drawer_sales_calender": "Sales Calendar",
-  "drawer_transactions_table": "Transactions Table"
+  "drawer_transactions_table": "Transactions Table",
+  "start_date": "Start date of cooperation",
+  "payment_method": "Preferred payment method",
+  "shipment_review": "Shipment Review",
+  "confirm_process": "Confirm Process"
 }
 

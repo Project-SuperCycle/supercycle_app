@@ -9,12 +9,13 @@ class CustomButton extends StatelessWidget {
     this.textColor,
     required this.onPress,
     this.enabled = true,
-    required String title,
+    required this.title,
   });
 
   final VoidCallback? onPress;
   final Color? backgroundColor, textColor;
   final bool enabled;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +46,11 @@ class CustomButton extends StatelessWidget {
           backgroundColor: Colors.transparent,
           disabledBackgroundColor: Colors.transparent,
         ),
-        onPressed: enabled ? onPress : null, child: null,
-
+        onPressed: enabled ? onPress : null,
+        child: Text(
+          title,
+          style: AppStyles.styleBold16(context).copyWith(color: Colors.white),
+        ),
       ),
     );
   }

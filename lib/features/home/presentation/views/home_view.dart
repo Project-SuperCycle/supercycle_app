@@ -61,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
           GestureDetector(
             child: SvgPicture.asset(AppAssets.boxIcon, fit: BoxFit.cover),
             onTap: () {
-              GoRouter.of(context).pushReplacement(EndPoints.salesProcessView);
+              GoRouter.of(context).push(EndPoints.salesProcessView);
             },
           ),
           Image.asset(AppAssets.homeIcon, height: 30, fit: BoxFit.cover),

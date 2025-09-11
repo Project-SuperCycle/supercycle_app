@@ -12,8 +12,8 @@ class UserInfoListTile extends StatefulWidget {
 }
 
 class _UserInfoListTileState extends State<UserInfoListTile> {
-  late final String managerName;
-  late final String businessType;
+  late String managerName;
+  late String businessType;
 
   @override
   void initState() {

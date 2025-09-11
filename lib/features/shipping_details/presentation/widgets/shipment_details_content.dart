@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
 import 'product_widgets.dart';
 import 'shipment_summary.dart';
@@ -6,10 +7,7 @@ import 'shipment_summary.dart';
 class ShipmentDetailsContent extends StatelessWidget {
   final List<Product> products;
 
-  const ShipmentDetailsContent({
-    super.key,
-    required this.products,
-  });
+  const ShipmentDetailsContent({super.key, required this.products});
 
   @override
   Widget build(BuildContext context) {
@@ -25,39 +23,28 @@ class ShipmentDetailsContent extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                Icons.inventory_2,
-                color: Colors.blue.shade600,
-                size: 20,
-              ),
+              Icon(Icons.inventory_2, color: Colors.blue.shade600, size: 20),
               const SizedBox(width: 8),
               Text(
                 'منتجات الشحنة (${products.length} أصناف)',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade700,
-                ),
+                style: AppStyles.styleSemiBold14(
+                  context,
+                ).copyWith(color: Colors.blue.shade700),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
 
         ...products.asMap().entries.map((entry) {
           int index = entry.key;
           Product product = entry.value;
           return ProductCard(product: product, index: index + 1);
-        }).toList(),
-
-        const SizedBox(height: 16),
+        }),
         Divider(color: Colors.grey.shade300),
         const SizedBox(height: 16),
-
         ShipmentSummary(products: products),
-
         const SizedBox(height: 16),
-        Divider(color: Colors.grey.shade300),
       ],
     );
   }

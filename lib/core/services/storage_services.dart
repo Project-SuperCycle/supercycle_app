@@ -5,6 +5,7 @@ import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.d
 abstract class StorageServices {
   /// Create storage
   static const storage = FlutterSecureStorage();
+
   /// Store any type of data by converting it to JSON
   static Future<void> storeData(String key, dynamic value) async {
     try {
@@ -17,10 +18,16 @@ abstract class StorageServices {
         jsonString = jsonEncode({'type': 'string', 'data': value});
       } else if (value is num || value is bool) {
         // Store numbers and booleans with type indicator
-        jsonString = jsonEncode({'type': value.runtimeType.toString(), 'data': value});
+        jsonString = jsonEncode({
+          'type': value.runtimeType.toString(),
+          'data': value,
+        });
       } else if (value is Map || value is List) {
         // Store collections with type indicator
-        jsonString = jsonEncode({'type': value.runtimeType.toString(), 'data': value});
+        jsonString = jsonEncode({
+          'type': value.runtimeType.toString(),
+          'data': value,
+        });
       } else {
         // Try to serialize custom objects
         jsonString = jsonEncode({'type': 'object', 'data': value});
@@ -96,27 +103,28 @@ abstract class StorageServices {
   }
 
   /// GET USER DATA
-   static Future<LoginedUserModel?> getUserData() async {
-     var data =  await StorageServices.readData<Map<String, dynamic>>('user');
-     if(data == null){
-       return null;
-     }
+  static Future<LoginedUserModel?> getUserData() async {
+    var data = await StorageServices.readData<Map<String, dynamic>>('user');
+    if (data == null) {
+      return null;
+    }
 
-     LoginedUserModel user = LoginedUserModel(
-       bussinessName: data['bussinessName'],
-       rawBusinessType: data['rawBusinessType'],
-       bussinessAdress: data['bussinessAdress'],
-       doshMangerName: data['doshMangerName'],
-       doshMangerPhone: data['doshMangerPhone'],
-       email: data['email'],
-     );
-     return user;
-   }
+    LoginedUserModel user = LoginedUserModel(
+      bussinessName: data['bussinessName'],
+      rawBusinessType: data['rawBusinessType'],
+      bussinessAdress: data['bussinessAdress'],
+      doshMangerName: data['doshMangerName'],
+      doshMangerPhone: data['doshMangerPhone'],
+      email: data['email'],
+      role: data['role'],
+    );
+    return user;
+  }
 
   /// GET USER TOKEN
   static Future<String?> getUserToken() async {
-    var token =  await StorageServices.readData<String>('token');
-    if(token == null){
+    var token = await StorageServices.readData<String>('token');
+    if (token == null) {
       return null;
     }
 

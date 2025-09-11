@@ -51,9 +51,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "buy_title": MessageLookupByLibrary.simpleMessage("Do you want to buy?"),
     "calculation": MessageLookupByLibrary.simpleMessage("Calculator"),
     "carton": MessageLookupByLibrary.simpleMessage("Carton"),
+    "close": MessageLookupByLibrary.simpleMessage("close"),
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "Confirm Password",
     ),
+    "confirm_process": MessageLookupByLibrary.simpleMessage("Confirm Process"),
     "contact_us": MessageLookupByLibrary.simpleMessage("Contact us"),
     "create_account": MessageLookupByLibrary.simpleMessage(
       "Create New Account",
@@ -62,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Date of last modification",
     ),
     "date_of_receipt": MessageLookupByLibrary.simpleMessage("Date of receipt"),
+    "delete": MessageLookupByLibrary.simpleMessage("delete"),
     "delivered_shipment_hint": MessageLookupByLibrary.simpleMessage(
       "It is Delivered within the month",
     ),
@@ -148,6 +151,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
     ),
+    "payment_method": MessageLookupByLibrary.simpleMessage(
+      "Preferred payment method",
+    ),
     "pending_shipment_hint": MessageLookupByLibrary.simpleMessage(
       "It will be delivered during the month",
     ),
@@ -180,6 +186,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Shipment details",
     ),
     "shipment_number": MessageLookupByLibrary.simpleMessage("Shipment number"),
+    "shipment_review": MessageLookupByLibrary.simpleMessage("Shipment Review"),
     "shipment_schedule": MessageLookupByLibrary.simpleMessage(
       "Shipment Schedule",
     ),
@@ -206,6 +213,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome to supercycle_app",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+    "start_date": MessageLookupByLibrary.simpleMessage(
+      "Start date of cooperation",
+    ),
     "title": MessageLookupByLibrary.simpleMessage("supercycle_app"),
     "transportation_data": MessageLookupByLibrary.simpleMessage(
       "Transportation data",

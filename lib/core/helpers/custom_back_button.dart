@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomBackButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color color;
   final double size;
   final EdgeInsetsGeometry? padding;
 
   const CustomBackButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     this.color = Colors.black,
     this.size = 24.0,
     this.padding,
@@ -17,12 +18,12 @@ class CustomBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed ?? () => Navigator.of(context).pop(),
+      onTap: onPressed ?? () => GoRouter.of(context).pop(),
       child: Container(
         padding: padding ?? const EdgeInsets.all(8.0),
         child: Icon(
           textDirection: TextDirection.ltr,
-          Icons.arrow_back_ios_new,
+          Icons.arrow_back_ios_new_rounded,
           color: color,
           size: size,
         ),

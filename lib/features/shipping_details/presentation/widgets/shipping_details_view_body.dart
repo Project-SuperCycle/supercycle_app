@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart' show GoRouter;
+import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
-import 'package:supercycle_app/core/helpers/logo.dart';
-import '../widgets/settings_icon.dart';
-import '../widgets/shipment_header.dart';
-import '../../../../core/helpers/notes_content.dart';
-import '../../../../core/helpers/progress_widgets.dart';
-import '../../../../core/helpers/expandable_section.dart';
-import '../widgets/shipment_details_content.dart';
-import '../../../../core/helpers/client_data_content.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart' show CustomBackButton;
+import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/widgets/custom_button.dart';
+import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
+import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
+import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
+import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
+import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
 import 'package:supercycle_app/core/services/data_service.dart';
+import 'package:supercycle_app/features/shipping_details/presentation/widgets/settings_icon.dart';
+import 'package:supercycle_app/features/shipping_details/presentation/widgets/shipment_details_content.dart';
+import 'package:supercycle_app/features/shipping_details/presentation/widgets/shipment_header.dart';
+import 'package:supercycle_app/generated/l10n.dart';
 
 class ShippingDetalisViewBody extends StatefulWidget {
   const ShippingDetalisViewBody({super.key});
 
   @override
-  State<ShippingDetalisViewBody> createState() => _ShippingDetalisViewBodyState();
+  State<ShippingDetalisViewBody> createState() =>
+      _ShippingDetalisViewBodyState();
 }
 
 class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
-
   late List<Product> shipmentProducts;
   List<String> notes = [
     'تم فحص المنتجات والتأكد من جودتها',
@@ -38,6 +41,8 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
     shipmentProducts = DataService.getSampleProducts();
   }
 
+  void _confirmProcess() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,36 +50,37 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(gradient: kGradientBackground),
         child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              const Logo(),
-
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: CustomScrollView(
+            slivers: [
+              // Header Section (Fixed)
+              SliverToBoxAdapter(
+                child: Column(
                   children: [
-                    Icon(
-                      textDirection: TextDirection.ltr,
-                      Icons.info_outline,
-                      color: Colors.black,
-                    ),
-                     CustomBackButton(
-                      color: Colors.black,
-                      size: 24,
-                      onPressed: () {
-                        GoRouter.of(context).pushReplacement(EndPoints.salesProcessView);
-                      },
+                    const ShipmentLogo(),
+                    const SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            textDirection: TextDirection.ltr,
+                            Icons.info_outline,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                          CustomBackButton(color: Colors.white, size: 25),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
 
-              Expanded(
+              // White Container Content (Scrollable)
+              SliverFillRemaining(
                 child: Container(
-                  margin: const EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 20),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -82,6 +88,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                       topRight: Radius.circular(50),
                     ),
                   ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.all(20),
@@ -92,36 +99,49 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                           padding: const EdgeInsets.all(16.0),
                           child: const SettingsIcon(),
                         ),
-
                         const ShipmentHeader(),
-                        const SizedBox(height: 20),
-
+                        const SizedBox(height: 16),
                         const ProgressBar(completedSteps: 1),
-                        const SizedBox(height: 30),
-
-                        ExpandableSection(
-                          title: 'تفاصيل الشحنة',
-                          iconPath: 'assets/images/Box-Perspective2.png',
-                          isExpanded: isShipmentDetailsExpanded,
-                          maxHeight: 220,
-                          onTap: _toggleShipmentDetails,
-                          content: ShipmentDetailsContent(products: shipmentProducts),
+                        const SizedBox(height: 20),
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ExpandableSection(
+                            title: 'تفاصيل الشحنة',
+                            iconPath: AppAssets.boxPerspective,
+                            isExpanded: isShipmentDetailsExpanded,
+                            maxHeight: 320,
+                            onTap: _toggleShipmentDetails,
+                            content: ShipmentDetailsContent(
+                              products: shipmentProducts,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 20),
-
-                        ExpandableSection(
-                          title: 'بيانات جهة التعامل',
-                          iconPath: 'assets/images/Box-Perspective.png',
-                          isExpanded: isClientDataExpanded,
-                          maxHeight: 220,
-                          onTap: _toggleClientData,
-                          content: const ClientDataContent(),
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ExpandableSection(
+                            title: 'بيانات جهة التعامل',
+                            iconPath: AppAssets.entityCard,
+                            isExpanded: isClientDataExpanded,
+                            maxHeight: 320,
+                            onTap: _toggleClientData,
+                            content: const ClientDataContent(),
+                          ),
                         ),
-
                         const SizedBox(height: 30),
-                        NotesContent(notes: notes),
-
-                        const SizedBox(height: 50),
+                        NotesContent(notes: notes, shipmentID: ""),
+                        const SizedBox(height: 20),
+                        CustomButton(
+                          onPress: _confirmProcess,
+                          title: S.of(context).confirm_process,
+                        ),
+                        const SizedBox(height: 30),
                       ],
                     ),
                   ),
@@ -133,6 +153,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
       ),
     );
   }
+
   void _toggleShipmentDetails() {
     setState(() {
       isShipmentDetailsExpanded = !isShipmentDetailsExpanded;
