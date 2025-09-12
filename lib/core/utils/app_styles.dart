@@ -14,7 +14,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w400,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -25,7 +25,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -36,7 +36,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -48,7 +48,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w400,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -59,7 +59,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -70,7 +70,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -82,7 +82,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w400,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -93,7 +93,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -104,7 +104,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -115,7 +115,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w700,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -127,7 +127,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w400,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -138,7 +138,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -149,7 +149,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -161,7 +161,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w400,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -172,7 +172,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -183,7 +183,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -195,7 +195,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w400,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -206,7 +206,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -217,7 +217,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -229,7 +229,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w400,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -240,7 +240,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w500,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -251,7 +251,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }
@@ -262,7 +262,7 @@ abstract class AppStyles {
       fontFamily: fontFamily,
       fontWeight: FontWeight.w700,
       height: textHeight,
-      color: AppColors.primaryTextColor,
+      color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
     );
   }

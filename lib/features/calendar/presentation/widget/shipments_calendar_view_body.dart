@@ -1,36 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart';
-import 'package:supercycle_app/core/helpers/logo.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/calendar_grid.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/calendar_header.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipment_details.dart';
+import 'package:supercycle_app/core/widgets/shipment/back_and_info_bar.dart';
+import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
+import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calendar_grid.dart';
+import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calendar_header.dart';
+import 'package:supercycle_app/features/calendar/presentation/widget/shipment_calendar_details.dart';
+import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calender_title.dart';
 
-class ShipmentsCalendarViewBody extends StatelessWidget {
-  const ShipmentsCalendarViewBody({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const ShipmentsCalendarPage();
-  }
-}
-
-class ShipmentsCalendarPage extends StatefulWidget {
-  const ShipmentsCalendarPage({Key? key}) : super(key: key);
+class ShipmentsCalendarViewBody extends StatefulWidget {
+  const ShipmentsCalendarViewBody({super.key});
 
   @override
-  _ShipmentsCalendarPageState createState() => _ShipmentsCalendarPageState();
+  ShipmentsCalendarViewBodyState createState() =>
+      ShipmentsCalendarViewBodyState();
 }
 
-class _ShipmentsCalendarPageState extends State<ShipmentsCalendarPage> {
+class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
   DateTime _currentDate = DateTime.now();
   DateTime? _selectedDate;
 
-  static const String _imageUrl = "https://moe-ye.net/wp-content/uploads/2021/08/IMG-20210808-WA0001.jpg";
+  static const String _imageUrl =
+      "https://moe-ye.net/wp-content/uploads/2021/08/IMG-20210808-WA0001.jpg";
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +32,16 @@ class _ShipmentsCalendarPageState extends State<ShipmentsCalendarPage> {
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 10),
-              const Logo(),
-              const SizedBox(height: 20),
-              _buildTopBar(context),
-              Expanded(
-                child: _buildMainContent(),
+              // Fixed header section
+              Column(
+                children: [
+                  const ShipmentLogo(),
+                  const SizedBox(height: 20),
+                  BackAndInfoBar(),
+                ],
               ),
+              // Scrollable main content
+              Expanded(child: _buildMainContent()),
             ],
           ),
         ),
@@ -55,28 +49,9 @@ class _ShipmentsCalendarPageState extends State<ShipmentsCalendarPage> {
     );
   }
 
-  Widget _buildTopBar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Icon(Icons.info_outline, color: Colors.black),
-          CustomBackButton(
-            color: Colors.black,
-            size: 24,
-            onPressed: () {
-              GoRouter.of(context).pushReplacement(EndPoints.homeView);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildMainContent() {
     return Container(
-      margin: const EdgeInsets.only(top: 40),
+      margin: const EdgeInsets.only(top: 20),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -84,60 +59,42 @@ class _ShipmentsCalendarPageState extends State<ShipmentsCalendarPage> {
           topRight: Radius.circular(50),
         ),
       ),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(20),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(50),
+          topRight: Radius.circular(50),
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(32), // Combined padding
           child: Column(
             children: [
-              _buildTitle(),
-              const SizedBox(height: 16),
-              CalendarHeader(
+              ShipmentsCalenderTitle(),
+              const SizedBox(height: 20),
+              ShipmentsCalendarHeader(
                 currentDate: _currentDate,
                 onPreviousMonth: _navigateToPreviousMonth,
                 onNextMonth: _navigateToNextMonth,
               ),
-              const SizedBox(height: 8),
-              SizedBox(
-                height: 300,
-                child: CalendarGrid(
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                height: 280,
+                child: ShipmentsCalendarGrid(
                   currentDate: _currentDate,
                   selectedDate: _selectedDate,
                   onDateSelected: _onDateSelected,
                 ),
               ),
               if (_selectedDate != null)
-                ShipmentDetails(
+                ShipmentCalendarDetails(
                   selectedDate: _selectedDate!,
                   imageUrl: _imageUrl,
-
                 ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTitle() {
-    return Column(
-      children: [
-        const Text(
-          "جدول متابعه الشحنات",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w900,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          'تابع مواعيد تسليم الشحنات وإجراءات التسليم',
-          style: TextStyle(color: Colors.grey[700], fontSize: 16),
-          textAlign: TextAlign.center,
-        ),
-      ],
     );
   }
 

@@ -12,12 +12,12 @@ class FormFields extends StatelessWidget {
   final Function(String?) onTopicChanged;
 
   const FormFields({
-    Key? key,
+    super.key,
     required this.formController,
     required this.isArabic,
     required this.isLoading,
     required this.onTopicChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +55,6 @@ class FormFields extends StatelessWidget {
           enabled: !isLoading,
         ),
         const SizedBox(height: 20),
-
-        const SizedBox(height: 20),
         CustomTextField(
           label: ContactStrings.get('message', isArabic),
           hint: ContactStrings.get('messageHint', isArabic),
@@ -74,7 +72,6 @@ class FormFields extends StatelessWidget {
             enabled: !isLoading,
           ),
         ),
-
       ],
     );
   }

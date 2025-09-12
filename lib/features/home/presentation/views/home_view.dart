@@ -66,11 +66,18 @@ class _HomeViewState extends State<HomeView> {
           ),
           Image.asset(AppAssets.homeIcon, height: 30, fit: BoxFit.cover),
           GestureDetector(
-              onTap: () {
-                GoRouter.of(context).pushReplacement(EndPoints.shipmentsCalendarView);
-              },
-              child: SvgPicture.asset(AppAssets.calendarIcon, fit: BoxFit.cover)),
-          SvgPicture.asset(AppAssets.chatIcon, fit: BoxFit.cover),
+            onTap: () {
+              GoRouter.of(context).push(EndPoints.shipmentsCalendarView);
+            },
+            child: SvgPicture.asset(AppAssets.calendarIcon, fit: BoxFit.cover),
+          ),
+
+          GestureDetector(
+            onTap: () {
+              GoRouter.of(context).push(EndPoints.contactUsView);
+            },
+            child: SvgPicture.asset(AppAssets.chatIcon, fit: BoxFit.cover),
+          ),
         ],
         onTap: (index) {
           setState(() {

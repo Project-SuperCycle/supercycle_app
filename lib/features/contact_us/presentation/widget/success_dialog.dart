@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/contact_strings.dart';
 
 class SuccessDialog extends StatelessWidget {
   final bool isArabic;
 
-  const SuccessDialog({
-    Key? key,
-    required this.isArabic,
-  }) : super(key: key);
+  const SuccessDialog({super.key, required this.isArabic});
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +54,15 @@ class SuccessDialog extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF3BC577),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               ContactStrings.get('ok', isArabic),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: AppStyles.styleSemiBold16(context),
             ),
           ),
         ),

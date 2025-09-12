@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class ContactInfoChip extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const ContactInfoChip({
-    Key? key,
-    required this.icon,
-    required this.text,
-  }) : super(key: key);
+  const ContactInfoChip({super.key, required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +20,14 @@ class ContactInfoChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: const Color(0xFF3BC577), size: 16),
-          const SizedBox(width: 6),
+          Icon(icon, color: AppColors.primaryColor, size: 16),
+          const SizedBox(width: 8),
           Flexible(
             child: Text(
               text,
-              style: TextStyle(
-                color: Colors.grey.shade700,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
+              style: AppStyles.styleSemiBold14(
+                context,
+              ).copyWith(color: AppColors.subTextColor),
               overflow: TextOverflow.ellipsis,
             ),
           ),

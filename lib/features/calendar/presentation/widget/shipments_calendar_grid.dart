@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/calendar_day.dart';
+import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calendar_day.dart';
 
-class CalendarGrid extends StatelessWidget {
+class ShipmentsCalendarGrid extends StatelessWidget {
   final DateTime currentDate;
   final DateTime? selectedDate;
   final Function(DateTime) onDateSelected;
 
-  const CalendarGrid({
+  const ShipmentsCalendarGrid({
     super.key,
     required this.currentDate,
     this.selectedDate,
@@ -26,11 +26,11 @@ class CalendarGrid extends StatelessWidget {
     for (int day = 1; day <= calendarInfo.daysInMonth; day++) {
       final date = DateTime(currentDate.year, currentDate.month, day);
       final isToday = CalendarUtils.isSameDate(date, DateTime.now());
-      final isSelected = selectedDate != null &&
-          CalendarUtils.isSameDate(date, selectedDate!);
+      final isSelected =
+          selectedDate != null && CalendarUtils.isSameDate(date, selectedDate!);
 
       dayWidgets.add(
-        CalendarDay(
+        ShipmentsCalendarDay(
           date: date,
           isToday: isToday,
           isSelected: isSelected,
@@ -41,9 +41,9 @@ class CalendarGrid extends StatelessWidget {
 
     return GridView.count(
       crossAxisCount: 7,
-      children: dayWidgets,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
+      children: dayWidgets,
     );
   }
 }

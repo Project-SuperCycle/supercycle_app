@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/contact_strings.dart';
 
 class ContactAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -8,30 +10,28 @@ class ContactAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onBack;
 
   const ContactAppBar({
-    Key? key,
+    super.key,
     required this.isArabic,
     required this.isLoading,
     required this.onLanguageToggle,
     required this.onBack,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
-      backgroundColor: const Color(0xFF3BC577),
+      backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
+        icon: const Icon(Icons.arrow_back_ios_new_rounded),
         onPressed: isLoading ? null : onBack,
       ),
       title: Text(
         ContactStrings.get('title', isArabic),
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Colors.white,
-        ),
+        style: AppStyles.styleSemiBold20(
+          context,
+        ).copyWith(fontWeight: FontWeight.bold, color: Colors.white),
       ),
       centerTitle: true,
       actions: [

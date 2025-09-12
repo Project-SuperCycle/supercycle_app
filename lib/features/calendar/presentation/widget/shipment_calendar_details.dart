@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/services/shipment_data_service.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipment_card.dart';
+import 'package:supercycle_app/features/calendar/presentation/widget/shipment_calendar_card.dart';
 
-
-class ShipmentDetails extends StatelessWidget {
+class ShipmentCalendarDetails extends StatelessWidget {
   final DateTime selectedDate;
   final String? imageUrl;
+  final bool isDelivered;
 
-  const ShipmentDetails({
-    Key? key,
+  const ShipmentCalendarDetails({
+    super.key,
     required this.selectedDate,
     this.imageUrl,
-  }) : super(key: key);
+    this.isDelivered = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,35 +23,52 @@ class ShipmentDetails extends StatelessWidget {
     final shipments = ShipmentDataService.getShipmentsForDate(dateKey);
 
     return Container(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.green[50],
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.green[200]!),
+        border: Border.all(
+          color: isDelivered ? Colors.green[300]! : Colors.red[300]!,
+          width: 1.5,
+        ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            'الشحنات ليوم ${CalendarUtils.formatFullDate(selectedDate)}',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.green[800],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              isDelivered ? 'شحنات تم تسليمها' : 'شحنات سيتم تسليمها',
+              style: AppStyles.styleSemiBold20(context),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              CalendarUtils.formatFullDate(selectedDate),
+              style: AppStyles.styleMedium18(
+                context,
+              ).copyWith(color: AppColors.subTextColor),
+            ),
+          ),
+
+          const SizedBox(height: 16),
           if (shipments == null || shipments.isEmpty)
             Center(
               child: Text(
                 'لا توجد شحنات لهذا اليوم',
-                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                style: AppStyles.styleMedium16(
+                  context,
+                ).copyWith(color: AppColors.subTextColor),
               ),
             )
           else
-            ...shipments.map((shipment) => ShipmentCard(shipment: shipment)),
-          const SizedBox(height: 12),
+            ...shipments.map(
+              (shipment) => ShipmentCalendarCard(shipment: shipment),
+            ),
+          const SizedBox(height: 16),
           if (imageUrl != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(12),

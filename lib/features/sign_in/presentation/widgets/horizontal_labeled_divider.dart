@@ -28,7 +28,7 @@ class HorizontalLabeledDivider extends StatelessWidget {
               S.of(context).or_register_via,
               style: AppStyles.styleMedium16(
                 context,
-              ).copyWith(color: AppColors.primaryTextColor),
+              ).copyWith(color: AppColors.mainTextColor),
             ),
           ),
           Expanded(child: Container(height: 1, color: AppColors.primaryColor)),

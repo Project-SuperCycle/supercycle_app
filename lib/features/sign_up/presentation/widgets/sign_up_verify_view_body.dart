@@ -94,7 +94,7 @@ class _SignUpVerifyViewBodyState extends State<SignUpVerifyViewBody> {
                         widget.credential,
                         style: AppStyles.styleMedium18(
                           context,
-                        ).copyWith(color: AppColors.secondaryTextColor),
+                        ).copyWith(color: AppColors.subTextColor),
                       ),
                       SizedBox(height: 30),
                       FilledRoundedPinPut(controller: controller),

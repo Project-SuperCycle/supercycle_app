@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 
-class CalendarHeader extends StatelessWidget {
+class ShipmentsCalendarHeader extends StatelessWidget {
   final DateTime currentDate;
   final VoidCallback onPreviousMonth;
   final VoidCallback onNextMonth;
 
-  const CalendarHeader({
-    Key? key,
+  const ShipmentsCalendarHeader({
+    super.key,
     required this.currentDate,
     required this.onPreviousMonth,
     required this.onNextMonth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,39 +26,44 @@ class CalendarHeader extends StatelessWidget {
           children: [
             IconButton(
               onPressed: onPreviousMonth,
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.green),
+              icon: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: AppColors.greenColor,
+              ),
             ),
             Text(
               monthYear,
-              style: TextStyle(
-                fontSize: 20,
+              style: AppStyles.styleSemiBold20(context).copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+                color: AppColors.greenColor,
               ),
             ),
             IconButton(
               onPressed: onNextMonth,
-              icon: const Icon(Icons.arrow_forward_ios, color: Colors.green),
+              icon: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.greenColor,
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: CalendarUtils.arabicDayNames
               .map(
-                (day) => Expanded(
-              child: Center(
-                child: Text(
-                  day,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
+                (day) => FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    day,
+                    style: AppStyles.styleSemiBold12(context).copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.greenColor,
+                    ),
                   ),
                 ),
-              ),
-            ),
-          )
+              )
               .toList(),
         ),
       ],
