@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/services/dosh_types_manager.dart';
+import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 
 class ShipmentSummary extends StatelessWidget {
   final List<DoshItemModel> items;
 
+  num _getPrice(String name) {
+    try {
+      var price = getIt<DoshTypesManager>().typesList
+          .firstWhere((type) => type.name == name)
+          .price;
+      return price;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   const ShipmentSummary({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
-    int totalQuantity = 0;
-    double totalValue = 0;
+    num totalQuantity = 0;
+    num totalValue = 0;
 
     for (var product in items) {
-      String qtyStr = product.quantity.toString().replaceAll(
-        RegExp(r'[^0-9]'),
-        '',
-      );
-      // String priceStr = product.averagePrice.replaceAll(RegExp(r'[^0-9]'), '');
-      String priceStr = "20000";
-
-      int qty = int.tryParse(qtyStr) ?? 0;
-      double price = double.tryParse(priceStr) ?? 0;
+      num qty = product.quantity ?? 0;
+      num price = _getPrice(product.name);
 
       totalQuantity += qty;
       totalValue += qty * price;
