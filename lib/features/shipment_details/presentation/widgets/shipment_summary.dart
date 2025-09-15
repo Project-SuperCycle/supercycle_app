@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 
 class ShipmentSummary extends StatelessWidget {
-  final List<Product> products;
+  final List<DoshItemModel> items;
 
-  const ShipmentSummary({super.key, required this.products});
+  const ShipmentSummary({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
     int totalQuantity = 0;
     double totalValue = 0;
 
-    for (var product in products) {
-      String qtyStr = product.quantity.replaceAll(RegExp(r'[^0-9]'), '');
-      String priceStr = product.averagePrice.replaceAll(RegExp(r'[^0-9]'), '');
+    for (var product in items) {
+      String qtyStr = product.quantity.toString().replaceAll(
+        RegExp(r'[^0-9]'),
+        '',
+      );
+      // String priceStr = product.averagePrice.replaceAll(RegExp(r'[^0-9]'), '');
+      String priceStr = "20000";
 
       int qty = int.tryParse(qtyStr) ?? 0;
       double price = double.tryParse(priceStr) ?? 0;

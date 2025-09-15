@@ -5,11 +5,13 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 class NotesContent extends StatefulWidget {
   final List<String> notes;
   final String shipmentID;
+  final Function(List<String>) onNotesChanged;
 
   const NotesContent({
     super.key,
     required this.notes,
     required this.shipmentID,
+    required this.onNotesChanged,
   });
 
   @override
@@ -72,15 +74,19 @@ class _NotesContentState extends State<NotesContent> {
                     isEditing = true;
                   });
                 },
-                onChanged: (value) {},
+                onChanged: (value) {
+                  widget.onNotesChanged(
+                    value.split('\n').where((note) => note.isNotEmpty).toList(),
+                  );
+                },
               ),
             ),
 
             // Header overlay
             Positioned(
-              top: 16,
-              left: 10,
-              right: 16,
+              top: 10,
+              left: 15,
+              right: 20,
               child: Row(
                 textDirection: TextDirection.ltr,
                 children: [
@@ -94,26 +100,11 @@ class _NotesContentState extends State<NotesContent> {
                     onPressed: _editNotes,
                   ),
                   const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(3),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ملاحظات :',
-                          style: AppStyles.styleSemiBold14(
-                            context,
-                          ).copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          '----/--/----   تعديل مقبول',
-                          style: AppStyles.styleSemiBold12(
-                            context,
-                          ).copyWith(color: AppColors.primaryColor),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    'ملاحظات :',
+                    style: AppStyles.styleSemiBold16(
+                      context,
+                    ).copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
@@ -10,35 +8,30 @@ import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
-import 'package:supercycle_app/core/services/data_service.dart';
-import 'package:supercycle_app/features/shipping_details/presentation/widgets/settings_icon.dart';
-import 'package:supercycle_app/features/shipping_details/presentation/widgets/shipment_details_content.dart';
-import 'package:supercycle_app/features/shipping_details/presentation/widgets/shipment_header.dart';
+import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/settings_icon.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_content.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_header.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 
-class ShippingDetalisViewBody extends StatefulWidget {
-  const ShippingDetalisViewBody({super.key});
+class ShipmentDetalisViewBody extends StatefulWidget {
+  const ShipmentDetalisViewBody({super.key, required this.shipment});
+  final ShipmentModel shipment;
 
   @override
-  State<ShippingDetalisViewBody> createState() =>
-      _ShippingDetalisViewBodyState();
+  State<ShipmentDetalisViewBody> createState() =>
+      _ShipmentDetalisViewBodyState();
 }
 
-class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
+class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
-  late List<Product> shipmentProducts;
-  List<String> notes = [
-    'تم فحص المنتجات والتأكد من جودتها',
-    'العميل طلب تأجيل التسليم ليوم الأحد القادم',
-    'يفضل التعامل مع هذا العميل نقداً فقط',
-  ];
+  List<String> notes = [];
 
   @override
   void initState() {
     super.initState();
-    shipmentProducts = DataService.getSampleProducts();
+    notes.add(widget.shipment.userNotes);
   }
 
   void _confirmProcess() {}
@@ -99,7 +92,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                           padding: const EdgeInsets.all(16.0),
                           child: const SettingsIcon(),
                         ),
-                        const ShipmentHeader(),
+                        ShipmentHeader(shipment: widget.shipment),
                         const SizedBox(height: 16),
                         const ProgressBar(completedSteps: 1),
                         const SizedBox(height: 20),
@@ -115,7 +108,7 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                             maxHeight: 320,
                             onTap: _toggleShipmentDetails,
                             content: ShipmentDetailsContent(
-                              products: shipmentProducts,
+                              items: widget.shipment.items,
                             ),
                           ),
                         ),
@@ -135,7 +128,11 @@ class _ShippingDetalisViewBodyState extends State<ShippingDetalisViewBody> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        NotesContent(notes: notes, shipmentID: ""),
+                        NotesContent(
+                          notes: notes,
+                          shipmentID: "",
+                          onNotesChanged: (notes) {},
+                        ),
                         const SizedBox(height: 20),
                         CustomButton(
                           onPress: _confirmProcess,

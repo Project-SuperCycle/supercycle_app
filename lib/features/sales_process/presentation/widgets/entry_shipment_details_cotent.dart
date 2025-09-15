@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 
 import 'package:supercycle_app/features/sales_process/data/models/unit.dart';
-import 'package:supercycle_app/features/sales_process/data/models/product_type_model.dart';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/editable_product_card.dart';
 
 class EntryShipmentDetailsContent extends StatefulWidget {
-  final List<ProductTypeModel> products;
-  const EntryShipmentDetailsContent({super.key, required this.products});
+  final List<DoshItemModel> products;
+  final Function(List<DoshItemModel>) onProductsChanged;
+  const EntryShipmentDetailsContent({
+    super.key,
+    required this.products,
+    required this.onProductsChanged,
+  });
 
   @override
   State<EntryShipmentDetailsContent> createState() =>
@@ -16,7 +21,7 @@ class EntryShipmentDetailsContent extends StatefulWidget {
 
 class _EntryShipmentDetailsContentState
     extends State<EntryShipmentDetailsContent> {
-  late List<ProductTypeModel> editableProducts;
+  late List<DoshItemModel> editableProducts;
   final List<String> availableProductTypes = [
     'كرتون درجه تانيه',
     'كرتون درجه اولى',
@@ -31,9 +36,9 @@ class _EntryShipmentDetailsContentState
 
     if (editableProducts.isEmpty) {
       editableProducts.add(
-        ProductTypeModel(
+        DoshItemModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          type: availableProductTypes.first,
+          name: availableProductTypes.first,
           quantity: 0,
           unit: Unit.kg.abbreviation,
         ),
@@ -42,11 +47,12 @@ class _EntryShipmentDetailsContentState
   }
 
   void _addProduct() {
+    widget.onProductsChanged(editableProducts);
     setState(() {
       editableProducts.add(
-        ProductTypeModel(
+        DoshItemModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          type: availableProductTypes.first,
+          name: availableProductTypes.first,
           quantity: 0,
           unit: Unit.kg.abbreviation,
         ),

@@ -24,8 +24,12 @@ class ContactAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        onPressed: isLoading ? null : onBack,
+        icon: Icon(
+          Icons.translate,
+          color: isLoading ? Colors.white60 : Colors.white,
+        ),
+        onPressed: isLoading ? null : onLanguageToggle,
+        tooltip: ContactStrings.get('switchToEnglish', isArabic),
       ),
       title: Text(
         ContactStrings.get('title', isArabic),
@@ -36,12 +40,8 @@ class ContactAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       actions: [
         IconButton(
-          icon: Icon(
-            Icons.translate,
-            color: isLoading ? Colors.white60 : Colors.white,
-          ),
-          onPressed: isLoading ? null : onLanguageToggle,
-          tooltip: ContactStrings.get('switchToEnglish', isArabic),
+          icon: const Icon(Icons.arrow_forward_ios_rounded),
+          onPressed: isLoading ? null : onBack,
         ),
         const SizedBox(width: 8),
       ],

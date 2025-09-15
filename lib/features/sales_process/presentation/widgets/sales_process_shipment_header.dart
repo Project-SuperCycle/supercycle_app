@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'dart:io';
-import 'image_picker.dart';
-import 'package:intl/intl.dart'; // إضافة هذا للتعامل مع تنسيق التاريخ
+import 'image_picker_widget.dart';
+import 'package:intl/intl.dart';
 
 class SalesProcessShipmentHeader extends StatefulWidget {
-  const SalesProcessShipmentHeader({super.key});
+  final List<File> selectedImages;
+  final Function(List<File>) onImagesChanged;
+  final Function(DateTime?) onDateTimeChanged;
+
+  const SalesProcessShipmentHeader({
+    super.key,
+    required this.selectedImages,
+    required this.onImagesChanged,
+    required this.onDateTimeChanged,
+  });
 
   @override
   State<SalesProcessShipmentHeader> createState() =>
@@ -15,26 +25,49 @@ class SalesProcessShipmentHeader extends StatefulWidget {
 
 class _SalesProcessShipmentHeaderState
     extends State<SalesProcessShipmentHeader> {
-  DateTime? selectedDate;
+  DateTime? selectedDateTime; // تغيير الاسم ليشمل الوقت أيضاً
 
   void _onImageChanged(File? image) {
-    // يمكنك إضافة logic هنا للتعامل مع تغيير الصورة
-    // مثل حفظ الصورة أو إرسالها للسيرفر
-    print('تم تغيير الصورة: ${image?.path}');
+    if (image != null) {
+      List<File> updatedImages = List.from(widget.selectedImages);
+      updatedImages.add(image);
+      widget.onImagesChanged(updatedImages);
+    }
+  }
+
+  void _removeImage(int index) {
+    List<File> updatedImages = List.from(widget.selectedImages);
+    updatedImages.removeAt(index);
+    widget.onImagesChanged(updatedImages);
+  }
+
+  void _clearAllImages() {
+    widget.onImagesChanged([]);
   }
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    // تحديد نطاق التواريخ المسموحة (من بعد يومين من اليوم الحالي فما فوق)
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime minDate = today.add(
+      const Duration(days: 1),
+    ); // بعد يومين على الأقل
+    final DateTime maxDate = today.add(
+      const Duration(days: 365),
+    ); // حتى سنة من الآن
+
+    // أولاً اختيار التاريخ
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-      locale: const Locale('en', 'SA'), // لعرض التقويم باللغة العربية
+      initialDate: selectedDateTime ?? minDate,
+      firstDate: minDate,
+      lastDate: maxDate,
+      locale: const Locale('ar'),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.orange, // لون الهيدر
+              primary: Colors.orange,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black,
@@ -45,110 +78,294 @@ class _SalesProcessShipmentHeaderState
       },
     );
 
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
+    if (pickedDate != null) {
+      // إذا تم اختيار تاريخ، اعرض اختيار الوقت
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: selectedDateTime != null
+            ? TimeOfDay.fromDateTime(selectedDateTime!)
+            : TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Colors.orange,
+                onPrimary: Colors.white,
+                surface: Colors.white,
+                onSurface: Colors.black,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        // دمج التاريخ والوقت مع تحديد المنطقة الزمنية GMT+2
+        final DateTime combinedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+
+        // تحويل التاريخ والوقت إلى منطقة زمنية محددة (GMT+2)
+        final Duration timeZoneOffset = Duration(hours: 2);
+        final DateTime dateTimeWithTimeZone = DateTime.utc(
+          combinedDateTime.year,
+          combinedDateTime.month,
+          combinedDateTime.day,
+          combinedDateTime.hour,
+          combinedDateTime.minute,
+        ).add(timeZoneOffset);
+
+        setState(() {
+          selectedDateTime = dateTimeWithTimeZone;
+        });
+
+        // طباعة التاريخ بالصيغة المطلوبة للتحقق
+        String formattedDateTime = formatDateTimeWithTimeZone(
+          dateTimeWithTimeZone,
+          timeZoneOffset,
+        );
+        print('Formatted DateTime: $formattedDateTime');
+      }
     }
+    widget.onDateTimeChanged(selectedDateTime);
   }
 
-  String _formatDate(DateTime? date) {
-    if (date == null) return '--/--/----';
-    // تنسيق التاريخ بالشكل المطلوب (يوم/شهر/سنة)
-    return DateFormat('dd/MM/yyyy').format(date);
+  // دالة مساعدة لتنسيق التاريخ والوقت بصيغة ISO 8601 مع الـ timezone
+  String formatDateTimeWithTimeZone(DateTime dateTime, Duration offset) {
+    // تحويل الـ offset إلى صيغة نصية (+02:00)
+    final int offsetHours = offset.inHours;
+    final int offsetMinutes = offset.inMinutes % 60;
+    final String offsetString = offsetHours >= 0
+        ? '+${offsetHours.toString().padLeft(2, '0')}:${offsetMinutes.toString().padLeft(2, '0')}'
+        : '-${(-offsetHours).toString().padLeft(2, '0')}:${(-offsetMinutes).toString().padLeft(2, '0')}';
+
+    // تنسيق التاريخ والوقت
+    final String formattedDateTime =
+        '${dateTime.year.toString().padLeft(4, '0')}-'
+        '${dateTime.month.toString().padLeft(2, '0')}-'
+        '${dateTime.day.toString().padLeft(2, '0')}T'
+        '${dateTime.hour.toString().padLeft(2, '0')}:'
+        '${dateTime.minute.toString().padLeft(2, '0')}:'
+        '${dateTime.second.toString().padLeft(2, '0')}'
+        '$offsetString';
+
+    return formattedDateTime;
+  }
+
+  String _formatDateTime(DateTime? dateTime) {
+    if (dateTime == null) return '--/--/---- --:--';
+    final DateTime adjustedDateTime = dateTime.subtract(Duration(hours: 2));
+    return DateFormat('dd/MM/yyyy HH:mm').format(adjustedDateTime);
+  }
+
+  Widget _buildImagesPreview() {
+    if (widget.selectedImages.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      height: 90,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: widget.selectedImages.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.all(1),
+            height: 90,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    widget.selectedImages[index],
+                    width: 80,
+                    height: 90,
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 90,
+                        color: Colors.grey.shade200,
+                        child: const Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 30,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Positioned(
+                  top: 2,
+                  right: 2,
+                  child: GestureDetector(
+                    onTap: () => _removeImage(index),
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: ClipRRect(
-                        child: Image.asset(
-                          AppAssets.boxPerspective,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.inventory_2_outlined,
-                              color: Colors.orange,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: ClipRRect(
+                              child: Image.asset(
+                                AppAssets.boxPerspective,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(
+                                    Icons.inventory_2_outlined,
+                                    color: Colors.orange,
+                                    size: 25,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'رقم الشحنة: ',
+                            style: AppStyles.styleSemiBold18(
+                              context,
+                            ).copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            'لم يحدد بعد ',
+                            style: AppStyles.styleSemiBold12(
+                              context,
+                            ).copyWith(color: AppColors.subTextColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        children: [
+                          Text(
+                            'موعد الاستلام: ',
+                            style: AppStyles.styleMedium12(
+                              context,
+                            ).copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            _formatDateTime(selectedDateTime),
+                            style: AppStyles.styleMedium12(
+                              context,
+                            ).copyWith(color: AppColors.subTextColor),
+                          ),
+                          IconButton(
+                            style: IconButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              backgroundColor: Colors.grey.shade100,
+                            ),
+                            onPressed: _selectDate,
+                            icon: const Icon(
+                              Icons.edit_calendar_sharp,
+                              color: Colors.black54,
                               size: 25,
-                            );
-                          },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // عرض عدد الصور المحددة
+                    if (widget.selectedImages.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          children: [
+                            Text(
+                              'الصور المحددة: ${widget.selectedImages.length}',
+                              style: AppStyles.styleSemiBold12(
+                                context,
+                              ).copyWith(color: Colors.blue),
+                            ),
+                            const SizedBox(width: 8),
+                            if (widget.selectedImages.length > 1)
+                              GestureDetector(
+                                onTap: _clearAllImages,
+                                child: Text(
+                                  'حذف الكل',
+                                  style: AppStyles.styleMedium12(context)
+                                      .copyWith(
+                                        color: Colors.red,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'رقم الشحنة: ',
-                      style: AppStyles.styleSemiBold18(
-                        context,
-                      ).copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 2),
-                    Text(
-                      'لم يحدد بعد ',
-                      style: AppStyles.styleSemiBold12(
-                        context,
-                      ).copyWith(color: Colors.grey),
-                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  children: [
-                    Text(
-                      'تاريخ الاستلام:',
-                      style: AppStyles.styleMedium12(
-                        context,
-                      ).copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 2),
-                    Text(
-                      _formatDate(selectedDate),
-                      style: AppStyles.styleMedium12(context).copyWith(
-                        color: selectedDate != null
-                            ? Colors.black
-                            : Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    IconButton(
-                      style: IconButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        backgroundColor: Colors.grey.shade100,
-                      ),
-                      onPressed: _selectDate,
-                      icon: const Icon(
-                        Icons.edit_calendar_sharp,
-                        color: Colors.black54,
-                        size: 25,
-                      ),
-                    ),
-                  ],
+            ),
+            Column(
+              children: [
+                ImagePickerWidget(
+                  defaultImagePath: AppAssets.photoGallery,
+                  onImageChanged: _onImageChanged,
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(height: 4),
+                Text(
+                  'إضافة صورة',
+                  style: AppStyles.styleMedium12(
+                    context,
+                  ).copyWith(color: Colors.grey.shade600),
+                ),
+              ],
+            ),
+          ],
         ),
-        const Spacer(),
-        ImagePicker(
-          defaultImagePath: AppAssets.photoGallery,
-          onImageChanged: _onImageChanged,
-        ),
+        // معاينة الصور المحددة
+        _buildImagesPreview(),
       ],
     );
   }

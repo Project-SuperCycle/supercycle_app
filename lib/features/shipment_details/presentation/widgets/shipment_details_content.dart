@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
-import 'product_widgets.dart';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
+import 'product_card.dart';
 import 'shipment_summary.dart';
 
 class ShipmentDetailsContent extends StatelessWidget {
-  final List<Product> products;
+  final List<DoshItemModel> items;
 
-  const ShipmentDetailsContent({super.key, required this.products});
+  const ShipmentDetailsContent({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ShipmentDetailsContent extends StatelessWidget {
               Icon(Icons.inventory_2, color: Colors.blue.shade600, size: 20),
               const SizedBox(width: 8),
               Text(
-                'منتجات الشحنة (${products.length} أصناف)',
+                'منتجات الشحنة (${items.length} أصناف)',
                 style: AppStyles.styleSemiBold14(
                   context,
                 ).copyWith(color: Colors.blue.shade700),
@@ -36,14 +36,14 @@ class ShipmentDetailsContent extends StatelessWidget {
         ),
         const SizedBox(height: 10),
 
-        ...products.asMap().entries.map((entry) {
+        ...items.asMap().entries.map((entry) {
           int index = entry.key;
-          Product product = entry.value;
-          return ProductCard(product: product, index: index + 1);
+          DoshItemModel item = entry.value;
+          return ProductCard(item: item, index: index + 1);
         }),
         Divider(color: Colors.grey.shade300),
         const SizedBox(height: 16),
-        ShipmentSummary(products: products),
+        ShipmentSummary(items: items),
         const SizedBox(height: 16),
       ],
     );

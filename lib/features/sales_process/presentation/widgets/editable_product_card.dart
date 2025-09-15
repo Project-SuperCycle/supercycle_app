@@ -6,13 +6,13 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_text_form_field.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart';
-import 'package:supercycle_app/features/sales_process/data/models/product_type_model.dart';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/data/models/unit.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 
 class EditableProductCard extends StatefulWidget {
-  final ProductTypeModel product;
-  final Function(ProductTypeModel updatedProduct) onProductUpdated;
+  final DoshItemModel product;
+  final Function(DoshItemModel updatedProduct) onProductUpdated;
   final VoidCallback onProductDeleted;
 
   const EditableProductCard({
@@ -51,7 +51,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _onDropdownChanged(String? value) {
     if (value != null && mounted) {
-      widget.onProductUpdated(widget.product.copyWith(type: value));
+      widget.onProductUpdated(widget.product.copyWith(name: value));
     }
   }
 

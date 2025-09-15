@@ -7,8 +7,9 @@ import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
+import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
-import 'package:supercycle_app/features/shipping_details/presentation/views/shipping_details_view.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/views/shipment_details_view.dart';
 import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
@@ -255,8 +256,9 @@ class AppRouter {
         name: 'ShippingDetails',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child:
-              const ShippingDetailsView(), // Replace with your actual home widget
+          child: ShipmentDetailsView(
+            shipment: state.extra as ShipmentModel,
+          ), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
