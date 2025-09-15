@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/services/dosh_types_manager.dart';
+import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 
@@ -7,6 +9,14 @@ class ProductCard extends StatelessWidget {
   final int index;
 
   const ProductCard({super.key, required this.item, required this.index});
+
+  String _getAveragePrice(String name) {
+    var price = getIt<DoshTypesManager>().typesList
+        .firstWhere((type) => type.name == name)
+        .price;
+    num averagePrice = price * item.quantity;
+    return averagePrice.toStringAsFixed(2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +75,7 @@ class ProductCard extends StatelessWidget {
                 child: ProductDetail(
                   icon: Icons.attach_money,
                   label: 'متوسط السعر',
-                  value: '20000',
+                  value: _getAveragePrice(item.name),
                   color: Colors.blue,
                 ),
               ),

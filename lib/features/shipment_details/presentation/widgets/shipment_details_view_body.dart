@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
+import 'package:supercycle_app/core/widgets/custom_text_field.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
@@ -112,7 +115,7 @@ class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 25),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -127,7 +130,34 @@ class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
                             content: const ClientDataContent(),
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            CustomTextField(
+                              label: "العنوان",
+                              hint: widget.shipment.customPickupAddress,
+                              keyboardType: TextInputType.text,
+                              icon: Icons.location_on_rounded,
+                              isArabic: true,
+                              enabled: false,
+                              borderColor: Colors.green.shade300,
+                            ),
+                            const SizedBox(height: 6),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                              ),
+                              child: Text(
+                                "سيتم استلام الشحنة منه",
+                                style: AppStyles.styleSemiBold12(
+                                  context,
+                                ).copyWith(color: AppColors.subTextColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
                         NotesContent(
                           notes: notes,
                           shipmentID: "",

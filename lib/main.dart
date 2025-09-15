@@ -42,8 +42,14 @@ void main() async {
               SocialAuthCubit(socialAuthRepo: getIt.get<SocialAuthRepoImp>()),
         ),
         BlocProvider(
-          create: (context) =>
-              HomeCubit(homeRepo: getIt.get<HomeRepoImp>())..fetchTypesData(),
+          create: (context) {
+            final cubit = HomeCubit(homeRepo: getIt.get<HomeRepoImp>());
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              cubit.fetchTypesData();
+              cubit.fetchDoshTypes();
+            });
+            return cubit;
+          },
         ),
       ],
 

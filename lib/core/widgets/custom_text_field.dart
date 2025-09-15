@@ -11,8 +11,8 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool isArabic;
   final bool enabled;
-
   final Widget? child;
+  final Color? borderColor;
 
   const CustomTextField({
     super.key,
@@ -26,6 +26,7 @@ class CustomTextField extends StatelessWidget {
     required this.isArabic,
     this.enabled = true,
     this.child,
+    this.borderColor,
   });
 
   @override
@@ -60,11 +61,14 @@ class CustomTextField extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(
+                color: borderColor ?? Colors.grey.shade300,
+                width: (borderColor == null) ? 1 : 1.5,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF3BC577), width: 2),
+              borderSide: BorderSide(color: Colors.green.shade300, width: 1.5),
             ),
           ),
         ),
