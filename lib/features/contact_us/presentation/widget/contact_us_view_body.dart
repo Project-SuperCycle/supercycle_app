@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/functions/lanuch_whatsApp.dart';
 import 'package:supercycle_app/core/services/contact_service.dart';
 import 'package:supercycle_app/core/services/mock_contact_service.dart';
 import 'package:supercycle_app/core/utils/contact_strings.dart';
@@ -16,12 +17,12 @@ class ContactUsViewBody extends StatefulWidget {
   final bool initialLanguage;
 
   const ContactUsViewBody({
-    Key? key,
+    super.key,
     this.contactService,
     this.logoUrl,
     this.companyName,
     this.initialLanguage = true,
-  }) : super(key: key);
+  });
 
   @override
   State<ContactUsViewBody> createState() => _ContactUsViewBodyState();
@@ -29,7 +30,6 @@ class ContactUsViewBody extends StatefulWidget {
 
 class _ContactUsViewBodyState extends State<ContactUsViewBody>
     with SingleTickerProviderStateMixin {
-
   // Services and Controllers
   late final ContactService _contactService;
   late final FormController _formController;
@@ -69,15 +69,13 @@ class _ContactUsViewBodyState extends State<ContactUsViewBody>
       ),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.2, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.2, 1.0, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _animationController.forward();
   }
@@ -179,32 +177,12 @@ class _ContactUsViewBodyState extends State<ContactUsViewBody>
 
         floatingActionButton: FloatingButton(
           isArabic: _isArabic,
-          onPressed: _openWhatsApp,
+          onPressed: () => openWhatsApp(context: context),
         ),
         floatingActionButtonLocation: _isArabic
             ? FloatingActionButtonLocation.startFloat
             : FloatingActionButtonLocation.endFloat,
-
       ),
     );
   }
-  Future<void> _openWhatsApp() async {
-    final phone = "201017185116"; // رقمك بكود الدولة بدون +
-    final message = Uri.encodeComponent("مرحبا، أحتاج إلى المساعدة");
-
-    final whatsappUrl = Uri.parse("whatsapp://send?phone=$phone&text=$message");
-    final fallbackUrl = Uri.parse("https://wa.me/$phone?text=$message");
-
-    if (await canLaunchUrl(whatsappUrl)) {
-      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
-    } else if (await canLaunchUrl(fallbackUrl)) {
-      await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint("WhatsApp is not installed");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("من فضلك ثبّت واتساب على جهازك")),
-      );
-    }
-  }
-
 }

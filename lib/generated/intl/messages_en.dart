@@ -99,6 +99,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "field_required": MessageLookupByLibrary.simpleMessage(
       "This field is required",
     ),
+    "follow_up_shipments": MessageLookupByLibrary.simpleMessage(
+      "Follow up on shipment delivery dates and delivery procedures",
+    ),
     "forgot_password": MessageLookupByLibrary.simpleMessage("Forgot Password"),
     "invalid_email": MessageLookupByLibrary.simpleMessage("invalid email"),
     "invalid_email_or_phone": MessageLookupByLibrary.simpleMessage(
@@ -215,6 +218,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "start_date": MessageLookupByLibrary.simpleMessage(
       "Start date of cooperation",
+    ),
+    "table_of_shipments": MessageLookupByLibrary.simpleMessage(
+      "Table of Shipments",
     ),
     "title": MessageLookupByLibrary.simpleMessage("supercycle_app"),
     "transportation_data": MessageLookupByLibrary.simpleMessage(

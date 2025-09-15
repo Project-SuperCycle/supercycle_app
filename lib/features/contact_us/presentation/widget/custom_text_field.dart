@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
@@ -14,7 +15,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? child;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.label,
     this.hint,
     this.controller,
@@ -25,29 +26,18 @@ class CustomTextField extends StatelessWidget {
     required this.isArabic,
     this.enabled = true,
     this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.grey.shade800,
-          ),
-        ),
+        Text(label, style: AppStyles.styleSemiBold14(context)),
         const SizedBox(height: 12),
-
-        if (child != null) ...[
-          child!,
-          const SizedBox(height: 12),
-        ],
-
+        if (child != null) ...[child!, const SizedBox(height: 10)],
         TextFormField(
+          style: AppStyles.styleRegular14(context),
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLines,
@@ -74,10 +64,7 @@ class CustomTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Color(0xFF3BC577),
-                width: 2,
-              ),
+              borderSide: const BorderSide(color: Color(0xFF3BC577), width: 2),
             ),
           ),
         ),

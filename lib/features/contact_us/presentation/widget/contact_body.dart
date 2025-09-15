@@ -14,7 +14,7 @@ class ContactBody extends StatelessWidget {
   final VoidCallback onSubmit;
 
   const ContactBody({
-    Key? key,
+    super.key,
     required this.animationController,
     required this.fadeAnimation,
     required this.slideAnimation,
@@ -22,7 +22,7 @@ class ContactBody extends StatelessWidget {
     required this.isArabic,
     required this.isLoading,
     required this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

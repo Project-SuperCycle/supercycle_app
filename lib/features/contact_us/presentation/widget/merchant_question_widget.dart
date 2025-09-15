@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/contact_strings.dart';
 
 class MerchantQuestionWidget extends StatelessWidget {
@@ -8,12 +9,12 @@ class MerchantQuestionWidget extends StatelessWidget {
   final bool enabled;
 
   const MerchantQuestionWidget({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     required this.isArabic,
     this.enabled = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +31,11 @@ class MerchantQuestionWidget extends StatelessWidget {
         children: [
           Text(
             ContactStrings.get('merchantQuestion', isArabic),
-            style: TextStyle(
-              color: enabled ? Color(0xFF3BC577): Colors.grey.shade500,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
+            style: AppStyles.styleSemiBold16(context).copyWith(
+              color: enabled ? Color(0xFF3BC577) : Colors.grey.shade500,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
           Row(
             children: [
               Expanded(
@@ -44,8 +43,7 @@ class MerchantQuestionWidget extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     ContactStrings.get('yes', isArabic),
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: AppStyles.styleMedium14(context).copyWith(
                       color: enabled ? Colors.black87 : Colors.grey.shade500,
                     ),
                   ),
@@ -60,8 +58,7 @@ class MerchantQuestionWidget extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     ContactStrings.get('no', isArabic),
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: AppStyles.styleMedium14(context).copyWith(
                       color: enabled ? Colors.black87 : Colors.grey.shade500,
                     ),
                   ),

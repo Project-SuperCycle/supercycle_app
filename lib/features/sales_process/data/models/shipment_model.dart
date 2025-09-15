@@ -1,46 +1,65 @@
-import 'package:supercycle_app/features/sales_process/data/models/product_type_model.dart';
+import 'dart:io';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/data/models/representitive_model.dart';
 
 class ShipmentModel {
-  final String pickupDate;
+  final String id;
+  final String shipmentNumber;
+  final String customPickupAddress;
+  final DateTime requestedPickupAt;
   final String status;
-  final String shipmentNo;
-  final List<ProductTypeModel> products;
-  final List<String> notes;
+  final List<String> uploadedImages;
+  final List<File> images;
+  final List<DoshItemModel> items;
+  final String userNotes;
+  final num totalQuantityKg;
   final RepresentitiveModel? representitive;
 
   ShipmentModel({
-    required this.pickupDate,
+    required this.id,
+    required this.shipmentNumber,
+    required this.customPickupAddress,
+    required this.requestedPickupAt,
     required this.status,
-    required this.shipmentNo,
-    required this.products,
-    required this.notes,
+    required this.uploadedImages,
+    required this.images,
+    required this.items,
+    required this.userNotes,
+    required this.totalQuantityKg,
     this.representitive,
   });
 
   factory ShipmentModel.fromJson(Map<String, dynamic> json) {
     return ShipmentModel(
-      pickupDate: json['pickupDate'] as String,
-      status: json['status'] ?? "",
-      shipmentNo: json['shipmentNo'] as String,
-      products: json['products']
-          .map<ProductTypeModel>((x) => ProductTypeModel.fromJson(x))
+      id: json['id'] as String,
+      shipmentNumber: json['shipmentNumber'] as String,
+      customPickupAddress: json['customPickupAddress'] as String,
+      requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
+      status: json['status'] as String,
+      uploadedImages: json['uploadedImages'] as List<String>,
+      images: json['images'] ?? [] as List<File>,
+      items: json['items']
+          .map<DoshItemModel>((x) => DoshItemModel.fromJson(x))
           .toList(),
-      notes: json['notes'] as List<String>,
-      representitive: json['representitive']
-          ? RepresentitiveModel.fromJson(json['representitive'])
-          : null,
+      userNotes: json['userNotes'] as String,
+      totalQuantityKg: json['totalQuantityKg'] as num,
+      representitive: json['representitive'] ?? null as RepresentitiveModel?,
     );
   }
 
   // toJson method
   Map<String, dynamic> toJson() {
     return {
-      'pickupDate': pickupDate,
+      '_id': id,
+      'shipmentNumber': shipmentNumber,
+      'customPickupAddress': customPickupAddress,
+      'requestedPickupAt': requestedPickupAt,
       'status': status,
-      'shipmentNo': shipmentNo,
-      'products': products,
-      'notes': notes,
+      'uploadedImages': uploadedImages,
+      'images': images,
+      'items': items,
+      'userNotes': userNotes,
+      'totalQuantityKg': totalQuantityKg,
       'representitive': representitive,
     };
   }
@@ -48,24 +67,34 @@ class ShipmentModel {
   // Optional: toString method for debugging
   @override
   String toString() {
-    return 'ShipmentModel(pickupDate: $pickupDate, status: $status, shipmentNo: $shipmentNo, products: ${products.toString()}, notes: ${notes.toString()}, representitive: ${representitive.toString()})';
+    return 'ShipmentModel(id: $id, shipmentNumber: $shipmentNumber, customPickupAddress: $customPickupAddress, requestedPickupAt: $requestedPickupAt, status: $status, uploadedImages: $uploadedImages, images: $images, items: $items, userNotes: $userNotes, totalQuantityKg: $totalQuantityKg, representitive: $representitive)';
   }
 
   // Optional: copyWith method for creating modified copies
   ShipmentModel copyWith({
-    String? pickupDate,
+    String? id,
+    String? shipmentNumber,
+    String? customPickupAddress,
+    DateTime? requestedPickupAt,
     String? status,
-    String? shipmentNo,
-    List<ProductTypeModel>? products,
-    List<String>? notes,
+    List<String>? uploadedImages,
+    List<File>? images,
+    List<DoshItemModel>? items,
+    String? userNotes,
+    num? totalQuantityKg,
     RepresentitiveModel? representitive,
   }) {
     return ShipmentModel(
-      pickupDate: pickupDate ?? this.pickupDate,
+      id: id ?? this.id,
+      shipmentNumber: shipmentNumber ?? this.shipmentNumber,
+      customPickupAddress: customPickupAddress ?? this.customPickupAddress,
+      requestedPickupAt: requestedPickupAt ?? this.requestedPickupAt,
       status: status ?? this.status,
-      shipmentNo: shipmentNo ?? this.shipmentNo,
-      products: products ?? this.products,
-      notes: notes ?? this.notes,
+      uploadedImages: uploadedImages ?? this.uploadedImages,
+      images: images ?? this.images,
+      items: items ?? this.items,
+      userNotes: userNotes ?? this.userNotes,
+      totalQuantityKg: totalQuantityKg ?? this.totalQuantityKg,
       representitive: representitive ?? this.representitive,
     );
   }

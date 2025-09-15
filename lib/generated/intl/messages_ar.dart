@@ -97,6 +97,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "entity_name": MessageLookupByLibrary.simpleMessage("اسم جهة التعامل"),
     "entity_type": MessageLookupByLibrary.simpleMessage("نوع النشاط"),
     "field_required": MessageLookupByLibrary.simpleMessage("هذا الحقل مطلوب"),
+    "follow_up_shipments": MessageLookupByLibrary.simpleMessage(
+      "تابع مواعيد تسليم الشحنات وإجراءات التسليم",
+    ),
     "forgot_password": MessageLookupByLibrary.simpleMessage("نسيت كلمة المرور"),
     "invalid_email": MessageLookupByLibrary.simpleMessage(
       "البريد الالكتروني غير صحيح",
@@ -194,6 +197,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "sign_in_alert_title": MessageLookupByLibrary.simpleMessage("مرحبا بك"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطى"),
     "start_date": MessageLookupByLibrary.simpleMessage("تاريخ بداية التعاون"),
+    "table_of_shipments": MessageLookupByLibrary.simpleMessage(
+      "جدول متابعة الشحنات",
+    ),
     "title": MessageLookupByLibrary.simpleMessage("سوبر سايكل"),
     "transportation_data": MessageLookupByLibrary.simpleMessage("بيانات النقل"),
     "truck": MessageLookupByLibrary.simpleMessage("الشاحنة"),

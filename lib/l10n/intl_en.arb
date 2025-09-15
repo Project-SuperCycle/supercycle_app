@@ -115,6 +115,8 @@
   "start_date": "Start date of cooperation",
   "payment_method": "Preferred payment method",
   "shipment_review": "Shipment Review",
-  "confirm_process": "Confirm Process"
+  "confirm_process": "Confirm Process",
+  "table_of_shipments": "Table of Shipments",
+  "follow_up_shipments": "Follow up on shipment delivery dates and delivery procedures"
 }
 

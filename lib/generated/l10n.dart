@@ -998,6 +998,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Table of Shipments`
+  String get table_of_shipments {
+    return Intl.message(
+      'Table of Shipments',
+      name: 'table_of_shipments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Follow up on shipment delivery dates and delivery procedures`
+  String get follow_up_shipments {
+    return Intl.message(
+      'Follow up on shipment delivery dates and delivery procedures',
+      name: 'follow_up_shipments',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

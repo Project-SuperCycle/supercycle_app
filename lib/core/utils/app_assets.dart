@@ -14,6 +14,7 @@ abstract class AppAssets {
   static const String boxPerspective = 'assets/images/boxPerspective.png';
   static const String entityCard = 'assets/images/entityCard.png';
   static const String photoGallery = 'assets/images/photoGallery.png';
+  static const String whatsappIcon = 'assets/images/whatsapp.png';
 
   static const String googleIcon = 'assets/images/Google.png';
   static const String facebookIcon = 'assets/images/Facebook.png';

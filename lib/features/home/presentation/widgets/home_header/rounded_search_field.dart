@@ -107,9 +107,9 @@ class _RoundedSearchFieldState extends State<RoundedSearchField> {
           hintText: widget.hintText ?? S.of(context).search,
           hintStyle:
               widget.hintStyle ??
-              AppStyles.styleSemiBold14(context).copyWith(
-                color: widget.hintTextColor ?? AppColors.secondaryTextColor,
-              ),
+              AppStyles.styleSemiBold14(
+                context,
+              ).copyWith(color: widget.hintTextColor ?? AppColors.subTextColor),
         ),
       ),
     );

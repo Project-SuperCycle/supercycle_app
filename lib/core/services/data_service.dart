@@ -1,5 +1,5 @@
 // services/data_service.dart
-import 'package:supercycle_app/features/shipping_details/data/models/product.dart';
+import 'package:supercycle_app/features/shipment_details/data/models/product.dart';
 
 class DataService {
   static List<Product> getSampleProducts() {
