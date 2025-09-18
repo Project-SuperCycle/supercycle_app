@@ -10,6 +10,8 @@ import 'package:supercycle_app/core/routes/routes.dart' show AppRouter;
 import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:supercycle_app/features/shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
+import 'package:supercycle_app/features/shipment_preview/data/repos/shipment_preview_repo_imp.dart';
 import 'package:supercycle_app/features/sign_in/data/managers/sign-in-cubit/sign_in_cubit.dart';
 import 'package:supercycle_app/features/sign_in/data/repos/signin_repo_imp.dart';
 import 'package:supercycle_app/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart'
@@ -50,6 +52,12 @@ void main() async {
             });
             return cubit;
           },
+        ),
+
+        BlocProvider(
+          create: (context) => CreateShipmentCubit(
+            shipmentDetailsRepo: getIt.get<ShipmentReviewRepoImp>(),
+          ),
         ),
       ],
 

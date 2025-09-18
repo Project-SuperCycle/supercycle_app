@@ -1,134 +1,172 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class DateTimePickerUtil {
-  static const String _defaultFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-  static const Duration _hundredYears = Duration(days: 365 * 100);
-
-  static Future<DateTime?> pickDateTime({
-    required BuildContext context,
-    DateTime? initialDateTime,
-    TextEditingController? controller,
-    String formatPattern = _defaultFormat,
-    bool showSnackbarOnError = true,
+class DateTimePickerHelper {
+  static Future<DateTime?> selectDateTime(
+    BuildContext context, {
+    DateTime? currentSelectedDateTime,
   }) async {
-    try {
-      final pickedDate = await _pickDate(context, initialDateTime);
-      if (pickedDate == null) return null;
+    // تحديد نطاق التواريخ المسموحة (من بعد يومين من اليوم الحالي فما فوق)
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime minDate = today.add(
+      const Duration(days: 1),
+    ); // بعد يومين على الأقل
+    final DateTime maxDate = today.add(
+      const Duration(days: 365),
+    ); // حتى سنة من الآن
 
-      final pickedTime = await _pickTime(context, initialDateTime);
-      if (pickedTime == null) return null;
-
-      DateTime selectedDateTime = DateTime(
-        pickedDate.year,
-        pickedDate.month,
-        pickedDate.day,
-        pickedTime.hour,
-        pickedTime.minute,
-      );
-
-      controller?.text = _formatToIso8601Utc(selectedDateTime, formatPattern);
-      return selectedDateTime;
-    } catch (e) {
-      _handleError(context, e, showSnackbarOnError);
-      return null;
-    }
-  }
-
-  static Future<DateTime?> _pickDate(
-      BuildContext context, DateTime? initialDate) {
-    return showDatePicker(
+    // أولاً اختيار التاريخ
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(_hundredYears),
-      selectableDayPredicate: (_) => true,
-    );
-  }
-
-  static Future<TimeOfDay?> _pickTime(
-      BuildContext context, DateTime? initialDate) {
-    return showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(initialDate ?? DateTime.now()),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          timePickerTheme: const TimePickerThemeData(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
+      initialDate: currentSelectedDateTime ?? minDate,
+      firstDate: minDate,
+      lastDate: maxDate,
+      locale: const Locale('ar'),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.primaryColor,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+              secondary: AppColors.primaryColor,
+              onSecondary: Colors.white,
+            ),
+            // تخصيص النصوص
+            textTheme: TextTheme(
+              headlineLarge: AppStyles.styleBold24(context),
+              // النص الكبير للشهر والسنة
+              headlineMedium: AppStyles.styleSemiBold22(context),
+              // نص الأيام
+              bodyLarge: AppStyles.styleMedium16(context),
+              // نص العناوين
+              titleMedium: AppStyles.styleSemiBold18(context),
+              // نص الأزرار
+              labelLarge: AppStyles.styleSemiBold16(context),
+            ),
+            // تخصيص الأزرار
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                foregroundColor: Colors.white,
+                textStyle: AppStyles.styleBold16(context),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primaryColor,
+                textStyle: AppStyles.styleSemiBold18(context),
+              ),
             ),
           ),
-        ),
-        child: child!,
-      ),
+          child: child!,
+        );
+      },
     );
-  }
 
-  static String _formatToIso8601Utc(DateTime dateTime, String formatPattern) {
-    return DateFormat(formatPattern).format(dateTime.toUtc());
-  }
-
-  static void _handleError(
-      BuildContext context, dynamic error, bool showSnackbar) {
-    debugPrint('DateTimePicker Error: $error');
-    if (showSnackbar && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to pick date/time')),
-      );
-    }
-  }
-
-  static Widget buildDateTimePickerField({
-    required BuildContext context,
-    required TextEditingController controller,
-    String labelText = 'Date & Time',
-    String hintText = 'Tap to select date and time',
-    String? Function(String?)? validator,
-    ValueChanged<String?>? onChanged,
-    DateTime? initialDateTime,
-    String formatPattern = _defaultFormat,
-    bool addThreeHours = true, // New parameter for the field
-    EdgeInsets? margin,
-    InputDecoration? decoration,
-  }) {
-    return GestureDetector(
-      onTap: () => pickDateTime(
+    if (pickedDate != null) {
+      // إذا تم اختيار تاريخ، اعرض اختيار الوقت
+      final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialDateTime: initialDateTime,
-        controller: controller,
-        formatPattern: formatPattern,
-      ),
-      child: Container(
-        margin: margin,
-        child: AbsorbPointer(
-          child: TextFormField(
-            controller: controller,
-            decoration: decoration ??
-                _defaultDecoration(
-                  labelText: labelText,
-                  hintText: hintText,
+        initialTime: currentSelectedDateTime != null
+            ? TimeOfDay.fromDateTime(currentSelectedDateTime!)
+            : TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: AppColors.primaryColor,
+                onPrimary: Colors.white,
+                surface: Colors.white,
+                onSurface: Colors.black,
+                secondary: AppColors.primaryColor,
+                onSecondary: Colors.white,
+              ),
+              // تخصيص النصوص للوقت
+              textTheme: TextTheme(
+                // النص الكبير للوقت
+                displayLarge: AppStyles.styleBold24(context),
+                // نص العناوين
+                titleMedium: AppStyles.styleSemiBold18(context),
+                // نص الأزرار الصغيرة
+                bodyMedium: AppStyles.styleMedium14(context),
+                // نص الأزرار
+                labelLarge: AppStyles.styleSemiBold16(context),
+              ),
+              // تخصيص الأزرار للوقت
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  foregroundColor: Colors.white,
+                  textStyle: AppStyles.styleBold16(context),
                 ),
-            validator: validator,
-            onChanged: onChanged,
-            readOnly: true,
-          ),
-        ),
-      ),
-    );
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.primaryColor,
+                  textStyle: AppStyles.styleBold16(context),
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        // دمج التاريخ والوقت مع تحديد المنطقة الزمنية GMT+2
+        final DateTime combinedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+
+        // تحويل التاريخ والوقت إلى منطقة زمنية محددة (GMT+2)
+        const Duration timeZoneOffset = Duration(hours: 2);
+        final DateTime dateTimeWithTimeZone = DateTime.utc(
+          combinedDateTime.year,
+          combinedDateTime.month,
+          combinedDateTime.day,
+          combinedDateTime.hour,
+          combinedDateTime.minute,
+        ).add(timeZoneOffset);
+
+        // طباعة التاريخ بالصيغة المطلوبة للتحقق
+        String formattedDateTime = formatDateTimeWithTimeZone(
+          dateTimeWithTimeZone,
+          timeZoneOffset,
+        );
+        return dateTimeWithTimeZone;
+      }
+    }
+
+    return null;
   }
 
-  static InputDecoration _defaultDecoration({
-    required String labelText,
-    required String hintText,
-  }) {
-    return InputDecoration(
-      labelText: labelText,
-      hintText: hintText,
-      suffixIcon: const Icon(Icons.calendar_today),
-      // enabledBorder: InputDecorations.enabledBorder(),
-      // focusedBorder: InputDecorations.focusedBorder(),
-      // errorBorder: InputDecorations.errorBorder(),
-      // focusedErrorBorder: InputDecorations.errorBorder(),
-    );
+  // دالة مساعدة لتنسيق التاريخ والوقت بصيغة ISO 8601 مع الـ timezone
+  static String formatDateTimeWithTimeZone(DateTime dateTime, Duration offset) {
+    // تحويل الـ offset إلى صيغة نصية (+02:00)
+    final int offsetHours = offset.inHours;
+    final int offsetMinutes = offset.inMinutes % 60;
+    final String offsetString = offsetHours >= 0
+        ? '+${offsetHours.toString().padLeft(2, '0')}:${offsetMinutes.toString().padLeft(2, '0')}'
+        : '-${(-offsetHours).toString().padLeft(2, '0')}:${(-offsetMinutes).toString().padLeft(2, '0')}';
+
+    // تنسيق التاريخ والوقت
+    final String formattedDateTime =
+        '${dateTime.year.toString().padLeft(4, '0')}-'
+        '${dateTime.month.toString().padLeft(2, '0')}-'
+        '${dateTime.day.toString().padLeft(2, '0')}T'
+        '${dateTime.hour.toString().padLeft(2, '0')}:'
+        '${dateTime.minute.toString().padLeft(2, '0')}:'
+        '${dateTime.second.toString().padLeft(2, '0')}'
+        '$offsetString';
+
+    return formattedDateTime;
   }
 }

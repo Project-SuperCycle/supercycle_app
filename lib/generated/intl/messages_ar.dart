@@ -177,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_type": MessageLookupByLibrary.simpleMessage("حدد النوع"),
     "sell_title": MessageLookupByLibrary.simpleMessage("هل تريد البيع؟"),
     "shipment_date": MessageLookupByLibrary.simpleMessage("تاريخ الشحنة"),
-    "shipment_details": MessageLookupByLibrary.simpleMessage("تفاصيل الشحنة"),
+    "shipment_preview": MessageLookupByLibrary.simpleMessage("تفاصيل الشحنة"),
     "shipment_number": MessageLookupByLibrary.simpleMessage("رقم الشحنة"),
     "shipment_review": MessageLookupByLibrary.simpleMessage("مراجعة الشحنة"),
     "shipment_schedule": MessageLookupByLibrary.simpleMessage("جدول الشحنات"),

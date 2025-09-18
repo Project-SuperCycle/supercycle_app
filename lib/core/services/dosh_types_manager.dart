@@ -9,8 +9,9 @@ class DoshTypesManager {
 }
 
 class DoshItem {
+  final String id;
   final String name;
   final num price;
 
-  DoshItem({required this.name, required this.price});
+  DoshItem({required this.id, required this.name, required this.price});
 }

@@ -4,7 +4,7 @@ import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 
-class ShipmentSummary extends StatelessWidget {
+class ShipmentDetailsSummary extends StatelessWidget {
   final List<DoshItemModel> items;
 
   num _getPrice(String name) {
@@ -18,7 +18,7 @@ class ShipmentSummary extends StatelessWidget {
     }
   }
 
-  const ShipmentSummary({super.key, required this.items});
+  const ShipmentDetailsSummary({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {

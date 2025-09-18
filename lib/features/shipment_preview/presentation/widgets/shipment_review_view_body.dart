@@ -2,10 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:logger/logger.dart';
-import 'package:mime/mime.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
@@ -24,16 +22,15 @@ import 'package:supercycle_app/features/shipment_preview/presentation/widgets/sh
 import 'package:supercycle_app/features/shipment_preview/presentation/widgets/shipment_review_header.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 
-class ShipmentDetailsViewBody extends StatefulWidget {
-  const ShipmentDetailsViewBody({super.key, required this.shipment});
+class ShipmentReviewViewBody extends StatefulWidget {
+  const ShipmentReviewViewBody({super.key, required this.shipment});
   final CreateShipmentModel shipment;
 
   @override
-  State<ShipmentDetailsViewBody> createState() =>
-      _ShipmentDetailsViewBodyState();
+  State<ShipmentReviewViewBody> createState() => _ShipmentReviewViewBodyState();
 }
 
-class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
+class _ShipmentReviewViewBodyState extends State<ShipmentReviewViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
   List<String> notes = [];
@@ -46,23 +43,8 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
 
   Future<FormData> createFormData() async {
     List<File> images = widget.shipment.images;
-    List<MultipartFile> imagesFiles = [];
-
-    // Convert each File to MultipartFile
-    for (File imageFile in images) {
-      final String imagePath = imageFile.path;
-      final String fileName = imagePath.split('/').last;
-      final String mimeType =
-          lookupMimeType(imagePath) ?? 'application/octet-stream';
-
-      MultipartFile multipartFile = await MultipartFile.fromFile(
-        imagePath,
-        filename: fileName,
-        contentType: MediaType.parse(mimeType),
-      );
-
-      imagesFiles.add(multipartFile);
-    }
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
 
     // Create FormData
     final formData = FormData.fromMap({
@@ -79,8 +61,6 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
     BlocProvider.of<CreateShipmentCubit>(
       context,
     ).createShipment(shipment: shipment);
-
-    Logger().i("CONFIRM PROCESS");
   }
 
   @override

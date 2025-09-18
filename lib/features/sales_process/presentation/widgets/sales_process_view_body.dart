@@ -16,7 +16,7 @@ import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
-import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/sales_process_shipment_header.dart';
 import 'package:supercycle_app/generated/l10n.dart';
@@ -75,9 +75,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     setState(() {
       this.products = products;
     });
-    for (var product in products) {
-      Logger().d("TYPE: ${product.name} | QTY: ${product.quantity}");
-    }
   }
 
   @override
@@ -243,23 +240,13 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
 
   // دالة للتعامل مع إرسال البيانات
   void _handleSubmit() {
-    ShipmentModel shipment = ShipmentModel(
-      id: "",
-      shipmentNumber: "لم يحدد بعد",
+    CreateShipmentModel shipment = CreateShipmentModel(
       customPickupAddress: addressController.text,
       requestedPickupAt: selectedDateTime ?? DateTime.now(),
-      status: "لم يحدد بعد",
-      uploadedImages: [],
       images: selectedImages,
       items: products,
       userNotes: notes.isEmpty ? "" : notes.first,
-      totalQuantityKg: products.fold(
-        0,
-        (previousValue, element) => previousValue + element.quantity,
-      ),
-      representitive: null,
     );
-    Logger().i("SHIPMENT : $shipment");
     GoRouter.of(context).push(EndPoints.shippingDetailsView, extra: shipment);
   }
 }

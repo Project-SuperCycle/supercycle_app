@@ -3,9 +3,9 @@ import 'package:supercycle_app/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle_app/core/services/api_services.dart';
 import 'package:supercycle_app/core/services/dosh_types_manager.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:supercycle_app/features/shipment_preview/data/repos/shipment_preview_repo_imp.dart';
 import 'package:supercycle_app/features/sign_in/data/repos/signin_repo_imp.dart';
-import 'package:supercycle_app/features/sign_up/data/repos/signup_repo_imp.dart'
-    show SignUpRepoImp;
+import 'package:supercycle_app/features/sign_up/data/repos/signup_repo_imp.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -27,5 +27,9 @@ void setupServiceLocator() {
 
   getIt.registerSingleton<HomeRepoImp>(
     HomeRepoImp(apiServices: getIt.get<ApiServices>()),
+  );
+
+  getIt.registerSingleton<ShipmentReviewRepoImp>(
+    ShipmentReviewRepoImp(apiServices: getIt.get<ApiServices>()),
   );
 }

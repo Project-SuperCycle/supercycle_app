@@ -433,7 +433,7 @@ class S {
   String get shipment_details {
     return Intl.message(
       'Shipment details',
-      name: 'shipment_details',
+      name: 'shipment_preview',
       desc: '',
       args: [],
     );

@@ -34,7 +34,7 @@ class _TypesListViewState extends State<TypesListView> {
 
         if (state is FetchDoshTypesSuccess) {
           List<DoshItem> typesList = state.doshTypes
-              .map((e) => DoshItem(name: e.name, price: e.maxPrice))
+              .map((e) => DoshItem(id: e.id, name: e.name, price: e.maxPrice))
               .toList();
           getIt<DoshTypesManager>().setTypesList(typesList);
         }

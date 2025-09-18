@@ -25,6 +25,10 @@ class DoshItemModel {
     return {'id': id, 'name': name, 'quantityKg': quantity, 'unit': unit};
   }
 
+  Map<String, dynamic> toMap() {
+    return {'doshType': id, 'quantityKg': quantity};
+  }
+
   // Optional: toString method for debugging
   @override
   String toString() {

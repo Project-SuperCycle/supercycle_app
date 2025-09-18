@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 
-class ShipmentHeader extends StatelessWidget {
-  const ShipmentHeader({super.key, required this.shipment});
-  final ShipmentModel shipment;
+class ShipmentDetailsHeader extends StatelessWidget {
+  const ShipmentDetailsHeader({super.key, required this.shipment});
+  final CreateShipmentModel shipment;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class ShipmentHeader extends StatelessWidget {
                     ).copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    shipment.shipmentNumber,
+                    "لم يحدد بعد",
                     style: AppStyles.styleSemiBold18(
                       context,
                     ).copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
@@ -50,7 +50,7 @@ class ShipmentHeader extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                shipment.status,
+                "لم تحدد بعد",
                 style: AppStyles.styleSemiBold16(
                   context,
                 ).copyWith(fontWeight: FontWeight.bold, color: Colors.blue),

@@ -7,4 +7,5 @@ abstract class ApiEndpoints {
   static const String doshPricesCurrent = '/dosh/prices/current';
   static const String doshPricesHistory = '/dosh/prices/history';
   static const String doshTypesData = '/dosh/types';
+  static const String createShipment = '/shipments';
 }
