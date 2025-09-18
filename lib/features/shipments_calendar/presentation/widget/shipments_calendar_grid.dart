@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calendar_day.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_day.dart';
 
 class ShipmentsCalendarGrid extends StatelessWidget {
   final DateTime currentDate;
@@ -30,7 +30,7 @@ class ShipmentsCalendarGrid extends StatelessWidget {
           selectedDate != null && CalendarUtils.isSameDate(date, selectedDate!);
 
       dayWidgets.add(
-        ShipmentsCalendarDay(
+        ShipmentCalendarDay(
           date: date,
           isToday: isToday,
           isSelected: isSelected,

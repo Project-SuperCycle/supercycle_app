@@ -3,14 +3,14 @@ import 'package:supercycle_app/core/services/shipment_data_service.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipment_calendar_card.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
-class ShipmentCalendarDetails extends StatelessWidget {
+class ShipmentsCalendarDetails extends StatelessWidget {
   final DateTime selectedDate;
   final String? imageUrl;
   final bool isDelivered;
 
-  const ShipmentCalendarDetails({
+  const ShipmentsCalendarDetails({
     super.key,
     required this.selectedDate,
     this.imageUrl,
@@ -66,7 +66,7 @@ class ShipmentCalendarDetails extends StatelessWidget {
             )
           else
             ...shipments.map(
-              (shipment) => ShipmentCalendarCard(shipment: shipment),
+              (shipment) => ShipmentsCalendarCard(shipment: shipment),
             ),
           const SizedBox(height: 16),
           if (imageUrl != null)

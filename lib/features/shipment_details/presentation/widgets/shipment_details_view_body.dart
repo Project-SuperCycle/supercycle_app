@@ -2,31 +2,28 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:logger/logger.dart';
-import 'package:mime/mime.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_settings_icon.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_header.dart';
 import 'package:supercycle_app/features/shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
 import 'package:supercycle_app/features/shipment_preview/presentation/widgets/shipment_review_content.dart';
-import 'package:supercycle_app/features/shipment_preview/presentation/widgets/shipment_review_header.dart';
-import 'package:supercycle_app/generated/l10n.dart';
 
 class ShipmentDetailsViewBody extends StatefulWidget {
   const ShipmentDetailsViewBody({super.key, required this.shipment});
-  final CreateShipmentModel shipment;
+  final ShipmentModel shipment;
 
   @override
   State<ShipmentDetailsViewBody> createState() =>
@@ -46,24 +43,8 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
 
   Future<FormData> createFormData() async {
     List<File> images = widget.shipment.images;
-    List<MultipartFile> imagesFiles = [];
-
-    // Convert each File to MultipartFile
-    for (File imageFile in images) {
-      final String imagePath = imageFile.path;
-      final String fileName = imagePath.split('/').last;
-      final String mimeType =
-          lookupMimeType(imagePath) ?? 'application/octet-stream';
-
-      MultipartFile multipartFile = await MultipartFile.fromFile(
-        imagePath,
-        filename: fileName,
-        contentType: MediaType.parse(mimeType),
-      );
-
-      imagesFiles.add(multipartFile);
-    }
-
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
     // Create FormData
     final formData = FormData.fromMap({
       ...widget.shipment.toMap(),
@@ -135,7 +116,11 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ShipmentReviewHeader(shipment: widget.shipment),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: const ShipmentDetailsSettingsIcon(),
+                        ),
+                        ShipmentDetailsHeader(shipment: widget.shipment),
                         const SizedBox(height: 16),
                         const ProgressBar(completedSteps: 1),
                         const SizedBox(height: 20),
@@ -202,40 +187,6 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                           notes: notes,
                           shipmentID: "",
                           onNotesChanged: (notes) {},
-                        ),
-                        const SizedBox(height: 20),
-                        BlocConsumer<CreateShipmentCubit, CreateShipmentState>(
-                          listener: (context, state) {
-                            // TODO: implement listener
-                            if (state is CreateShipmentSuccess) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(state.message)),
-                              );
-                            }
-                            if (state is CreateShipmentFailure) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(state.errorMessage),
-                                  backgroundColor: Colors.redAccent,
-                                ),
-                              );
-                            }
-                          },
-                          builder: (context, state) {
-                            if (state is CreateShipmentLoading) {
-                              return const Center(
-                                child: CustomLoadingIndicator(),
-                              );
-                            }
-                            return CustomButton(
-                              onPress: _confirmProcess,
-                              title: S.of(context).confirm_process,
-                            );
-                          },
-                          buildWhen: (previous, current) =>
-                              current is CreateShipmentLoading ||
-                              current is CreateShipmentSuccess ||
-                              current is CreateShipmentFailure,
                         ),
                         const SizedBox(height: 30),
                       ],

@@ -15,7 +15,7 @@ import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_detai
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.dart';
 import 'package:supercycle_app/features/splash/views/splash_view.dart';
-import 'package:supercycle_app/features/calendar/presentation/view/shipments_calendar_view.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(

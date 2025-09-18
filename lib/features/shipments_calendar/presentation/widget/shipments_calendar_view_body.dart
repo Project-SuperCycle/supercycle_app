@@ -3,10 +3,10 @@ import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 import 'package:supercycle_app/core/widgets/shipment/back_and_info_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calendar_grid.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calendar_header.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipment_calendar_details.dart';
-import 'package:supercycle_app/features/calendar/presentation/widget/shipments_calender_title.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_details.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_grid.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_header.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calender_title.dart';
 
 class ShipmentsCalendarViewBody extends StatefulWidget {
   const ShipmentsCalendarViewBody({super.key});
@@ -87,7 +87,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                 ),
               ),
               if (_selectedDate != null)
-                ShipmentCalendarDetails(
+                ShipmentsCalendarDetails(
                   selectedDate: _selectedDate!,
                   imageUrl: _imageUrl,
                 ),

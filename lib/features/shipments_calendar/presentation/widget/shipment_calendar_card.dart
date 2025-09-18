@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/calendar/data/models/shipment.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment.dart';
 
-class ShipmentCalendarCard extends StatelessWidget {
+class ShipmentsCalendarCard extends StatelessWidget {
   final Shipment shipment;
 
-  const ShipmentCalendarCard({super.key, required this.shipment});
+  const ShipmentsCalendarCard({super.key, required this.shipment});
 
   void _showShipmentDetails(BuildContext context) {}
 

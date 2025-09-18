@@ -3,13 +3,13 @@ import 'package:supercycle_app/core/services/shipment_data_service.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 
-class ShipmentsCalendarDay extends StatefulWidget {
+class ShipmentCalendarDay extends StatefulWidget {
   final DateTime date;
   final bool isToday;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const ShipmentsCalendarDay({
+  const ShipmentCalendarDay({
     super.key,
     required this.date,
     required this.isToday,
@@ -18,10 +18,10 @@ class ShipmentsCalendarDay extends StatefulWidget {
   });
 
   @override
-  State<ShipmentsCalendarDay> createState() => _ShipmentsCalendarDayState();
+  State<ShipmentCalendarDay> createState() => _ShipmentCalendarDayState();
 }
 
-class _ShipmentsCalendarDayState extends State<ShipmentsCalendarDay> {
+class _ShipmentCalendarDayState extends State<ShipmentCalendarDay> {
   Color _determineFillColor() {
     final dateKey = CalendarUtils.formatDateKey(widget.date);
 

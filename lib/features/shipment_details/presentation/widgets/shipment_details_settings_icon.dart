@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SettingsIcon extends StatelessWidget {
-  const SettingsIcon({super.key});
+class ShipmentDetailsSettingsIcon extends StatelessWidget {
+  const ShipmentDetailsSettingsIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +13,7 @@ class SettingsIcon extends StatelessWidget {
           'assets/images/settings icon.png',
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
-            return const Icon(
-              Icons.settings,
-              color: Colors.grey,
-              size: 24,
-            );
+            return const Icon(Icons.settings, color: Colors.grey, size: 24);
           },
         ),
       ),

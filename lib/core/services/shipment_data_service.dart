@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/features/calendar/data/models/shipment.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment.dart';
 
 class ShipmentDataService {
   static final Map<String, List<Shipment>> _deliveryData = {
@@ -90,7 +90,6 @@ class ShipmentDataService {
     ],
   };
 
-
   static List<Shipment>? getShipmentsForDate(String dateKey) {
     return _deliveryData[dateKey];
   }
@@ -143,7 +142,10 @@ class ShipmentDataService {
     _deliveryData[dateKey]!.add(shipment);
   }
 
-  static bool updateShipmentStatus(String shipmentNumber, ShipmentStatus newStatus) {
+  static bool updateShipmentStatus(
+    String shipmentNumber,
+    ShipmentStatus newStatus,
+  ) {
     for (var dateKey in _deliveryData.keys) {
       final shipments = _deliveryData[dateKey]!;
       for (var shipment in shipments) {
@@ -166,7 +168,9 @@ class ShipmentDataService {
   }
 
   static List<String> getDatesWithShipments() {
-    return _deliveryData.keys.where((dateKey) => hasShipmentsForDate(dateKey)).toList();
+    return _deliveryData.keys
+        .where((dateKey) => hasShipmentsForDate(dateKey))
+        .toList();
   }
 
   static Map<String, int> getShipmentsSummary() {

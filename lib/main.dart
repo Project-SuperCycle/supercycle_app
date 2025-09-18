@@ -10,8 +10,14 @@ import 'package:supercycle_app/core/routes/routes.dart' show AppRouter;
 import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:supercycle_app/features/shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
+import 'package:supercycle_app/features/shipment_details/data/cubits/shipment_cubit/shipment_cubit.dart';
+import 'package:supercycle_app/features/shipment_details/data/repos/shipment_details_repo_imp.dart';
+import 'package:supercycle_app/features/shipment_details/data/repos/shipment_notes_repo_imp.dart';
 import 'package:supercycle_app/features/shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
 import 'package:supercycle_app/features/shipment_preview/data/repos/shipment_preview_repo_imp.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 import 'package:supercycle_app/features/sign_in/data/managers/sign-in-cubit/sign_in_cubit.dart';
 import 'package:supercycle_app/features/sign_in/data/repos/signin_repo_imp.dart';
 import 'package:supercycle_app/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart'
@@ -56,7 +62,24 @@ void main() async {
 
         BlocProvider(
           create: (context) => CreateShipmentCubit(
-            shipmentDetailsRepo: getIt.get<ShipmentReviewRepoImp>(),
+            shipmentReviewRepo: getIt.get<ShipmentReviewRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) => ShipmentCubit(
+            shipmentDetailsRepo: getIt.get<ShipmentDetailsRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              NotesCubit(shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) => ShipmentsCalendarCubit(
+            shipmentsCalendarRepo: getIt.get<ShipmentsCalendarRepoImp>(),
           ),
         ),
       ],

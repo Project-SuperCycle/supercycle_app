@@ -147,7 +147,7 @@ class ShipmentReviewHeader extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: Colors.black87,
+      barrierColor: Colors.black26,
       builder: (BuildContext context) {
         return ImagesPreviewDialog(images: images);
       },

@@ -8,14 +8,14 @@ import 'package:supercycle_app/features/shipment_preview/data/repos/shipment_pre
 part 'create_shipment_state.dart';
 
 class CreateShipmentCubit extends Cubit<CreateShipmentState> {
-  final ShipmentReviewRepoImp shipmentDetailsRepo;
-  CreateShipmentCubit({required this.shipmentDetailsRepo})
+  final ShipmentReviewRepoImp shipmentReviewRepo;
+  CreateShipmentCubit({required this.shipmentReviewRepo})
     : super(CreateShipmentInitial());
 
   Future<void> createShipment({required FormData shipment}) async {
     emit(CreateShipmentLoading());
     try {
-      var result = await shipmentDetailsRepo.createShipment(shipment: shipment);
+      var result = await shipmentReviewRepo.createShipment(shipment: shipment);
       result.fold(
         (failure) {
           emit(CreateShipmentFailure(errorMessage: failure.errMessage));
