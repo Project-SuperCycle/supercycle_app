@@ -55,7 +55,7 @@ class ShipmentNotesRepoImp implements ShipmentNotesRepo {
   }
 
   @override
-  Future<Either<Failure, List<NotesModel>>> getAllNotes({
+  Future<Either<Failure, List<String>>> getAllNotes({
     required String shipmentId,
   }) async {
     // TODO: implement getAllNotes
@@ -64,7 +64,10 @@ class ShipmentNotesRepoImp implements ShipmentNotesRepo {
         endPoint: ApiEndpoints.getAllNotes.replaceFirst('{id}', shipmentId),
       );
       var data = response["data"];
-      List<NotesModel> notes = data.map((e) => NotesModel.fromJson(e)).toList();
+      List<String> notes = [];
+      for (var note in data) {
+        notes.add(note["content"]);
+      }
       return right(notes);
     } on DioException catch (dioError) {
       Logger().i("DioException ${dioError.toString()}");

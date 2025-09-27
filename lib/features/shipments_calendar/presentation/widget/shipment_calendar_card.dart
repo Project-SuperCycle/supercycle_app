@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
@@ -25,6 +26,11 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: widget.shipment.id);
+
+    BlocProvider.of<NotesCubit>(
+      context,
+    ).getAllNotes(shipmentId: widget.shipment.id);
+
     GoRouter.of(
       context,
     ).push(EndPoints.shipmentDetailsView, extra: singleShipment);

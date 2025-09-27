@@ -17,7 +17,7 @@ final class GetAllNotesLoading extends NotesState {
 }
 
 final class GetAllNotesSuccess extends NotesState {
-  final List<NotesModel> notes;
+  final List<String> notes;
   const GetAllNotesSuccess({required this.notes});
   @override
   List<Object> get props => [];

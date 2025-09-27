@@ -1,10 +1,5 @@
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
@@ -12,13 +7,12 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_notes.dart';
 import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_settings_icon.dart';
 import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_header.dart';
-import 'package:supercycle_app/features/shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
 import 'package:supercycle_app/features/shipment_preview/presentation/widgets/shipment_review_content.dart';
 
 class ShipmentDetailsViewBody extends StatefulWidget {
@@ -33,24 +27,10 @@ class ShipmentDetailsViewBody extends StatefulWidget {
 class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
-  List<String> notes = [];
 
   @override
   void initState() {
     super.initState();
-    notes.add(widget.shipment.userNotes);
-  }
-
-  Future<FormData> createFormData() async {
-    List<File> images = widget.shipment.images;
-    List<MultipartFile> imagesFiles =
-        await ShipmentManager.createMultipartImages(images: images);
-    // Create FormData
-    final formData = FormData.fromMap({
-      ...widget.shipment.toMap(),
-      'uploadedImages': imagesFiles, // Add the converted MultipartFiles
-    });
-    return formData;
   }
 
   @override
@@ -172,11 +152,7 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        NotesContent(
-                          notes: notes,
-                          shipmentID: widget.shipment.id,
-                          onNotesChanged: (notes) {},
-                        ),
+                        ShipmentDetailsNotes(shipmentID: widget.shipment.id),
                         const SizedBox(height: 30),
                       ],
                     ),
