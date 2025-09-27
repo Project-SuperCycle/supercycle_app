@@ -15,7 +15,7 @@ import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/features/shipment_details/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
 import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_settings_icon.dart';
 import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_header.dart';
 import 'package:supercycle_app/features/shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
@@ -23,7 +23,7 @@ import 'package:supercycle_app/features/shipment_preview/presentation/widgets/sh
 
 class ShipmentDetailsViewBody extends StatefulWidget {
   const ShipmentDetailsViewBody({super.key, required this.shipment});
-  final ShipmentModel shipment;
+  final SingleShipmentModel shipment;
 
   @override
   State<ShipmentDetailsViewBody> createState() =>

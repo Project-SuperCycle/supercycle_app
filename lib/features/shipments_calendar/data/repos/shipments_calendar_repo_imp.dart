@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/errors/failures.dart';
 import 'package:supercycle_app/core/services/api_endpoints.dart';
 import 'package:supercycle_app/core/services/api_services.dart';
-import 'package:supercycle_app/features/shipment_details/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/repos/shipments_calendar_repo.dart';
 
 class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
@@ -18,14 +19,16 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
       final response = await apiServices.get(
         endPoint: ApiEndpoints.getAllShipments,
       );
+
       var data = response["data"];
-      List<ShipmentModel> shipments = data
-          .map((e) => ShipmentModel.fromJson(e))
-          .toList();
+      List<ShipmentModel> shipments = [];
+
+      for (var element in data) {
+        shipments.add(ShipmentModel.fromJson(element));
+      }
 
       return right(shipments);
     } on DioException catch (dioError) {
-      Logger().i("DioException ${dioError.toString()}");
       return left(ServerFailure.fromDioError(dioError));
     } on FormatException catch (formatError) {
       return left(
@@ -34,8 +37,10 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
           422, // Unprocessable Entity
         ),
       );
-    } on TypeError catch (typeError) {
+    } on TypeError catch (typeError, stackTrace) {
       // أخطاء النوع (مثل null safety)
+      Logger().w("typeError ${typeError.toString()}");
+      Logger().w("stackTrace ${stackTrace.toString()}");
       return left(
         ServerFailure(
           'Data parsing error: ${typeError.toString()}',
@@ -54,7 +59,7 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
   }
 
   @override
-  Future<Either<Failure, ShipmentModel>> getShipmentById({
+  Future<Either<Failure, SingleShipmentModel>> getShipmentById({
     required String shipmentId,
   }) async {
     // TODO: implement getShipmentById
@@ -63,7 +68,7 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
         endPoint: ApiEndpoints.getShipmentById.replaceFirst('{id}', shipmentId),
       );
       var data = response["data"];
-      ShipmentModel shipment = ShipmentModel.fromJson(data);
+      SingleShipmentModel shipment = SingleShipmentModel.fromJson(data);
       return right(shipment);
     } on DioException catch (dioError) {
       Logger().i("DioException ${dioError.toString()}");

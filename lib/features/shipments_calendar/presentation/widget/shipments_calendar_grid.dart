@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_day.dart';
 
 class ShipmentsCalendarGrid extends StatelessWidget {
   final DateTime currentDate;
   final DateTime? selectedDate;
   final Function(DateTime) onDateSelected;
+  final List<ShipmentModel> shipments;
 
   const ShipmentsCalendarGrid({
     super.key,
     required this.currentDate,
     this.selectedDate,
     required this.onDateSelected,
+    required this.shipments,
   });
 
   @override
@@ -31,6 +34,7 @@ class ShipmentsCalendarGrid extends StatelessWidget {
 
       dayWidgets.add(
         ShipmentCalendarDay(
+          shipments: shipments,
           date: date,
           isToday: isToday,
           isSelected: isSelected,

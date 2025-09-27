@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:supercycle_app/features/shipment_details/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 sealed class ShipmentsCalendarState extends Equatable {
   const ShipmentsCalendarState();
@@ -37,7 +38,7 @@ final class GetShipmentLoading extends ShipmentsCalendarState {
 }
 
 final class GetShipmentSuccess extends ShipmentsCalendarState {
-  final ShipmentModel shipment;
+  final SingleShipmentModel shipment;
   const GetShipmentSuccess({required this.shipment});
   @override
   List<Object> get props => [];

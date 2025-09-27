@@ -1,10 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 
 class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
   final ShipmentsCalendarRepoImp shipmentsCalendarRepo;
+
   ShipmentsCalendarCubit({required this.shipmentsCalendarRepo})
     : super(ShipmentsCalendarInitial());
 
@@ -21,7 +22,6 @@ class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
           // Store user globally
         },
       );
-      Logger().i("GET ALL SHIPMENTS CUBIT");
     } catch (error) {
       emit(GetAllShipmentsFailure(errorMessage: error.toString()));
     }
@@ -42,7 +42,6 @@ class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
           // Store user globally
         },
       );
-      Logger().i("GET SHIPMENT BY ID CUBIT");
     } catch (error) {
       emit(GetShipmentFailure(errorMessage: error.toString()));
     }

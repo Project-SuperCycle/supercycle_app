@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/models/shipment.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 class ShipmentsCalendarCard extends StatelessWidget {
-  final Shipment shipment;
+  final ShipmentModel shipment;
 
   const ShipmentsCalendarCard({super.key, required this.shipment});
 
@@ -41,7 +42,7 @@ class ShipmentsCalendarCard extends StatelessWidget {
                                 style: AppStyles.styleSemiBold16(context),
                               ),
                               Text(
-                                shipment.number,
+                                shipment.shipmentNumber,
                                 style: AppStyles.styleMedium16(
                                   context,
                                 ).copyWith(color: AppColors.greenColor),
@@ -60,7 +61,7 @@ class ShipmentsCalendarCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            shipment.time,
+                            _formatTimeToArabic(shipment.requestedPickupAt),
                             style: AppStyles.styleRegular14(
                               context,
                             ).copyWith(color: AppColors.greenColor),
@@ -87,7 +88,7 @@ class ShipmentsCalendarCard extends StatelessWidget {
                           style: AppStyles.styleSemiBold14(context),
                         ),
                         Text(
-                          shipment.quantity,
+                          shipment.totalQuantityKg.toString(),
                           style: AppStyles.styleMedium14(
                             context,
                           ).copyWith(color: AppColors.subTextColor),
@@ -105,7 +106,7 @@ class ShipmentsCalendarCard extends StatelessWidget {
                           style: AppStyles.styleSemiBold14(context),
                         ),
                         Text(
-                          shipment.address,
+                          shipment.customPickupAddress,
                           style: AppStyles.styleMedium14(
                             context,
                           ).copyWith(color: AppColors.subTextColor),
@@ -123,9 +124,9 @@ class ShipmentsCalendarCard extends StatelessWidget {
                           style: AppStyles.styleSemiBold14(context),
                         ),
                         Text(
-                          shipment.statusText,
+                          shipment.status,
                           style: AppStyles.styleMedium14(context).copyWith(
-                            color: shipment.isDelivered
+                            color: (shipment.status == 'Delivered')
                                 ? Colors.green[700]
                                 : Colors.red[700],
                             fontWeight: FontWeight.bold,
@@ -164,5 +165,12 @@ class ShipmentsCalendarCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatTimeToArabic(DateTime dateTime) {
+    int hour = dateTime.hour;
+    int displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+    String period = hour < 12 ? "صباحا" : "مساءا";
+    return "$displayHour $period";
   }
 }

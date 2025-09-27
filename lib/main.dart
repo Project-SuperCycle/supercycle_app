@@ -78,9 +78,15 @@ void main() async {
         ),
 
         BlocProvider(
-          create: (context) => ShipmentsCalendarCubit(
-            shipmentsCalendarRepo: getIt.get<ShipmentsCalendarRepoImp>(),
-          ),
+          create: (context) {
+            final cubit = ShipmentsCalendarCubit(
+              shipmentsCalendarRepo: getIt.get<ShipmentsCalendarRepoImp>(),
+            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              cubit.getAllShipments();
+            });
+            return cubit;
+          },
         ),
       ],
 

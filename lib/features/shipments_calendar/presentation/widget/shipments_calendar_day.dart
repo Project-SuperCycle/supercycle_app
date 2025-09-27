@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/services/shipment_data_service.dart';
+import 'package:supercycle_app/core/helpers/shipments_calender_helper.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 class ShipmentCalendarDay extends StatefulWidget {
   final DateTime date;
   final bool isToday;
   final bool isSelected;
   final VoidCallback onTap;
+  final List<ShipmentModel> shipments;
 
   const ShipmentCalendarDay({
     super.key,
@@ -15,6 +17,7 @@ class ShipmentCalendarDay extends StatefulWidget {
     required this.isToday,
     required this.isSelected,
     required this.onTap,
+    required this.shipments,
   });
 
   @override
@@ -24,16 +27,26 @@ class ShipmentCalendarDay extends StatefulWidget {
 class _ShipmentCalendarDayState extends State<ShipmentCalendarDay> {
   Color _determineFillColor() {
     final dateKey = CalendarUtils.formatDateKey(widget.date);
+    final shipmentsHelper = ShipmentsCalendarHelper(
+      shipments: widget.shipments,
+    );
+
+    if (widget.isSelected) {
+      return Colors.blueAccent;
+    }
 
     if (widget.isToday) {
       return Colors.blueAccent;
     }
-    if (ShipmentDataService.hasAnyPendingShipments(dateKey)) {
+
+    if (shipmentsHelper.hasAnyPendingShipmentsWithTime(dateKey)) {
       return Color(0xffC70B0B);
     }
-    if (ShipmentDataService.areAllShipmentsDelivered(dateKey)) {
+
+    if (shipmentsHelper.areAllShipmentsDeliveredWithTime(dateKey)) {
       return Color(0xff3BC567);
     }
+
     return Colors.grey.shade200;
   }
 

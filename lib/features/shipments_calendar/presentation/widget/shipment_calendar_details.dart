@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/services/shipment_data_service.dart';
+import 'package:supercycle_app/core/helpers/shipments_calender_helper.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
 class ShipmentsCalendarDetails extends StatelessWidget {
   final DateTime selectedDate;
   final String? imageUrl;
-  final bool isDelivered;
+  final List<ShipmentModel> shipments;
 
   const ShipmentsCalendarDetails({
     super.key,
     required this.selectedDate,
     this.imageUrl,
-    this.isDelivered = true,
+    required this.shipments,
   });
 
   @override
   Widget build(BuildContext context) {
     final dateKey = CalendarUtils.formatDateKey(selectedDate);
-    final shipments = ShipmentDataService.getShipmentsForDate(dateKey);
+    final shipmentsHelper = ShipmentsCalendarHelper(shipments: shipments);
+    final shipmentsList = shipmentsHelper.getShipmentsForDate(dateKey);
+    final isDelivered = shipmentsHelper.areAllShipmentsDeliveredWithTime(
+      dateKey,
+    );
 
     return Container(
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -55,7 +60,7 @@ class ShipmentsCalendarDetails extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
-          if (shipments == null || shipments.isEmpty)
+          if (shipmentsList.isEmpty)
             Center(
               child: Text(
                 'لا توجد شحنات لهذا اليوم',
@@ -65,7 +70,7 @@ class ShipmentsCalendarDetails extends StatelessWidget {
               ),
             )
           else
-            ...shipments.map(
+            ...shipmentsList.map(
               (shipment) => ShipmentsCalendarCard(shipment: shipment),
             ),
           const SizedBox(height: 16),

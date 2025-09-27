@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 import 'package:supercycle_app/core/widgets/shipment/back_and_info_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_details.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_grid.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_header.dart';
@@ -19,6 +26,14 @@ class ShipmentsCalendarViewBody extends StatefulWidget {
 class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
   DateTime _currentDate = DateTime.now();
   DateTime? _selectedDate;
+
+  List<ShipmentModel> shipments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
+  }
 
   static const String _imageUrl =
       "https://moe-ye.net/wp-content/uploads/2021/08/IMG-20210808-WA0001.jpg";
@@ -41,7 +56,48 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                 ],
               ),
               // Scrollable main content
-              Expanded(child: _buildMainContent()),
+              Expanded(
+                child:
+                    BlocConsumer<
+                      ShipmentsCalendarCubit,
+                      ShipmentsCalendarState
+                    >(
+                      listener: (context, state) {
+                        // TODO: implement listener
+                        if (state is GetAllShipmentsSuccess) {
+                          setState(() {
+                            shipments = state.shipments;
+                          });
+                        }
+                        if (state is GetAllShipmentsFailure) {
+                          shipments = [];
+                          Logger().e(state.errorMessage);
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is GetAllShipmentsLoading) {
+                          return const Center(
+                            child: CustomLoadingIndicator(color: Colors.white),
+                          );
+                        }
+                        if (state is GetAllShipmentsFailure) {
+                          return Center(
+                            child: Text(
+                              state.errorMessage,
+                              style: AppStyles.styleMedium18(
+                                context,
+                              ).copyWith(color: Colors.red),
+                            ),
+                          );
+                        }
+                        return _buildMainContent(shipments: shipments);
+                      },
+                      buildWhen: (previous, current) =>
+                          current is GetAllShipmentsSuccess ||
+                          current is GetAllShipmentsFailure ||
+                          current is GetAllShipmentsLoading,
+                    ),
+              ),
             ],
           ),
         ),
@@ -49,7 +105,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
     );
   }
 
-  Widget _buildMainContent() {
+  Widget _buildMainContent({required List<ShipmentModel> shipments}) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       decoration: const BoxDecoration(
@@ -81,6 +137,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 height: 280,
                 child: ShipmentsCalendarGrid(
+                  shipments: shipments,
                   currentDate: _currentDate,
                   selectedDate: _selectedDate,
                   onDateSelected: _onDateSelected,
@@ -88,6 +145,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
               ),
               if (_selectedDate != null)
                 ShipmentsCalendarDetails(
+                  shipments: shipments,
                   selectedDate: _selectedDate!,
                   imageUrl: _imageUrl,
                 ),

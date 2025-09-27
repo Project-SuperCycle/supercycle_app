@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/models/shipment.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 class CalendarUtils {
   static const List<String> arabicDayNames = [
@@ -30,11 +30,9 @@ class CalendarUtils {
   }
 
   /// يحدد لون الشحنات لليوم
-  static Color getShipmentColor(List<Shipment> shipments) {
-    final allDelivered = shipments.every(
-      (s) => s.status == ShipmentStatus.delivered,
-    );
-    final anyPending = shipments.any((s) => s.status == ShipmentStatus.pending);
+  static Color getShipmentColor(List<ShipmentModel> shipments) {
+    final allDelivered = shipments.every((s) => s.status == "delivered");
+    final anyPending = shipments.any((s) => s.status == "pending");
 
     if (allDelivered) return Colors.green[600]!; // كله متسلم
     if (anyPending) return Colors.red[600]!; // لسه فيه pending

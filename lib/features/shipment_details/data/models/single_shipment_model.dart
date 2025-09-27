@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/data/models/representitive_model.dart';
 
-class ShipmentModel {
+class SingleShipmentModel {
   final String id;
   final String shipmentNumber;
   final String customPickupAddress;
@@ -17,7 +16,7 @@ class ShipmentModel {
   final num totalQuantityKg;
   final RepresentitiveModel? representitive;
 
-  ShipmentModel({
+  SingleShipmentModel({
     required this.id,
     required this.shipmentNumber,
     required this.customPickupAddress,
@@ -31,36 +30,37 @@ class ShipmentModel {
     this.images = const [],
   });
 
-  factory ShipmentModel.fromJson(Map<String, dynamic> json) {
-    return ShipmentModel(
-      id: json['id'] as String,
+  factory SingleShipmentModel.fromJson(Map<String, dynamic> json) {
+    return SingleShipmentModel(
+      id: json['_id'] as String,
       shipmentNumber: json['shipmentNumber'] as String,
       customPickupAddress: json['customPickupAddress'] as String,
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
       status: json['status'] as String,
-      uploadedImages: json['uploadedImages'] as List<String>,
-      items: json['items']
-          .map<DoshItemModel>((x) => DoshItemModel.fromJson(x))
-          .toList(),
-      userNotes: json['userNotes'] as String,
-      totalQuantityKg: json['totalQuantityKg'] as num,
-      representitive: json['representitive'] ?? null as RepresentitiveModel?,
+      uploadedImages: json['uploadedImages'] != null
+          ? List<String>.from(json['uploadedImages'])
+          : [],
+      items: [],
+      userNotes: json['userNotes'] as String? ?? '',
+      totalQuantityKg: json['totalQuantityKg'] as num? ?? 0,
+      representitive: json['representitive'] != null
+          ? RepresentitiveModel.fromJson(json['representitive'])
+          : null,
     );
   }
 
-  // toJson method
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
       'shipmentNumber': shipmentNumber,
       'customPickupAddress': customPickupAddress,
-      'requestedPickupAt': requestedPickupAt,
+      'requestedPickupAt': requestedPickupAt.toIso8601String(),
       'status': status,
       'uploadedImages': uploadedImages,
-      'items': items,
+      'items': items.map((item) => item.toJson()).toList(),
       'userNotes': userNotes,
       'totalQuantityKg': totalQuantityKg,
-      'representitive': representitive,
+      'representitive': representitive?.toJson(),
     };
   }
 
@@ -73,14 +73,12 @@ class ShipmentModel {
     };
   }
 
-  // Optional: toString method for debugging
   @override
   String toString() {
     return 'ShipmentModel(id: $id, shipmentNumber: $shipmentNumber, customPickupAddress: $customPickupAddress, requestedPickupAt: $requestedPickupAt, status: $status, uploadedImages: $uploadedImages, items: $items, userNotes: $userNotes, totalQuantityKg: $totalQuantityKg, representitive: $representitive)';
   }
 
-  // Optional: copyWith method for creating modified copies
-  ShipmentModel copyWith({
+  SingleShipmentModel copyWith({
     String? id,
     String? shipmentNumber,
     String? customPickupAddress,
@@ -91,8 +89,9 @@ class ShipmentModel {
     String? userNotes,
     num? totalQuantityKg,
     RepresentitiveModel? representitive,
+    List<File>? images,
   }) {
-    return ShipmentModel(
+    return SingleShipmentModel(
       id: id ?? this.id,
       shipmentNumber: shipmentNumber ?? this.shipmentNumber,
       customPickupAddress: customPickupAddress ?? this.customPickupAddress,
@@ -103,6 +102,7 @@ class ShipmentModel {
       userNotes: userNotes ?? this.userNotes,
       totalQuantityKg: totalQuantityKg ?? this.totalQuantityKg,
       representitive: representitive ?? this.representitive,
+      images: images ?? this.images,
     );
   }
 }
