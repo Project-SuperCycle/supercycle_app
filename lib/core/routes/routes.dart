@@ -7,6 +7,8 @@ import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
+import 'package:supercycle_app/features/profile/edit_profile/presentation/view/edit_profile_view.dart';
+import 'package:supercycle_app/features/profile/presentation/view/profile_view.dart';
 import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
 import 'package:supercycle_app/features/shipment_details/presentation/views/shipment_details_view.dart';
@@ -19,7 +21,6 @@ import 'package:supercycle_app/features/calendar/presentation/view/shipments_cal
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: EndPoints.splashView,
     routes: [
       // Splash Screen Route - Choose your preferred transition
       GoRoute(
@@ -278,6 +279,14 @@ class AppRouter {
       GoRoute(
         path: EndPoints.contactUsView,
         builder: (context, state) => const ContactUsView(),
+      ),
+      GoRoute(
+        path: EndPoints.profileView,
+        builder: (context, state) => const ProfileView(),
+      ),
+      GoRoute(
+        path: EndPoints.editprofileView,
+        builder: (context, state) => const EditProfileView(),
       ),
     ],
 

@@ -18,3 +18,10 @@ const kGradientButton = LinearGradient(
   end: Alignment.bottomCenter,
   colors: [Color(0xFF3BC577), Color(0xFF078531)],
 );
+
+const kGradientContainer = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomRight,
+  colors: [Color(0xFF3BC577), Color(0xFFFFFFFF)],
+  stops: [0.70, 1.0],
+);

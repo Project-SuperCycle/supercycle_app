@@ -34,7 +34,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
   List<File> selectedImages = [];
   DateTime? selectedDateTime;
 
-  // Callback functions for shipment data
   void _onImagesChanged(List<File> images) {
     setState(() {
       selectedImages = images;
