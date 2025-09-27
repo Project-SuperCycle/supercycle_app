@@ -247,6 +247,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       items: products,
       userNotes: notes.isEmpty ? "" : notes.first,
     );
-    GoRouter.of(context).push(EndPoints.shippingDetailsView, extra: shipment);
+    GoRouter.of(context).push(EndPoints.shipmentPreviewView, extra: shipment);
   }
 }

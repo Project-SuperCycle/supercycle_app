@@ -40,7 +40,11 @@ class SingleShipmentModel {
       uploadedImages: json['uploadedImages'] != null
           ? List<String>.from(json['uploadedImages'])
           : [],
-      items: [],
+      items: json['items'] != null
+          ? List<DoshItemModel>.from(
+              json['items'].map((x) => DoshItemModel.fromJson(x)),
+            )
+          : [],
       userNotes: json['userNotes'] as String? ?? '',
       totalQuantityKg: json['totalQuantityKg'] as num? ?? 0,
       representitive: json['representitive'] != null

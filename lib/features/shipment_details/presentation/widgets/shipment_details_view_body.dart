@@ -53,17 +53,6 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
     return formData;
   }
 
-  void _confirmProcess() async {
-    // Handle image file with MIME type detection
-    FormData shipment = await createFormData();
-
-    BlocProvider.of<CreateShipmentCubit>(
-      context,
-    ).createShipment(shipment: shipment);
-
-    Logger().i("CONFIRM PROCESS");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +174,7 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                         const SizedBox(height: 20),
                         NotesContent(
                           notes: notes,
-                          shipmentID: "",
+                          shipmentID: widget.shipment.id,
                           onNotesChanged: (notes) {},
                         ),
                         const SizedBox(height: 30),

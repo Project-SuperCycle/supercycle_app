@@ -35,28 +35,26 @@ class ShipmentDetailsHeader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Text(
-                    'رقم الشحنة: ',
-                    style: AppStyles.styleSemiBold18(
-                      context,
-                    ).copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "لم يحدد بعد",
-                    style: AppStyles.styleSemiBold18(
-                      context,
-                    ).copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      shipment.shipmentNumber,
+                      style: AppStyles.styleSemiBold18(context).copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                "لم تحدد بعد",
+                shipment.status,
                 style: AppStyles.styleSemiBold16(
                   context,
                 ).copyWith(fontWeight: FontWeight.bold, color: Colors.blue),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

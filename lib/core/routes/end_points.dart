@@ -8,8 +8,9 @@ abstract class EndPoints {
   static const String firstOnboardingView = '/firstOnboardingView';
   static const String secondOnboardingView = '/secondOnboardingView';
   static const String thirdOnboardingView = '/thirdOnboardingView';
-  static const String shippingDetailsView = '/shippingDetailsView';
   static const String salesProcessView = '/salesProcessView';
+  static const String shipmentPreviewView = '/shipmentPreviewView';
+  static const String shipmentDetailsView = '/shipmentDetailsView';
   static const String shipmentsCalendarView = '/shipmentsCalendarView';
   static const String contactUsView = '/contactUsView';
 }
