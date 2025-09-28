@@ -1,4 +1,5 @@
 class DoshTypeModel {
+  final String id;
   final String name;
   final String pic;
   final String unit;
@@ -6,6 +7,7 @@ class DoshTypeModel {
   final num maxPrice;
 
   DoshTypeModel({
+    required this.id,
     required this.name,
     required this.pic,
     required this.unit,
@@ -16,6 +18,7 @@ class DoshTypeModel {
   // fromJson constructor
   factory DoshTypeModel.fromJson(Map<String, dynamic> json) {
     return DoshTypeModel(
+      id: json['typeId'] as String,
       name: json['name'] as String,
       pic: json['pic'] ?? "",
       unit: json['unit'] as String,
@@ -27,6 +30,7 @@ class DoshTypeModel {
   // toJson method
   Map<String, dynamic> toJson() {
     return {
+      'typeId': id,
       'name': name,
       'pic': pic,
       'unit': unit,
@@ -38,11 +42,12 @@ class DoshTypeModel {
   // Optional: toString method for debugging
   @override
   String toString() {
-    return 'DoshTypeModel(name: $name, pic: $pic, unit: $unit, minPrice: $minPrice, maxPrice: $maxPrice)';
+    return 'DoshTypeModel(id: $id ,name: $name, pic: $pic, unit: $unit, minPrice: $minPrice, maxPrice: $maxPrice)';
   }
 
   // Optional: copyWith method for creating modified copies
   DoshTypeModel copyWith({
+    String? id,
     String? name,
     String? pic,
     String? unit,
@@ -50,6 +55,7 @@ class DoshTypeModel {
     num? maxPrice,
   }) {
     return DoshTypeModel(
+      id: id ?? this.id,
       name: name ?? this.name,
       pic: pic ?? this.pic,
       unit: unit ?? this.unit,

@@ -989,6 +989,16 @@ class S {
     );
   }
 
+  /// `Edit Shipment`
+  String get shipment_edit {
+    return Intl.message(
+      'Edit Shipment',
+      name: 'shipment_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Confirm Process`
   String get confirm_process {
     return Intl.message(

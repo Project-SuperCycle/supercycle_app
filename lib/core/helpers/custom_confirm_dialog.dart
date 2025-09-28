@@ -25,14 +25,14 @@ Future<void> showCustomConfirmationDialog({
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                 Row(
+                Row(
                   children: [
-                    Icon(Icons.info_outline_rounded, color: AppColors.primaryColor),
-                    SizedBox(width: 10),
-                    Text(
-                      title,
-                      style: AppStyles.styleMedium16(context),
+                    Icon(
+                      Icons.info_outline_rounded,
+                      color: AppColors.primaryColor,
                     ),
+                    SizedBox(width: 10),
+                    Text(title, style: AppStyles.styleMedium16(context)),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -59,9 +59,11 @@ Future<void> showCustomConfirmationDialog({
                         Navigator.of(context).pop();
                         onConfirmed();
                       },
-                      child:  Text(
-                          S.of(context).alert_ok_button,
-                        style: AppStyles.styleMedium16(context),
+                      child: Text(
+                        S.of(context).alert_ok_button,
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(color: Colors.white),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -74,7 +76,9 @@ Future<void> showCustomConfirmationDialog({
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                       ),
                       onPressed: () => Navigator.of(context).pop(),
-                      child:  Text(S.of(context).alert_cancel_button, style: AppStyles.styleMedium14(context),
+                      child: Text(
+                        S.of(context).alert_cancel_button,
+                        style: AppStyles.styleSemiBold14(context),
                       ),
                     ),
                   ],

@@ -3,17 +3,20 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart'
-    show CustomBackButton;
+import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
+import 'package:supercycle_app/core/widgets/custom_text_field.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
-import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/sales_process_shipment_header.dart';
 import 'package:supercycle_app/generated/l10n.dart';
@@ -33,6 +36,21 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
   List<DoshItemModel> products = [];
   List<File> selectedImages = [];
   DateTime? selectedDateTime;
+  TextEditingController addressController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserAddress();
+  }
+
+  void _getUserAddress() async {
+    var user = await StorageServices.getUserData();
+    if (user == null) {
+      return;
+    }
+    addressController.text = user.bussinessAdress;
+  }
 
   // Callback functions for shipment data
   void _onImagesChanged(List<File> images) {
@@ -57,9 +75,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     setState(() {
       this.products = products;
     });
-    for (var product in products) {
-      Logger().d("TYPE: ${product.name} | QTY: ${product.quantity}");
-    }
   }
 
   @override
@@ -157,6 +172,34 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                           ),
                         ),
                         const SizedBox(height: 25),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            CustomTextField(
+                              label: "العنوان",
+                              hint: "عنوان الاستلام",
+                              controller: addressController,
+                              keyboardType: TextInputType.text,
+                              icon: Icons.location_on_rounded,
+                              isArabic: true,
+                              enabled: true,
+                              borderColor: Colors.green.shade300,
+                            ),
+                            const SizedBox(height: 6),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                              ),
+                              child: Text(
+                                "سيتم استلام الشحنة منه",
+                                style: AppStyles.styleSemiBold12(
+                                  context,
+                                ).copyWith(color: AppColors.subTextColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 25),
                         NotesContent(
                           notes: notes,
                           shipmentID: "",
@@ -165,7 +208,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                         const SizedBox(height: 30),
                         CustomButton(
                           onPress: () {
-                            // الآن يمكنك استخدام selectedImages هنا
                             _handleSubmit();
                           },
                           title: S.of(context).shipment_review,
@@ -198,23 +240,13 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
 
   // دالة للتعامل مع إرسال البيانات
   void _handleSubmit() {
-    ShipmentModel shipment = ShipmentModel(
-      id: "",
-      shipmentNumber: "لم يحدد بعد",
-      customPickupAddress: "لم يحدد بعد",
-      requestedPickupAt: selectedDateTime!,
-      status: "لم يحدد بعد",
-      uploadedImages: [],
+    CreateShipmentModel shipment = CreateShipmentModel(
+      customPickupAddress: addressController.text,
+      requestedPickupAt: selectedDateTime ?? DateTime.now(),
       images: selectedImages,
       items: products,
-      userNotes: notes.first,
-      totalQuantityKg: products.fold(
-        0,
-        (previousValue, element) => previousValue + element.quantity,
-      ),
-      representitive: null,
+      userNotes: notes.isEmpty ? "" : notes.first,
     );
-    Logger().i("SHIPMENT $shipment");
-    GoRouter.of(context).push(EndPoints.shippingDetailsView, extra: shipment);
+    GoRouter.of(context).push(EndPoints.shipmentPreviewView, extra: shipment);
   }
 }

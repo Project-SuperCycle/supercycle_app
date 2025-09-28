@@ -7,15 +7,18 @@ import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
-import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
+import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
 import 'package:supercycle_app/features/shipment_details/presentation/views/shipment_details_view.dart';
+import 'package:supercycle_app/features/shipment_edit/presentation/views/shipment_edit_view.dart';
+import 'package:supercycle_app/features/shipment_preview/presentation/views/shipment_review_view.dart';
 import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.dart';
 import 'package:supercycle_app/features/splash/views/splash_view.dart';
-import 'package:supercycle_app/features/calendar/presentation/view/shipments_calendar_view.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -250,14 +253,14 @@ class AppRouter {
         ),
       ),
 
-      // Shipping Details View Route
+      // Shipment Preview View Route
       GoRoute(
-        path: EndPoints.shippingDetailsView,
-        name: 'ShippingDetails',
+        path: EndPoints.shipmentPreviewView,
+        name: 'ShipmentPreview',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: ShipmentDetailsView(
-            shipment: state.extra as ShipmentModel,
+          child: ShipmentReviewView(
+            shipment: state.extra as CreateShipmentModel,
           ), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
@@ -271,6 +274,50 @@ class AppRouter {
           transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
+      // Shipment Details View Route
+      GoRoute(
+        path: EndPoints.shipmentDetailsView,
+        name: 'ShipmentDetails',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: ShipmentDetailsView(
+            shipment: state.extra as SingleShipmentModel,
+          ), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+
+      // Shipment Edit View Route
+      GoRoute(
+        path: EndPoints.shipmentEditView,
+        name: 'ShipmentEdit',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: ShipmentEditView(
+            shipment: state.extra as SingleShipmentModel,
+          ), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+
       GoRoute(
         path: EndPoints.shipmentsCalendarView,
         builder: (context, state) => const ShipmentsCalendarView(),

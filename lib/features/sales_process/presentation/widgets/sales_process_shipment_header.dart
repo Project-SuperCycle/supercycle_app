@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/helpers/date_time_picker_util.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
@@ -46,115 +47,17 @@ class _SalesProcessShipmentHeaderState
   }
 
   Future<void> _selectDate() async {
-    // تحديد نطاق التواريخ المسموحة (من بعد يومين من اليوم الحالي فما فوق)
-    final DateTime now = DateTime.now();
-    final DateTime today = DateTime(now.year, now.month, now.day);
-    final DateTime minDate = today.add(
-      const Duration(days: 1),
-    ); // بعد يومين على الأقل
-    final DateTime maxDate = today.add(
-      const Duration(days: 365),
-    ); // حتى سنة من الآن
-
-    // أولاً اختيار التاريخ
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDateTime ?? minDate,
-      firstDate: minDate,
-      lastDate: maxDate,
-      locale: const Locale('ar'),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Colors.orange,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
+    final DateTime? result = await DateTimePickerHelper.selectDateTime(
+      context,
+      currentSelectedDateTime: selectedDateTime,
     );
 
-    if (pickedDate != null) {
-      // إذا تم اختيار تاريخ، اعرض اختيار الوقت
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: selectedDateTime != null
-            ? TimeOfDay.fromDateTime(selectedDateTime!)
-            : TimeOfDay.now(),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: Colors.orange,
-                onPrimary: Colors.white,
-                surface: Colors.white,
-                onSurface: Colors.black,
-              ),
-            ),
-            child: child!,
-          );
-        },
-      );
-
-      if (pickedTime != null) {
-        // دمج التاريخ والوقت مع تحديد المنطقة الزمنية GMT+2
-        final DateTime combinedDateTime = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-
-        // تحويل التاريخ والوقت إلى منطقة زمنية محددة (GMT+2)
-        final Duration timeZoneOffset = Duration(hours: 2);
-        final DateTime dateTimeWithTimeZone = DateTime.utc(
-          combinedDateTime.year,
-          combinedDateTime.month,
-          combinedDateTime.day,
-          combinedDateTime.hour,
-          combinedDateTime.minute,
-        ).add(timeZoneOffset);
-
-        setState(() {
-          selectedDateTime = dateTimeWithTimeZone;
-        });
-
-        // طباعة التاريخ بالصيغة المطلوبة للتحقق
-        String formattedDateTime = formatDateTimeWithTimeZone(
-          dateTimeWithTimeZone,
-          timeZoneOffset,
-        );
-        print('Formatted DateTime: $formattedDateTime');
-      }
+    if (result != null) {
+      setState(() {
+        selectedDateTime = result;
+      });
+      widget.onDateTimeChanged(selectedDateTime);
     }
-    widget.onDateTimeChanged(selectedDateTime);
-  }
-
-  // دالة مساعدة لتنسيق التاريخ والوقت بصيغة ISO 8601 مع الـ timezone
-  String formatDateTimeWithTimeZone(DateTime dateTime, Duration offset) {
-    // تحويل الـ offset إلى صيغة نصية (+02:00)
-    final int offsetHours = offset.inHours;
-    final int offsetMinutes = offset.inMinutes % 60;
-    final String offsetString = offsetHours >= 0
-        ? '+${offsetHours.toString().padLeft(2, '0')}:${offsetMinutes.toString().padLeft(2, '0')}'
-        : '-${(-offsetHours).toString().padLeft(2, '0')}:${(-offsetMinutes).toString().padLeft(2, '0')}';
-
-    // تنسيق التاريخ والوقت
-    final String formattedDateTime =
-        '${dateTime.year.toString().padLeft(4, '0')}-'
-        '${dateTime.month.toString().padLeft(2, '0')}-'
-        '${dateTime.day.toString().padLeft(2, '0')}T'
-        '${dateTime.hour.toString().padLeft(2, '0')}:'
-        '${dateTime.minute.toString().padLeft(2, '0')}:'
-        '${dateTime.second.toString().padLeft(2, '0')}'
-        '$offsetString';
-
-    return formattedDateTime;
   }
 
   String _formatDateTime(DateTime? dateTime) {

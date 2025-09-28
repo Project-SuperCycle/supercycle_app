@@ -1,44 +1,54 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/core/widgets/custom_text_field.dart';
+import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
-import 'package:supercycle_app/features/shipment_details/presentation/widgets/settings_icon.dart';
-import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_content.dart';
-import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_header.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_notes.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_settings_icon.dart';
+import 'package:supercycle_app/features/shipment_details/presentation/widgets/shipment_details_header.dart';
+import 'package:supercycle_app/features/shipment_preview/presentation/widgets/shipment_review_content.dart';
 
-class ShipmentDetalisViewBody extends StatefulWidget {
-  const ShipmentDetalisViewBody({super.key, required this.shipment});
-  final ShipmentModel shipment;
+class ShipmentDetailsViewBody extends StatefulWidget {
+  const ShipmentDetailsViewBody({super.key, required this.shipment});
+  final SingleShipmentModel shipment;
 
   @override
-  State<ShipmentDetalisViewBody> createState() =>
-      _ShipmentDetalisViewBodyState();
+  State<ShipmentDetailsViewBody> createState() =>
+      _ShipmentDetailsViewBodyState();
 }
 
-class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
+class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
-  List<String> notes = [];
+
+  int _page = 3;
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    notes.add(widget.shipment.userNotes);
   }
 
-  void _confirmProcess() {}
+  void _onNavigationTap(int index) {
+    setState(() {
+      _page = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(gradient: kGradientBackground),
@@ -88,11 +98,15 @@ class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: const SettingsIcon(),
-                        ),
-                        ShipmentHeader(shipment: widget.shipment),
+                        (widget.shipment.status == 'canceled')
+                            ? Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: ShipmentDetailsSettingsIcon(
+                                  shipment: widget.shipment,
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                        ShipmentDetailsHeader(shipment: widget.shipment),
                         const SizedBox(height: 16),
                         const ProgressBar(completedSteps: 1),
                         const SizedBox(height: 20),
@@ -107,12 +121,12 @@ class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
                             isExpanded: isShipmentDetailsExpanded,
                             maxHeight: 320,
                             onTap: _toggleShipmentDetails,
-                            content: ShipmentDetailsContent(
+                            content: ShipmentReviewContent(
                               items: widget.shipment.items,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 25),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -127,17 +141,35 @@ class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
                             content: const ClientDataContent(),
                           ),
                         ),
-                        const SizedBox(height: 30),
-                        NotesContent(
-                          notes: notes,
-                          shipmentID: "",
-                          onNotesChanged: (notes) {},
+                        const SizedBox(height: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            CustomTextField(
+                              label: "العنوان",
+                              hint: widget.shipment.customPickupAddress,
+                              keyboardType: TextInputType.text,
+                              icon: Icons.location_on_rounded,
+                              isArabic: true,
+                              enabled: false,
+                              borderColor: Colors.green.shade300,
+                            ),
+                            const SizedBox(height: 6),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                              ),
+                              child: Text(
+                                "سيتم استلام الشحنة منه",
+                                style: AppStyles.styleSemiBold12(
+                                  context,
+                                ).copyWith(color: AppColors.subTextColor),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 20),
-                        CustomButton(
-                          onPress: _confirmProcess,
-                          title: S.of(context).confirm_process,
-                        ),
+                        ShipmentDetailsNotes(shipmentID: widget.shipment.id),
                         const SizedBox(height: 30),
                       ],
                     ),
@@ -147,6 +179,11 @@ class _ShipmentDetalisViewBodyState extends State<ShipmentDetalisViewBody> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: CustomCurvedNavigationBar(
+        currentIndex: _page,
+        navigationKey: _bottomNavigationKey,
+        onTap: _onNavigationTap,
       ),
     );
   }

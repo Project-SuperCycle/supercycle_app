@@ -7,6 +7,7 @@ import 'package:supercycle_app/core/services/api_endpoints.dart'
     show ApiEndpoints;
 import 'package:supercycle_app/core/services/api_services.dart'
     show ApiServices;
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
 import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart';
 import 'package:supercycle_app/features/sign_in/data/repos/signin_repo.dart';
@@ -49,6 +50,9 @@ class SignInRepoImp implements SignInRepo {
       }
 
       LoginedUserModel loginUser = LoginedUserModel.fromJson(data);
+
+      StorageServices.storeData('user', loginUser.toJson());
+      StorageServices.storeData('token', token);
       return right(loginUser);
     } on DioException catch (dioError) {
       return left(ServerFailure.fromDioError(dioError));

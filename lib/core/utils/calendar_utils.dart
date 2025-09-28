@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supercycle_app/features/calendar/data/models/shipment.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 class CalendarUtils {
   static const List<String> arabicDayNames = [
@@ -10,7 +10,7 @@ class CalendarUtils {
     'الأربعاء',
     'الخميس',
     'الجمعة',
-    'السبت'
+    'السبت',
   ];
 
   static bool isSameDate(DateTime a, DateTime b) {
@@ -21,7 +21,6 @@ class CalendarUtils {
     return DateFormat('yyyy-MM-dd', 'en').format(date);
   }
 
-
   static String formatMonthYear(DateTime date) {
     return DateFormat.yMMMM('ar').format(date);
   }
@@ -31,18 +30,22 @@ class CalendarUtils {
   }
 
   /// يحدد لون الشحنات لليوم
-  static Color getShipmentColor(List<Shipment> shipments) {
-    final allDelivered = shipments.every((s) => s.status == ShipmentStatus.delivered);
-    final anyPending = shipments.any((s) => s.status == ShipmentStatus.pending);
+  static Color getShipmentColor(List<ShipmentModel> shipments) {
+    final allDelivered = shipments.every((s) => s.status == "delivered");
+    final anyPending = shipments.any((s) => s.status == "pending");
 
     if (allDelivered) return Colors.green[600]!; // كله متسلم
-    if (anyPending) return Colors.red[600]!;    // لسه فيه pending
-    return Colors.grey[300]!;                   // fallback
+    if (anyPending) return Colors.red[600]!; // لسه فيه pending
+    return Colors.grey[300]!; // fallback
   }
 
   static CalendarInfo getCalendarInfo(DateTime currentDate) {
     final firstDayOfMonth = DateTime(currentDate.year, currentDate.month, 1);
-    final daysInMonth = DateTime(currentDate.year, currentDate.month + 1, 0).day;
+    final daysInMonth = DateTime(
+      currentDate.year,
+      currentDate.month + 1,
+      0,
+    ).day;
     final firstWeekday = firstDayOfMonth.weekday % 7;
 
     return CalendarInfo(

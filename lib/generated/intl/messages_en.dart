@@ -188,6 +188,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shipment_details": MessageLookupByLibrary.simpleMessage(
       "Shipment details",
     ),
+    "shipment_edit": MessageLookupByLibrary.simpleMessage("Edit Shipment"),
     "shipment_number": MessageLookupByLibrary.simpleMessage("Shipment number"),
     "shipment_review": MessageLookupByLibrary.simpleMessage("Shipment Review"),
     "shipment_schedule": MessageLookupByLibrary.simpleMessage(
