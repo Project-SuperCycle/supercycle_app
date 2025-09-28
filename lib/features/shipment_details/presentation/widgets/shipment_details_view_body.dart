@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
@@ -5,6 +6,7 @@ import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
+import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
@@ -28,14 +30,25 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
 
+  int _page = 3;
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
   }
 
+  void _onNavigationTap(int index) {
+    setState(() {
+      _page = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(gradient: kGradientBackground),
@@ -166,6 +179,11 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: CustomCurvedNavigationBar(
+        currentIndex: _page,
+        navigationKey: _bottomNavigationKey,
+        onTap: _onNavigationTap,
       ),
     );
   }

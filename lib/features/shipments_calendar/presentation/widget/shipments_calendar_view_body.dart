@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -5,6 +6,7 @@ import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
+import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/back_and_info_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
@@ -24,6 +26,10 @@ class ShipmentsCalendarViewBody extends StatefulWidget {
 }
 
 class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
+  int _page = 3;
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   DateTime _currentDate = DateTime.now();
   DateTime? _selectedDate;
 
@@ -35,12 +41,19 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
     BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
   }
 
+  void _onNavigationTap(int index) {
+    setState(() {
+      _page = index;
+    });
+  }
+
   static const String _imageUrl =
       "https://moe-ye.net/wp-content/uploads/2021/08/IMG-20210808-WA0001.jpg";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(gradient: kGradientBackground),
@@ -101,6 +114,11 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: CustomCurvedNavigationBar(
+        currentIndex: _page,
+        navigationKey: _bottomNavigationKey,
+        onTap: _onNavigationTap,
       ),
     );
   }
