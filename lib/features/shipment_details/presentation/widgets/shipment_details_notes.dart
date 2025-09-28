@@ -17,6 +17,7 @@ class ShipmentDetailsNotes extends StatefulWidget {
 
 class _ShipmentDetailsNotesState extends State<ShipmentDetailsNotes> {
   List<String> notes = [];
+  TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
@@ -34,9 +35,16 @@ class _ShipmentDetailsNotesState extends State<ShipmentDetailsNotes> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return ShipmentAddNoteModel(shipmentId: widget.shipmentID);
+        return ShipmentAddNoteModel(
+          shipmentId: widget.shipmentID,
+          noteController: noteController,
+        );
       },
     );
+    setState(() {
+      notes.add(noteController.text);
+    });
+    noteController.clear();
   }
 
   @override

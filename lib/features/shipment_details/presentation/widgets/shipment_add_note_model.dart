@@ -7,7 +7,12 @@ import 'package:supercycle_app/features/shipment_details/data/models/create_note
 
 class ShipmentAddNoteModel extends StatefulWidget {
   final String shipmentId;
-  const ShipmentAddNoteModel({super.key, required this.shipmentId});
+  final TextEditingController noteController;
+  const ShipmentAddNoteModel({
+    super.key,
+    required this.shipmentId,
+    required this.noteController,
+  });
 
   @override
   State<ShipmentAddNoteModel> createState() => _ShipmentAddNoteModelState();
@@ -29,7 +34,6 @@ class _ShipmentAddNoteModelState extends State<ShipmentAddNoteModel> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController noteController = TextEditingController();
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -73,7 +77,7 @@ class _ShipmentAddNoteModelState extends State<ShipmentAddNoteModel> {
 
               // TextField
               TextField(
-                controller: noteController,
+                controller: widget.noteController,
                 maxLines: 4,
                 textAlign: TextAlign.right,
                 decoration: InputDecoration(
@@ -134,11 +138,11 @@ class _ShipmentAddNoteModelState extends State<ShipmentAddNoteModel> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        if (noteController.text.trim().isNotEmpty) {
+                        if (widget.noteController.text.trim().isNotEmpty) {
                           // TODO: Call the save note method from your cubit
                           _addNote(
                             note: CreateNotesModel(
-                              content: noteController.text.trim(),
+                              content: widget.noteController.text.trim(),
                             ),
                             shipmentId: widget.shipmentId,
                           );

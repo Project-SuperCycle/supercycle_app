@@ -85,10 +85,14 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: const ShipmentDetailsSettingsIcon(),
-                        ),
+                        (widget.shipment.status == 'canceled')
+                            ? Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: ShipmentDetailsSettingsIcon(
+                                  shipment: widget.shipment,
+                                ),
+                              )
+                            : const SizedBox.shrink(),
                         ShipmentDetailsHeader(shipment: widget.shipment),
                         const SizedBox(height: 16),
                         const ProgressBar(completedSteps: 1),

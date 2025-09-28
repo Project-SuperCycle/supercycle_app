@@ -111,6 +111,7 @@
   "start_date": "تاريخ بداية التعاون",
   "payment_method": "طريقة السداد المفضلة",
   "shipment_review": "مراجعة الشحنة",
+  "shipment_edit": "تعديل الشحنة",
   "confirm_process": "تأكيد العملية",
   "table_of_shipments": "جدول متابعة الشحنات",
   "follow_up_shipments" : "تابع مواعيد تسليم الشحنات وإجراءات التسليم"

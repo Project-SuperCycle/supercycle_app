@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -9,31 +8,6 @@ part 'shipment_state.dart';
 class ShipmentCubit extends Cubit<ShipmentState> {
   final ShipmentDetailsRepoImp shipmentDetailsRepo;
   ShipmentCubit({required this.shipmentDetailsRepo}) : super(ShipmentInitial());
-
-  Future<void> updateShipment({
-    required FormData shipment,
-    required String shipmentId,
-  }) async {
-    emit(UpdateShipmentLoading());
-    try {
-      var result = await shipmentDetailsRepo.updateShipment(
-        shipment: shipment,
-        shipmentId: shipmentId,
-      );
-      result.fold(
-        (failure) {
-          emit(UpdateShipmentFailure(errorMessage: failure.errMessage));
-        },
-        (message) {
-          emit(UpdateShipmentSuccess(message: message));
-          // Store user globally
-        },
-      );
-      Logger().i("UPDATE SHIPMENT CUBIT");
-    } catch (error) {
-      emit(UpdateShipmentFailure(errorMessage: error.toString()));
-    }
-  }
 
   Future<void> cancelShipment({required String shipmentId}) async {
     emit(CancelShipmentLoading());

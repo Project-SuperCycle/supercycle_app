@@ -4,21 +4,22 @@ import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/errors/failures.dart';
 import 'package:supercycle_app/core/services/api_endpoints.dart';
 import 'package:supercycle_app/core/services/api_services.dart';
-import 'package:supercycle_app/features/shipment_details/data/repos/shipment_details_repo.dart';
+import 'package:supercycle_app/features/shipment_edit/data/repos/shipment_edit_repo.dart';
 
-class ShipmentDetailsRepoImp implements ShipmentDetailsRepo {
+class ShipmentEditRepoImp implements ShipmentEditRepo {
   final ApiServices apiServices;
-  ShipmentDetailsRepoImp({required this.apiServices});
+  ShipmentEditRepoImp({required this.apiServices});
 
   @override
-  Future<Either<Failure, String>> cancelShipment({
-    required String shipmentId,
+  Future<Either<Failure, String>> editShipment({
+    required FormData shipment,
+    required String id,
   }) async {
-    // TODO: implement cancelShipment
+    // TODO: implement createShipment
     try {
-      final response = await apiServices.post(
-        endPoint: ApiEndpoints.cancelShipment.replaceFirst('{id}', shipmentId),
-        data: {},
+      final response = await apiServices.patchFormData(
+        endPoint: ApiEndpoints.editShipment.replaceFirst('{id}', id),
+        data: shipment,
       );
       String message = response["message"];
       return right(message);

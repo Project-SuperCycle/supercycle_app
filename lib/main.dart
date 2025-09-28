@@ -14,6 +14,8 @@ import 'package:supercycle_app/features/shipment_details/data/cubits/notes_cubit
 import 'package:supercycle_app/features/shipment_details/data/cubits/shipment_cubit/shipment_cubit.dart';
 import 'package:supercycle_app/features/shipment_details/data/repos/shipment_details_repo_imp.dart';
 import 'package:supercycle_app/features/shipment_details/data/repos/shipment_notes_repo_imp.dart';
+import 'package:supercycle_app/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
+import 'package:supercycle_app/features/shipment_edit/data/repos/shipment_edit_repo_imp.dart';
 import 'package:supercycle_app/features/shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
 import 'package:supercycle_app/features/shipment_preview/data/repos/shipment_preview_repo_imp.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
@@ -87,6 +89,12 @@ void main() async {
             });
             return cubit;
           },
+        ),
+
+        BlocProvider(
+          create: (context) => ShipmentEditCubit(
+            shipmentEditRepo: getIt.get<ShipmentEditRepoImp>(),
+          ),
         ),
       ],
 

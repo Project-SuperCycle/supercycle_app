@@ -433,7 +433,7 @@ class S {
   String get shipment_details {
     return Intl.message(
       'Shipment details',
-      name: 'shipment_preview',
+      name: 'shipment_details',
       desc: '',
       args: [],
     );
@@ -984,6 +984,16 @@ class S {
     return Intl.message(
       'Shipment Review',
       name: 'shipment_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Shipment`
+  String get shipment_edit {
+    return Intl.message(
+      'Edit Shipment',
+      name: 'shipment_edit',
       desc: '',
       args: [],
     );

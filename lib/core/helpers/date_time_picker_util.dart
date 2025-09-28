@@ -11,7 +11,7 @@ class DateTimePickerHelper {
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
     final DateTime minDate = today.add(
-      const Duration(days: 1),
+      const Duration(days: 3),
     ); // بعد يومين على الأقل
     final DateTime maxDate = today.add(
       const Duration(days: 365),
@@ -137,10 +137,7 @@ class DateTimePickerHelper {
         ).add(timeZoneOffset);
 
         // طباعة التاريخ بالصيغة المطلوبة للتحقق
-        String formattedDateTime = formatDateTimeWithTimeZone(
-          dateTimeWithTimeZone,
-          timeZoneOffset,
-        );
+        formatDateTimeWithTimeZone(dateTimeWithTimeZone, timeZoneOffset);
         return dateTimeWithTimeZone;
       }
     }

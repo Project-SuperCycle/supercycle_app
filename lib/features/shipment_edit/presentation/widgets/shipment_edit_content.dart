@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
+
 import 'package:supercycle_app/features/sales_process/data/models/unit.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/editable_product_card.dart';
 
-class EntryShipmentDetailsContent extends StatefulWidget {
+class ShipmentEditContent extends StatefulWidget {
   final List<DoshItemModel> products;
   final Function(List<DoshItemModel>) onProductsChanged;
-  const EntryShipmentDetailsContent({
+  const ShipmentEditContent({
     super.key,
     required this.products,
     required this.onProductsChanged,
   });
 
   @override
-  State<EntryShipmentDetailsContent> createState() =>
-      _EntryShipmentDetailsContentState();
+  State<ShipmentEditContent> createState() => _ShipmentEditContentState();
 }
 
-class _EntryShipmentDetailsContentState
-    extends State<EntryShipmentDetailsContent> {
+class _ShipmentEditContentState extends State<ShipmentEditContent> {
   late List<DoshItemModel> editableProducts;
   bool _isUpdating = false; // Flag to prevent recursive updates
 
@@ -40,7 +41,7 @@ class _EntryShipmentDetailsContentState
   }
 
   @override
-  void didUpdateWidget(EntryShipmentDetailsContent oldWidget) {
+  void didUpdateWidget(ShipmentEditContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Only update if products actually changed and we're not in the middle of an update
     if (!_isUpdating && widget.products != oldWidget.products) {

@@ -13,14 +13,12 @@ class EditableProductCard extends StatefulWidget {
   final DoshItemModel product;
   final Function(DoshItemModel updatedProduct) onProductUpdated;
   final VoidCallback onProductDeleted;
-
   const EditableProductCard({
     super.key,
     required this.product,
     required this.onProductUpdated,
     required this.onProductDeleted,
   });
-
   @override
   State<EditableProductCard> createState() => _EditableProductCardState();
 }
@@ -29,8 +27,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
   late TextEditingController quantityController;
   String? selectedTypeName;
   String averagePrice = '0.00';
-  bool _isInitializing = true;
-  bool _isUpdating = false;
+  bool _isInitializing =
+      true; // Flag to prevent callbacks during initialization
+  bool _isUpdating = false; // Flag to prevent recursive updates
 
   static const EdgeInsets _cardPadding = EdgeInsets.symmetric(
     horizontal: 12.0,
@@ -63,23 +62,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
   }
 
   void _setInitialTypeName() {
-    // Get available type options
-    final typeOptions = _getTypeOptions();
-
-    // Set initial type name if product has a name and it exists in options
-    if (widget.product.name.isNotEmpty &&
-        typeOptions.contains(widget.product.name)) {
+    // Set initial type name if product has a name
+    if (widget.product.name.isNotEmpty) {
       selectedTypeName = widget.product.name;
-    } else if (typeOptions.isNotEmpty && widget.product.name.isNotEmpty) {
-      // If the product name doesn't exist in options, try to find a similar one
-      final similarType = typeOptions.firstWhere(
-        (type) =>
-            type.toLowerCase().contains(widget.product.name.toLowerCase()),
-        orElse: () => typeOptions.first,
-      );
-      selectedTypeName = similarType;
-    } else {
-      selectedTypeName = null;
     }
   }
 
@@ -167,20 +152,10 @@ class _EditableProductCardState extends State<EditableProductCard> {
   }
 
   List<String> _getTypeOptions() {
-    try {
-      var typesList = getIt<DoshTypesManager>().typesList
-          .map((type) => type.name)
-          .where((name) => name.isNotEmpty) // Filter out empty names
-          .toSet() // Remove duplicates
-          .toList();
-
-      // Sort the list for consistency
-      typesList.sort();
-      return typesList;
-    } catch (e) {
-      print('Error getting type options: $e');
-      return [];
-    }
+    var typesList = getIt<DoshTypesManager>().typesList
+        .map((type) => type.name)
+        .toList();
+    return typesList;
   }
 
   num _getPrice(String name) {
@@ -190,39 +165,12 @@ class _EditableProductCardState extends State<EditableProductCard> {
           .price;
       return price;
     } catch (e) {
-      print('Error getting price for $name: $e');
       return 0;
     }
   }
 
   List<String> _getUnitOptions() {
     return [Unit.kg.abbreviation, Unit.ton.abbreviation];
-  }
-
-  // Helper method to get valid initial value for type dropdown
-  String? _getValidTypeInitialValue() {
-    final options = _getTypeOptions();
-    if (options.isEmpty) return null;
-
-    // Return selectedTypeName only if it exists in options
-    if (selectedTypeName != null && options.contains(selectedTypeName)) {
-      return selectedTypeName;
-    }
-
-    return null;
-  }
-
-  // Helper method to get valid initial value for unit dropdown
-  String _getValidUnitInitialValue() {
-    final options = _getUnitOptions();
-
-    // Return widget.product.unit only if it exists in options
-    if (options.contains(widget.product.unit)) {
-      return widget.product.unit;
-    }
-
-    // Default to first unit if current unit is invalid
-    return options.first;
   }
 
   @override
@@ -260,8 +208,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
             options: _getTypeOptions(),
             onChanged: _onTypeChanged,
             hintText: S.of(context).select_type,
-            initialValue:
-                _getValidTypeInitialValue(), // Use validated initial value
+            initialValue: selectedTypeName,
           ),
         ),
       ],
@@ -292,7 +239,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
   Widget _buildUnitDropdown(BuildContext context) {
     return CustomDropdown(
       showBorder: false,
-      initialValue: _getValidUnitInitialValue(), // Use validated initial value
+      initialValue: widget.product.unit,
       options: _getUnitOptions(),
       onChanged: _onUnitChanged,
     );
@@ -335,7 +282,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         InkWell(
-          onTap: _safeDeleteProduct,
+          onTap: _safeDeleteProduct, // Fixed: now safely calls delete
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.symmetric(

@@ -10,7 +10,7 @@ abstract class ApiEndpoints {
   static const String getAllShipments = '/shipments';
   static const String getShipmentById = '/shipments/{id}';
   static const String createShipment = '/shipments';
-  static const String updateShipment = '/shipments/{id}';
+  static const String editShipment = '/shipments/{id}';
   static const String cancelShipment = '/shipments/{id}/cancel';
   static const String addNotes = '/shipments/{id}/notes';
   static const String getAllNotes = '/shipments/{id}/notes';

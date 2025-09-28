@@ -185,9 +185,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_type": MessageLookupByLibrary.simpleMessage("Select type"),
     "sell_title": MessageLookupByLibrary.simpleMessage("Do you want to sell?"),
     "shipment_date": MessageLookupByLibrary.simpleMessage("Shipment date"),
-    "shipment_preview": MessageLookupByLibrary.simpleMessage(
+    "shipment_details": MessageLookupByLibrary.simpleMessage(
       "Shipment details",
     ),
+    "shipment_edit": MessageLookupByLibrary.simpleMessage("Edit Shipment"),
     "shipment_number": MessageLookupByLibrary.simpleMessage("Shipment number"),
     "shipment_review": MessageLookupByLibrary.simpleMessage("Shipment Review"),
     "shipment_schedule": MessageLookupByLibrary.simpleMessage(
