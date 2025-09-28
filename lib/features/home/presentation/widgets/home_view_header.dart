@@ -13,7 +13,6 @@ class HomeViewHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Status bar height (top)
     MediaQueryData mediaQuery = MediaQuery.of(context);
     double statusBarHeight = mediaQuery.padding.top;
 

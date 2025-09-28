@@ -52,7 +52,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     addressController.text = user.bussinessAdress;
   }
 
-  // Callback functions for shipment data
   void _onImagesChanged(List<File> images) {
     setState(() {
       selectedImages = images;
