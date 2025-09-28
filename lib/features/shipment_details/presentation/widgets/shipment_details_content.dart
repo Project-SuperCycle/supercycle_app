@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'product_card.dart';
-import 'shipment_summary.dart';
+import 'shipment_details_summary.dart';
 
 class ShipmentDetailsContent extends StatelessWidget {
   final List<DoshItemModel> items;
@@ -43,7 +43,7 @@ class ShipmentDetailsContent extends StatelessWidget {
         }),
         Divider(color: Colors.grey.shade300),
         const SizedBox(height: 16),
-        ShipmentSummary(items: items),
+        ShipmentDetailsSummary(items: items),
         const SizedBox(height: 16),
       ],
     );

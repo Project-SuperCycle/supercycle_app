@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
-
 import 'package:supercycle_app/features/sales_process/data/models/unit.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/editable_product_card.dart';
@@ -22,23 +21,17 @@ class EntryShipmentDetailsContent extends StatefulWidget {
 class _EntryShipmentDetailsContentState
     extends State<EntryShipmentDetailsContent> {
   late List<DoshItemModel> editableProducts;
-  final List<String> availableProductTypes = [
-    'كرتون درجه تانيه',
-    'كرتون درجه اولى',
-    'كرتون بني',
-    'ورق أبيض',
-  ];
+  bool _isUpdating = false; // Flag to prevent recursive updates
 
   @override
   void initState() {
     super.initState();
     editableProducts = List.from(widget.products);
-
     if (editableProducts.isEmpty) {
       editableProducts.add(
         DoshItemModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: availableProductTypes.first,
+          name: "",
           quantity: 0,
           unit: Unit.kg.abbreviation,
         ),
@@ -46,17 +39,93 @@ class _EntryShipmentDetailsContentState
     }
   }
 
+  @override
+  void didUpdateWidget(EntryShipmentDetailsContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only update if products actually changed and we're not in the middle of an update
+    if (!_isUpdating && widget.products != oldWidget.products) {
+      editableProducts = List.from(widget.products);
+      if (editableProducts.isEmpty) {
+        editableProducts.add(
+          DoshItemModel(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            name: "",
+            quantity: 0,
+            unit: Unit.kg.abbreviation,
+          ),
+        );
+      }
+    }
+  }
+
   void _addProduct() {
-    widget.onProductsChanged(editableProducts);
+    if (_isUpdating) return; // Prevent recursive calls
+
     setState(() {
       editableProducts.add(
         DoshItemModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: availableProductTypes.first,
+          name: "",
           quantity: 0,
           unit: Unit.kg.abbreviation,
         ),
       );
+    });
+    // Don't call _scheduleCallback for add product as it's just adding an empty product
+  }
+
+  void _scheduleCallback() {
+    if (_isUpdating) return; // Prevent recursive calls
+
+    _isUpdating = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        widget.onProductsChanged(List.from(editableProducts));
+      }
+      _isUpdating = false;
+    });
+  }
+
+  void _handleProductUpdate(DoshItemModel updatedProduct) {
+    if (_isUpdating) return; // Prevent recursive calls
+
+    // Use Future.microtask to defer the setState call
+    Future.microtask(() {
+      if (mounted && !_isUpdating) {
+        setState(() {
+          final index = editableProducts.indexWhere(
+            (p) => p.id == updatedProduct.id,
+          );
+          if (index != -1) {
+            editableProducts[index] = updatedProduct;
+          }
+        });
+        _scheduleCallback();
+      }
+    });
+  }
+
+  void _handleProductDelete(DoshItemModel productToDelete) {
+    if (_isUpdating) return; // Prevent recursive calls
+
+    // Use Future.microtask to defer the setState call
+    Future.microtask(() {
+      if (mounted && !_isUpdating) {
+        setState(() {
+          editableProducts.removeWhere((p) => p.id == productToDelete.id);
+          if (editableProducts.isEmpty) {
+            editableProducts.add(
+              DoshItemModel(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: "",
+                quantity: 0,
+                unit: Unit.kg.abbreviation,
+              ),
+            );
+          }
+        });
+        _scheduleCallback();
+      }
     });
   }
 
@@ -67,28 +136,12 @@ class _EntryShipmentDetailsContentState
         children: [
           ...editableProducts.map((product) {
             return EditableProductCard(
+              key: ValueKey(product.id), // Add key for better widget identity
               product: product,
-              onProductUpdated: (updatedProduct) {
-                setState(() {
-                  final index = editableProducts.indexWhere(
-                    (p) => p.id == updatedProduct.id,
-                  );
-                  if (index != -1) {
-                    editableProducts[index] = updatedProduct;
-                  }
-                });
-              },
-              onProductDeleted: () {
-                setState(() {
-                  editableProducts.remove(product);
-                  if (editableProducts.isEmpty) {
-                    _addProduct();
-                  }
-                });
-              },
+              onProductUpdated: _handleProductUpdate,
+              onProductDeleted: () => _handleProductDelete(product),
             );
           }),
-          // const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerLeft,
             child: Container(

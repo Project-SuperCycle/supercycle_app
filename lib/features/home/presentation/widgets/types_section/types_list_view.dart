@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, BlocConsumer;
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart'
-    show CustomLoadingIndicator;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle_app/core/services/dosh_types_manager.dart';
+import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
-import 'package:supercycle_app/features/home/presentation/widgets/types_section/type_card_item.dart'
-    show TypeCardItem;
+import 'package:supercycle_app/features/home/presentation/widgets/types_section/type_card_item.dart';
 
 class TypesListView extends StatefulWidget {
   const TypesListView({super.key});
@@ -29,6 +30,13 @@ class _TypesListViewState extends State<TypesListView> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+
+        if (state is FetchDoshTypesSuccess) {
+          List<DoshItem> typesList = state.doshTypes
+              .map((e) => DoshItem(id: e.id, name: e.name, price: e.maxPrice))
+              .toList();
+          getIt<DoshTypesManager>().setTypesList(typesList);
         }
       },
       builder: (context, state) {

@@ -26,7 +26,6 @@ class SignInCubit extends Cubit<SignInState> {
         },
         (user) {
           emit(SignInSuccess(user: user));
-          StorageServices.storeData('user', user.toJson());
         },
       );
     } catch (error) {
