@@ -124,6 +124,7 @@ class _MyAppState extends State<MyApp> {
       child: BlocBuilder<LocalCubit, LocalState>(
         builder: (context, state) {
           return MaterialApp.router(
+            theme: ThemeData(scaffoldBackgroundColor: Colors.white),
             routerConfig: AppRouter.router,
             locale: (state is ChangeLocalState)
                 ? const Locale('ar')

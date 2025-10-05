@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class ProfileStatsColumn extends StatelessWidget {
   const ProfileStatsColumn({
@@ -17,20 +19,20 @@ class ProfileStatsColumn extends StatelessWidget {
       children: [
         Text(
           number,
-          style: const TextStyle(
-            color: Colors.white,
+          style: AppStyles.styleSemiBold24(context).copyWith(
             fontSize: 36,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
+        const SizedBox(height: 12),
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            height: 1.2,
+          style: AppStyles.styleSemiBold12(context).copyWith(
             fontWeight: FontWeight.bold,
+            height: 1.6,
+            color: AppColors.primaryColor,
           ),
         ),
       ],

@@ -21,12 +21,8 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
     return Scaffold(
       body: Column(
         children: [
-          // Profile Header Section
-          ProfileHeaderSection(
-            profileData: ProfileConstants.sampleProfileData,
-          ),
-          const SizedBox(height: 20),
-
+          ProfileHeaderSection(profileData: ProfileConstants.sampleProfileData),
+          const SizedBox(height: 30),
           // Page Indicators
           ProfilePageIndicator(
             currentPage: currentPage,
@@ -45,10 +41,12 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
               width: double.infinity,
               color: Colors.white,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
                 child: Column(
                   children: [
-                    const SizedBox(height: 2),
                     _buildCurrentPageContent(),
                     const SizedBox(height: 40),
                   ],

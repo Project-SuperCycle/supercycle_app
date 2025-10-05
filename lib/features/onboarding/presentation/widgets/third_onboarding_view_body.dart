@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart' show GoRouter;
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
-import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
+import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle_app/features/onboarding/presentation/widgets/small_circular_indicator.dart'
-    show SmallCircularIndicator;
-import 'package:supercycle_app/features/onboarding/presentation/widgets/small_rounded_indicator.dart'
-    show SmallRoundedIndicator;
+import 'package:supercycle_app/features/onboarding/presentation/widgets/partial_circle_border_painter.dart';
+
 import 'package:supercycle_app/generated/l10n.dart' show S;
 
 class ThirdOnboardingViewBody extends StatelessWidget {
@@ -18,7 +15,6 @@ class ThirdOnboardingViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      decoration: const BoxDecoration(gradient: kGradientBackground),
       child: Column(
         children: [
           Align(
@@ -30,7 +26,7 @@ class ThirdOnboardingViewBody extends StatelessWidget {
                   S.of(context).skip,
                   style: AppStyles.styleSemiBold18(
                     context,
-                  ).copyWith(color: Colors.white),
+                  ).copyWith(color: AppColors.primaryColor),
                 ),
                 onPressed: () {
                   GoRouter.of(context).pushReplacement(EndPoints.homeView);
@@ -38,64 +34,69 @@ class ThirdOnboardingViewBody extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          Text(
+            "خدمة",
+            style: AppStyles.styleBold24(
+              context,
+            ).copyWith(fontSize: 36, color: AppColors.primaryColor),
+          ),
+          SizedBox(height: 30),
           Flexible(
             fit: FlexFit.tight,
-            child: Stack(
-              children: [
-                Image.asset(AppAssets.onboarding3_1, fit: BoxFit.cover),
-                Positioned(
-                  top: 100,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Image.asset(
-                    AppAssets.onboarding3_2,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30.0,
+                vertical: 20,
+              ),
+              child: Image.asset(AppAssets.onboarding3, fit: BoxFit.cover),
             ),
           ),
-          SizedBox(height: 10),
-          Text(
-            S.of(context).onboarding_3,
-            style: AppStyles.styleSemiBold18(context).copyWith(
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              "مندوبنا هيجيلك يستلم الكرتون، وتقدر تتابع العملية لحظة بلحظة مندوبنا هيجيلك يستلم الكرتون، وتقدر تتابع العملية لحظة بلحظة",
+              style: AppStyles.styleSemiBold18(
+                context,
+              ).copyWith(color: AppColors.primaryColor, height: 1.6),
+              textAlign: TextAlign.center,
             ),
           ),
 
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Row(
-              textDirection: TextDirection.ltr,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  textDirection: TextDirection.ltr,
-                  children: [
-                    SmallCircularIndicator(),
-                    SizedBox(width: 5),
-                    SmallCircularIndicator(),
-                    SizedBox(width: 5),
-                    SmallRoundedIndicator(),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    GoRouter.of(context).pushReplacement(EndPoints.homeView);
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.black,
+          SizedBox(height: 30),
+          CustomPaint(
+            painter: PartialCircleBorderPainter(
+              color: AppColors.primaryColor,
+              strokeWidth: 4,
+              percentage: 0.75, // 25% of the circle
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: GestureDetector(
+                onTap: () {
+                  GoRouter.of(
+                    context,
+                  ).pushReplacement(EndPoints.fourthOnboardingView);
+                },
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  margin: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Colors.white,
+                    size: 30,
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-          SizedBox(height: 25),
+
+          SizedBox(height: 50),
         ],
       ),
     );

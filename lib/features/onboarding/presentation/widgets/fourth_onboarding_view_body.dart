@@ -8,8 +8,8 @@ import 'package:supercycle_app/features/onboarding/presentation/widgets/partial_
 
 import 'package:supercycle_app/generated/l10n.dart' show S;
 
-class SecondOnboardingViewBody extends StatelessWidget {
-  const SecondOnboardingViewBody({super.key});
+class FourthOnboardingViewBody extends StatelessWidget {
+  const FourthOnboardingViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class SecondOnboardingViewBody extends StatelessWidget {
             ),
           ),
           Text(
-            "بيع",
+            "فلوس",
             style: AppStyles.styleBold24(
               context,
             ).copyWith(fontSize: 36, color: AppColors.primaryColor),
@@ -43,19 +43,13 @@ class SecondOnboardingViewBody extends StatelessWidget {
           SizedBox(height: 30),
           Flexible(
             fit: FlexFit.tight,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30.0,
-                vertical: 20,
-              ),
-              child: Image.asset(AppAssets.onboarding2, fit: BoxFit.cover),
-            ),
+            child: Image.asset(AppAssets.onboarding4, fit: BoxFit.cover),
           ),
           SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
-              "عرض الكرتون اللي عندك بخطوات بسيطة، وحدد الكمية والمكان",
+              "استلم فلوسك بعد البيع للمصنع مباشرة بكل سهولة",
               style: AppStyles.styleSemiBold18(
                 context,
               ).copyWith(color: AppColors.primaryColor, height: 1.6),
@@ -68,15 +62,13 @@ class SecondOnboardingViewBody extends StatelessWidget {
             painter: PartialCircleBorderPainter(
               color: AppColors.primaryColor,
               strokeWidth: 4,
-              percentage: 0.50, // 25% of the circle
+              percentage: 1.0, // 25% of the circle
             ),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: GestureDetector(
                 onTap: () {
-                  GoRouter.of(
-                    context,
-                  ).pushReplacement(EndPoints.thirdOnboardingView);
+                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
                 },
                 child: Container(
                   width: 80,

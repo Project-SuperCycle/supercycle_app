@@ -5,11 +5,12 @@ import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
 import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
+import 'package:supercycle_app/features/onboarding/presentation/views/fourth_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
-import 'package:supercycle_app/features/profile/edit_profile/presentation/view/edit_profile_view.dart';
+import 'package:supercycle_app/features/edit_profile/presentation/view/edit_profile_view.dart';
+import 'package:supercycle_app/features/onboarding/presentation/widgets/fourth_onboarding_view_body.dart';
 import 'package:supercycle_app/features/profile/presentation/view/profile_view.dart';
-import 'package:supercycle_app/features/sales_process/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
 import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
@@ -25,6 +26,7 @@ import 'package:supercycle_app/features/shipments_calendar/presentation/view/shi
 
 class AppRouter {
   static final GoRouter router = GoRouter(
+    initialLocation: EndPoints.splashView,
     routes: [
       // Splash Screen Route - Choose your preferred transition
       GoRoute(
@@ -121,6 +123,33 @@ class AppRouter {
             );
           },
           transitionDuration: const Duration(milliseconds: 500),
+        ),
+      ),
+
+      // Fourth Onboarding Route
+      GoRoute(
+        path: EndPoints.fourthOnboardingView,
+        name: 'FourthOnboarding',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const FourthOnboardingView(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Slide transition from right to left
+            return SlideTransition(
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOutCubic,
+                    ),
+                  ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 600),
         ),
       ),
 

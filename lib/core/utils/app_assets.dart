@@ -16,6 +16,11 @@ abstract class AppAssets {
   static const String photoGallery = 'assets/images/photoGallery.png';
   static const String whatsappIcon = 'assets/images/whatsapp.png';
 
+  static const String onboarding1 = 'assets/images/onboard1.png';
+  static const String onboarding2 = 'assets/images/onboard2.png';
+  static const String onboarding3 = 'assets/images/onboard3.png';
+  static const String onboarding4 = 'assets/images/onboard4.png';
+
   static const String googleIcon = 'assets/images/Google.png';
   static const String facebookIcon = 'assets/images/Facebook.png';
 
@@ -28,8 +33,7 @@ abstract class AppAssets {
   static const String calculatorIcon = 'assets/images/Calculator.svg';
   static const String boxIcon = 'assets/images/Box.svg';
   static const String userCardIcon = 'assets/images/User-Card-ID.svg';
-  static const String onboarding1 = 'assets/images/onboard1.png';
-  static const String onboarding2 = 'assets/images/onboard2.png';
+
   static const String onboarding3_1 = 'assets/images/onboard3_1.png';
   static const String onboarding3_2 = 'assets/images/onboard3_2.png';
 }
