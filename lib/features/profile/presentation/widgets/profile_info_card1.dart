@@ -1,45 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart' show ProfileConstants;
+import 'package:supercycle_app/core/utils/profile_constants.dart'
+    show ProfileConstants;
 import 'package:supercycle_app/features/profile/presentation/widgets/branches_section.dart';
 import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
 import 'package:supercycle_app/features/profile/presentation/widgets/profile_info_row.dart';
 
 class ProfileInfoCard1 extends StatelessWidget {
-  const ProfileInfoCard1({
-    super.key,
-    required this.profileData,
-  });
+  const ProfileInfoCard1({super.key, required this.profileData});
 
   final ProfileData profileData;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: ProfileConstants.spacing),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color(0xE4DDFFE7),
-          border: Border.all(color: Color(0xFF16A243)),
-          borderRadius: BorderRadius.circular(ProfileConstants.cardBorderRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              ..._buildProfileInfoRows(),
-              const SizedBox(height: 30),
-              BranchesSection(branchCount: profileData.branchCount),
-            ],
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: const Color(0xE4DDFFE7),
+        border: Border.all(color: Color(0xFF16A243)),
+        borderRadius: BorderRadius.circular(ProfileConstants.cardBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
           ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            ..._buildProfileInfoRows(),
+            const SizedBox(height: 30),
+            BranchesSection(branchCount: profileData.branchCount),
+          ],
         ),
       ),
     );
@@ -75,14 +70,16 @@ class ProfileInfoCard1 extends StatelessWidget {
     ];
 
     return profileInfo
-        .map((item) => Padding(
-      padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
-      child: ProfileInfoRow(
-        label: item.label,
-        value: item.value,
-        icon: item.icon,
-      ),
-    ))
+        .map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
+            child: ProfileInfoRow(
+              label: item.label,
+              value: item.value,
+              icon: item.icon,
+            ),
+          ),
+        )
         .toList();
   }
 }

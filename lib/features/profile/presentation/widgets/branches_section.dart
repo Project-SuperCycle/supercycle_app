@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class BranchesSection extends StatefulWidget {
-  const BranchesSection({
-    super.key,
-    required this.branchCount,
-  });
+  const BranchesSection({super.key, required this.branchCount});
 
   final int branchCount;
 
@@ -15,22 +14,19 @@ class BranchesSection extends StatefulWidget {
 
 class _BranchesSectionState extends State<BranchesSection> {
   final PageController _pageController = PageController(viewportFraction: 0.35);
+  List<String> types = ["كرتون بنى", "ورق ابيض"];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "الفروع المتعاونه",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: AppStyles.styleSemiBold18(context),
           textAlign: TextAlign.right,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         _buildBranchesCarousel(),
         const SizedBox(height: 12),
         Center(
@@ -64,19 +60,12 @@ class _BranchesSectionState extends State<BranchesSection> {
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.grey[300]!,
-                  width: 1,
-                ),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.store_outlined,
-                    color: Colors.grey[600],
-                    size: 30,
-                  ),
+                  Icon(Icons.store_outlined, color: Colors.grey[600], size: 30),
                   const SizedBox(height: 8),
                   Text(
                     "فرع ${index + 1}",
@@ -99,35 +88,19 @@ class _BranchesSectionState extends State<BranchesSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           " الأنواع المتعامل بيها :",
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: AppStyles.styleSemiBold18(context),
         ),
+        const SizedBox(height: 10.0),
         Row(
-          children: const [
-            Text(
-              "كرتون بنى",
-              style: TextStyle(
-                color: Color(0xFF0BAC00),
-                fontSize: 14,
-              ),
-            ),
-            Text(
-              " - ",
-              style: TextStyle(
-                color: Color(0xFF0BAC00),
-                fontSize: 14,
-              ),
-            ),
-            Text(
-              "ورق ابيض",
-              style: TextStyle(
-                color: Color(0xFF0BAC00),
-                fontSize: 14,
+          children: [
+            ...types.map(
+              (type) => Text(
+                "$type - ",
+                style: AppStyles.styleSemiBold12(
+                  context,
+                ).copyWith(color: AppColors.subTextColor),
               ),
             ),
           ],

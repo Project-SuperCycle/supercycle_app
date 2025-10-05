@@ -98,7 +98,7 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (widget.shipment.status == 'canceled')
+                        (widget.shipment.status == 'pending')
                             ? Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: ShipmentDetailsSettingsIcon(

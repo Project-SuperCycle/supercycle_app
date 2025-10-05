@@ -1,58 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
 import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_header_navigation.dart';
+import 'package:supercycle_app/features/profile/presentation/widgets/profile_image.dart';
 import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_stats_row.dart';
 
 class ProfileHeaderSection extends StatelessWidget {
-  const ProfileHeaderSection({
-    super.key,
-    required this.profileData,
-  });
-
+  const ProfileHeaderSection({super.key, required this.profileData});
   final ProfileData profileData;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final double containerHeight = 260.0;
+    final profileImageSize = 120.0;
+
+    return SizedBox(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.45,
-      decoration: const BoxDecoration(
-        gradient: kGradientContainer,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
+      height: containerHeight + (profileImageSize / 2),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            height: containerHeight,
+            decoration: BoxDecoration(
+              gradient: kGradientContainer,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(50),
+                  spreadRadius: 2,
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                const ProfileHeaderNavigation(),
+                const Spacer(flex: 1),
+                // Profile Name
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    profileData.name,
+                    style: AppStyles.styleSemiBold24(
+                      context,
+                    ).copyWith(color: Colors.white, fontSize: 32),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const Spacer(flex: 2),
+              ],
+            ),
+          ),
 
-            // Header Navigation
-            const ProfileHeaderNavigation(),
-
-            const SizedBox(height: 70),
-
-            // Profile Name
-            Text(
-              profileData.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+          // Profile Image and Stats Row
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ProfileStatsRow(
+                profileData: profileData,
+                profileImage: Container(
+                  width: profileImageSize,
+                  height: profileImageSize,
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Colors.white, Colors.white],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(50),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Container(
+                      decoration: BoxDecoration(shape: BoxShape.circle),
+                      child: ClipOval(
+                        child: ProfileImage(logoPath: profileData.logoPath),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Stats Row with Profile Image
-            Expanded(
-              child: ProfileStatsRow(profileData: profileData),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

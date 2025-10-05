@@ -1,22 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
-import 'package:supercycle_app/features/shipment_details/presentation/views/shipment_details_view.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
+import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
-class ProfileInfoCard2 extends StatelessWidget {
+class ProfileInfoCard2 extends StatefulWidget {
   const ProfileInfoCard2({super.key});
 
+  @override
+  State<ProfileInfoCard2> createState() => _ProfileInfoCard2State();
+}
+
+class _ProfileInfoCard2State extends State<ProfileInfoCard2> {
+  List<ShipmentsCalendarCard> transactions = [
+    ShipmentsCalendarCard(
+      shipment: ShipmentModel(
+        id: "01",
+        shipmentNumber: "SN0001",
+        customPickupAddress: "ميدان الجيزة",
+        requestedPickupAt: DateTime.now(),
+        status: "pending",
+        totalQuantityKg: 1000,
+      ),
+    ),
+    ShipmentsCalendarCard(
+      shipment: ShipmentModel(
+        id: "02",
+        shipmentNumber: "SN0002",
+        customPickupAddress: "جسر السويس",
+        requestedPickupAt: DateTime.now(),
+        status: "pending",
+        totalQuantityKg: 2000,
+      ),
+    ),
+    ShipmentsCalendarCard(
+      shipment: ShipmentModel(
+        id: "03",
+        shipmentNumber: "SN0003",
+        customPickupAddress: "التحرير -  القاهرة",
+        requestedPickupAt: DateTime.now(),
+        status: "pending",
+        totalQuantityKg: 3000,
+      ),
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
+        Text(
           'سجل المعاملات السابقة',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: AppStyles.styleSemiBold22(context),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
@@ -25,8 +60,9 @@ class ProfileInfoCard2 extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xE4DDFFE7),
             border: Border.all(color: Color(0xFF16A243)),
-            borderRadius:
-            BorderRadius.circular(ProfileConstants.cardBorderRadius),
+            borderRadius: BorderRadius.circular(
+              ProfileConstants.cardBorderRadius,
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -37,33 +73,7 @@ class ProfileInfoCard2 extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                _buildTransactionCard(
-                  context,
-                  shipmentNumber: 'رقم الشحنة: 001',
-                  deliveryDate: 'تاريخ الاستلام: 15/11/2023',
-                  quantity: 'الكمية: 25',
-                  price: 'السعر: 1500 ريال',
-                ),
-                const SizedBox(height: 15),
-                _buildTransactionCard(
-                  context,
-                  shipmentNumber: 'رقم الشحنة: 002',
-                  deliveryDate: 'تاريخ الاستلام: 20/11/2023',
-                  quantity: 'الكمية: 30',
-                  price: 'السعر: 2000 ريال',
-                ),
-                const SizedBox(height: 15),
-                _buildTransactionCard(
-                  context,
-                  shipmentNumber: 'رقم الشحنة: 003',
-                  deliveryDate: 'تاريخ الاستلام: 25/11/2023',
-                  quantity: 'الكمية: 40',
-                  price: 'السعر: 2500 ريال',
-                ),
-              ],
-            ),
+            child: Column(children: [...transactions]),
           ),
         ),
       ],
@@ -71,12 +81,12 @@ class ProfileInfoCard2 extends StatelessWidget {
   }
 
   Widget _buildTransactionCard(
-      BuildContext context, {
-        required String shipmentNumber,
-        required String deliveryDate,
-        required String quantity,
-        required String price,
-      }) {
+    BuildContext context, {
+    required String shipmentNumber,
+    required String deliveryDate,
+    required String quantity,
+    required String price,
+  }) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(

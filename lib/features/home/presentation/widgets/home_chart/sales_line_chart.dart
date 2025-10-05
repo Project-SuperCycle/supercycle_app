@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle_app/core/helpers/custom_dropdown.dart'
     show CustomDropdown;
+import 'package:supercycle_app/core/services/dosh_types_manager.dart';
+import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
@@ -16,9 +18,8 @@ class ChartPriceData {
   final String month;
   final double price;
 
-  ChartPriceData({required this.month, required this.price});
+  const ChartPriceData({required this.month, required this.price});
 
-  // Convert TypeHistoryModel to ChartPriceData
   factory ChartPriceData.fromTypeHistory(TypeHistoryModel typeHistory) {
     return ChartPriceData(
       month: _formatMonth(typeHistory.month),
@@ -26,34 +27,30 @@ class ChartPriceData {
     );
   }
 
-  // Helper to format month from "2025-06" to "Jun"
   static String _formatMonth(String monthString) {
-    try {
-      if (monthString.contains('-')) {
-        List<String> parts = monthString.split('-');
-        if (parts.length >= 2) {
-          int monthNum = int.tryParse(parts[1]) ?? 1;
-          List<String> months = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ];
-          return months[monthNum - 1];
-        }
-      }
-      return monthString;
-    } catch (e) {
-      return monthString;
-    }
+    if (!monthString.contains('-')) return monthString;
+
+    final parts = monthString.split('-');
+    if (parts.length < 2) return monthString;
+
+    final monthNum = int.tryParse(parts[1]);
+    if (monthNum == null || monthNum < 1 || monthNum > 12) return monthString;
+
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return months[monthNum - 1];
   }
 }
 
@@ -79,48 +76,142 @@ class _LineChart extends StatelessWidget {
     return LineChart(chartData, duration: const Duration(milliseconds: 250));
   }
 
-  LineChartData get chartData => LineChartData(
-    lineTouchData: lineTouchData,
-    gridData: gridData,
-    titlesData: titlesData,
-    borderData: borderData,
-    lineBarsData: [lineChartBarData],
-    minX: 0,
-    maxX: (priceData.length - 1).toDouble(),
-    maxY: _getMaxPrice() * 1.1,
-    // Add 10% padding
-    minY: _getMinPrice() * 0.9,
-  );
+  LineChartData get chartData {
+    final max = _getMaxPrice();
+    final min = _getMinPrice();
 
-  LineTouchData get lineTouchData => LineTouchData(
-    handleBuiltInTouches: true,
-    touchTooltipData: LineTouchTooltipData(
-      getTooltipColor: (touchedSpot) => Colors.blueGrey.withValues(alpha: 0.8),
-      getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-        return touchedBarSpots.map((barSpot) {
-          final flSpot = barSpot;
-          final index = flSpot.x.toInt();
-          if (index >= 0 && index < priceData.length) {
-            String formattedPrice = priceFormatter != null
-                ? priceFormatter!(flSpot.y)
-                : '\$${flSpot.y.toStringAsFixed(1)}';
-            return LineTooltipItem(
-              '${priceData[index].month}\n$formattedPrice',
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            );
-          }
-          return null;
-        }).toList();
+    return LineChartData(
+      lineTouchData: _buildLineTouchData(),
+      gridData: const FlGridData(show: false),
+      titlesData: _buildTitlesData(),
+      borderData: _buildBorderData(),
+      lineBarsData: [_buildLineChartBarData()],
+      minX: 0,
+      maxX: (priceData.length - 1).toDouble(),
+      maxY: max * 1.1,
+      minY: min * 0.9,
+    );
+  }
+
+  LineTouchData _buildLineTouchData() {
+    return LineTouchData(
+      handleBuiltInTouches: true,
+      touchTooltipData: LineTouchTooltipData(
+        getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
+        getTooltipItems: (spots) => spots.map((spot) {
+          final index = spot.x.toInt();
+          if (index < 0 || index >= priceData.length) return null;
+
+          final price =
+              priceFormatter?.call(spot.y) ?? '\$${spot.y.toStringAsFixed(1)}';
+
+          return LineTooltipItem(
+            '${priceData[index].month}\n$price',
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  FlTitlesData _buildTitlesData() {
+    return FlTitlesData(
+      bottomTitles: AxisTitles(sideTitles: _buildBottomTitles()),
+      leftTitles: AxisTitles(sideTitles: _buildLeftTitles()),
+      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    );
+  }
+
+  SideTitles _buildLeftTitles() {
+    final max = _getMaxPrice();
+    final min = _getMinPrice();
+
+    return SideTitles(
+      showTitles: true,
+      interval: priceInterval ?? ((max - min) / 4),
+      reservedSize: 50,
+      getTitlesWidget: (value, meta) {
+        const style = TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          fontFamily: 'Cairo',
+          color: Colors.grey,
+        );
+        final price =
+            priceFormatter?.call(value) ?? '\$${value.toStringAsFixed(1)}';
+        return SideTitleWidget(
+          meta: meta,
+          child: Text(price, style: style, textAlign: TextAlign.center),
+        );
       },
-    ),
-  );
+    );
+  }
 
-  FlTitlesData get titlesData => FlTitlesData(
-    bottomTitles: AxisTitles(sideTitles: bottomTitles),
-    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-    leftTitles: AxisTitles(sideTitles: leftTitles()),
-  );
+  SideTitles _buildBottomTitles() {
+    return SideTitles(
+      showTitles: true,
+      reservedSize: 30,
+      interval: showAllMonths ? 1 : null,
+      getTitlesWidget: (value, meta) {
+        const style = TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          fontFamily: 'Cairo',
+          color: Colors.grey,
+        );
+
+        final index = value.toInt();
+        if (index < 0 || index >= priceData.length) {
+          return const SizedBox.shrink();
+        }
+
+        if (!showAllMonths && index % 3 != 0 && index != priceData.length - 1) {
+          return const SizedBox.shrink();
+        }
+
+        return SideTitleWidget(
+          meta: meta,
+          space: 10,
+          child: Text(priceData[index].month.toUpperCase(), style: style),
+        );
+      },
+    );
+  }
+
+  FlBorderData _buildBorderData() {
+    return FlBorderData(
+      show: true,
+      border: Border(
+        bottom: BorderSide(
+          color: AppColors.primaryColor.withValues(alpha: 0.2),
+          width: 3,
+        ),
+        left: const BorderSide(color: Colors.transparent),
+        right: const BorderSide(color: Colors.transparent),
+        top: const BorderSide(color: Colors.transparent),
+      ),
+    );
+  }
+
+  LineChartBarData _buildLineChartBarData() {
+    return LineChartBarData(
+      isCurved: true,
+      color: AppColors.primaryColor,
+      barWidth: 4,
+      isStrokeCapRound: true,
+      dotData: const FlDotData(show: true),
+      belowBarData: BarAreaData(
+        show: true,
+        color: AppColors.primaryColor.withValues(alpha: 0.1),
+      ),
+      spots: priceData
+          .asMap()
+          .entries
+          .map((e) => FlSpot(e.key.toDouble(), e.value.price))
+          .toList(),
+    );
+  }
 
   double _getMaxPrice() {
     if (priceData.isEmpty) return 4.0;
@@ -131,96 +222,11 @@ class _LineChart extends StatelessWidget {
   double _getMinPrice() {
     if (minPrice != null) return minPrice!;
     if (priceData.isEmpty) return 0.0;
-    double dataMinPrice = priceData
+
+    final dataMin = priceData
         .map((e) => e.price)
         .reduce((a, b) => a < b ? a : b);
-    return dataMinPrice > 0 ? dataMinPrice * 0.9 : 0.0;
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-      fontFamily: 'Cairo',
-      color: Colors.grey,
-    );
-    String formattedPrice = priceFormatter != null
-        ? priceFormatter!(value)
-        : '\$${value.toStringAsFixed(1)}';
-    return SideTitleWidget(
-      meta: meta,
-      child: Text(formattedPrice, style: style, textAlign: TextAlign.center),
-    );
-  }
-
-  SideTitles leftTitles() => SideTitles(
-    getTitlesWidget: leftTitleWidgets,
-    showTitles: true,
-    interval: priceInterval ?? ((_getMaxPrice() - _getMinPrice()) / 4),
-    reservedSize: 50,
-  );
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-      fontFamily: 'Cairo',
-      color: Colors.grey,
-    );
-    final index = value.toInt();
-    if (index >= 0 && index < priceData.length) {
-      if (showAllMonths || index % 3 == 0 || index == priceData.length - 1) {
-        return SideTitleWidget(
-          meta: meta,
-          space: 10,
-          child: Text(priceData[index].month.toUpperCase(), style: style),
-        );
-      }
-    }
-    return SideTitleWidget(meta: meta, child: const Text(''));
-  }
-
-  SideTitles get bottomTitles => SideTitles(
-    showTitles: true,
-    reservedSize: 30,
-    interval: showAllMonths ? 1 : null,
-    getTitlesWidget: bottomTitleWidgets,
-  );
-
-  FlGridData get gridData => const FlGridData(show: false);
-
-  FlBorderData get borderData => FlBorderData(
-    show: true,
-    border: Border(
-      bottom: BorderSide(
-        color: AppColors.primaryColor.withValues(alpha: 0.2),
-        width: 3,
-      ),
-      left: const BorderSide(color: Colors.transparent),
-      right: const BorderSide(color: Colors.transparent),
-      top: const BorderSide(color: Colors.transparent),
-    ),
-  );
-
-  LineChartBarData get lineChartBarData => LineChartBarData(
-    isCurved: true,
-    color: AppColors.primaryColor,
-    barWidth: 4,
-    isStrokeCapRound: true,
-    dotData: const FlDotData(show: true),
-    belowBarData: BarAreaData(
-      show: true,
-      color: AppColors.primaryColor.withValues(alpha: 0.1),
-    ),
-    spots: _getFlSpots(),
-  );
-
-  List<FlSpot> _getFlSpots() {
-    return priceData
-        .asMap()
-        .entries
-        .map((entry) => FlSpot(entry.key.toDouble(), entry.value.price))
-        .toList();
+    return dataMin > 0 ? dataMin * 0.9 : 0.0;
   }
 }
 
@@ -245,97 +251,104 @@ class SalesLineChart extends StatefulWidget {
 }
 
 class SalesLineChartState extends State<SalesLineChart> {
-  String? selectedTypeId;
-  List<DoshDataModel> doshData = [];
-  String? selectedTypeName;
-  bool isInitialized = false;
+  String? _selectedTypeId;
+  String? _selectedTypeName;
+  List<DoshDataModel> _doshData = [];
+  bool _isInitialized = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _loadTypeHistory({String? typeId}) {
-    final String finalTypeId =
-        typeId ?? selectedTypeId ?? '68a8567bf5a2951a1ee9e982';
-    BlocProvider.of<HomeCubit>(context).fetchTypeHistory(typeId: finalTypeId);
-  }
-
-  void _loadDoshTypes() {
-    BlocProvider.of<HomeCubit>(context).fetchTypesData();
-  }
-
-  void _onDropdownChanged(String? value) {
-    if (value != null && doshData.isNotEmpty) {
-      try {
-        final selectedType = doshData.firstWhere(
-          (e) => e.name == value,
-          orElse: () => doshData.first,
-        );
-        setState(() {
-          selectedTypeId = selectedType.id;
-          selectedTypeName = selectedType.name;
-        });
-        _loadTypeHistory(typeId: selectedTypeId!);
-      } catch (e) {
-        debugPrint('Error in dropdown selection: $e');
-        // Fall back to first item if available
-        if (doshData.isNotEmpty) {
-          setState(() {
-            selectedTypeId = doshData.first.id;
-            selectedTypeName = doshData.first.name;
-          });
-          _loadTypeHistory(typeId: selectedTypeId!);
-        }
-      }
+  List<String> get _typeOptions {
+    try {
+      final typesList =
+          getIt<DoshTypesManager>().typesList
+              .map((type) => type.name)
+              .where((name) => name.isNotEmpty)
+              .toSet()
+              .toList()
+            ..sort();
+      return typesList;
+    } catch (_) {
+      return [];
     }
+  }
+
+  void _loadTypeHistory([String? typeId]) {
+    final id = typeId ?? _selectedTypeId ?? '68a8567bf5a2951a1ee9e982';
+    context.read<HomeCubit>().fetchTypeHistory(typeId: id);
+  }
+
+  void _handleDropdownChange(String? value) {
+    if (value == null || _doshData.isEmpty) return;
+
+    final selectedType = _doshData.firstWhere(
+      (e) => e.name == value,
+      orElse: () => _doshData.first,
+    );
+
+    setState(() {
+      _selectedTypeId = selectedType.id;
+      _selectedTypeName = selectedType.name;
+    });
+
+    _loadTypeHistory(selectedType.id);
+  }
+
+  void _initializeSelection(List<DoshDataModel> data) {
+    if (_isInitialized || data.isEmpty) return;
+
+    setState(() {
+      _doshData = data;
+      _selectedTypeId = data.first.id;
+      _selectedTypeName = data.first.name;
+      _isInitialized = true;
+    });
+
+    _loadTypeHistory(_selectedTypeId);
   }
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.3,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        S.of(context).price_indicator,
-                        style: AppStyles.styleSemiBold20(
-                          context,
-                        ).copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: _buildDropdown(),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20, left: 10),
-                    child: _buildChart(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeader(context),
+            const SizedBox(height: 40),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20, left: 10),
+                child: _buildChart(),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: Text(
+            S.of(context).price_indicator,
+            style: AppStyles.styleSemiBold20(
+              context,
+            ).copyWith(fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 20),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: _buildDropdown(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -343,99 +356,76 @@ class SalesLineChartState extends State<SalesLineChart> {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is FetchTypesDataSuccess) {
-          setState(() {
-            doshData = state.doshData;
-            // Set initial selection if not already set
-            if (!isInitialized && doshData.isNotEmpty) {
-              selectedTypeId = doshData.first.id;
-              selectedTypeName = doshData.first.name;
-              isInitialized = true;
-            }
-          });
-          // Load initial data
-          if (selectedTypeId != null) {
-            _loadTypeHistory(typeId: selectedTypeId);
-          }
-        }
-        if (state is FetchTypesDataFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 3),
-            ),
-          );
+          _initializeSelection(state.doshData);
+        } else if (state is FetchTypesDataFailure) {
+          _showErrorSnackBar(context, state.message);
         }
       },
+      buildWhen: (prev, curr) =>
+          curr is FetchTypesDataSuccess ||
+          curr is FetchTypesDataFailure ||
+          curr is FetchTypesDataLoading,
       builder: (context, state) {
         if (state is FetchTypesDataLoading) {
-          return Container(
-            height: 50,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.withAlpha(100)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Center(
-              child: SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                  strokeWidth: 2,
-                ),
-              ),
-            ),
-          );
+          return _buildLoadingDropdown();
         }
 
-        if (state is FetchTypesDataSuccess && doshData.isNotEmpty) {
-          return CustomDropdown(
-            options: doshData.map((e) => e.name).toList(),
-            onChanged: _onDropdownChanged,
-            hintText: S.of(context).select_type,
-            initialValue: selectedTypeName, // Set current value
-          );
-        }
+        final options = _doshData.isNotEmpty
+            ? _doshData.map((e) => e.name).toList()
+            : _typeOptions;
 
-        // Fallback dropdown with default options
         return CustomDropdown(
-          options: const ["ورق", "كرتون"],
-          onChanged: _onDropdownChanged,
+          options: options,
+          onChanged: _handleDropdownChange,
           hintText: S.of(context).select_type,
-          initialValue: selectedTypeName,
+          initialValue: _selectedTypeName,
         );
       },
-      buildWhen: (previous, current) =>
-          current is FetchTypesDataSuccess ||
-          current is FetchTypesDataFailure ||
-          current is FetchTypesDataLoading,
+    );
+  }
+
+  Widget _buildLoadingDropdown() {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.withAlpha(100)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Center(
+        child: SizedBox(
+          height: 20,
+          width: 20,
+          child: CircularProgressIndicator(
+            color: AppColors.primaryColor,
+            strokeWidth: 2,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildChart() {
     return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (prev, curr) =>
+          curr is FetchTypeHistorySuccess ||
+          curr is FetchTypeHistoryFailure ||
+          curr is FetchTypeHistoryLoading,
       builder: (context, state) {
-        // Handle TypeHistoryLoading state
         if (state is FetchTypeHistoryLoading) {
           return const Center(
             child: CircularProgressIndicator(color: AppColors.primaryColor),
           );
         }
 
-        // Handle TypeHistoryFailure state
         if (state is FetchTypeHistoryFailure) {
           return _buildErrorWidget(state.message);
         }
 
-        // Handle TypeHistorySuccess state
         if (state is FetchTypeHistorySuccess) {
-          if (state.history.isEmpty) {
-            return _buildNoDataWidget();
-          }
+          if (state.history.isEmpty) return _buildNoDataWidget();
 
-          // Convert TypeHistoryModel list to ChartPriceData list
-          List<ChartPriceData> chartData = state.history
-              .map((typeHistory) => ChartPriceData.fromTypeHistory(typeHistory))
+          final chartData = state.history
+              .map(ChartPriceData.fromTypeHistory)
               .toList();
 
           return _LineChart(
@@ -448,115 +438,94 @@ class SalesLineChartState extends State<SalesLineChart> {
           );
         }
 
-        // Default state - show initial widget
         return _buildInitialWidget();
       },
-      buildWhen: (previous, current) =>
-          current is FetchTypeHistorySuccess ||
-          current is FetchTypeHistoryFailure ||
-          current is FetchTypeHistoryLoading,
     );
   }
 
   Widget _buildErrorWidget(String errorMessage) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 48,
-            color: Colors.red.withValues(alpha: 0.7),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            "No Data Available",
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            errorMessage,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.red.withValues(alpha: 0.8),
-              fontSize: 12,
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => _loadTypeHistory(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
+    return _buildStatusWidget(
+      icon: Icons.error_outline,
+      iconColor: Colors.red.withValues(alpha: 0.7),
+      title: 'No Data Available',
+      titleColor: Colors.red,
+      message: errorMessage,
+      messageColor: Colors.red.withValues(alpha: 0.8),
+      buttonText: 'Retry',
     );
   }
 
   Widget _buildNoDataWidget() {
+    return _buildStatusWidget(
+      icon: Icons.analytics_outlined,
+      iconColor: Colors.grey.withValues(alpha: 0.7),
+      title: 'No data available',
+      titleColor: Colors.grey,
+      buttonText: 'Load Data',
+    );
+  }
+
+  Widget _buildInitialWidget() {
+    return _buildStatusWidget(
+      icon: Icons.show_chart,
+      iconColor: AppColors.primaryColor.withValues(alpha: 0.7),
+      title: 'Chart ready to load',
+      titleColor: AppColors.primaryColor.withValues(alpha: 0.8),
+      buttonText: 'Load Chart',
+    );
+  }
+
+  Widget _buildStatusWidget({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required Color titleColor,
+    String? message,
+    Color? messageColor,
+    required String buttonText,
+  }) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.analytics_outlined,
-            size: 48,
-            color: Colors.grey.withValues(alpha: 0.7),
-          ),
+          Icon(icon, size: 48, color: iconColor),
           const SizedBox(height: 16),
-          const Text(
-            'No data available',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+          Text(
+            title,
+            style: TextStyle(
+              color: titleColor,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          if (message != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: messageColor, fontSize: 12),
+            ),
+          ],
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => _loadTypeHistory(),
+            onPressed: _loadTypeHistory,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Load Data'),
+            child: Text(buttonText),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildInitialWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.show_chart,
-            size: 48,
-            color: AppColors.primaryColor.withValues(alpha: 0.7),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Chart ready to load',
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.primaryColor.withValues(alpha: 0.8),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => _loadTypeHistory(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Load Chart'),
-          ),
-        ],
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
       ),
     );
   }

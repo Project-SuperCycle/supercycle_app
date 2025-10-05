@@ -1,36 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart';
 import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_stats_column.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_image.dart';
+import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_stats_column.dart';
 
 class ProfileStatsRow extends StatelessWidget {
   const ProfileStatsRow({
     super.key,
     required this.profileData,
+    this.profileImage,
   });
 
   final ProfileData profileData;
+  final Widget? profileImage;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Left Stat - Required Shipments
-        ProfileStatsColumn(
-          number: profileData.requiredProducts.toString().padLeft(2, '0'),
-          label: 'عدد الشحنات\nالمطلوبة',
+        Expanded(
+          child: ProfileStatsColumn(
+            number: profileData.requiredProducts.toString().padLeft(2, '0'),
+            label: 'عدد الشحنات\nالمطلوبة',
+          ),
         ),
+        const SizedBox(width: 12),
+        // Center - Profile Image
+        if (profileImage != null) profileImage!,
 
-        // Profile Image - Positioned to overlap
-        ProfileImage(logoPath: profileData.logoPath),
-
+        const SizedBox(width: 12),
         // Right Stat - Available Shipments
-        ProfileStatsColumn(
-          number: profileData.availableProducts.toString().padLeft(2, '0'),
-          label: 'عدد الشحنات\nالمتفق عليها',
+        Expanded(
+          child: ProfileStatsColumn(
+            number: profileData.availableProducts.toString().padLeft(2, '0'),
+            label: 'عدد الشحنات\nالمتفق عليها',
+          ),
         ),
       ],
     );
