@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -28,22 +30,20 @@ class _SplashViewState extends State<SplashView>
     );
 
     // Create fade animation (opacity: 0.0 to 1.0)
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
+      ),
+    );
 
     // Create scale animation (scale: 0.5 to 1.0)
-    _scaleAnimation = Tween<double>(
-      begin: 0.5,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
+      ),
+    );
 
     // Start animation
     _animationController.forward();
@@ -70,88 +70,48 @@ class _SplashViewState extends State<SplashView>
       body: SizedBox(
         width: screenSize.width,
         height: screenSize.height,
-        child: Stack(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Background gradient
-            Positioned.fill(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: kGradientBackground,
-                ),
-              ),
+            Text(
+              "أهلا بيك",
+              style: AppStyles.styleBold24(
+                context,
+              ).copyWith(fontSize: 36, color: AppColors.primaryColor),
             ),
-
-            // Background logo - top left
-            Positioned(
-              left: -screenSize.width * 0.4,
-              top: -screenSize.height * 0.25,
-              child: AnimatedBuilder(
-                animation: _fadeAnimation,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: 0.05 * _fadeAnimation.value,
+            AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
                     child: Container(
-                      width: screenSize.width * 0.9,
-                      height: screenSize.height * 0.9,
+                      width: screenSize.width * 0.8,
+                      height: screenSize.width * 0.8,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(AppAssets.logoIcon),
+                          image: AssetImage(AppAssets.logo),
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-
-            // Background logo - bottom right
-            Positioned(
-              left: screenSize.width * 0.4,
-              top: screenSize.height * 0.3,
-              child: AnimatedBuilder(
-                animation: _fadeAnimation,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: 0.05 * _fadeAnimation.value,
-                    child: Container(
-                      width: screenSize.width * 0.9,
-                      height: screenSize.height * 0.9,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(AppAssets.logoIcon),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            Text(
+              "حوّل الكرتون المستهلك لفلوس",
+              style: AppStyles.styleMedium18(
+                context,
+              ).copyWith(color: AppColors.primaryColor),
             ),
-
-            // Main logo with animation
-            Center(
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _scaleAnimation.value,
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: Container(
-                        width: screenSize.width * 0.8,
-                        height: screenSize.width * 0.8,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(AppAssets.logo),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            SizedBox(height: 8),
+            Text(
+              "بطريقة سهلة وآمنة",
+              style: AppStyles.styleMedium18(
+                context,
+              ).copyWith(color: AppColors.primaryColor),
             ),
           ],
         ),
