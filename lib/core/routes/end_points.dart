@@ -14,4 +14,5 @@ abstract class EndPoints {
   static const String contactUsView = '/contactUsView';
   static const String profileView = '/';
   static const String editprofileView = '/editprofileView';
+  static const String representativeProfileView = '/representativeProfileView';
 }

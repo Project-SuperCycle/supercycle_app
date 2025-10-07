@@ -19,6 +19,8 @@ import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.
 import 'package:supercycle_app/features/splash/views/splash_view.dart';
 import 'package:supercycle_app/features/calendar/presentation/view/shipments_calendar_view.dart';
 
+import '../../features/representative_profile/presentation/view/representative_profile_view.dart';
+
 class AppRouter {
   static final GoRouter router = GoRouter(
     routes: [
@@ -287,6 +289,10 @@ class AppRouter {
       GoRoute(
         path: EndPoints.editprofileView,
         builder: (context, state) => const EditProfileView(),
+      ),
+      GoRoute(
+        path: EndPoints.representativeProfileView,
+        builder: (context, state) => const RepresentativeProfileView(),
       ),
     ],
 
