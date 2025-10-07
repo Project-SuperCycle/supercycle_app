@@ -17,6 +17,10 @@ class ProfileImage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
+        border: Border.all(
+          color: const Color(0xFF4CAF50),
+          width: 4,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -28,15 +32,15 @@ class ProfileImage extends StatelessWidget {
       child: ClipOval(
         child: Container(
           color: Colors.white,
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(8),
           child: Image.asset(
             logoPath,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return const Icon(
                 Icons.store,
-                size: 50,
-                color: Colors.blue,
+                size: 70,
+                color: Color(0xFF4CAF50),
               );
             },
           ),

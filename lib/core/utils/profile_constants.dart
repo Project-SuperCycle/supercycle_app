@@ -1,11 +1,12 @@
 
 // Constants for profile view
 import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
+import 'package:supercycle_app/features/representative_profile/presentation/widgets/representative_profile_data.dart';
 
 class ProfileConstants {
   // UI Constants
   static const double headerHeight = 0.28;
-  static const double profileImageSize = 100;
+  static const double profileImageSize = 120;
   static const double borderRadius = 50;
   static const double cardBorderRadius = 20;
   static const double spacing = 16;
@@ -23,4 +24,5 @@ class ProfileConstants {
     branchCount: 6,
     logoPath: 'assets/images/carrefour_logo.png',
   );
+
 }
