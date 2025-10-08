@@ -61,7 +61,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   void _navigateToScreen(int index) {
     switch (index) {
       case 0:
-        // Calculator - يمكنك إضافة المسار المناسب هنا
+        GoRouter.of(context).push(EndPoints.calculatorView);
         break;
       case 1:
         isUserLoggedIn

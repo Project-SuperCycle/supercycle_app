@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' hide CustomTransitionPage;
 import 'package:supercycle_app/core/helpers/page_transition.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/features/calculator/presentation/view/calculator_view.dart';
 import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
 import 'package:supercycle_app/features/environment/presentation/views/environmental_impact_view.dart';
 import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
@@ -27,7 +28,7 @@ import 'package:supercycle_app/features/shipments_calendar/presentation/view/shi
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: EndPoints.environmentalImpactView,
+    initialLocation: EndPoints.homeView,
     routes: [
       // Splash Screen Route - Choose your preferred transition
       GoRoute(
@@ -36,12 +37,7 @@ class AppRouter {
         pageBuilder: (context, state) => TransitionHelper.createPage(
           key: state.pageKey,
           child: const SplashView(),
-          // Easy to change - just replace with any transition:
-          // transition: PageTransitions.elasticScale, // Current: Elastic scale
-          // transition: PageTransitions.slideFromBottom,
-          // transition: PageTransitions.rotationScale,
           transition: PageTransitions.bounceScale,
-          // transition: PageTransitions.doorSwing,
           duration: const Duration(milliseconds: 600),
         ),
       ),
@@ -374,6 +370,25 @@ class AppRouter {
         pageBuilder: (context, state) => CustomTransitionPage(
           child:
               EnvironmentalImpactView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+
+      // Calculator View Route
+      GoRoute(
+        path: EndPoints.calculatorView,
+        name: 'Calculator',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: CalculatorView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
