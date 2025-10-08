@@ -36,17 +36,17 @@ List<DrawerItemModel> getDrawerItems(BuildContext context) {
         width: 30,
         height: 30,
       ),
-      onTap: () => GoRouter.of(context).push(EndPoints.homeView),
+      onTap: () => GoRouter.of(context).push(EndPoints.shipmentsCalendarView),
     ),
     DrawerItemModel(
-      title: S.of(context).drawer_transactions_table,
+      title: S.of(context).drawer_environmental_impact,
       leading: SvgPicture.asset(
         AppAssets.calendarIcon,
         fit: BoxFit.cover,
         width: 30,
         height: 30,
       ),
-      onTap: () => GoRouter.of(context).push(EndPoints.homeView),
+      onTap: () => GoRouter.of(context).push(EndPoints.environmentalImpactView),
     ),
   ];
 }

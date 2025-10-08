@@ -68,6 +68,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "شحنات تم تسليمها",
     ),
     "drawer_contact_us": MessageLookupByLibrary.simpleMessage("تواصل معنا"),
+    "drawer_environmental_impact": MessageLookupByLibrary.simpleMessage(
+      "الأثر البيئي",
+    ),
     "drawer_home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
     "drawer_language": MessageLookupByLibrary.simpleMessage("اللغة"),
     "drawer_logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),

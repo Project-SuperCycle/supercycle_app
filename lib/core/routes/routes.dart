@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart' hide CustomTransitionPage;
 import 'package:supercycle_app/core/helpers/page_transition.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
+import 'package:supercycle_app/features/environment/presentation/views/environmental_impact_view.dart';
 import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/fourth_onboarding_view.dart';
@@ -26,7 +27,7 @@ import 'package:supercycle_app/features/shipments_calendar/presentation/view/shi
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: EndPoints.splashView,
+    initialLocation: EndPoints.environmentalImpactView,
     routes: [
       // Splash Screen Route - Choose your preferred transition
       GoRoute(
@@ -364,6 +365,26 @@ class AppRouter {
       GoRoute(
         path: EndPoints.editprofileView,
         builder: (context, state) => const EditProfileView(),
+      ),
+
+      // Environmental Impact View Route
+      GoRoute(
+        path: EndPoints.environmentalImpactView,
+        name: 'Environmental Impact',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child:
+              EnvironmentalImpactView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
       ),
     ],
 

@@ -72,6 +72,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Delivered shipments",
     ),
     "drawer_contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "drawer_environmental_impact": MessageLookupByLibrary.simpleMessage(
+      "Environmental Impact",
+    ),
     "drawer_home": MessageLookupByLibrary.simpleMessage("Home"),
     "drawer_language": MessageLookupByLibrary.simpleMessage("Language"),
     "drawer_logout": MessageLookupByLibrary.simpleMessage("Logout"),

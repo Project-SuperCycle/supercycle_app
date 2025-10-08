@@ -959,6 +959,16 @@ class S {
     );
   }
 
+  /// `Environmental Impact`
+  String get drawer_environmental_impact {
+    return Intl.message(
+      'Environmental Impact',
+      name: 'drawer_environmental_impact',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Start date of cooperation`
   String get start_date {
     return Intl.message(

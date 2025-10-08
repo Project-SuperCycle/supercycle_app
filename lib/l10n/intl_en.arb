@@ -112,6 +112,7 @@
   "drawer_language": "Language",
   "drawer_sales_calender": "Sales Calendar",
   "drawer_transactions_table": "Transactions Table",
+  "drawer_environmental_impact": "Environmental Impact",
   "start_date": "Start date of cooperation",
   "payment_method": "Preferred payment method",
   "shipment_review": "Shipment Review",
