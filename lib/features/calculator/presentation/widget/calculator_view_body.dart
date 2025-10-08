@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/helpers/custom_dropdown.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
@@ -125,52 +126,16 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  const Color(0xFF9333EA).withOpacity(0.1),
-                                  const Color(0xFFEC4899).withOpacity(0.1),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: const Color(0xFF059669).withOpacity(0.5),
-                                width: 1.5,
-                              ),
-                            ),
-                            child: DropdownButtonFormField<String>(
-                              value: selectedType,
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 16,
-                                ),
-                                border: InputBorder.none,
-                                hintText: 'اختار النوع ...',
-                              ),
-                              dropdownColor: Colors.white,
-                              isExpanded: true,
-                              items: productTypes.keys.map((String type) {
-                                return DropdownMenuItem<String>(
-                                  value: type,
-                                  child: Text(
-                                    type,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF374151),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedType = value;
-                                });
-                              },
-                            ),
+                          CustomDropdown(
+                            options: productTypes.keys
+                                .map((type) => type)
+                                .toList(),
+                            onChanged: (val) {
+                              setState(() {
+                                selectedType = val;
+                              });
+                            },
                           ),
-
                           const SizedBox(height: 25),
 
                           // Quantity TextField
@@ -191,16 +156,11 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                           const SizedBox(height: 10),
                           Container(
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  const Color(0xFF9333EA).withOpacity(0.1),
-                                  const Color(0xFFEC4899).withOpacity(0.1),
-                                ],
-                              ),
+                              color: Colors.transparent,
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
-                                color: const Color(0xFF059669).withOpacity(0.5),
-                                width: 1.5,
+                                color: Colors.grey.withAlpha(200),
+                                width: 1,
                               ),
                             ),
                             child: TextField(
@@ -217,10 +177,7 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                 border: InputBorder.none,
                                 hintText: 'ادخل الكمية ...',
                               ),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF374151),
-                              ),
+                              style: AppStyles.styleMedium14(context),
                               onChanged: (value) {
                                 setState(() {});
                               },
