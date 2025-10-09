@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_stats_column.dart';
+import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_column.dart';
 
-class ProfileStatsRow extends StatelessWidget {
-  const ProfileStatsRow({
+class TraderProfileStatsRow extends StatelessWidget {
+  const TraderProfileStatsRow({
     super.key,
     required this.profileData,
     this.profileImage,
   });
 
-  final ProfileData profileData;
+  final TraderProfileData profileData;
   final Widget? profileImage;
 
   @override
@@ -20,19 +20,19 @@ class ProfileStatsRow extends StatelessWidget {
       children: [
         // Left Stat - Required Shipments
         Expanded(
-          child: ProfileStatsColumn(
+          child: TraderProfileStatsColumn(
             number: profileData.requiredProducts.toString().padLeft(2, '0'),
             label: 'عدد الشحنات\nالمطلوبة',
           ),
         ),
         const SizedBox(width: 12),
-        // Center - Profile Image
+        // Center - trader_main_profile Image
         if (profileImage != null) profileImage!,
 
         const SizedBox(width: 12),
         // Right Stat - Available Shipments
         Expanded(
-          child: ProfileStatsColumn(
+          child: TraderProfileStatsColumn(
             number: profileData.availableProducts.toString().padLeft(2, '0'),
             label: 'عدد الشحنات\nالمتفق عليها',
           ),

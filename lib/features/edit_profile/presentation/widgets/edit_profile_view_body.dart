@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_header_logo.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_logo.dart';
 
 class EditProfileViewBody extends StatefulWidget {
   const EditProfileViewBody({super.key});
@@ -39,7 +39,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                     const SizedBox(height: 20),
 
                     // Header Logo
-                    ProfileHeaderLogo(),
+                    TraderProfileHeaderLogo(),
 
                     const SizedBox(height: 30),
 
@@ -232,9 +232,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
   }) {
     return Card(
       elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -273,11 +271,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
           color: Colors.blue.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(
-          icon,
-          color: textColor ?? Colors.blue,
-          size: 24,
-        ),
+        child: Icon(icon, color: textColor ?? Colors.blue, size: 24),
       ),
       title: Text(
         title,
@@ -292,11 +286,14 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
           color: textColor?.withOpacity(0.7) ?? Colors.grey[600],
         ),
       ),
-      trailing: trailing ??
+      trailing:
+          trailing ??
           (onTap != null
-              ? Icon(Icons.arrow_forward_ios,
-              size: 16,
-              color: textColor ?? Colors.grey)
+              ? Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: textColor ?? Colors.grey,
+                )
               : null),
       onTap: onTap,
     );
@@ -337,7 +334,9 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
 
   // Edit Field Dialog
   void _editField(String fieldName, String currentValue) {
-    TextEditingController controller = TextEditingController(text: currentValue);
+    TextEditingController controller = TextEditingController(
+      text: currentValue,
+    );
 
     showDialog(
       context: context,
@@ -429,9 +428,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
               child: const Text("إلغاء"),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
                 Navigator.pop(context);
                 // Handle logout
@@ -482,8 +479,8 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
 
   void _navigateToHelp() {
     // Navigate to help page
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("سيتم فتح صفحة المساعدة")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("سيتم فتح صفحة المساعدة")));
   }
 }

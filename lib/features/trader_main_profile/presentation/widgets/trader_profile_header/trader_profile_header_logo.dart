@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
 
-class ProfileHeaderLogo extends StatelessWidget {
-  const ProfileHeaderLogo({super.key});
+class TraderProfileHeaderLogo extends StatelessWidget {
+  const TraderProfileHeaderLogo({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_header_section.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_page_indicator.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_info_card1.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_info_card2.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_info_card3.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card1.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card2.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card3.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_page_indicator.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_section.dart';
 
-class ProfileViewBody extends StatefulWidget {
-  const ProfileViewBody({super.key});
+class TraderProfileViewBody extends StatefulWidget {
+  const TraderProfileViewBody({super.key});
 
   @override
-  State<ProfileViewBody> createState() => _ProfileViewBodyState();
+  State<TraderProfileViewBody> createState() => _TraderProfileViewBodyState();
 }
 
-class _ProfileViewBodyState extends State<ProfileViewBody> {
+class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
   int currentPage = 0;
 
   @override
@@ -21,10 +21,12 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
     return Scaffold(
       body: Column(
         children: [
-          ProfileHeaderSection(profileData: ProfileConstants.sampleProfileData),
+          TraderProfileHeaderSection(
+            profileData: ProfileConstants.sampleProfileData,
+          ),
           const SizedBox(height: 30),
           // Page Indicators
-          ProfilePageIndicator(
+          TraderProfilePageIndicator(
             currentPage: currentPage,
             onPageChanged: (index) {
               setState(() {
@@ -62,15 +64,15 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
   Widget _buildCurrentPageContent() {
     switch (currentPage) {
       case 0:
-        return ProfileInfoCard1(
+        return TraderProfileInfoCard1(
           profileData: ProfileConstants.sampleProfileData,
         );
       case 1:
-        return const ProfileInfoCard2();
+        return const TraderProfileInfoCard2();
       case 2:
-        return const ProfileInfoCard3();
+        return const TraderProfileInfoCard3();
       default:
-        return ProfileInfoCard1(
+        return TraderProfileInfoCard1(
           profileData: ProfileConstants.sampleProfileData,
         );
     }

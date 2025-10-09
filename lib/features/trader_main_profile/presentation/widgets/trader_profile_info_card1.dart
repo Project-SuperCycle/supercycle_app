@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart'
     show ProfileConstants;
-import 'package:supercycle_app/features/profile/presentation/widgets/branches_section.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_info_row.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_branches_section.dart';
+import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_row.dart';
 
-class ProfileInfoCard1 extends StatelessWidget {
-  const ProfileInfoCard1({super.key, required this.profileData});
+class TraderProfileInfoCard1 extends StatelessWidget {
+  const TraderProfileInfoCard1({super.key, required this.profileData});
 
-  final ProfileData profileData;
+  final TraderProfileData profileData;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ProfileInfoCard1 extends StatelessWidget {
           children: [
             ..._buildProfileInfoRows(),
             const SizedBox(height: 30),
-            BranchesSection(branchCount: profileData.branchCount),
+            TraderBranchesSection(branchCount: profileData.branchCount),
           ],
         ),
       ),
@@ -73,7 +73,7 @@ class ProfileInfoCard1 extends StatelessWidget {
         .map(
           (item) => Padding(
             padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
-            child: ProfileInfoRow(
+            child: TraderProfileInfoRow(
               label: item.label,
               value: item.value,
               icon: item.icon,

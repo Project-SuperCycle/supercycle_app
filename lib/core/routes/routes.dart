@@ -11,8 +11,7 @@ import 'package:supercycle_app/features/onboarding/presentation/views/fourth_onb
 import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
 import 'package:supercycle_app/features/edit_profile/presentation/view/edit_profile_view.dart';
-import 'package:supercycle_app/features/onboarding/presentation/widgets/fourth_onboarding_view_body.dart';
-import 'package:supercycle_app/features/profile/presentation/view/profile_view.dart';
+import 'package:supercycle_app/features/representative_main_profile/presentation/view/representative_profile_view.dart';
 import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
 import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
@@ -25,6 +24,7 @@ import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verif
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.dart';
 import 'package:supercycle_app/features/splash/views/splash_view.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/view/trader_profile_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -153,7 +153,7 @@ class AppRouter {
       // Home View Route
       GoRoute(
         path: EndPoints.homeView,
-        name: 'home',
+        name: 'Home',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
           child: const HomeView(), // Replace with your actual home widget
@@ -346,21 +346,101 @@ class AppRouter {
         ),
       ),
 
+      // Representative Profile View Route
+      GoRoute(
+        path: EndPoints.representativeProfileView,
+        name: 'Representative Profile',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child:
+              RepresentativeProfileView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+
+      // Shipments Calender View Route
       GoRoute(
         path: EndPoints.shipmentsCalendarView,
-        builder: (context, state) => const ShipmentsCalendarView(),
+        name: 'Shipments Calendar',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child:
+              ShipmentsCalendarView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
       ),
+
+      // Contact Us View Route
       GoRoute(
         path: EndPoints.contactUsView,
-        builder: (context, state) => const ContactUsView(),
+        name: 'Contact Us',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: ContactUsView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
       ),
+
+      // Trader Profile View Route
       GoRoute(
-        path: EndPoints.profileView,
-        builder: (context, state) => const ProfileView(),
+        path: EndPoints.traderProfileView,
+        name: 'Trader Profile',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: TraderProfileView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
       ),
+
+      // Trader Edit Profile View Route
       GoRoute(
-        path: EndPoints.editprofileView,
-        builder: (context, state) => const EditProfileView(),
+        path: EndPoints.editTraderProfileView,
+        name: 'Trader Edit Profile',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: EditProfileView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
       ),
 
       // Environmental Impact View Route

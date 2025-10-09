@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class ProfileStatsColumn extends StatelessWidget {
-  const ProfileStatsColumn({
+class TraderProfileStatsColumn extends StatelessWidget {
+  const TraderProfileStatsColumn({
     super.key,
     required this.number,
     required this.label,

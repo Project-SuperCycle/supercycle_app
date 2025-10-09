@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_header_navigation.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_image.dart';
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_header/profile_stats_row.dart';
+import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_navigation.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_row.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_image.dart';
 
-class ProfileHeaderSection extends StatelessWidget {
-  const ProfileHeaderSection({super.key, required this.profileData});
-  final ProfileData profileData;
+class TraderProfileHeaderSection extends StatelessWidget {
+  const TraderProfileHeaderSection({super.key, required this.profileData});
+  final TraderProfileData profileData;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +41,9 @@ class ProfileHeaderSection extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const ProfileHeaderNavigation(),
+                const TraderProfileHeaderNavigation(),
                 const Spacer(flex: 1),
-                // Profile Name
+                // trader_main_profile Name
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
@@ -61,14 +60,14 @@ class ProfileHeaderSection extends StatelessWidget {
             ),
           ),
 
-          // Profile Image and Stats Row
+          // trader_main_profile Image and Stats Row
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ProfileStatsRow(
+              child: TraderProfileStatsRow(
                 profileData: profileData,
                 profileImage: Container(
                   width: profileImageSize,
@@ -95,7 +94,9 @@ class ProfileHeaderSection extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(shape: BoxShape.circle),
                       child: ClipOval(
-                        child: ProfileImage(logoPath: profileData.logoPath),
+                        child: TraderProfileImage(
+                          logoPath: profileData.logoPath,
+                        ),
                       ),
                     ),
                   ),

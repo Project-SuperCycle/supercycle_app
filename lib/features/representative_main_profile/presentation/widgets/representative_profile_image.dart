@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.logoPath});
+class RepresentativeProfileImage extends StatelessWidget {
+  const RepresentativeProfileImage({super.key, required this.logoPath});
 
   final String logoPath;
 

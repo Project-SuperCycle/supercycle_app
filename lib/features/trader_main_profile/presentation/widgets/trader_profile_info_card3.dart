@@ -3,8 +3,8 @@ import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
 
-class ProfileInfoCard3 extends StatelessWidget {
-  const ProfileInfoCard3({super.key});
+class TraderProfileInfoCard3 extends StatelessWidget {
+  const TraderProfileInfoCard3({super.key});
 
   @override
   Widget build(BuildContext context) {

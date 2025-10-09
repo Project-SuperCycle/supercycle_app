@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ProfilePageIndicator extends StatelessWidget {
-  const ProfilePageIndicator({
+class RepresentativeProfilePageIndicator extends StatelessWidget {
+  const RepresentativeProfilePageIndicator({
     super.key,
     required this.currentPage,
-    this.totalPages = 3,
+    this.totalPages = 2,
     this.onPageChanged,
   });
 
@@ -19,7 +19,7 @@ class ProfilePageIndicator extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: List.generate(
         totalPages,
-            (index) => GestureDetector(
+        (index) => GestureDetector(
           onTap: () {
             onPageChanged?.call(index);
           },
@@ -35,7 +35,7 @@ class ProfilePageIndicator extends StatelessWidget {
       width: 12,
       height: 12,
       decoration: BoxDecoration(
-        color: isActive ? Colors.green : const Color(0xFFC0BEBE),
+        color: isActive ? Colors.green : Colors.grey.withAlpha(150),
         shape: BoxShape.circle,
       ),
     );

@@ -5,14 +5,14 @@ import 'package:supercycle_app/features/sales_process/presentation/views/sales_p
 import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
-class ProfileInfoCard2 extends StatefulWidget {
-  const ProfileInfoCard2({super.key});
+class TraderProfileInfoCard2 extends StatefulWidget {
+  const TraderProfileInfoCard2({super.key});
 
   @override
-  State<ProfileInfoCard2> createState() => _ProfileInfoCard2State();
+  State<TraderProfileInfoCard2> createState() => _TraderProfileInfoCard2State();
 }
 
-class _ProfileInfoCard2State extends State<ProfileInfoCard2> {
+class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
   List<ShipmentsCalendarCard> transactions = [
     ShipmentsCalendarCard(
       shipment: ShipmentModel(

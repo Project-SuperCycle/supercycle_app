@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class ProfileData {
+class TraderProfileData {
   final String name;
   final String activityType;
   final String address;
@@ -12,7 +12,7 @@ class ProfileData {
   final int branchCount;
   final String logoPath;
 
-  const ProfileData({
+  const TraderProfileData({
     required this.name,
     required this.activityType,
     required this.address,
@@ -25,8 +25,8 @@ class ProfileData {
     required this.logoPath,
   });
 
-  factory ProfileData.fromJson(Map<String, dynamic> json) {
-    return ProfileData(
+  factory TraderProfileData.fromJson(Map<String, dynamic> json) {
+    return TraderProfileData(
       name: json['name'] ?? '',
       activityType: json['activityType'] ?? '',
       address: json['address'] ?? '',
@@ -55,7 +55,7 @@ class ProfileData {
     };
   }
 
-  ProfileData copyWith({
+  TraderProfileData copyWith({
     String? name,
     String? activityType,
     String? address,
@@ -67,7 +67,7 @@ class ProfileData {
     int? branchCount,
     String? logoPath,
   }) {
-    return ProfileData(
+    return TraderProfileData(
       name: name ?? this.name,
       activityType: activityType ?? this.activityType,
       address: address ?? this.address,

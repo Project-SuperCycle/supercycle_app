@@ -3,16 +3,16 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class BranchesSection extends StatefulWidget {
-  const BranchesSection({super.key, required this.branchCount});
+class TraderBranchesSection extends StatefulWidget {
+  const TraderBranchesSection({super.key, required this.branchCount});
 
   final int branchCount;
 
   @override
-  State<BranchesSection> createState() => _BranchesSectionState();
+  State<TraderBranchesSection> createState() => _TraderBranchesSectionState();
 }
 
-class _BranchesSectionState extends State<BranchesSection> {
+class _TraderBranchesSectionState extends State<TraderBranchesSection> {
   final PageController _pageController = PageController(viewportFraction: 0.35);
   List<String> types = ["كرتون بنى", "ورق ابيض"];
 

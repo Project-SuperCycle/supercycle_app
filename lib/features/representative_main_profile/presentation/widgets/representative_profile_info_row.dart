@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class ProfileInfoRow extends StatelessWidget {
-  const ProfileInfoRow({
+class RepresentativeProfileInfoRow extends StatelessWidget {
+  const RepresentativeProfileInfoRow({
     super.key,
     required this.label,
     required this.value,

@@ -1,6 +1,7 @@
-
 // Constants for profile view
-import 'package:supercycle_app/features/profile/presentation/widgets/profile_data.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/features/representative_main_profile/data/models/representative_profile_data.dart';
+import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
 
 class ProfileConstants {
   // UI Constants
@@ -11,7 +12,7 @@ class ProfileConstants {
   static const double spacing = 16;
 
   // Sample data - in real app, this would come from state management or API
-  static const ProfileData sampleProfileData = ProfileData(
+  static const TraderProfileData sampleProfileData = TraderProfileData(
     name: "Carrefour",
     activityType: "متجر تجاري",
     address: "التجمع الخامس شارع النار",
@@ -23,4 +24,14 @@ class ProfileConstants {
     branchCount: 6,
     logoPath: 'assets/images/carrefour_logo.png',
   );
+
+  static RepresentativeProfileData sampleRepresentativeData =
+      RepresentativeProfileData(
+        name: "إسلام شاكر",
+        phoneNumber: "+201095767137",
+        email: "islamelzantot@gmail.com",
+        requiredProducts: 3,
+        weeklyProducts: 43,
+        logoPath: AppAssets.defaultAvatar,
+      );
 }
