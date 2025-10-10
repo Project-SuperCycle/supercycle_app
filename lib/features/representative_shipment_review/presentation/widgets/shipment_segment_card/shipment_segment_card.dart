@@ -1,16 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_card_header.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_card_progress.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_destination_section.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_next_button.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_products_details.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_truck_info.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_weight_section.dart';
 
-class DeliveryOrderCard extends StatelessWidget {
+class DeliveryOrderCard extends StatefulWidget {
   final String driverName;
   final String phoneNumber;
   final String truckNumber;
@@ -39,6 +38,14 @@ class DeliveryOrderCard extends StatelessWidget {
   });
 
   @override
+  State<DeliveryOrderCard> createState() => _DeliveryOrderCardState();
+}
+
+class _DeliveryOrderCardState extends State<DeliveryOrderCard> {
+  final TextEditingController _weightController = TextEditingController();
+  String? _imagePath;
+
+  @override
   Widget build(BuildContext context) {
     int currentStep = 1;
 
@@ -65,7 +72,10 @@ class DeliveryOrderCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            SegmentCardHeader(driverName: driverName, phoneNumber: phoneNumber),
+            SegmentCardHeader(
+              driverName: widget.driverName,
+              phoneNumber: widget.phoneNumber,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
               child: SegmentCardProgress(
@@ -73,23 +83,42 @@ class DeliveryOrderCard extends StatelessWidget {
                 steps: steps,
               ),
             ),
-            SegmentTruckInfo(truckNumber: truckNumber),
+            SegmentTruckInfo(truckNumber: widget.truckNumber),
             SizedBox(height: 4),
             SegmentDestinationSection(
-              destinationTitle: destinationTitle,
-              destinationAddress: destinationAddress,
+              destinationTitle: widget.destinationTitle,
+              destinationAddress: widget.destinationAddress,
             ),
             SegmentProductsDetails(
-              quantity: quantity,
-              productType: productType,
+              quantity: widget.quantity,
+              productType: widget.productType,
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 25.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [SegmentNextButton(onNextPressed: onNextPressed)],
-              ),
+
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 25.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     children: [
+            //       SegmentNextButton(onNextPressed: widget.onNextPressed),
+            //     ],
+            //   ),
+            // ),
+            SegmentWeightSection(
+              onImageSelected: (File? image) {
+                print('Image selected: ${image?.path}');
+              },
+              onUploadTap: () {
+                // Handle upload - access data via the widget's state
+                print('Upload button pressed');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('تم رفع البيانات بنجاح'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              },
             ),
+
             const SizedBox(height: 20),
           ],
         ),
