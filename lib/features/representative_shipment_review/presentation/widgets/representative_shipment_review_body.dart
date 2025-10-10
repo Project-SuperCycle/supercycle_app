@@ -7,6 +7,7 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/representative_shipment_review_header.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_card.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_states_row/representative_shipment_states.dart';
@@ -98,16 +99,16 @@ class _RepresentativeShipmentReviewBodyState
                       const SizedBox(height: 16),
                       Center(
                         child: ShipmentSegmentCard(
-                          driverName: 'محمد أيمن',
-                          phoneNumber: '0105325656',
-                          truckNumber: '328 ص ي م',
-                          currentStage: 0,
-                          totalStages: 3,
-                          destinationTitle: 'وجهه السيارة 1 :',
-                          destinationAddress:
-                              'مصنع أكتوبر 15 شارع الجمهورية، المبنى الثالث',
-                          productType: 'ورق ابيض',
-                          quantity: '2 طن',
+                          segment: ShipmentSegmentData(
+                            driverName: 'محمد أيمن',
+                            phoneNumber: '0105325656',
+                            truckNumber: '328 ص ي م',
+                            destinationTitle: 'وجهه السيارة 1 :',
+                            destinationAddress:
+                                'مصنع أكتوبر 15 شارع الجمهورية، المبنى الثالث',
+                            productType: 'ورق ابيض',
+                            quantity: '2 طن',
+                          ),
                         ),
                       ),
                     ],

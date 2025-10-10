@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
 
 class SegmentWeightInfo extends StatelessWidget {
   final String imagePath;
@@ -68,37 +69,7 @@ class SegmentWeightInfo extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20),
-
-          // Weight Display
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8EAF6),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  unit!,
-                  style: AppStyles.styleSemiBold14(
-                    context,
-                  ).copyWith(color: const Color(0xFF3F51B5)),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  weight,
-                  style: AppStyles.styleBold20(
-                    context,
-                  ).copyWith(fontSize: 20, color: const Color(0xFF1A237E)),
-                ),
-                const SizedBox(width: 12),
-                Text(': الوزن', style: AppStyles.styleSemiBold16(context)),
-              ],
-            ),
-          ),
+          SegmentProductsDetails(quantity: 2000, productType: "ورق أبيض"),
         ],
       ),
     );

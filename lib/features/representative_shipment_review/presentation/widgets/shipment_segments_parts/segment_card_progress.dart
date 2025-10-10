@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class SegmentCardProgress extends StatelessWidget {
+class SegmentCardProgress extends StatefulWidget {
   final int currentStep;
-  final List<StepData> steps;
   final Color activeColor;
   final Color inactiveColor;
   final Color completedColor;
@@ -11,12 +10,21 @@ class SegmentCardProgress extends StatelessWidget {
   const SegmentCardProgress({
     super.key,
     required this.currentStep,
-    required this.steps,
     this.activeColor = Colors.blueAccent,
     this.inactiveColor = const Color(0xFFE0E0E0),
     this.completedColor = const Color(0xFF3BC577),
-  }) : assert(steps.length == 3, 'Must have exactly 3 steps');
+  });
 
+  @override
+  State<SegmentCardProgress> createState() => _SegmentCardProgressState();
+}
+
+class _SegmentCardProgressState extends State<SegmentCardProgress> {
+  final List<StepData> steps = const [
+    StepData(title: 'تم التحرك', icon: Icons.shopping_cart_rounded),
+    StepData(title: 'تم الوزن', icon: Icons.local_shipping_rounded),
+    StepData(title: 'تم التسليم', icon: Icons.check_circle_rounded),
+  ];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,16 +61,16 @@ class SegmentCardProgress extends StatelessWidget {
   }
 
   Widget _buildStepCircle(int index) {
-    final isCompleted = index < currentStep;
-    final isActive = index == currentStep;
+    final isCompleted = index < widget.currentStep;
+    final isActive = index == widget.currentStep;
 
     Color circleColor;
     if (isCompleted) {
-      circleColor = completedColor;
+      circleColor = widget.completedColor;
     } else if (isActive) {
-      circleColor = activeColor;
+      circleColor = widget.activeColor;
     } else {
-      circleColor = inactiveColor;
+      circleColor = widget.inactiveColor;
     }
 
     return Container(
@@ -78,20 +86,20 @@ class SegmentCardProgress extends StatelessWidget {
   }
 
   Widget _buildConnector(int index) {
-    final isCompleted = index < currentStep;
+    final isCompleted = index < widget.currentStep;
 
     return Container(
       height: 4,
       decoration: BoxDecoration(
-        color: isCompleted ? completedColor : inactiveColor,
+        color: isCompleted ? widget.completedColor : widget.inactiveColor,
         borderRadius: BorderRadius.circular(4),
       ),
     );
   }
 
   Widget _buildStepLabel(int index, BuildContext context) {
-    final isCompleted = index < currentStep;
-    final isActive = index == currentStep;
+    final isCompleted = index < widget.currentStep;
+    final isActive = index == widget.currentStep;
 
     return FittedBox(
       fit: BoxFit.scaleDown,

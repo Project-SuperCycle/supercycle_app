@@ -3,7 +3,7 @@ import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class SegmentProductsDetails extends StatelessWidget {
-  final String quantity;
+  final num quantity;
   final String productType;
   const SegmentProductsDetails({
     super.key,
@@ -37,8 +37,8 @@ class SegmentProductsDetails extends StatelessWidget {
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      quantity,
-                      style: AppStyles.styleSemiBold18(context),
+                      "${quantity.toString()} كجم ",
+                      style: AppStyles.styleSemiBold16(context),
                       textDirection: TextDirection.rtl,
                     ),
                   ),
@@ -68,7 +68,7 @@ class SegmentProductsDetails extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     child: Text(
                       productType,
-                      style: AppStyles.styleSemiBold18(context),
+                      style: AppStyles.styleSemiBold16(context),
                       textDirection: TextDirection.rtl,
                     ),
                   ),

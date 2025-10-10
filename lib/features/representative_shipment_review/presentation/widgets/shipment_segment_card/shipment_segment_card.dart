@@ -1,65 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_card_header.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_card_progress.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_deliverd_section.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_destination_section.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_products_details.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_truck_info.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_weight_info.dart';
+import 'package:logger/logger.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
 
 class ShipmentSegmentCard extends StatefulWidget {
-  final String driverName;
-  final String phoneNumber;
-  final String truckNumber;
-  final int currentStage;
-  final int totalStages;
-  final String destinationTitle;
-  final String destinationAddress;
-  final String productType;
-  final String quantity;
-
-  const ShipmentSegmentCard({
-    super.key,
-    required this.driverName,
-    required this.phoneNumber,
-    required this.truckNumber,
-    this.currentStage = 0,
-    this.totalStages = 3,
-    required this.destinationTitle,
-    required this.destinationAddress,
-    required this.productType,
-    required this.quantity,
-  });
+  final ShipmentSegmentData segment;
+  const ShipmentSegmentCard({super.key, required this.segment});
 
   @override
   State<ShipmentSegmentCard> createState() => _ShipmentSegmentCardState();
 }
 
 class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
-  bool isWeightDataExpanded = false;
+  bool isMoved = false;
+  bool isWeighted = false;
+  bool isDelivered = false;
 
-  void _toggleWeightData() {
+  void onMovedPressed() {
     setState(() {
-      isWeightDataExpanded = !isWeightDataExpanded;
+      isMoved = true;
     });
+    Logger().i("isMoved: $isMoved");
   }
 
-  void onNextPressed() {}
+  void onWeightedPressed() {
+    setState(() {
+      isWeighted = true;
+    });
+    Logger().i("isWeighted: $isWeighted");
+  }
 
-  void onMovePressed() {}
+  void onDeliveredPressed() {
+    setState(() {
+      isDelivered = true;
+    });
+    Logger().i("isDelivered: $isDelivered");
+  }
 
   @override
   Widget build(BuildContext context) {
-    int currentStep = 1;
-
-    final List<StepData> steps = const [
-      StepData(title: 'تم التحرك', icon: Icons.shopping_cart_rounded),
-      StepData(title: 'تم الوزن', icon: Icons.local_shipping_rounded),
-      StepData(title: 'تم التسليم', icon: Icons.check_circle_rounded),
-    ];
-
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
@@ -78,84 +60,45 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         child: Column(
           children: [
             SegmentCardHeader(
-              driverName: widget.driverName,
-              phoneNumber: widget.phoneNumber,
+              driverName: widget.segment.driverName,
+              phoneNumber: widget.segment.phoneNumber,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-              child: SegmentCardProgress(
-                currentStep: currentStep,
-                steps: steps,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: _buildCurrentStep(),
             ),
-            SegmentTruckInfo(truckNumber: widget.truckNumber),
-            SizedBox(height: 4),
-            SegmentDestinationSection(
-              destinationTitle: widget.destinationTitle,
-              destinationAddress: widget.destinationAddress,
-            ),
-            SegmentProductsDetails(
-              quantity: widget.quantity,
-              productType: widget.productType,
-            ),
-
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 25.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     children: [
-            //       SegmentActionButton(
-            //         title: "تم التحرك",
-            //         onPressed: onNextPressed,
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SegmentWeightSection(
-            //   onImageSelected: (File? image) {},
-            //   onUploadTap: () {
-            //     ScaffoldMessenger.of(context).showSnackBar(
-            //       const SnackBar(
-            //         content: Text('تم رفع البيانات بنجاح'),
-            //         backgroundColor: Colors.green,
-            //       ),
-            //     );
-            //   },
-            // ),
-            Container(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-              child: ExpandableSection(
-                title: 'بيانات الوزنة',
-                iconPath: AppAssets.boxPerspective,
-                isExpanded: isWeightDataExpanded,
-                maxHeight: 280,
-                onTap: _toggleWeightData,
-                content: SegmentWeightInfo(
-                  imagePath: AppAssets.miniature,
-                  weight: '25.5',
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 25.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     children: [
-            //       SegmentActionButton(
-            //         title: "تم التوصيل",
-            //         onPressed: onMovePressed,
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            SegmentDeliverdSection(),
             const SizedBox(height: 20),
           ],
         ),
       ),
+    );
+  }
+
+  /// Determines which step to display based on current state
+  Widget _buildCurrentStep() {
+    // Step 3: Show if weight is uploaded (isWeighted = true)
+    if (isWeighted) {
+      return ShipmentSegmentStep3(
+        segment: widget.segment,
+        isDelivered: isDelivered,
+        onDeliveredPressed: onDeliveredPressed,
+      );
+    }
+
+    // Step 2: Show if moved to warehouse (isMoved = true)
+    if (isMoved) {
+      return ShipmentSegmentStep2(
+        segment: widget.segment,
+        isWeighted: isWeighted,
+        onUploadPressed: onWeightedPressed,
+      );
+    }
+
+    // Step 1: Default initial step
+    return ShipmentSegmentStep1(
+      segment: widget.segment,
+      isMoved: isMoved,
+      onMovedPressed: onMovedPressed,
     );
   }
 }
