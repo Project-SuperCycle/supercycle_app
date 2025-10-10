@@ -212,7 +212,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                         ),
                         const SizedBox(height: 25),
                         RepresentativeShipmentActionsRow(
-                          shipmentID: widget.shipment.id,
+                          shipment: widget.shipment,
                         ),
                         const SizedBox(height: 30),
                       ],

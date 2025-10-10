@@ -36,4 +36,8 @@ abstract class AppAssets {
 
   static const String onboarding3_1 = 'assets/images/onboard3_1.png';
   static const String onboarding3_2 = 'assets/images/onboard3_2.png';
+
+  static const String locationIcon = 'assets/images/Location.png';
+  static const String rectangleBorder1 = 'assets/images/RectangleBorder.png';
+  static const String rectangleBorder2 = 'assets/images/RectangleBorder.svg';
 }

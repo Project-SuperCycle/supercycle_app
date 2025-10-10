@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class RepresentativeShipmentActionsRow extends StatelessWidget {
-  final String shipmentID;
-  const RepresentativeShipmentActionsRow({super.key, required this.shipmentID});
+  final SingleShipmentModel shipment;
+  const RepresentativeShipmentActionsRow({super.key, required this.shipment});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +20,9 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           ),
           onPressed: () {
-            GoRouter.of(context).push(
-              EndPoints.representativeShipmentReviewView,
-              extra: shipmentID,
-            );
+            GoRouter.of(
+              context,
+            ).push(EndPoints.representativeShipmentReviewView, extra: shipment);
           },
           child: Text(
             'تأكيد الشحنة',
