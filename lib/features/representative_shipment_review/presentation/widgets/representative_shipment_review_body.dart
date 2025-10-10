@@ -97,7 +97,7 @@ class _RepresentativeShipmentReviewBodyState
                       RepresentativeShipmentStates(),
                       const SizedBox(height: 16),
                       Center(
-                        child: DeliveryOrderCard(
+                        child: ShipmentSegmentCard(
                           driverName: 'محمد أيمن',
                           phoneNumber: '0105325656',
                           truckNumber: '328 ص ي م',
@@ -108,12 +108,6 @@ class _RepresentativeShipmentReviewBodyState
                               'مصنع أكتوبر 15 شارع الجمهورية، المبنى الثالث',
                           productType: 'ورق ابيض',
                           quantity: '2 طن',
-                          onNextPressed: () {
-                            print('Next button pressed');
-                          },
-                          onInfoPressed: () {
-                            print('Info button pressed');
-                          },
                         ),
                       ),
                     ],

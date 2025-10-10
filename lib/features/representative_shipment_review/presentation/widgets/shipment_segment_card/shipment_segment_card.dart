@@ -1,15 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_card_header.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_card_progress.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_deliverd_section.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_destination_section.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_next_button.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_products_details.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_truck_info.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_weight_section.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/segment_weight_info.dart';
 
-class DeliveryOrderCard extends StatefulWidget {
+class ShipmentSegmentCard extends StatefulWidget {
   final String driverName;
   final String phoneNumber;
   final String truckNumber;
@@ -19,10 +19,8 @@ class DeliveryOrderCard extends StatefulWidget {
   final String destinationAddress;
   final String productType;
   final String quantity;
-  final VoidCallback? onNextPressed;
-  final VoidCallback? onInfoPressed;
 
-  const DeliveryOrderCard({
+  const ShipmentSegmentCard({
     super.key,
     required this.driverName,
     required this.phoneNumber,
@@ -33,17 +31,24 @@ class DeliveryOrderCard extends StatefulWidget {
     required this.destinationAddress,
     required this.productType,
     required this.quantity,
-    this.onNextPressed,
-    this.onInfoPressed,
   });
 
   @override
-  State<DeliveryOrderCard> createState() => _DeliveryOrderCardState();
+  State<ShipmentSegmentCard> createState() => _ShipmentSegmentCardState();
 }
 
-class _DeliveryOrderCardState extends State<DeliveryOrderCard> {
-  final TextEditingController _weightController = TextEditingController();
-  String? _imagePath;
+class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
+  bool isWeightDataExpanded = false;
+
+  void _toggleWeightData() {
+    setState(() {
+      isWeightDataExpanded = !isWeightDataExpanded;
+    });
+  }
+
+  void onNextPressed() {}
+
+  void onMovePressed() {}
 
   @override
   Widget build(BuildContext context) {
@@ -99,26 +104,54 @@ class _DeliveryOrderCardState extends State<DeliveryOrderCard> {
             //   child: Row(
             //     mainAxisAlignment: MainAxisAlignment.end,
             //     children: [
-            //       SegmentNextButton(onNextPressed: widget.onNextPressed),
+            //       SegmentActionButton(
+            //         title: "تم التحرك",
+            //         onPressed: onNextPressed,
+            //       ),
             //     ],
             //   ),
             // ),
-            SegmentWeightSection(
-              onImageSelected: (File? image) {
-                print('Image selected: ${image?.path}');
-              },
-              onUploadTap: () {
-                // Handle upload - access data via the widget's state
-                print('Upload button pressed');
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('تم رفع البيانات بنجاح'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-              },
+            // SegmentWeightSection(
+            //   onImageSelected: (File? image) {},
+            //   onUploadTap: () {
+            //     ScaffoldMessenger.of(context).showSnackBar(
+            //       const SnackBar(
+            //         content: Text('تم رفع البيانات بنجاح'),
+            //         backgroundColor: Colors.green,
+            //       ),
+            //     );
+            //   },
+            // ),
+            Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+              child: ExpandableSection(
+                title: 'بيانات الوزنة',
+                iconPath: AppAssets.boxPerspective,
+                isExpanded: isWeightDataExpanded,
+                maxHeight: 280,
+                onTap: _toggleWeightData,
+                content: SegmentWeightInfo(
+                  imagePath: AppAssets.miniature,
+                  weight: '25.5',
+                ),
+              ),
             ),
-
+            const SizedBox(height: 20),
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 25.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     children: [
+            //       SegmentActionButton(
+            //         title: "تم التوصيل",
+            //         onPressed: onMovePressed,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            SegmentDeliverdSection(),
             const SizedBox(height: 20),
           ],
         ),

@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class SegmentNextButton extends StatelessWidget {
-  final VoidCallback? onNextPressed;
+class SegmentActionButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final String title;
 
-  const SegmentNextButton({super.key, this.onNextPressed});
+  const SegmentActionButton({super.key, this.onPressed, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onNextPressed,
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
@@ -18,7 +19,7 @@ class SegmentNextButton extends StatelessWidget {
         elevation: 2,
       ),
       child: Text(
-        'التالي',
+        title,
         style: AppStyles.styleBold16(context).copyWith(color: Colors.white),
       ),
     );
