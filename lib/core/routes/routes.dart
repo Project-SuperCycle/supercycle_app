@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' hide CustomTransitionPage;
 import 'package:supercycle_app/core/helpers/page_transition.dart';
+import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/features/calculator/presentation/view/calculator_view.dart';
 import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
@@ -12,10 +13,11 @@ import 'package:supercycle_app/features/onboarding/presentation/views/second_onb
 import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
 import 'package:supercycle_app/features/edit_profile/presentation/view/edit_profile_view.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/view/representative_profile_view.dart';
+import 'package:supercycle_app/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
 import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
-import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
-import 'package:supercycle_app/features/shipment_details/presentation/views/shipment_details_view.dart';
+import 'package:supercycle_app/features/trader_shipment_details/presentation/views/shipment_details_view.dart';
 import 'package:supercycle_app/features/shipment_edit/presentation/views/shipment_edit_view.dart';
 import 'package:supercycle_app/features/shipment_preview/presentation/views/shipment_review_view.dart';
 import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.dart';
@@ -469,6 +471,50 @@ class AppRouter {
         name: 'Calculator',
         pageBuilder: (context, state) => CustomTransitionPage(
           child: CalculatorView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+
+      // Representative Shipment Details View Route
+      GoRoute(
+        path: EndPoints.representativeShipmentDetailsView,
+        name: 'Representative Shipment Details ',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: RepresentativeShipmentDetailsView(
+            shipment: state.extra as SingleShipmentModel,
+          ), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+
+      // Representative Shipment Review View Route
+      GoRoute(
+        path: EndPoints.representativeShipmentReviewView,
+        name: 'Representative Shipment Review ',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: RepresentativeShipmentReviewView(
+            shipment: state.extra as SingleShipmentModel,
+          ), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(

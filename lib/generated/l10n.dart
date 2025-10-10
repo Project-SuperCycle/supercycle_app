@@ -430,10 +430,10 @@ class S {
   }
 
   /// `Shipment details`
-  String get shipment_details {
+  String get trader_shipment_details {
     return Intl.message(
       'Shipment details',
-      name: 'shipment_details',
+      name: 'trader_shipment_details',
       desc: '',
       args: [],
     );

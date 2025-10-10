@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
-import 'package:supercycle_app/features/shipment_details/data/models/single_shipment_model.dart';
+import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
@@ -32,7 +32,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
 
     GoRouter.of(
       context,
-    ).push(EndPoints.shipmentDetailsView, extra: singleShipment);
+    ).push(EndPoints.representativeShipmentDetailsView, extra: singleShipment);
   }
 
   @override

@@ -46,7 +46,7 @@
   "sale_process": "إجراء عملية بيع",
   "upload_shipment_photo_hint": "الرجاء رفع صورة للشحنة إن وجدت",
   "entity_data": "بيانات جهة التعامل",
-  "shipment_details": "تفاصيل الشحنة",
+  "trader_shipment_details": "تفاصيل الشحنة",
   "price": "السعر",
   "type": "النوع",
   "quantity": "الكمية",

@@ -180,7 +180,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_type": MessageLookupByLibrary.simpleMessage("حدد النوع"),
     "sell_title": MessageLookupByLibrary.simpleMessage("هل تريد البيع؟"),
     "shipment_date": MessageLookupByLibrary.simpleMessage("تاريخ الشحنة"),
-    "shipment_details": MessageLookupByLibrary.simpleMessage("تفاصيل الشحنة"),
     "shipment_edit": MessageLookupByLibrary.simpleMessage("تعديل الشحنة"),
     "shipment_number": MessageLookupByLibrary.simpleMessage("رقم الشحنة"),
     "shipment_review": MessageLookupByLibrary.simpleMessage("مراجعة الشحنة"),
@@ -205,6 +204,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "جدول متابعة الشحنات",
     ),
     "title": MessageLookupByLibrary.simpleMessage("سوبر سايكل"),
+    "trader_shipment_details": MessageLookupByLibrary.simpleMessage(
+      "تفاصيل الشحنة",
+    ),
     "transportation_data": MessageLookupByLibrary.simpleMessage("بيانات النقل"),
     "truck": MessageLookupByLibrary.simpleMessage("الشاحنة"),
     "type": MessageLookupByLibrary.simpleMessage("النوع"),

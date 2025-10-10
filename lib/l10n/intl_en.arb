@@ -50,7 +50,7 @@
   "sale_process": "Sale Process",
   "upload_shipment_photo_hint": "Please upload a photo of the shipment if available",
   "entity_data": "Entity data",
-  "shipment_details": "Shipment details",
+  "trader_shipment_details": "Shipment details",
   "price": "Price",
   "type": "Type",
   "quantity": "Quantity",

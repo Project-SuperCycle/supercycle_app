@@ -17,9 +17,9 @@ class ShipmentModel {
 
   factory ShipmentModel.fromJson(Map<String, dynamic> json) {
     return ShipmentModel(
-      id: json['_id'] as String,
-      shipmentNumber: json['shipmentNumber'] as String,
-      customPickupAddress: json['customPickupAddress'] as String,
+      id: json['_id'] ?? "",
+      shipmentNumber: json['shipmentNumber'] ?? "",
+      customPickupAddress: json['customPickupAddress'] ?? "",
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
       status: json['status'] as String,
       totalQuantityKg: json['totalQuantityKg'] as num? ?? 0,
