@@ -16,7 +16,7 @@ import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_content.dart';
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_header.dart';
-import 'package:supercycle_app/features/representative_shipment_rejected/presentation/widgets/representative_shipment_reject_report.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_rejected_body/representative_shipment_reject_report.dart';
 
 class RepresentativeShipmentRejectedBody extends StatefulWidget {
   const RepresentativeShipmentRejectedBody({super.key, required this.shipment});

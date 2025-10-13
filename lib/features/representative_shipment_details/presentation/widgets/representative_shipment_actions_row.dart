@@ -34,7 +34,11 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             backgroundColor: Colors.grey,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           ),
-          onPressed: () {},
+          onPressed: () {
+            GoRouter.of(
+              context,
+            ).push(EndPoints.representativeShipmentEditView, extra: shipment);
+          },
           child: Text(
             'تعديل',
             style: AppStyles.styleBold14(context).copyWith(color: Colors.white),

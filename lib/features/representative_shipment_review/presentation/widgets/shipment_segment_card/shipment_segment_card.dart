@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/features/representative_shipment_accepted/data/models/shipment_segment_data.dart';
-import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
-import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
-import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
-import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
 
 class ShipmentSegmentCard extends StatefulWidget {
   final ShipmentSegmentData segment;
