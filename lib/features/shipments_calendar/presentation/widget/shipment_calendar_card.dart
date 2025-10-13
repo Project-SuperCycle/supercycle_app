@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
@@ -13,26 +12,18 @@ import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_
 class ShipmentsCalendarCard extends StatefulWidget {
   final ShipmentModel shipment;
   const ShipmentsCalendarCard({super.key, required this.shipment});
-
   @override
   State<ShipmentsCalendarCard> createState() => _ShipmentsCalendarCardState();
 }
 
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
-  late SingleShipmentModel singleShipment;
-
   void _showShipmentDetails(BuildContext context) {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: widget.shipment.id);
-
     BlocProvider.of<NotesCubit>(
       context,
     ).getAllNotes(shipmentId: widget.shipment.id);
-
-    GoRouter.of(
-      context,
-    ).push(EndPoints.representativeShipmentDetailsView, extra: singleShipment);
   }
 
   @override
@@ -41,7 +32,15 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
       listener: (context, state) {
         // TODO: implement listener
         if (state is GetShipmentSuccess) {
-          singleShipment = state.shipment;
+          GoRouter.of(context).push(
+            EndPoints.representativeShipmentDetailsView,
+            extra: state.shipment,
+          );
+        }
+        if (state is GetShipmentFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
         }
       },
       child: Card(

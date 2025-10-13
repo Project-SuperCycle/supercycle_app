@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_states_row/shipment_state_info_row.dart';
+import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/shipment_states_row/shipment_state_info_row.dart';
 
 class RepresentativeShipmentStates extends StatelessWidget {
   const RepresentativeShipmentStates({super.key});

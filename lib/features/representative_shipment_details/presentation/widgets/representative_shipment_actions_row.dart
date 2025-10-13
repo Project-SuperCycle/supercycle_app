@@ -45,7 +45,12 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             backgroundColor: AppColors.failureColor,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           ),
-          onPressed: () {},
+          onPressed: () {
+            GoRouter.of(context).push(
+              EndPoints.representativeShipmentRejectedView,
+              extra: shipment,
+            );
+          },
           child: Text(
             'رفض الشحنة',
             style: AppStyles.styleBold14(context).copyWith(color: Colors.white),

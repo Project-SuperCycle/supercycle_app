@@ -34,7 +34,7 @@ class SingleShipmentModel {
     return SingleShipmentModel(
       id: json['_id'] as String,
       shipmentNumber: json['shipmentNumber'] as String,
-      customPickupAddress: json['customPickupAddress'] as String,
+      customPickupAddress: json['customPickupAddress'] ?? "",
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
       status: json['status'] as String,
       uploadedImages: json['uploadedImages'] != null
@@ -45,7 +45,7 @@ class SingleShipmentModel {
               json['items'].map((x) => DoshItemModel.fromJson(x)),
             )
           : [],
-      userNotes: json['userNotes'] as String? ?? '',
+      userNotes: json['userNotes'] ?? '',
       totalQuantityKg: json['totalQuantityKg'] as num? ?? 0,
       representitive: json['representitive'] != null
           ? RepresentitiveModel.fromJson(json['representitive'])

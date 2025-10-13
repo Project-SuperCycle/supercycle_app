@@ -26,6 +26,8 @@ abstract class EndPoints {
       '/representativeShipmentDetailsView';
   static const String representativeShipmentReviewView =
       '/representativeShipmentReviewView';
+  static const String representativeShipmentRejectedView =
+      '/representativeShipmentRejectedView';
 
   static const String environmentalImpactView = '/environmentalImpactView';
   static const String calculatorView = '/calculatorView';

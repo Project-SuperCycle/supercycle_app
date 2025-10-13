@@ -7,10 +7,10 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/representative_shipment_review_header.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_card.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_states_row/representative_shipment_states.dart';
+import 'package:supercycle_app/features/representative_shipment_accepted/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/representative_shipment_review_header.dart';
+import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/shipment_segment_card/shipment_segment_card.dart';
+import 'package:supercycle_app/features/representative_shipment_accepted/presentation/widgets/shipment_states_row/representative_shipment_states.dart';
 
 class RepresentativeShipmentReviewBody extends StatefulWidget {
   const RepresentativeShipmentReviewBody({super.key, required this.shipment});
