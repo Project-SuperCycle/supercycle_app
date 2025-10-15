@@ -374,12 +374,54 @@ class SalesLineChartState extends State<SalesLineChart> {
             ? _doshData.map((e) => e.name).toList()
             : _typeOptions;
 
-        return CustomDropdown(
-          options: options,
-          onChanged: _handleDropdownChange,
-          hintText: S.of(context).select_type,
-          initialValue: _selectedTypeName,
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: DropdownButtonFormField<String>(
+            value: _selectedTypeName?.isNotEmpty == true ? _selectedTypeName : null,
+            items: options.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Row(
+                  children: [
+                    const Icon(Icons.recycling, color: Colors.green, size: 20),
+                    const SizedBox(width: 10),
+                    Text(
+                      value,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: _handleDropdownChange, // نفس الفنكشن القديمة
+            icon: const Icon(Icons.arrow_drop_down_rounded, color: Colors.grey),
+            decoration: InputDecoration(
+              hintText: S.of(context).select_type,
+              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.grey[500],
+              ),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+            ),
+            dropdownColor: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
         );
+
       },
     );
   }
