@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/helpers/custom_back_button.dart' show CustomBackButton;
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class EnvironmentalImpactHeader extends StatelessWidget {
   const EnvironmentalImpactHeader({super.key});
-
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
+
       child: Container(
         decoration: BoxDecoration(
           gradient: kGradientContainer,
@@ -23,38 +24,44 @@ class EnvironmentalImpactHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(50),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.eco,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        Text(
-                          'أثرك البيئي',
-                          style: AppStyles.styleBold24(
-                            context,
-                          ).copyWith(color: Colors.white),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(50),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.eco,
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          'كل خطوة تصنع فرقًا',
-                          style: AppStyles.styleMedium14(
-                            context,
-                          ).copyWith(color: Color(0xFFD1FAE5)),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'أثرك البيئي',
+                              style: AppStyles.styleBold24(
+                                context,
+                              ).copyWith(color: Colors.white),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'كل خطوة تصنع فرقًا',
+                              style: AppStyles.styleMedium14(
+                                context,
+                              ).copyWith(color: Color(0xFFD1FAE5)),
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    CustomBackButton(color: Colors.white, size: 25),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -67,11 +74,17 @@ class EnvironmentalImpactHeader extends StatelessWidget {
                   child: const Row(
                     children: [
                       Expanded(
-                        child: _StatCard(value: '847', label: 'كجم تم تدويرها'),
+                        child: _StatCard(
+                          value: '847',
+                          label: 'كجم تم تدويرها',
+                        ),
                       ),
                       SizedBox(width: 16),
                       Expanded(
-                        child: _StatCard(value: '12', label: 'شجرة تم زراعتها'),
+                        child: _StatCard(
+                          value: '12',
+                          label: 'شجرة تم زراعتها',
+                        ),
                       ),
                     ],
                   ),

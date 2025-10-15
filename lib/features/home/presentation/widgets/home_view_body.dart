@@ -13,18 +13,21 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          HomeViewHeader(onDrawerPressed: onDrawerPressed),
-          SizedBox(height: 20),
-          SalesChartCard(),
-          SizedBox(height: 30),
-          TypesSectionHeader(),
-          SizedBox(height: 10),
-          TypesListView(),
-          SizedBox(height: 40),
-        ],
+    return Container(
+      color: Colors.grey[50],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            HomeViewHeader(onDrawerPressed: onDrawerPressed),
+            const SizedBox(height: 24),
+            SalesChartCard(),
+            const SizedBox(height: 32),
+            TypesSectionHeader(),
+            const SizedBox(height: 16),
+            TypesListView(),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }

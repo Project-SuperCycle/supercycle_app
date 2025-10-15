@@ -1,129 +1,183 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
-import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
-import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle_app/core/widgets/custom_button.dart' show CustomButton;
+import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/core/widgets/custom_button.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_type_model.dart';
-import 'package:supercycle_app/generated/l10n.dart' show S;
+import 'package:supercycle_app/generated/l10n.dart';
 
-class TypeCardItem extends StatelessWidget {
+class TypeCardItem extends StatefulWidget {
   final DoshTypeModel typeModel;
   const TypeCardItem({super.key, required this.typeModel});
 
+  @override
+  State<TypeCardItem> createState() => _TypeCardItemState();
+}
+
+class _TypeCardItemState extends State<TypeCardItem> {
+  bool _isPressed = false;
+
   String formatPrice(dynamic price) {
     if (price == null) return '0.00';
-
-    double priceValue;
-
+    double value;
     if (price is String) {
-      priceValue = double.tryParse(price) ?? 0.0;
+      value = double.tryParse(price) ?? 0.0;
     } else if (price is int) {
-      priceValue = price.toDouble();
+      value = price.toDouble();
     } else if (price is double) {
-      priceValue = price;
+      value = price;
     } else {
-      priceValue = 0.0;
+      value = 0.0;
     }
-
-    return priceValue.toStringAsFixed(2);
+    return value.toStringAsFixed(2);
   }
 
   String formatPriceRange(dynamic minPrice, dynamic maxPrice) {
-    String formattedMinPrice = formatPrice(minPrice);
-    String formattedMaxPrice = formatPrice(maxPrice);
-    return '$formattedMinPrice : $formattedMaxPrice';
+    return '${formatPrice(minPrice)} : ${formatPrice(maxPrice)}';
   }
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 220 / 280,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withAlpha(150),
-              spreadRadius: 2,
-              blurRadius: 4,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: 125,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                image: DecorationImage(
-                  image: AssetImage(AppAssets.miniature),
-                  fit: BoxFit.cover,
-                ),
+    final typeModel = widget.typeModel;
+
+    return AnimatedScale(
+      scale: _isPressed ? 0.97 : 1.0,
+      duration: const Duration(milliseconds: 120),
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        child: Container(
+          width: 200,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white, // 👈 الكارت أبيض بالكامل
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.15),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        typeModel.name,
-                        textDirection: TextDirection.rtl,
-                        style: AppStyles.styleSemiBold12(
-                          context,
-                        ).copyWith(fontWeight: FontWeight.bold),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // ======== IMAGE SECTION ========
+              ClipRRect(
+                borderRadius:
+                const BorderRadius.vertical(top: Radius.circular(20)),
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      AppAssets.miniature,
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                    Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.0),
+                            Colors.black.withOpacity(0.1),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 15.0),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      textDirection: TextDirection.rtl,
-                      children: [
-                        Text(
-                          formatPriceRange(
-                            typeModel.minPrice,
-                            typeModel.maxPrice,
-                          ),
-                          textDirection: TextDirection.rtl,
-                          style: AppStyles.styleSemiBold12(context).copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor,
-                          ),
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          shape: BoxShape.circle,
                         ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "${S.of(context).money} / ${S.of(context).unit}",
-                          textDirection: TextDirection.rtl,
-                          style: AppStyles.styleSemiBold12(
-                            context,
-                          ).copyWith(fontWeight: FontWeight.bold),
+                        child: const Icon(
+                          Icons.recycling,
+                          size: 18,
+                          color: Colors.green,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20.0),
-                  CustomButton(
-                    title: S.of(context).make_process,
-                    onPress: () => StorageServices.clearAll(),
-                  ),
-                  SizedBox(height: 12.0),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+
+              // ======== CONTENT SECTION ========
+              Expanded(
+                child: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // ----- Title -----
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          typeModel.name,
+                          textDirection: TextDirection.rtl,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppStyles.styleBold18(context).copyWith(),
+                        ),
+                      ),
+
+                      // ----- Price Container -----
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            textDirection: TextDirection.rtl,
+                            children: [
+                              Text(
+                                formatPriceRange(
+                                    typeModel.minPrice, typeModel.maxPrice),
+                                style:
+                                AppStyles.styleBold14(context).copyWith(
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                "${S.of(context).money} / ${S.of(context).unit}",
+                                style:
+                                AppStyles.styleMedium12(context).copyWith(
+                                  color: AppColors.subTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // ----- Button -----
+                      CustomButton(
+                        title: S.of(context).make_process,
+                        onPress: () => GoRouter.of(context)
+                            .push(EndPoints.salesProcessView),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

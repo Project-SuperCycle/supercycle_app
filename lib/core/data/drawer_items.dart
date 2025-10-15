@@ -26,7 +26,7 @@ List<DrawerItemModel> getDrawerItems(BuildContext context) {
         width: 30,
         height: 30,
       ),
-      onTap: () => GoRouter.of(context).push(EndPoints.homeView),
+      onTap: () => GoRouter.of(context).push(EndPoints.traderProfileView),
     ),
     DrawerItemModel(
       title: S.of(context).drawer_sales_calender,
