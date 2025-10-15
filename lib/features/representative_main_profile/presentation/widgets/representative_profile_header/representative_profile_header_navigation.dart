@@ -14,10 +14,10 @@ class RepresentativeProfileHeaderNavigation extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Menu Button (Edit representative_main_profile)
+          // Menu Button (Edit Profile)
           IconButton(
             onPressed: () {
-              GoRouter.of(context).go(EndPoints.editTraderProfileView);
+              GoRouter.of(context).go(EndPoints.editRepresentativeProfileView);
             },
             icon: const Icon(Icons.menu, color: Colors.white, size: 28),
           ),

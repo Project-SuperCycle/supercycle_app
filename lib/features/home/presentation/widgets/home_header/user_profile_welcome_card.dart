@@ -42,7 +42,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
           child: Center(
             child: GestureDetector(
               onTap: () {
-                GoRouter.of(context).push(EndPoints.representativeProfileView);
+                GoRouter.of(context).push(EndPoints.traderProfileView);
               },
               child: Image.asset(
                 AppAssets.defaultAvatar,
@@ -66,15 +66,10 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
               ).copyWith(color: Colors.white),
             ),
             const SizedBox(height: 5),
-            GestureDetector(
-              onTap: () {
-                GoRouter.of(context).push(EndPoints.traderProfileView);
-              },
-              child: Text(
-                managerName,
-                textDirection: TextDirection.ltr,
-                style: AppStyles.styleSemiBold16(context),
-              ),
+            Text(
+              managerName,
+              textDirection: TextDirection.ltr,
+              style: AppStyles.styleSemiBold16(context),
             ),
           ],
         ),

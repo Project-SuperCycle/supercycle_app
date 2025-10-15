@@ -1,111 +1,200 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/profile_constants.dart';
 import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_navigation.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_row.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_image.dart';
 
-class TraderProfileHeaderSection extends StatelessWidget {
-  const TraderProfileHeaderSection({super.key, required this.profileData});
+class ProfileHeaderSection extends StatelessWidget {
+  const ProfileHeaderSection({super.key, required this.profileData});
+
   final TraderProfileData profileData;
 
   @override
   Widget build(BuildContext context) {
-    final double containerHeight = 260.0;
-    final profileImageSize = 120.0;
-
-    return SizedBox(
-      width: double.infinity,
-      height: containerHeight + (profileImageSize / 2),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            height: containerHeight,
-            decoration: BoxDecoration(
-              gradient: kGradientContainer,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(50),
-                  spreadRadius: 2,
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                const TraderProfileHeaderNavigation(),
-                const Spacer(flex: 1),
-                // trader_main_profile Name
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    profileData.name,
-                    style: AppStyles.styleSemiBold24(
-                      context,
-                    ).copyWith(color: Colors.white, fontSize: 32),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const Spacer(flex: 2),
-              ],
-            ),
-          ),
-
-          // trader_main_profile Image and Stats Row
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TraderProfileStatsRow(
-                profileData: profileData,
-                profileImage: Container(
-                  width: profileImageSize,
-                  height: profileImageSize,
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.white, Colors.white],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(50),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Container(
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: ClipOval(
-                        child: TraderProfileImage(
-                          logoPath: profileData.logoPath,
-                        ),
-                      ),
-                    ),
-                  ),
+    return Column(
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.3,
+              decoration: const BoxDecoration(
+                gradient: kGradientContainer,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
               ),
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+
+                    // Header Navigation
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Menu Button (Edit Profile)
+                          IconButton(
+                            onPressed: () {
+                              GoRouter.of(
+                                context,
+                              ).go(EndPoints.editTraderProfileView);
+                            },
+                            icon: const Icon(
+                              Icons.menu,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
+
+                          // Logo Section
+                          Expanded(
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    AppAssets.logoName,
+                                    fit: BoxFit.contain,
+                                    scale: 6.0,
+                                  ),
+                                  SizedBox(width: 5),
+                                  Image.asset(
+                                    AppAssets.logoIcon,
+                                    fit: BoxFit.contain,
+                                    scale: 7.5,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Back Button (Home)
+                          CustomBackButton(
+                            color: Colors.white,
+                            size: 28,
+                            onPressed: () {
+                              GoRouter.of(context).go(EndPoints.homeView);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+
+                    Text(
+                      profileData.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const Spacer(),
+                  ],
+                ),
+              ),
             ),
+
+            Positioned(
+              bottom: -60,
+              child: Container(
+                width: ProfileConstants.profileImageSize,
+                height: ProfileConstants.profileImageSize,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF4CAF50), width: 4),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 15,
+                      spreadRadius: 3,
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(8),
+                    child: Image.asset(
+                      profileData.logoPath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.store,
+                          size: 70,
+                          color: Color(0xFF4CAF50),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 30),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    profileData.availableProducts.toString().padLeft(2, '0'),
+                    style: const TextStyle(
+                      color: Color(0xFF4CAF50),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'المنتجات\nالمتاحة',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black87, fontSize: 14),
+                  ),
+                ],
+              ),
+
+              Column(
+                children: [
+                  Text(
+                    profileData.requiredProducts.toString().padLeft(2, '0'),
+                    style: const TextStyle(
+                      color: Color(0xFF4CAF50),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'المنتجات\nالمطلوبة',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black87, fontSize: 14),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
