@@ -1,4 +1,3 @@
-
 import 'package:supercycle_app/features/representative_profile/presentation/widgets/representative_profile_data.dart';
 
 class ProfileConstants {
