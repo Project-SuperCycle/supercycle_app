@@ -45,10 +45,9 @@ class TypeCardItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withAlpha(150),
-              spreadRadius: 2,
-              blurRadius: 4,
-              offset: const Offset(0, 1),
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -66,10 +65,26 @@ class TypeCardItem extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.1),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 12),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
                   Align(
@@ -79,42 +94,49 @@ class TypeCardItem extends StatelessWidget {
                       child: Text(
                         typeModel.name,
                         textDirection: TextDirection.rtl,
-                        style: AppStyles.styleSemiBold12(
-                          context,
-                        ).copyWith(fontWeight: FontWeight.bold),
+                        style: AppStyles.styleBold18(context),
                       ),
                     ),
                   ),
-                  SizedBox(height: 15.0),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      textDirection: TextDirection.rtl,
-                      children: [
-                        Text(
-                          formatPriceRange(
-                            typeModel.minPrice,
-                            typeModel.maxPrice,
+                  SizedBox(height: 12.0),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        textDirection: TextDirection.rtl,
+                        children: [
+                          Text(
+                            formatPriceRange(
+                              typeModel.minPrice,
+                              typeModel.maxPrice,
+                            ),
+                            textDirection: TextDirection.rtl,
+                            style: AppStyles.styleBold14(context).copyWith(
+                              color: AppColors.primaryColor,
+                            ),
                           ),
-                          textDirection: TextDirection.rtl,
-                          style: AppStyles.styleSemiBold12(context).copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor,
+                          const SizedBox(width: 8),
+                          Text(
+                            "${S.of(context).money} / ${S.of(context).unit}",
+                            textDirection: TextDirection.rtl,
+                            style: AppStyles.styleMedium12(context).copyWith(
+                              color: AppColors.subTextColor,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "${S.of(context).money} / ${S.of(context).unit}",
-                          textDirection: TextDirection.rtl,
-                          style: AppStyles.styleSemiBold12(
-                            context,
-                          ).copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 16.0),
                   CustomButton(
                     title: S.of(context).make_process,
                     onPress: () => StorageServices.clearAll(),

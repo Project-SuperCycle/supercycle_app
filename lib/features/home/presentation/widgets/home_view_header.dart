@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
+import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/features/home/presentation/widgets/home_header/home_header_logo.dart'
     show HomeHeaderLogo;
 import 'package:supercycle_app/features/home/presentation/widgets/home_header/home_header_nav_actions.dart';
@@ -18,31 +18,30 @@ class HomeViewHeader extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.only(
-        top: statusBarHeight,
+        top: statusBarHeight + 10,
         bottom: 20,
         left: 20,
         right: 20,
       ),
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
-        color: AppColors.primaryColor,
+        gradient: kGradientContainer,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withAlpha(150),
-            spreadRadius: 2,
-            blurRadius: 4,
-            offset: const Offset(0, 1),
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
           HomeHeaderLogo(),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Row(
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +50,7 @@ class HomeViewHeader extends StatelessWidget {
               HomeHeaderNavActions(onDrawerPressed: onDrawerPressed),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           RoundedSearchField(onChange: (value) {}, showClearButton: true),
         ],
       ),

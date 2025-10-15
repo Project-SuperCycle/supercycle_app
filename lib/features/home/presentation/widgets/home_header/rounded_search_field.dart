@@ -77,8 +77,18 @@ class _RoundedSearchFieldState extends State<RoundedSearchField> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: MediaQuery.sizeOf(context).width * widget.widthFactor!,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(widget.borderRadius!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: TextField(
         controller: _controller,
         onChanged: widget.onChange,
@@ -91,6 +101,17 @@ class _RoundedSearchFieldState extends State<RoundedSearchField> {
             borderRadius: BorderRadius.circular(widget.borderRadius!),
             borderSide: BorderSide.none,
           ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius!),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius!),
+            borderSide: BorderSide(
+              color: AppColors.primaryColor.withOpacity(0.3),
+              width: 1.5,
+            ),
+          ),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(right: 18.0, left: 6.0),
             child: SvgPicture.asset(
@@ -100,16 +121,15 @@ class _RoundedSearchFieldState extends State<RoundedSearchField> {
           ),
           suffixIcon: widget.showClearButton && _showClearButton
               ? IconButton(
-                  icon: Icon(Icons.clear, color: Colors.grey),
-                  onPressed: _clearText,
-                )
+            icon: Icon(Icons.clear, color: Colors.grey),
+            onPressed: _clearText,
+          )
               : null,
           hintText: widget.hintText ?? S.of(context).search,
-          hintStyle:
-              widget.hintStyle ??
-              AppStyles.styleSemiBold14(
-                context,
-              ).copyWith(color: widget.hintTextColor ?? AppColors.subTextColor),
+          hintStyle: widget.hintStyle ??
+              AppStyles.styleSemiBold14(context).copyWith(
+                color: widget.hintTextColor ?? AppColors.subTextColor,
+              ),
         ),
       ),
     );
