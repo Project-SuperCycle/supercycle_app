@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
 import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
@@ -139,7 +141,7 @@ class TypeCardItem extends StatelessWidget {
                   SizedBox(height: 16.0),
                   CustomButton(
                     title: S.of(context).make_process,
-                    onPress: () => StorageServices.clearAll(),
+                    onPress: () => GoRouter.of(context).push(EndPoints.salesProcessView),
                   ),
                   SizedBox(height: 12.0),
                 ],

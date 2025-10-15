@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
 import 'package:supercycle_app/features/home/presentation/widgets/types_section/types_filter_buttons_list.dart';
 import 'package:supercycle_app/generated/l10n.dart' show S;
@@ -21,38 +22,71 @@ class _TypesSectionHeaderState extends State<TypesSectionHeader> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              S.of(context).types,
-              style: AppStyles.styleSemiBold20(
-                context,
-              ).copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 20),
           Row(
-            textDirection: TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.category,
+                        color: AppColors.primaryColor,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      S.of(context).types,
+                      style: AppStyles.styleBold20(context),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: IconButton(
                   onPressed: () {
                     setState(() {
                       isExpanded = !isExpanded;
                     });
                   },
-                  icon: SvgPicture.asset(
-                    AppAssets.drawerIcon,
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                  icon: AnimatedRotation(
+                    turns: isExpanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Icon(
+                      Icons.filter_list,
+                      color: AppColors.primaryColor,
+                      size: 24,
+                    ),
                   ),
                 ),
               ),
-              SizedBox(width: 10),
-              isExpanded ? TypesFilterButtonsList() : SizedBox.shrink(),
             ],
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: isExpanded
+                ? Column(
+              children: [
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TypesFilterButtonsList(),
+                ),
+              ],
+            )
+                : const SizedBox.shrink(),
           ),
         ],
       ),

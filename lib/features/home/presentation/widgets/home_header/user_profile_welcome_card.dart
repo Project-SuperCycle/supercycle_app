@@ -53,7 +53,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             radius: 32,
             child: GestureDetector(
               onTap: () {
-                GoRouter.of(context).push(EndPoints.traderProfileView);
+                GoRouter.of(context).push(EndPoints.representativeProfileView);
               },
               child: ClipOval(
                 child: Image.asset(
@@ -78,13 +78,6 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
                 color: const Color(0xFFD1FAE5),
               ),
             ),
-<<<<<<< Updated upstream
-            const SizedBox(height: 5),
-            Text(
-              managerName,
-              textDirection: TextDirection.ltr,
-              style: AppStyles.styleSemiBold16(context),
-=======
             const SizedBox(height: 4),
             GestureDetector(
               onTap: () {
@@ -97,7 +90,6 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
                   color: Colors.white,
                 ),
               ),
->>>>>>> Stashed changes
             ),
           ],
         ),
