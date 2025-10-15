@@ -76,6 +76,7 @@ class _ExpandableSectionState extends State<ExpandableSection> {
                     ),
                     const Spacer(),
                     Row(
+                      textDirection: TextDirection.rtl,
                       children: [
                         SizedBox(
                           width: 24,

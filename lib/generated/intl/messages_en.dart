@@ -72,6 +72,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Delivered shipments",
     ),
     "drawer_contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "drawer_environmental_impact": MessageLookupByLibrary.simpleMessage(
+      "Environmental Impact",
+    ),
     "drawer_home": MessageLookupByLibrary.simpleMessage("Home"),
     "drawer_language": MessageLookupByLibrary.simpleMessage("Language"),
     "drawer_logout": MessageLookupByLibrary.simpleMessage("Logout"),
@@ -185,9 +188,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_type": MessageLookupByLibrary.simpleMessage("Select type"),
     "sell_title": MessageLookupByLibrary.simpleMessage("Do you want to sell?"),
     "shipment_date": MessageLookupByLibrary.simpleMessage("Shipment date"),
-    "shipment_details": MessageLookupByLibrary.simpleMessage(
-      "Shipment details",
-    ),
     "shipment_edit": MessageLookupByLibrary.simpleMessage("Edit Shipment"),
     "shipment_number": MessageLookupByLibrary.simpleMessage("Shipment number"),
     "shipment_review": MessageLookupByLibrary.simpleMessage("Shipment Review"),
@@ -224,6 +224,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Table of Shipments",
     ),
     "title": MessageLookupByLibrary.simpleMessage("supercycle_app"),
+    "trader_shipment_details": MessageLookupByLibrary.simpleMessage(
+      "Shipment details",
+    ),
     "transportation_data": MessageLookupByLibrary.simpleMessage(
       "Transportation data",
     ),

@@ -430,10 +430,10 @@ class S {
   }
 
   /// `Shipment details`
-  String get shipment_details {
+  String get trader_shipment_details {
     return Intl.message(
       'Shipment details',
-      name: 'shipment_details',
+      name: 'trader_shipment_details',
       desc: '',
       args: [],
     );
@@ -954,6 +954,16 @@ class S {
     return Intl.message(
       'Transactions Table',
       name: 'drawer_transactions_table',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Environmental Impact`
+  String get drawer_environmental_impact {
+    return Intl.message(
+      'Environmental Impact',
+      name: 'drawer_environmental_impact',
       desc: '',
       args: [],
     );

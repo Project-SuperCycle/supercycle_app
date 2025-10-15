@@ -4,7 +4,7 @@ import 'package:supercycle_app/core/utils/app_colors.dart';
 
 abstract class AppStyles {
   static const fontFamily = 'Cairo';
-  static const textHeight = 1.2;
+  static const textHeight = 1.4;
   static const letterSpacing = 1.2;
 
   // Styles 14
@@ -41,6 +41,17 @@ abstract class AppStyles {
     );
   }
 
+  static TextStyle styleBold12(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 12),
+      fontFamily: fontFamily,
+      fontWeight: FontWeight.w700,
+      height: textHeight,
+      color: AppColors.mainTextColor,
+      letterSpacing: letterSpacing,
+    );
+  }
+
   // Styles 14
   static TextStyle styleRegular14(BuildContext context) {
     return TextStyle(
@@ -69,6 +80,17 @@ abstract class AppStyles {
       fontSize: getResponsiveFontSize(context, fontSize: 14),
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
+      height: textHeight,
+      color: AppColors.mainTextColor,
+      letterSpacing: letterSpacing,
+    );
+  }
+
+  static TextStyle styleBold14(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 14),
+      fontFamily: fontFamily,
+      fontWeight: FontWeight.w700,
       height: textHeight,
       color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,
@@ -154,6 +176,17 @@ abstract class AppStyles {
     );
   }
 
+  static TextStyle styleBold18(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 18),
+      fontFamily: fontFamily,
+      fontWeight: FontWeight.w700,
+      height: textHeight,
+      color: AppColors.mainTextColor,
+      letterSpacing: letterSpacing,
+    );
+  }
+
   // Styles 20
   static TextStyle styleRegular20(BuildContext context) {
     return TextStyle(
@@ -182,6 +215,17 @@ abstract class AppStyles {
       fontSize: getResponsiveFontSize(context, fontSize: 20),
       fontFamily: fontFamily,
       fontWeight: FontWeight.w600,
+      height: textHeight,
+      color: AppColors.mainTextColor,
+      letterSpacing: letterSpacing,
+    );
+  }
+
+  static TextStyle styleBold20(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 20),
+      fontFamily: fontFamily,
+      fontWeight: FontWeight.w700,
       height: textHeight,
       color: AppColors.mainTextColor,
       letterSpacing: letterSpacing,

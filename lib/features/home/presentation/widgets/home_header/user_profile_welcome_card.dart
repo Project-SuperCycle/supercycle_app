@@ -42,7 +42,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
           child: Center(
             child: GestureDetector(
               onTap: () {
-                GoRouter.of(context).push(EndPoints.profileView);
+                GoRouter.of(context).push(EndPoints.representativeProfileView);
               },
               child: Image.asset(
                 AppAssets.defaultAvatar,
@@ -67,8 +67,8 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             ),
             const SizedBox(height: 5),
             GestureDetector(
-              onTap: (){
-                GoRouter.of(context).push(EndPoints.profileView);
+              onTap: () {
+                GoRouter.of(context).push(EndPoints.traderProfileView);
               },
               child: Text(
                 managerName,

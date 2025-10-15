@@ -69,8 +69,6 @@ class Assets {
   static const String functionsLaunchEmail =
       'lib/core/functions/launch_email.dart';
   static const String functionsLaunchUrl = 'lib/core/functions/launch_url.dart';
-  static const String functionsSocialAuth =
-      'lib/core/functions/social_auth.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String generatedL10n = 'lib/generated/l10n.dart';
   static const String helpersCustomConfirmDialog =
