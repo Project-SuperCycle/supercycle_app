@@ -30,8 +30,8 @@ class ProfileConstants {
         name: "إسلام شاكر",
         phoneNumber: "+201095767137",
         email: "islamelzantot@gmail.com",
-        requiredProducts: 3,
-        weeklyProducts: 43,
+        totalShipments: 20,
+        weeklyShipments: 5,
         logoPath: AppAssets.defaultAvatar,
       );
 }

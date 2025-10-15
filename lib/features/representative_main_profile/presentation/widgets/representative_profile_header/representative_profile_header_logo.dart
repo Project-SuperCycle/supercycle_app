@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
+import 'package:supercycle_app/core/utils/app_assets.dart';
 
 class RepresentativeProfileHeaderLogo extends StatelessWidget {
   const RepresentativeProfileHeaderLogo({super.key});

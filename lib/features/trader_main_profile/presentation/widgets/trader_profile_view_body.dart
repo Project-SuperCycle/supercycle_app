@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_section.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card1.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card2.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card3.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_page_indicator.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_section.dart';
 
-class TraderProfileViewBody extends StatefulWidget {
-  const TraderProfileViewBody({super.key});
+class ProfileViewBody extends StatefulWidget {
+  const ProfileViewBody({super.key});
 
   @override
-  State<TraderProfileViewBody> createState() => _TraderProfileViewBodyState();
+  State<ProfileViewBody> createState() => _ProfileViewBodyState();
 }
 
-class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
+class _ProfileViewBodyState extends State<ProfileViewBody> {
   int currentPage = 0;
 
   @override
@@ -21,10 +21,10 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
     return Scaffold(
       body: Column(
         children: [
-          TraderProfileHeaderSection(
-            profileData: ProfileConstants.sampleProfileData,
-          ),
-          const SizedBox(height: 30),
+          // Profile Header Section
+          ProfileHeaderSection(profileData: ProfileConstants.sampleProfileData),
+          const SizedBox(height: 20),
+
           // Page Indicators
           TraderProfilePageIndicator(
             currentPage: currentPage,
@@ -43,12 +43,10 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
               width: double.infinity,
               color: Colors.white,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 20,
-                ),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
+                    const SizedBox(height: 2),
                     _buildCurrentPageContent(),
                     const SizedBox(height: 40),
                   ],

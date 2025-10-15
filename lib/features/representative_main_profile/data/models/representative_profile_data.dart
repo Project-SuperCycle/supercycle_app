@@ -4,17 +4,17 @@ class RepresentativeProfileData {
   final String name;
   final String phoneNumber;
   final String email;
-  final int requiredProducts;
-  final int weeklyProducts;
   final String logoPath;
+  final int totalShipments;
+  final int weeklyShipments;
 
   const RepresentativeProfileData({
     required this.name,
     required this.phoneNumber,
     required this.email,
-    required this.requiredProducts,
-    required this.weeklyProducts,
     required this.logoPath,
+    this.totalShipments = 0,
+    this.weeklyShipments = 0,
   });
 
   factory RepresentativeProfileData.fromJson(Map<String, dynamic> json) {
@@ -22,9 +22,9 @@ class RepresentativeProfileData {
       name: json['name'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       email: json['email'] ?? '',
-      requiredProducts: json['requiredProducts'] ?? 0,
-      weeklyProducts: json['availableProducts'] ?? 0,
       logoPath: json['logoPath'] ?? '',
+      totalShipments: json['totalShipments'] ?? 0,
+      weeklyShipments: json['weeklyShipments'] ?? 0,
     );
   }
 
@@ -33,9 +33,9 @@ class RepresentativeProfileData {
       'name': name,
       'phoneNumber': phoneNumber,
       'email': email,
-      'requiredProducts': requiredProducts,
-      'availableProducts': weeklyProducts,
       'logoPath': logoPath,
+      'totalShipments': totalShipments,
+      'weeklyShipments': weeklyShipments,
     };
   }
 
@@ -43,17 +43,17 @@ class RepresentativeProfileData {
     String? name,
     String? phoneNumber,
     String? email,
-    int? requiredProducts,
-    int? availableProducts,
     String? logoPath,
+    int? totalShipments,
+    int? weeklyShipments,
   }) {
     return RepresentativeProfileData(
       name: name ?? this.name,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       email: email ?? this.email,
-      requiredProducts: requiredProducts ?? this.requiredProducts,
-      weeklyProducts: availableProducts ?? this.weeklyProducts,
       logoPath: logoPath ?? this.logoPath,
+      totalShipments: totalShipments ?? this.totalShipments,
+      weeklyShipments: weeklyShipments ?? this.weeklyShipments,
     );
   }
 }

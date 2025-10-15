@@ -6,6 +6,6 @@ class TraderProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const TraderProfileViewBody();
+    return const ProfileViewBody();
   }
 }
