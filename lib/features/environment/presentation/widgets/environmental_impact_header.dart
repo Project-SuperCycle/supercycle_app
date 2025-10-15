@@ -7,86 +7,76 @@ class EnvironmentalImpactHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverAppBar(
-      expandedHeight: 225,
-      pinned: false,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: kGradientContainer,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
+    return SliverToBoxAdapter(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: kGradientContainer,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(50),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.eco,
-                          color: Colors.white,
-                          size: 24,
-                        ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(50),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'أثرك البيئي',
-                            style: AppStyles.styleBold24(
-                              context,
-                            ).copyWith(color: Colors.white),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'كل خطوة تصنع فرقًا',
-                            style: AppStyles.styleMedium14(
-                              context,
-                            ).copyWith(color: Color(0xFFD1FAE5)),
-                          ),
-                        ],
+                      child: const Icon(
+                        Icons.eco,
+                        color: Colors.white,
+                        size: 24,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withAlpha(20),
-                      borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Row(
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: _StatCard(
-                            value: '847',
-                            label: 'كجم تم تدويرها',
-                          ),
+                        Text(
+                          'أثرك البيئي',
+                          style: AppStyles.styleBold24(
+                            context,
+                          ).copyWith(color: Colors.white),
                         ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: _StatCard(
-                            value: '12',
-                            label: 'شجرة تم زراعتها',
-                          ),
+                        SizedBox(height: 8),
+                        Text(
+                          'كل خطوة تصنع فرقًا',
+                          style: AppStyles.styleMedium14(
+                            context,
+                          ).copyWith(color: Color(0xFFD1FAE5)),
                         ),
                       ],
                     ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(20),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ],
-              ),
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: _StatCard(value: '847', label: 'كجم تم تدويرها'),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: _StatCard(value: '12', label: 'شجرة تم زراعتها'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
