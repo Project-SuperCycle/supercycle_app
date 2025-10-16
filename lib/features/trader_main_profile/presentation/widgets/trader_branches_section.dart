@@ -36,7 +36,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
             effect: ExpandingDotsEffect(
               dotHeight: 8,
               dotWidth: 8,
-              activeDotColor: Colors.green.shade600,
+              activeDotColor: const Color(0xFF10B981),
               dotColor: Colors.grey.shade400,
             ),
           ),
@@ -58,21 +58,19 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
             padding: const EdgeInsets.only(right: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: const Color(0xFF10B981).withAlpha(25),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
+                border: Border.all(color: const Color(0xFF10B981).withAlpha(100), width: 1.5),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.store_outlined, color: Colors.grey[600], size: 30),
+                  Icon(Icons.store_outlined, color: const Color(0xFF10B981), size: 30),
                   const SizedBox(height: 8),
                   Text(
                     "فرع ${index + 1}",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.w500,
+                    style: AppStyles.styleSemiBold12(context).copyWith(
+                      color: const Color(0xFF059669),
                     ),
                   ),
                 ],
@@ -96,7 +94,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
         Row(
           children: [
             ...types.map(
-              (type) => Text(
+                  (type) => Text(
                 "$type - ",
                 style: AppStyles.styleSemiBold12(
                   context,

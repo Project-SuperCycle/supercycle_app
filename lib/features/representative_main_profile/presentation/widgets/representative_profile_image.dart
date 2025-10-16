@@ -14,11 +14,11 @@ class RepresentativProfileImage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF4CAF50), width: 4),
+        border: Border.all(color: Colors.white, width: 4),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 20,
+            color: Colors.black.withAlpha(50),
+            blurRadius: 15,
             spreadRadius: 3,
           ),
         ],
@@ -34,7 +34,7 @@ class RepresentativProfileImage extends StatelessWidget {
               return const Icon(
                 Icons.person,
                 size: 70,
-                color: Color(0xFF4CAF50),
+                color: Color(0xFF10B981),
               );
             },
           ),

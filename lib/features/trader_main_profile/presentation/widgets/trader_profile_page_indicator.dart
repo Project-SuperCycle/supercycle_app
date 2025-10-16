@@ -19,7 +19,7 @@ class TraderProfilePageIndicator extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: List.generate(
         totalPages,
-        (index) => GestureDetector(
+            (index) => GestureDetector(
           onTap: () {
             onPageChanged?.call(index);
           },
@@ -35,7 +35,7 @@ class TraderProfilePageIndicator extends StatelessWidget {
       width: 12,
       height: 12,
       decoration: BoxDecoration(
-        color: isActive ? Colors.green : const Color(0xFFC0BEBE),
+        color: isActive ? const Color(0xFF10B981) : const Color(0xFFC0BEBE),
         shape: BoxShape.circle,
       ),
     );

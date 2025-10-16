@@ -19,16 +19,13 @@ class TraderProfileInfoCard3 extends StatelessWidget {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: const Color(0xE4DDFFE7),
-            border: Border.all(color: Color(0xFF16A243)),
-            borderRadius: BorderRadius.circular(
-              ProfileConstants.cardBorderRadius,
-            ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 8,
-                spreadRadius: 1,
+                color: Colors.grey.withAlpha(25),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -100,9 +97,9 @@ class TraderProfileInfoCard3 extends StatelessWidget {
     );
   }
 
-  Widget _divider() => const Padding(
-    padding: EdgeInsets.symmetric(vertical: 10),
-    child: Divider(color: Colors.grey, thickness: 0.6),
+  Widget _divider() => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    child: Divider(color: Colors.grey[300], thickness: 0.6),
   );
 
   Widget _buildContractSection({
@@ -117,19 +114,25 @@ class TraderProfileInfoCard3 extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, color: Colors.green.shade700, size: 20),
-            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981).withAlpha(25),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: const Color(0xFF10B981), size: 20),
+            ),
+            const SizedBox(width: 12),
             Text(title, style: AppStyles.styleBold16(context)),
           ],
         ),
         const SizedBox(height: 12),
-
         ...content.map((item) {
           final parts = item.split(':');
           final hasLabel = parts.length > 1;
 
           return Padding(
-            padding: const EdgeInsets.only(bottom: 6, right: 28),
+            padding: const EdgeInsets.only(bottom: 6, right: 48),
             child: RichText(
               textAlign: TextAlign.right,
               text: TextSpan(
@@ -138,7 +141,9 @@ class TraderProfileInfoCard3 extends StatelessWidget {
                     TextSpan(
                       text: "${parts[0]}: ",
                       style: AppStyles.styleSemiBold12(context).copyWith(
-                        color: highlight ? Colors.green.shade800 : Colors.black,
+                        color: highlight
+                            ? const Color(0xFF059669)
+                            : Colors.black,
                       ),
                     ),
                   TextSpan(

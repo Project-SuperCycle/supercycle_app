@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/representative_main_profile/data/models/representative_profile_data.dart';
-import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_navigation.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_image.dart';
 
 class RepresentativeProfileHeaderSection extends StatelessWidget {
@@ -16,104 +20,146 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.3,
-              decoration: const BoxDecoration(
-                gradient: kGradientContainer,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const RepresentativeProfileHeaderNavigation(),
-                    const Spacer(),
-                    Text(
-                      representativeProfileData.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: kGradientContainer,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // Header Navigation
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Menu Button (Opens Drawer)
+                      Builder(
+                        builder: (context) => Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(50),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            icon: const Icon(
+                              Icons.menu,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          ),
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-              ),
-            ),
 
-            Positioned(
-              bottom: -60,
-              child: RepresentativProfileImage(
-                logoPath: representativeProfileData.logoPath,
-              ),
-            ),
-          ],
-        ),
+                      // Logo Section
+                      Expanded(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                AppAssets.logoName,
+                                fit: BoxFit.contain,
+                                scale: 6.0,
+                              ),
+                              const SizedBox(width: 5),
+                              Image.asset(
+                                AppAssets.logoIcon,
+                                fit: BoxFit.contain,
+                                scale: 7.5,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
-        const SizedBox(height: 30),
+                      // Back Button (Home)
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha(50),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: CustomBackButton(
+                          color: Colors.white,
+                          size: 24,
+                          onPressed: () {
+                            GoRouter.of(context).go(EndPoints.homeView);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
+                  const SizedBox(height: 30),
+
+                  // Profile Image
+                  RepresentativProfileImage(
+                    logoPath: representativeProfileData.logoPath,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Profile Name
                   Text(
-                    representativeProfileData.weeklyShipments
-                        .toString()
-                        .padLeft(2, '0'),
-                    style: const TextStyle(
-                      color: Color(0xFF4CAF50),
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                    representativeProfileData.name,
+                    style: AppStyles.styleBold24(context).copyWith(
+                      color: Colors.white,
+                      fontSize: 28,
                     ),
                   ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'عدد شحناتك\nالأسبوع ده',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black87, fontSize: 14),
+
+                  const SizedBox(height: 20),
+
+                  // Stats Row
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(20),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _StatCard(
+                          value: representativeProfileData.weeklyShipments
+                              .toString()
+                              .padLeft(2, '0'),
+                          label: 'عدد شحناتك\nالأسبوع ده',
+                        ),
+                        Container(
+                          height: 50,
+                          width: 1,
+                          color: Colors.white.withAlpha(80),
+                        ),
+                        _StatCard(
+                          value: representativeProfileData.totalShipments
+                              .toString()
+                              .padLeft(2, '0'),
+                          label: 'شحنات\nمعنا',
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-
-              Column(
-                children: [
-                  Text(
-                    representativeProfileData.totalShipments.toString().padLeft(
-                      2,
-                      '0',
-                    ),
-                    style: const TextStyle(
-                      color: Color(0xFF4CAF50),
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'شحنات\nمعنا',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black87, fontSize: 14),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
+        const SizedBox(height: 20),
 
-        const SizedBox(height: 30),
-
+        // Contact Info Card
         Container(
           width: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -122,9 +168,9 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withAlpha(25),
                 blurRadius: 10,
-                offset: const Offset(0, 5),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -136,57 +182,82 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'رقم الهاتف',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF10B981).withAlpha(25),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.phone,
+                            color: Color(0xFF10B981),
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'رقم الهاتف',
+                          style: AppStyles.styleSemiBold14(context),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      representativeProfileData.phoneNumber,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF4CAF50),
-                        fontWeight: FontWeight.w500,
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: Text(
+                        representativeProfileData.phoneNumber,
+                        style: AppStyles.styleMedium12(context).copyWith(
+                          color: Colors.grey[600],
+                        ),
+                        textDirection: TextDirection.ltr,
                       ),
-                      textDirection: TextDirection.ltr,
                     ),
                   ],
                 ),
               ),
-
               Container(
                 width: 1,
-                height: 40,
+                height: 50,
                 color: Colors.grey[300],
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 12),
               ),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'الإيميل',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF10B981).withAlpha(25),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.email,
+                            color: Color(0xFF10B981),
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'الإيميل',
+                          style: AppStyles.styleSemiBold14(context),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      representativeProfileData.email,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF4CAF50),
-                        fontWeight: FontWeight.w500,
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: Text(
+                        representativeProfileData.email,
+                        style: AppStyles.styleMedium12(context).copyWith(
+                          color: Colors.grey[600],
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
                     ),
                   ],
                 ),
@@ -194,8 +265,37 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+}
 
-        const SizedBox(height: 30),
+class _StatCard extends StatelessWidget {
+  final String value;
+  final String label;
+
+  const _StatCard({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: AppStyles.styleBold24(context).copyWith(
+            color: Colors.white,
+            fontSize: 32,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: AppStyles.styleSemiBold12(
+            context,
+          ).copyWith(color: const Color(0xFFD1FAE5)),
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }

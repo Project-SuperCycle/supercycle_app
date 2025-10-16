@@ -13,38 +13,27 @@ class TraderProfileInfoCard2 extends StatefulWidget {
 }
 
 class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
-  List<ShipmentsCalendarCard> transactions = [
-    ShipmentsCalendarCard(
-      shipment: ShipmentModel(
-        id: "01",
-        shipmentNumber: "SN0001",
-        customPickupAddress: "ميدان الجيزة",
-        requestedPickupAt: DateTime.now(),
-        status: "pending",
-        totalQuantityKg: 1000,
-      ),
-    ),
-    ShipmentsCalendarCard(
-      shipment: ShipmentModel(
-        id: "02",
-        shipmentNumber: "SN0002",
-        customPickupAddress: "جسر السويس",
-        requestedPickupAt: DateTime.now(),
-        status: "pending",
-        totalQuantityKg: 2000,
-      ),
-    ),
-    ShipmentsCalendarCard(
-      shipment: ShipmentModel(
-        id: "03",
-        shipmentNumber: "SN0003",
-        customPickupAddress: "التحرير -  القاهرة",
-        requestedPickupAt: DateTime.now(),
-        status: "pending",
-        totalQuantityKg: 3000,
-      ),
-    ),
+  List<Map<String, String>> transactions = [
+    {
+      'shipmentNumber': 'رقم الشحنة: SN0001',
+      'deliveryDate': 'تاريخ الاستلام: 15/11/2023',
+      'quantity': 'الكمية: 1000 كجم',
+      'price': 'السعر: 5000 جنيه',
+    },
+    {
+      'shipmentNumber': 'رقم الشحنة: SN0002',
+      'deliveryDate': 'تاريخ الاستلام: 20/11/2023',
+      'quantity': 'الكمية: 2000 كجم',
+      'price': 'السعر: 10000 جنيه',
+    },
+    {
+      'shipmentNumber': 'رقم الشحنة: SN0003',
+      'deliveryDate': 'تاريخ الاستلام: 25/11/2023',
+      'quantity': 'الكمية: 3000 كجم',
+      'price': 'السعر: 15000 جنيه',
+    },
   ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -73,7 +62,20 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(children: [...transactions]),
+            child: Column(
+              children: transactions.map((transaction) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: _buildTransactionCard(
+                    context,
+                    shipmentNumber: transaction['shipmentNumber']!,
+                    deliveryDate: transaction['deliveryDate']!,
+                    quantity: transaction['quantity']!,
+                    price: transaction['price']!,
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],
@@ -81,12 +83,12 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
   }
 
   Widget _buildTransactionCard(
-    BuildContext context, {
-    required String shipmentNumber,
-    required String deliveryDate,
-    required String quantity,
-    required String price,
-  }) {
+      BuildContext context, {
+        required String shipmentNumber,
+        required String deliveryDate,
+        required String quantity,
+        required String price,
+      }) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -113,15 +115,11 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
             const SizedBox(height: 8),
             _buildDetailRow(price),
             const SizedBox(height: 15),
-
             GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    // builder: (context) => ShipmentDetailsView(
-                    //   shipment: shipmentNumber.split(':').last.trim(),
-                    // ),
                     builder: (context) => SalesProcessView(),
                   ),
                 );

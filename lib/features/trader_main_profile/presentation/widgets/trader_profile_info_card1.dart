@@ -15,14 +15,13 @@ class TraderProfileInfoCard1 extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: const Color(0xE4DDFFE7),
-        border: Border.all(color: Color(0xFF16A243)),
-        borderRadius: BorderRadius.circular(ProfileConstants.cardBorderRadius),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.grey.withAlpha(25),
             blurRadius: 10,
-            spreadRadius: 2,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -72,14 +71,14 @@ class TraderProfileInfoCard1 extends StatelessWidget {
     return profileInfo
         .map(
           (item) => Padding(
-            padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
-            child: TraderProfileInfoRow(
-              label: item.label,
-              value: item.value,
-              icon: item.icon,
-            ),
-          ),
-        )
+        padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
+        child: TraderProfileInfoRow(
+          label: item.label,
+          value: item.value,
+          icon: item.icon,
+        ),
+      ),
+    )
         .toList();
   }
 }

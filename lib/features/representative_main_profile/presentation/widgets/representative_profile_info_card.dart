@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
 
@@ -9,29 +10,22 @@ class RepresentativeProfileInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
+        Text(
           'سجل المعاملات السابقة',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: AppStyles.styleSemiBold22(context),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: const Color(0xE4DDFFE7),
-            border: Border.all(color: Color(0xFF16A243)),
-            borderRadius: BorderRadius.circular(
-              ProfileConstants.cardBorderRadius,
-            ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.grey.withAlpha(25),
                 blurRadius: 10,
-                spreadRadius: 2,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -71,20 +65,21 @@ class RepresentativeProfileInfoCard extends StatelessWidget {
   }
 
   Widget _buildTransactionCard(
-    BuildContext context, {
-    required String shipmentNumber,
-    required String deliveryDate,
-    required String quantity,
-    required String price,
-  }) {
+      BuildContext context, {
+        required String shipmentNumber,
+        required String deliveryDate,
+        required String quantity,
+        required String price,
+      }) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[50],
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: const Color(0xFF10B981).withAlpha(50)),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withAlpha(15),
             blurRadius: 5,
             spreadRadius: 1,
           ),
@@ -103,7 +98,6 @@ class RepresentativeProfileInfoCard extends StatelessWidget {
             const SizedBox(height: 8),
             _buildDetailRow(price),
             const SizedBox(height: 15),
-
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -115,8 +109,15 @@ class RepresentativeProfileInfoCard extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: Color(0xFF16A243),
+                  color: const Color(0xFF10B981),
                   borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF10B981).withAlpha(50),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: const Text(
                   'إظهار التفاصيل',

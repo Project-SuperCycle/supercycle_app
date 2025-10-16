@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
+import 'package:supercycle_app/core/widgets/drawer/profile_drawer.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_section.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_info_card.dart';
 
@@ -16,27 +17,28 @@ class _RepresentativeProfileViewBodyState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          RepresentativeProfileHeaderSection(
-            representativeProfileData:
-                ProfileConstants.sampleRepresentativeData,
+      backgroundColor: Colors.grey[50],
+      drawer: ProfileDrawer(
+        profileName: ProfileConstants.sampleRepresentativeData.name,
+        profileImage: ProfileConstants.sampleRepresentativeData.logoPath,
+        isTrader: false,
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: RepresentativeProfileHeaderSection(
+              representativeProfileData:
+              ProfileConstants.sampleRepresentativeData,
+            ),
           ),
-          const SizedBox(height: 0),
-
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              color: Colors.white,
-              child: const SingleChildScrollView(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    SizedBox(height: 2),
-                    RepresentativeProfileInfoCard(),
-                    SizedBox(height: 40),
-                  ],
-                ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: const [
+                  RepresentativeProfileInfoCard(),
+                  SizedBox(height: 40),
+                ],
               ),
             ),
           ),

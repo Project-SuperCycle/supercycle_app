@@ -40,12 +40,12 @@ List<DrawerItemModel> getDrawerItems(BuildContext context) {
     ),
     DrawerItemModel(
       title: S.of(context).drawer_environmental_impact,
-      leading: SvgPicture.asset(
-        AppAssets.calendarIcon,
-        fit: BoxFit.cover,
-        width: 30,
-        height: 30,
+      leading: Icon(
+        Icons.eco_outlined,
+        color: Colors.black45,
+        size: 30,
       ),
+
       onTap: () => GoRouter.of(context).push(EndPoints.environmentalImpactView),
     ),
   ];

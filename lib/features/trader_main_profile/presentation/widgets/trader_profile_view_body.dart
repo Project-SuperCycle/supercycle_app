@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
+import 'package:supercycle_app/core/widgets/drawer/profile_drawer.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_section.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card1.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card2.dart';
@@ -15,64 +16,92 @@ class ProfileViewBody extends StatefulWidget {
 
 class _ProfileViewBodyState extends State<ProfileViewBody> {
   int currentPage = 0;
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Profile Header Section
-          ProfileHeaderSection(profileData: ProfileConstants.sampleProfileData),
-          const SizedBox(height: 20),
-
-          // Page Indicators
-          TraderProfilePageIndicator(
-            currentPage: currentPage,
-            onPageChanged: (index) {
-              setState(() {
-                currentPage = index;
-              });
-            },
+      backgroundColor: Colors.grey[50],
+      drawer: ProfileDrawer(
+        profileName: ProfileConstants.sampleProfileData.name,
+        profileImage: ProfileConstants.sampleProfileData.logoPath,
+        isTrader: true,
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: ProfileHeaderSection(
+              profileData: ProfileConstants.sampleProfileData,
+            ),
           ),
-
-          const SizedBox(height: 10),
-
-          // White Content Section with different cards based on currentPage
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              color: Colors.white,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 2),
-                    _buildCurrentPageContent(),
-                    const SizedBox(height: 40),
-                  ],
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                // Page Indicators
+                TraderProfilePageIndicator(
+                  currentPage: currentPage,
+                  onPageChanged: (index) {
+                    _pageController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
                 ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.65,
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    currentPage = index;
+                  });
+                },
+                children: [
+                  _buildPageContent(
+                    TraderProfileInfoCard1(
+                      profileData: ProfileConstants.sampleProfileData,
+                    ),
+                  ),
+                  _buildPageContent(
+                    const TraderProfileInfoCard2(),
+                  ),
+                  _buildPageContent(
+                    const TraderProfileInfoCard3(),
+                  ),
+                ],
               ),
             ),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 40),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCurrentPageContent() {
-    switch (currentPage) {
-      case 0:
-        return TraderProfileInfoCard1(
-          profileData: ProfileConstants.sampleProfileData,
-        );
-      case 1:
-        return const TraderProfileInfoCard2();
-      case 2:
-        return const TraderProfileInfoCard3();
-      default:
-        return TraderProfileInfoCard1(
-          profileData: ProfileConstants.sampleProfileData,
-        );
-    }
+  Widget _buildPageContent(Widget card) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          card,
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
   }
 }

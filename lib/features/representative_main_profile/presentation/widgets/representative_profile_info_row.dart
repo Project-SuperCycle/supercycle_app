@@ -20,25 +20,25 @@ class RepresentativeProfileInfoRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.green.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            color: const Color(0xFF10B981).withAlpha(25),
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: Colors.green, size: 20),
+          child: Icon(icon, color: const Color(0xFF10B981), size: 25),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(value, style: AppStyles.styleSemiBold16(context)),
-              const SizedBox(height: 10),
+              Text(value, style: AppStyles.styleSemiBold14(context)),
+              const SizedBox(height: 8),
               Text(
                 label,
                 style: AppStyles.styleMedium12(
                   context,
-                ).copyWith(color: AppColors.subTextColor),
+                ).copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
