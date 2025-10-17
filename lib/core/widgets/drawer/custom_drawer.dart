@@ -38,7 +38,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   void logout() async {
     await StorageServices.clearAll();
-    GoRouter.of(context).push(EndPoints.signInView);
+    GoRouter.of(context).pushReplacement(EndPoints.signInView);
     GoogleSignIn().signOut();
     FacebookAuth.instance.logOut();
   }

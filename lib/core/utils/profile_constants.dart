@@ -6,7 +6,7 @@ import 'package:supercycle_app/features/trader_main_profile/data/models/trader_p
 class ProfileConstants {
   // UI Constants
   static const double headerHeight = 0.28;
-  static const double profileImageSize = 100;
+  static const double profileImageSize = 110;
   static const double borderRadius = 50;
   static const double cardBorderRadius = 20;
   static const double spacing = 16;

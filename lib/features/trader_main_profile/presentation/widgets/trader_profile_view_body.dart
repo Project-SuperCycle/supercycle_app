@@ -6,56 +6,59 @@ import 'package:supercycle_app/features/trader_main_profile/presentation/widgets
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card3.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_page_indicator.dart';
 
-class ProfileViewBody extends StatefulWidget {
-  const ProfileViewBody({super.key});
+class TraderProfileViewBody extends StatefulWidget {
+  const TraderProfileViewBody({super.key});
 
   @override
-  State<ProfileViewBody> createState() => _ProfileViewBodyState();
+  State<TraderProfileViewBody> createState() => _TraderProfileViewBodyState();
 }
 
-class _ProfileViewBodyState extends State<ProfileViewBody> {
+class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
   int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          // Profile Header Section
-          ProfileHeaderSection(profileData: ProfileConstants.sampleProfileData),
-          const SizedBox(height: 20),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              // Profile Header Section
+              ProfileHeaderSection(
+                profileData: ProfileConstants.sampleProfileData,
+              ),
+              const SizedBox(height: 20),
 
-          // Page Indicators
-          TraderProfilePageIndicator(
-            currentPage: currentPage,
-            onPageChanged: (index) {
-              setState(() {
-                currentPage = index;
-              });
-            },
+              // Page Indicators
+              TraderProfilePageIndicator(
+                currentPage: currentPage,
+                onPageChanged: (index) {
+                  setState(() {
+                    currentPage = index;
+                  });
+                },
+              ),
+              const SizedBox(height: 10),
+            ],
           ),
-
-          const SizedBox(height: 10),
-
-          // White Content Section with different cards based on currentPage
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              color: Colors.white,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 2),
-                    _buildCurrentPageContent(),
-                    const SizedBox(height: 40),
-                  ],
-                ),
+        ),
+        SliverFillRemaining(
+          child: Container(
+            width: double.infinity,
+            color: Colors.white,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 2),
+                  _buildCurrentPageContent(),
+                  const SizedBox(height: 40),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

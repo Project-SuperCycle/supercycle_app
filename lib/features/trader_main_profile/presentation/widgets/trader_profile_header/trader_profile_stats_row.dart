@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_column.dart';
 
 class TraderProfileStatsRow extends StatelessWidget {
   const TraderProfileStatsRow({
@@ -16,26 +17,39 @@ class TraderProfileStatsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Left Stat - Required Shipments
-        Expanded(
-          child: TraderProfileStatsColumn(
-            number: profileData.requiredProducts.toString().padLeft(2, '0'),
-            label: 'عدد الشحنات\nالمطلوبة',
-          ),
+        Column(
+          children: [
+            Text(
+              profileData.availableProducts.toString().padLeft(2, '0'),
+              style: AppStyles.styleBold24(
+                context,
+              ).copyWith(color: AppColors.primaryColor, fontSize: 32),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              'المنتجات\nالمتاحة',
+              textAlign: TextAlign.center,
+              style: AppStyles.styleSemiBold14(context),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        // Center - trader_main_profile Image
-        if (profileImage != null) profileImage!,
 
-        const SizedBox(width: 12),
-        // Right Stat - Available Shipments
-        Expanded(
-          child: TraderProfileStatsColumn(
-            number: profileData.availableProducts.toString().padLeft(2, '0'),
-            label: 'عدد الشحنات\nالمتفق عليها',
-          ),
+        Column(
+          children: [
+            Text(
+              profileData.requiredProducts.toString().padLeft(2, '0'),
+              style: AppStyles.styleBold24(
+                context,
+              ).copyWith(color: AppColors.primaryColor, fontSize: 32),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              'المنتجات\nالمطلوبة',
+              textAlign: TextAlign.center,
+              style: AppStyles.styleSemiBold14(context),
+            ),
+          ],
         ),
       ],
     );

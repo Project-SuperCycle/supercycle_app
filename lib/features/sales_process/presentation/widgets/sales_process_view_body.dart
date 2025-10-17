@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
@@ -49,7 +48,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     if (user == null) {
       return;
     }
-    addressController.text = user.bussinessAdress;
+    addressController.text = user.bussinessAdress ?? "";
   }
 
   void _onImagesChanged(List<File> images) {

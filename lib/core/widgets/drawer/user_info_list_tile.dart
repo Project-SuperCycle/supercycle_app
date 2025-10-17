@@ -12,7 +12,7 @@ class UserInfoListTile extends StatefulWidget {
 }
 
 class _UserInfoListTileState extends State<UserInfoListTile> {
-  late String managerName;
+  late String userName;
   late String businessType;
 
   @override
@@ -24,8 +24,18 @@ class _UserInfoListTileState extends State<UserInfoListTile> {
   void getUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
     setState(() {
-      managerName = (user != null) ? user.doshMangerName : '';
-      businessType = (user != null) ? user.rawBusinessType : '';
+      if (user != null) {
+        if (user.role == "representative") {
+          userName = user.displayName!;
+          businessType = "مندوب";
+        } else {
+          userName = user.doshMangerName!;
+          businessType = user.rawBusinessType!;
+        }
+      } else {
+        userName = '';
+        businessType = '';
+      }
     });
   }
 
@@ -43,7 +53,7 @@ class _UserInfoListTileState extends State<UserInfoListTile> {
           title: FittedBox(
             fit: BoxFit.scaleDown,
             alignment: AlignmentDirectional.centerStart,
-            child: Text(managerName, style: AppStyles.styleSemiBold16(context)),
+            child: Text(userName, style: AppStyles.styleSemiBold16(context)),
           ),
           subtitle: FittedBox(
             fit: BoxFit.scaleDown,

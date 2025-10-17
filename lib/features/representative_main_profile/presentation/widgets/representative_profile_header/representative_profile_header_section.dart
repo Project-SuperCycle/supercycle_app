@@ -22,7 +22,7 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: 260,
               decoration: const BoxDecoration(
                 gradient: kGradientContainer,
                 borderRadius: BorderRadius.only(
