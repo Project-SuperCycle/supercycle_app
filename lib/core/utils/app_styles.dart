@@ -266,6 +266,17 @@ abstract class AppStyles {
     );
   }
 
+  static TextStyle styleBold22(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 22),
+      fontFamily: fontFamily,
+      fontWeight: FontWeight.w700,
+      height: textHeight,
+      color: AppColors.mainTextColor,
+      letterSpacing: letterSpacing,
+    );
+  }
+
   // Styles 24
   static TextStyle styleRegular24(BuildContext context) {
     return TextStyle(

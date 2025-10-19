@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/representative_main_profile/data/models/representative_profile_data.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_navigation.dart';
+import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_stats_row.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_image.dart';
 
 class RepresentativeProfileHeaderSection extends StatelessWidget {
@@ -30,23 +33,19 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                   bottomRight: Radius.circular(30),
                 ),
               ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const RepresentativeProfileHeaderNavigation(),
-                    const Spacer(),
-                    Text(
-                      representativeProfileData.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  SizedBox(height: MediaQuery.of(context).padding.top),
+                  const RepresentativeProfileHeaderNavigation(),
+                  const SizedBox(height: 30),
+                  Text(
+                    representativeProfileData.name,
+                    style: AppStyles.styleBold24(
+                      context,
+                    ).copyWith(color: Colors.white, fontSize: 30),
+                  ),
+                  const Spacer(),
+                ],
               ),
             ),
 
@@ -59,56 +58,13 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 30),
-
+        const SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    representativeProfileData.weeklyShipments
-                        .toString()
-                        .padLeft(2, '0'),
-                    style: const TextStyle(
-                      color: Color(0xFF4CAF50),
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'عدد شحناتك\nالأسبوع ده',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black87, fontSize: 14),
-                  ),
-                ],
-              ),
-
-              Column(
-                children: [
-                  Text(
-                    representativeProfileData.totalShipments.toString().padLeft(
-                      2,
-                      '0',
-                    ),
-                    style: const TextStyle(
-                      color: Color(0xFF4CAF50),
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'شحنات\nمعنا',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black87, fontSize: 14),
-                  ),
-                ],
-              ),
-            ],
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.10,
+          ),
+          child: RepresentativeProfileStatsRow(
+            representativeProfileData: representativeProfileData,
           ),
         ),
 
@@ -122,7 +78,7 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withAlpha(25),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -136,23 +92,20 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'رقم الهاتف',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                      style: AppStyles.styleSemiBold16(context),
                     ),
                     const SizedBox(height: 5),
-                    Text(
-                      representativeProfileData.phoneNumber,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF4CAF50),
-                        fontWeight: FontWeight.w500,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        representativeProfileData.phoneNumber,
+                        style: AppStyles.styleMedium14(
+                          context,
+                        ).copyWith(color: Color(0xFF4CAF50)),
+                        textDirection: TextDirection.ltr,
                       ),
-                      textDirection: TextDirection.ltr,
                     ),
                   ],
                 ),
@@ -161,32 +114,27 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
               Container(
                 width: 1,
                 height: 40,
-                color: Colors.grey[300],
                 margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
 
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'الإيميل',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
+                    Text('الإيميل', style: AppStyles.styleSemiBold16(context)),
                     const SizedBox(height: 5),
-                    Text(
-                      representativeProfileData.email,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF4CAF50),
-                        fontWeight: FontWeight.w500,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        representativeProfileData.email,
+                        style: AppStyles.styleMedium14(
+                          context,
+                        ).copyWith(color: Color(0xFF4CAF50)),
                       ),
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
                     ),
                   ],
                 ),

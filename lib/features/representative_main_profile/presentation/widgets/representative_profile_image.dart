@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
 
 class RepresentativProfileImage extends StatelessWidget {
@@ -14,10 +15,10 @@ class RepresentativProfileImage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF4CAF50), width: 4),
+        border: Border.all(color: AppColors.primaryColor, width: 4),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withAlpha(50),
             blurRadius: 20,
             spreadRadius: 3,
           ),

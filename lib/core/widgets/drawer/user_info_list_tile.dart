@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
@@ -12,8 +13,9 @@ class UserInfoListTile extends StatefulWidget {
 }
 
 class _UserInfoListTileState extends State<UserInfoListTile> {
-  late String userName;
-  late String businessType;
+  String userName = '';
+  String businessType = '';
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -23,24 +25,36 @@ class _UserInfoListTileState extends State<UserInfoListTile> {
 
   void getUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
+    Logger().w("user: $user");
     setState(() {
       if (user != null) {
         if (user.role == "representative") {
-          userName = user.displayName!;
+          userName = user.displayName ?? '';
           businessType = "مندوب";
         } else {
-          userName = user.doshMangerName!;
-          businessType = user.rawBusinessType!;
+          userName = user.doshMangerName ?? '';
+          businessType = user.rawBusinessType ?? '';
         }
-      } else {
-        userName = '';
-        businessType = '';
       }
+      isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Card(
+        color: const Color(0xFFFAFAFA),
+        elevation: 0,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return Card(
       color: const Color(0xFFFAFAFA),
       elevation: 0,

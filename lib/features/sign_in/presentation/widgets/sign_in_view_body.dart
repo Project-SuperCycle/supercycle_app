@@ -14,8 +14,8 @@ import 'package:supercycle_app/core/widgets/auth/social_auth_row.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
 import 'package:supercycle_app/core/widgets/custom_text_form_field.dart';
 import 'package:supercycle_app/core/widgets/rounded_container.dart';
-import 'package:supercycle_app/features/sign_in/data/managers/sign-in-cubit/sign_in_cubit.dart';
-import 'package:supercycle_app/features/sign_in/data/managers/sign-in-cubit/sign_in_state.dart';
+import 'package:supercycle_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
+import 'package:supercycle_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
 import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart'
     show SigninCredentialsModel;
 import 'package:supercycle_app/features/sign_in/presentation/widgets/horizontal_labeled_divider.dart';

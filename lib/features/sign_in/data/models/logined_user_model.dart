@@ -24,11 +24,21 @@ class LoginedUserModel {
   // fromJson constructor
   factory LoginedUserModel.fromJson(Map<String, dynamic> json) {
     return LoginedUserModel(
-      bussinessName: json['profile']['bussinessName'],
-      rawBusinessType: json['profile']['rawBusinessType'],
-      bussinessAdress: json['profile']['bussinessAdress'],
-      doshMangerName: json['profile']['doshMangerName'],
-      doshMangerPhone: json['profile']['doshMangerPhone'],
+      bussinessName: (json['profile'] == null)
+          ? null
+          : json['profile']['bussinessName'],
+      rawBusinessType: (json['profile'] == null)
+          ? null
+          : json['profile']['rawBusinessType'],
+      bussinessAdress: (json['profile'] == null)
+          ? null
+          : json['profile']['bussinessAdress'],
+      doshMangerName: (json['profile'] == null)
+          ? null
+          : json['profile']['doshMangerName'],
+      doshMangerPhone: (json['profile'] == null)
+          ? null
+          : json['profile']['doshMangerPhone'],
       email: json['email'],
       role: json['role'],
       phone: json['phone'],
