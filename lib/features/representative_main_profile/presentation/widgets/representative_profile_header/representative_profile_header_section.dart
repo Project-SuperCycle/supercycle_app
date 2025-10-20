@@ -87,6 +87,7 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
@@ -127,14 +128,11 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                   children: [
                     Text('الإيميل', style: AppStyles.styleSemiBold16(context)),
                     const SizedBox(height: 5),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        representativeProfileData.email,
-                        style: AppStyles.styleMedium14(
-                          context,
-                        ).copyWith(color: Color(0xFF4CAF50)),
-                      ),
+                    Text(
+                      representativeProfileData.email,
+                      style: AppStyles.styleMedium14(
+                        context,
+                      ).copyWith(color: Color(0xFF4CAF50)),
                     ),
                   ],
                 ),

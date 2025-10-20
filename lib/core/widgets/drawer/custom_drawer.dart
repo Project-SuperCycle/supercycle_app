@@ -31,8 +31,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   void getUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
+    String? userToken = await StorageServices.getUserToken();
     setState(() {
-      isUserLoggedIn = (user != null);
+      isUserLoggedIn = (user != null && userToken != null);
     });
   }
 
