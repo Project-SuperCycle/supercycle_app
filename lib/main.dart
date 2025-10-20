@@ -10,6 +10,15 @@ import 'package:supercycle_app/core/routes/routes.dart' show AppRouter;
 import 'package:supercycle_app/core/services/services_locator.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/repos/rep_shipment_details_repo_imp.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/deliver_segment_cubit/deliver_segment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
 import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 import 'package:supercycle_app/features/trader_shipment_details/data/cubits/shipment_cubit/shipment_cubit.dart';
 import 'package:supercycle_app/features/trader_shipment_details/data/repos/shipment_details_repo_imp.dart';
@@ -94,6 +103,42 @@ void main() async {
         BlocProvider(
           create: (context) => ShipmentEditCubit(
             shipmentEditRepo: getIt.get<ShipmentEditRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) => AcceptShipmentCubit(
+            repShipmentDetailsRepo: getIt.get<RepShipmentDetailsRepoImp>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => RejectShipmentCubit(
+            repShipmentDetailsRepo: getIt.get<RepShipmentDetailsRepoImp>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => UpdateShipmentCubit(
+            repShipmentDetailsRepo: getIt.get<RepShipmentDetailsRepoImp>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => StartSegmentCubit(
+            repShipmentReviewRepo: getIt.get<RepShipmentReviewRepoImp>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => WeighSegmentCubit(
+            repShipmentReviewRepo: getIt.get<RepShipmentReviewRepoImp>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => DeliverSegmentCubit(
+            repShipmentReviewRepo: getIt.get<RepShipmentReviewRepoImp>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => FailSegmentCubit(
+            repShipmentReviewRepo: getIt.get<RepShipmentReviewRepoImp>(),
           ),
         ),
       ],
