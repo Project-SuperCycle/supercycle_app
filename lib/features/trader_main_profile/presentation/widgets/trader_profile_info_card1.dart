@@ -32,7 +32,10 @@ class TraderProfileInfoCard1 extends StatelessWidget {
           children: [
             ..._buildProfileInfoRows(),
             const SizedBox(height: 30),
-            TraderBranchesSection(branchCount: profileData.branchCount),
+            TraderBranchesSection(
+              branches: profileData.branches,
+              types: profileData.recyclableTypes,
+            ),
           ],
         ),
       ),

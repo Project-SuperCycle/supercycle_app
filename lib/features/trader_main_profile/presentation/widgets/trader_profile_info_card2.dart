@@ -47,8 +47,8 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: const Color(0xE4DDFFE7),
-            border: Border.all(color: Color(0xFF16A243)),
+            color: const Color(0xFF10B981).withAlpha(25),
+            border: Border.all(color: const Color(0xFF10B981)),
             borderRadius: BorderRadius.circular(
               ProfileConstants.cardBorderRadius,
             ),
@@ -128,7 +128,7 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: Color(0xFF16A243),
+                  color: const Color(0xFF10B981),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Text(

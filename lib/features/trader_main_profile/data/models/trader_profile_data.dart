@@ -1,5 +1,58 @@
 import 'package:flutter/cupertino.dart';
 
+// Model للفرع
+class BranchModel {
+  final String name;
+  final String address;
+  final String managerName;
+  final String managerPhone;
+  final int deliveryVolume;
+
+  const BranchModel({
+    required this.name,
+    required this.address,
+    required this.managerName,
+    required this.managerPhone,
+    required this.deliveryVolume,
+  });
+
+  factory BranchModel.fromJson(Map<String, dynamic> json) {
+    return BranchModel(
+      name: json['name'] ?? '',
+      address: json['address'] ?? '',
+      managerName: json['managerName'] ?? '',
+      managerPhone: json['managerPhone'] ?? '',
+      deliveryVolume: json['deliveryVolume'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'address': address,
+      'managerName': managerName,
+      'managerPhone': managerPhone,
+      'deliveryVolume': deliveryVolume,
+    };
+  }
+
+  BranchModel copyWith({
+    String? name,
+    String? address,
+    String? managerName,
+    String? managerPhone,
+    int? deliveryVolume,
+  }) {
+    return BranchModel(
+      name: name ?? this.name,
+      address: address ?? this.address,
+      managerName: managerName ?? this.managerName,
+      managerPhone: managerPhone ?? this.managerPhone,
+      deliveryVolume: deliveryVolume ?? this.deliveryVolume,
+    );
+  }
+}
+
 class TraderProfileData {
   final String name;
   final String activityType;
@@ -9,7 +62,8 @@ class TraderProfileData {
   final String email;
   final int requiredProducts;
   final int availableProducts;
-  final int branchCount;
+  final List<BranchModel> branches; // بدل branchCount
+  final List<String> recyclableTypes; // الأنواع المتعامل بها
   final String logoPath;
 
   const TraderProfileData({
@@ -21,7 +75,8 @@ class TraderProfileData {
     required this.email,
     required this.requiredProducts,
     required this.availableProducts,
-    required this.branchCount,
+    required this.branches,
+    required this.recyclableTypes,
     required this.logoPath,
   });
 
@@ -35,7 +90,14 @@ class TraderProfileData {
       email: json['email'] ?? '',
       requiredProducts: json['requiredProducts'] ?? 0,
       availableProducts: json['availableProducts'] ?? 0,
-      branchCount: json['branchCount'] ?? 0,
+      branches: (json['branches'] as List?)
+          ?.map((branchJson) => BranchModel.fromJson(branchJson))
+          .toList() ??
+          [],
+      recyclableTypes: (json['recyclableTypes'] as List?)
+          ?.map((type) => type.toString())
+          .toList() ??
+          [],
       logoPath: json['logoPath'] ?? '',
     );
   }
@@ -50,7 +112,8 @@ class TraderProfileData {
       'email': email,
       'requiredProducts': requiredProducts,
       'availableProducts': availableProducts,
-      'branchCount': branchCount,
+      'branches': branches.map((branch) => branch.toJson()).toList(),
+      'recyclableTypes': recyclableTypes,
       'logoPath': logoPath,
     };
   }
@@ -64,7 +127,8 @@ class TraderProfileData {
     String? email,
     int? requiredProducts,
     int? availableProducts,
-    int? branchCount,
+    List<BranchModel>? branches,
+    List<String>? recyclableTypes,
     String? logoPath,
   }) {
     return TraderProfileData(
@@ -76,10 +140,13 @@ class TraderProfileData {
       email: email ?? this.email,
       requiredProducts: requiredProducts ?? this.requiredProducts,
       availableProducts: availableProducts ?? this.availableProducts,
-      branchCount: branchCount ?? this.branchCount,
+      branches: branches ?? this.branches,
+      recyclableTypes: recyclableTypes ?? this.recyclableTypes,
       logoPath: logoPath ?? this.logoPath,
     );
   }
+
+  int get branchCount => branches.length;
 }
 
 class ProfileInfoItem {

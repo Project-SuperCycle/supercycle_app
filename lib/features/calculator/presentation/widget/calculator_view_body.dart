@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/helpers/custom_dropdown.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
@@ -43,253 +47,324 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         decoration: const BoxDecoration(gradient: kGradientBackground),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Card(
-              elevation: 20,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 500),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Header
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF059669), Color(0xFF10B981)],
+        child: SafeArea(
+          child: Directionality(
+            textDirection: TextDirection.rtl, // ✅ لضبط الاتجاه العربي
+            child: Column(
+              children: [
+                // ======= Header & Back Button =======
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          AppAssets.logoName,
+                          fit: BoxFit.contain,
+                          scale: 6.0,
                         ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
+                        const SizedBox(width: 5),
+                        Image.asset(
+                          AppAssets.logoIcon,
+                          fit: BoxFit.contain,
+                          scale: 7.5,
                         ),
-                      ),
-                      padding: const EdgeInsets.all(30),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.calculate,
-                                color: Colors.white,
-                                size: 32,
-                              ),
-                              SizedBox(width: 12),
-                              Text(
-                                'اجمالي الشحنة',
-                                style: AppStyles.styleBold24(
-                                  context,
-                                ).copyWith(color: Colors.white, fontSize: 28),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'احسب تكلفة منتجك على الفور',
-                            style: AppStyles.styleSemiBold14(
-                              context,
-                            ).copyWith(color: Colors.white.withAlpha(450)),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
+                  ),
+                ),
 
-                    // Content
-                    Padding(
-                      padding: const EdgeInsets.all(30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Dropdown
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.inventory_2,
-                                color: AppColors.primaryColor,
-                                size: 20,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'نوع الدشت',
-                                style: AppStyles.styleSemiBold14(context),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          CustomDropdown(
-                            options: productTypes.keys
-                                .map((type) => type)
-                                .toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                selectedType = val;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 25),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        child: CustomBackButton(
+                          color: Colors.white,
+                          size: 24,
+                          onPressed: () {
+                            GoRouter.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-                          // Quantity TextField
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.scale,
-                                color: AppColors.primaryColor,
-                                size: 20,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'الكمية (كجم)',
-                                style: AppStyles.styleSemiBold14(context),
-                              ),
-                            ],
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(20),
+                      child: Card(
+                        elevation: 20,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Container(
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                          const SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.grey.withAlpha(200),
-                                width: 1,
-                              ),
-                            ),
-                            child: TextField(
-                              controller: quantityController,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // ======= Card Header =======
+                              Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF059669),
+                                      Color(0xFF10B981)
+                                    ],
                                   ),
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 16,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  ),
                                 ),
-                                border: InputBorder.none,
-                                hintText: 'ادخل الكمية ...',
-                              ),
-                              style: AppStyles.styleMedium14(context),
-                              onChanged: (value) {
-                                setState(() {});
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 30),
-
-                          // Price Display Area
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFD1FAE5).withAlpha(100),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: const Color(0xFF6EE7B7),
-                                width: 1.5,
-                              ),
-                            ),
-
-                            padding: const EdgeInsets.all(25),
-                            child: Column(
-                              children: [
-                                // Price per kg
-                                Text(
-                                  'سعر الكجم',
-                                  style: AppStyles.styleSemiBold16(context),
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                padding: const EdgeInsets.all(30),
+                                child: Column(
                                   children: [
-                                    ShaderMask(
-                                      shaderCallback: (bounds) =>
-                                          const LinearGradient(
-                                            colors: [
-                                              Color(0xFF059669),
-                                              Color(0xFF10B981),
-                                            ],
-                                          ).createShader(bounds),
-                                      child: Text(
-                                        pricePerKg.toStringAsFixed(2),
-                                        style: AppStyles.styleBold24(context)
-                                            .copyWith(
-                                              color: Colors.white,
-                                              fontSize: 36,
-                                            ),
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.calculate,
+                                          color: Colors.white,
+                                          size: 32,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          'إجمالي الشحنة',
+                                          style: AppStyles.styleBold24(context)
+                                              .copyWith(
+                                            color: Colors.white,
+                                            fontSize: 28,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(height: 8),
                                     Text(
-                                      '/كجم',
-                                      style: AppStyles.styleSemiBold20(
-                                        context,
-                                      ).copyWith(color: AppColors.subTextColor),
+                                      'احسب تكلفة منتجك على الفور',
+                                      style: AppStyles.styleSemiBold14(context)
+                                          .copyWith(
+                                        color: Colors.white.withAlpha(200),
+                                      ),
                                     ),
                                   ],
                                 ),
+                              ),
 
-                                const SizedBox(height: 20),
-
-                                // Divider
-                                Container(
-                                  height: 2,
-                                  decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFF059669),
-                                        Color(0xFF10B981),
+                              // ======= Card Body =======
+                              Padding(
+                                padding: const EdgeInsets.all(30),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // --- Dropdown ---
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.inventory_2,
+                                          color: AppColors.primaryColor,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'نوع الدشت',
+                                          style:
+                                          AppStyles.styleSemiBold14(context),
+                                        ),
                                       ],
                                     ),
-                                    borderRadius: BorderRadius.circular(1),
-                                  ),
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                // Total Price
-                                Text(
-                                  'السعر الاجمالي',
-                                  style: AppStyles.styleSemiBold16(context),
-                                ),
-                                const SizedBox(height: 12),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: kGradientContainer,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 30,
-                                    vertical: 10,
-                                  ),
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text(
-                                      totalPrice.toStringAsFixed(2),
-                                      style: AppStyles.styleBold24(context)
-                                          .copyWith(
-                                            color: Colors.white,
-                                            fontSize: 30,
-                                          ),
+                                    const SizedBox(height: 10),
+                                    CustomDropdown(
+                                      options:
+                                      productTypes.keys.map((e) => e).toList(),
+                                      onChanged: (val) {
+                                        setState(() {
+                                          selectedType = val;
+                                        });
+                                      },
                                     ),
-                                  ),
+                                    const SizedBox(height: 25),
+
+                                    // --- Quantity Input ---
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.scale,
+                                          color: AppColors.primaryColor,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'الكمية (كجم)',
+                                          style:
+                                          AppStyles.styleSemiBold14(context),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                          color: Colors.grey.withAlpha(200),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: TextField(
+                                        controller: quantityController,
+                                        keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                        decoration: const InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 16,
+                                          ),
+                                          border: InputBorder.none,
+                                          hintText: 'ادخل الكمية ...',
+                                        ),
+                                        style:
+                                        AppStyles.styleMedium14(context),
+                                        onChanged: (value) => setState(() {}),
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 30),
+
+                                    // --- Price Display Area ---
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFD1FAE5)
+                                            .withAlpha(100),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: const Color(0xFF6EE7B7),
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(25),
+                                      child: Column(
+                                        children: [
+                                          // Price per kg
+                                          Text(
+                                            'سعر الكجم',
+                                            style: AppStyles.styleSemiBold16(
+                                                context),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              ShaderMask(
+                                                shaderCallback: (bounds) =>
+                                                    const LinearGradient(
+                                                      colors: [
+                                                        Color(0xFF059669),
+                                                        Color(0xFF10B981),
+                                                      ],
+                                                    ).createShader(bounds),
+                                                child: Text(
+                                                  pricePerKg.toStringAsFixed(2),
+                                                  style: AppStyles.styleBold24(
+                                                      context)
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 36,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                '/كجم',
+                                                style: AppStyles.styleSemiBold20(
+                                                  context,
+                                                ).copyWith(
+                                                  color: AppColors.subTextColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          const SizedBox(height: 20),
+
+                                          // Divider
+                                          Container(
+                                            height: 2,
+                                            decoration: BoxDecoration(
+                                              gradient: const LinearGradient(
+                                                colors: [
+                                                  Color(0xFF059669),
+                                                  Color(0xFF10B981),
+                                                ],
+                                              ),
+                                              borderRadius:
+                                              BorderRadius.circular(1),
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 20),
+
+                                          // Total Price
+                                          Text(
+                                            'السعر الإجمالي',
+                                            style: AppStyles.styleSemiBold16(
+                                                context),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              gradient: kGradientContainer,
+                                              borderRadius:
+                                              BorderRadius.circular(15),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 30,
+                                              vertical: 10,
+                                            ),
+                                            child: FittedBox(
+                                              fit: BoxFit.contain,
+                                              child: Text(
+                                                totalPrice.toStringAsFixed(2),
+                                                style: AppStyles.styleBold24(
+                                                    context)
+                                                    .copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),

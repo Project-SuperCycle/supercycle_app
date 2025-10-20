@@ -29,7 +29,7 @@ class CustomCurvedNavigationBar extends StatefulWidget {
 class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   late int _currentIndex;
 
-  bool isUserLoggedIn = false;
+  bool isUserLoggedIn = true;
 
   void getUser() async {
     LoginedUserModel? user = await StorageServices.getUserData();

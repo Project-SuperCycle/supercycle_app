@@ -171,13 +171,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
         'icon': Icons.help_outline,
         'title': 'المساعدة والدعم',
         'onTap': () {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('صفحة المساعدة قريباً'),
-              backgroundColor: Color(0xFF10B981),
-            ),
-          );
+          GoRouter.of(context).push(EndPoints.contactUsView);
         },
       },
     ];
