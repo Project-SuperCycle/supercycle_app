@@ -1,0 +1,122 @@
+import 'package:supercycle_app/features/representative_shipment_review/data/models/inspected_dosh_item_model.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/weight_report_model.dart';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
+
+class ShipmentSegmentModel {
+  final String? id;
+  final String? status;
+  final List<DoshItemModel> items;
+  final String? destName;
+  final String? destAddress;
+  final String? vehicleNumber;
+  final String? driverName;
+  final String? driverPhone;
+  final WeightReportModel? weightReport;
+  final List<InspectedDoshItemModel>? inspectedItems;
+
+  ShipmentSegmentModel({
+    required this.id,
+    required this.status,
+    required this.items,
+    required this.destName,
+    required this.destAddress,
+    required this.vehicleNumber,
+    required this.driverName,
+    required this.driverPhone,
+    required this.weightReport,
+    required this.inspectedItems,
+  });
+
+  factory ShipmentSegmentModel.fromJson(Map<String, dynamic> json) {
+    return ShipmentSegmentModel(
+      id: json['_id'] as String,
+      status: json['status'] as String,
+      items: (json['items'] == null)
+          ? null
+          : json['items']
+                .map(
+                  (item) =>
+                      DoshItemModel.fromJson(item as Map<String, dynamic>),
+                )
+                .toList(),
+      destName: json['destinationId'] == null
+          ? null
+          : json['destinationId']['name'] as String,
+      destAddress: json['destinationId'] == null
+          ? null
+          : json['destinationId']['address'] as String,
+      vehicleNumber: json['vehicleId'] == null
+          ? null
+          : json['vehicleId']['licensePlate'] as String,
+      driverName: json['vehicleId'] == null
+          ? null
+          : json['vehicleId']['driverName'] as String,
+      driverPhone: json['vehicleId'] == null
+          ? null
+          : json['vehicleId']['driverPhone'] as String,
+      weightReport: WeightReportModel.fromJson(
+        json['weightReport'] as Map<String, dynamic>,
+      ),
+      inspectedItems: (json['inspectedItems'] == null)
+          ? null
+          : (json['inspectedItems'] as List)
+                .map(
+                  (item) => InspectedDoshItemModel.fromJson(
+                    item as Map<String, dynamic>,
+                  ),
+                )
+                .toList(),
+    );
+  }
+
+  // toJson method
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'status': status,
+      'items': items.map((item) => item.toJson()).toList(),
+      'destName': destName,
+      'destAddress': destAddress,
+      'vehicleNumber': vehicleNumber,
+      'driverName': driverName,
+      'driverPhone': driverPhone,
+      'weightReport': (weightReport == null) ? null : weightReport!.toJson(),
+      'inspectedItems': (inspectedItems == null)
+          ? null
+          : inspectedItems!.map((item) => item.toJson()).toList(),
+    };
+  }
+
+  // Optional: toString method for debugging
+  @override
+  String toString() {
+    return 'ShipmentSegmentModel(id: $id, status: $status, items: $items, destName: $destName, destAddress: $destAddress, vehicleNumber: $vehicleNumber, driverName: $driverName, driverPhone: $driverPhone, weightReport: $weightReport, inspectedItems: $inspectedItems)';
+  }
+
+  // Optional: copyWith method for creating modified copies
+  ShipmentSegmentModel copyWith({
+    String? id,
+    String? status,
+    List<DoshItemModel>? items,
+    String? destName,
+    String? destAddress,
+    String? vehicleNumber,
+    String? driverName,
+    String? driverPhone,
+    WeightReportModel? weightReport,
+    List<InspectedDoshItemModel>? inspectedItems,
+  }) {
+    return ShipmentSegmentModel(
+      id: id ?? this.id,
+      status: status ?? this.status,
+      items: items ?? this.items,
+      destName: destName ?? this.destName,
+      destAddress: destAddress ?? this.destAddress,
+      vehicleNumber: vehicleNumber ?? this.vehicleNumber,
+      driverName: driverName ?? this.driverName,
+      driverPhone: driverPhone ?? this.driverPhone,
+      weightReport: weightReport ?? this.weightReport,
+      inspectedItems: inspectedItems ?? this.inspectedItems,
+    );
+  }
+}
