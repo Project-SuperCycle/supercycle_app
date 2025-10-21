@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 
 class ApiServices {
@@ -27,6 +28,7 @@ class ApiServices {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           String? token = await _getToken();
+          Logger().i("SERVICES TOKEN1  -> $token");
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
@@ -38,6 +40,7 @@ class ApiServices {
 
   Future<String?> _getToken() async {
     final token = await StorageServices.getUserToken();
+    Logger().i("SERVICES TOKEN2  -> $token");
     if (token != null) {
       return token;
     }

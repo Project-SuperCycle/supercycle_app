@@ -5,6 +5,7 @@ import 'package:supercycle_app/core/errors/failures.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/services/api_endpoints.dart';
 import 'package:supercycle_app/core/services/api_services.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/repos/shipments_calendar_repo.dart';
 
@@ -82,6 +83,57 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
       );
     } on TypeError catch (typeError) {
       // أخطاء النوع (مثل null safety)
+      return left(
+        ServerFailure(
+          'Data parsing error: ${typeError.toString()}',
+          422, // Unprocessable Entity
+        ),
+      );
+    } catch (e) {
+      // أي أخطاء أخرى غير متوقعة
+      return left(
+        ServerFailure(
+          'Unexpected error occurred: ${e.toString()}',
+          520, // Unknown Error
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ShipmentModel>>> getAllRepShipments() async {
+    // TODO: implement getAllRepShipments
+    try {
+      Logger().i("🚀 Calling endpoint: ${ApiEndpoints.getAllRepShipments}");
+      Logger().i(
+        "🟢 Token before call: ${(await StorageServices.getUserToken())}",
+      );
+      final response = await apiServices.get(
+        endPoint: ApiEndpoints.getAllRepShipments,
+      );
+      Logger().i("🟩 Response from server: $response");
+
+      var data = response["data"];
+      List<ShipmentModel> shipments = [];
+
+      for (var element in data) {
+        shipments.add(ShipmentModel.fromJson(element));
+      }
+
+      return right(shipments);
+    } on DioException catch (dioError) {
+      return left(ServerFailure.fromDioError(dioError));
+    } on FormatException catch (formatError) {
+      return left(
+        ServerFailure(
+          formatError.toString(),
+          422, // Unprocessable Entity
+        ),
+      );
+    } on TypeError catch (typeError, stackTrace) {
+      // أخطاء النوع (مثل null safety)
+      Logger().w("typeError ${typeError.toString()}");
+      Logger().w("stackTrace ${stackTrace.toString()}");
       return left(
         ServerFailure(
           'Data parsing error: ${typeError.toString()}',

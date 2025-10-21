@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
@@ -16,6 +17,7 @@ import 'package:supercycle_app/features/shipments_calendar/presentation/widget/s
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_grid.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_header.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calender_title.dart';
+import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
 
 class ShipmentsCalendarViewBody extends StatefulWidget {
   const ShipmentsCalendarViewBody({super.key});
@@ -29,22 +31,40 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
   int _page = 3;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   DateTime _currentDate = DateTime.now();
   DateTime? _selectedDate;
-
   List<ShipmentModel> shipments = [];
+  LoginedUserModel? user;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getUserData();
+    });
   }
 
   void _onNavigationTap(int index) {
     setState(() {
       _page = index;
     });
+  }
+  void _getUserData() async {
+    final data = await StorageServices.readData<Map<String, dynamic>>('user');
+    final fetchedUser = await StorageServices.getUserData();
+    if (fetchedUser == null) {
+      setState(() => user = null);
+      return;
+    }
+
+    setState(() {
+      user = fetchedUser;
+    });
+    if (user!.role == "representative") {
+      BlocProvider.of<ShipmentsCalendarCubit>(context).getAllRepShipments();
+    } else {
+      BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
+    }
   }
 
   static const String _imageUrl =
@@ -76,14 +96,15 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                       ShipmentsCalendarState
                     >(
                       listener: (context, state) {
-                        // TODO: implement listener
                         if (state is GetAllShipmentsSuccess) {
                           setState(() {
                             shipments = state.shipments;
                           });
                         }
                         if (state is GetAllShipmentsFailure) {
-                          shipments = [];
+                          setState(() {
+                            shipments = [];
+                          });
                           Logger().e(state.errorMessage);
                         }
                       },

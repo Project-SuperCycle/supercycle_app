@@ -29,7 +29,9 @@ class SignInRepoImp implements SignInRepo {
       Logger().i(response);
       var data = response['data'];
       var token = response['token'];
-
+      var user = LoginedUserModel.fromJson(data);
+      StorageServices.storeData('user', user.toJson());
+      StorageServices.storeData('token', token);
       if (data == null) {
         return left(
           ServerFailure(
