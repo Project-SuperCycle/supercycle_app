@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_logo.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class EditProfileViewBody extends StatefulWidget {
   const EditProfileViewBody({super.key});
@@ -38,22 +39,28 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                   children: [
                     const SizedBox(height: 20),
 
-                    // Header Logo
-                    TraderProfileHeaderLogo(),
-
-                    const SizedBox(height: 30),
-
-                    // User Name
-                    Text(
-                      userName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                    // Back Button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          Text(
+                            "تعديل الملف الشخصي",
+                            style: AppStyles.styleSemiBold18(context).copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 40), // For symmetry
+                        ],
                       ),
                     ),
 
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
                     // Profile Picture with Edit Button
                     Stack(
@@ -98,7 +105,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                             child: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: AppColors.primaryColor,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
@@ -123,7 +130,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
               ),
             ),
 
-            const SizedBox(height: 70),
+            const SizedBox(height: 30),
 
             // Profile Information Section
             Padding(
@@ -167,6 +174,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                         subtitle: "تفعيل الإشعارات",
                         trailing: Switch(
                           value: true,
+                          activeColor: AppColors.primaryColor,
                           onChanged: (value) {
                             // Handle notification toggle
                           },
@@ -240,11 +248,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+              style: AppStyles.styleSemiBold18(context),
             ),
             const SizedBox(height: 16),
             ...children,
@@ -268,32 +272,34 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.1),
+          color: (textColor ?? AppColors.primaryColor).withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(icon, color: textColor ?? Colors.blue, size: 24),
+        child: Icon(
+          icon,
+          color: textColor ?? AppColors.primaryColor,
+          size: 24,
+        ),
       ),
       title: Text(
         title,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
+        style: AppStyles.styleSemiBold14(context).copyWith(
           color: textColor ?? Colors.black87,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(
-          color: textColor?.withOpacity(0.7) ?? Colors.grey[600],
+        style: AppStyles.styleSemiBold12(context).copyWith(
+          color: textColor?.withOpacity(0.7) ?? AppColors.subTextColor,
         ),
       ),
-      trailing:
-          trailing ??
+      trailing: trailing ??
           (onTap != null
               ? Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: textColor ?? Colors.grey,
-                )
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: textColor ?? Colors.grey,
+          )
               : null),
       onTap: onTap,
     );
@@ -305,12 +311,18 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("تغيير الصورة الشخصية"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            "تغيير الصورة الشخصية",
+            style: AppStyles.styleSemiBold18(context),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.camera),
+                leading: Icon(Icons.camera, color: AppColors.primaryColor),
                 title: const Text("التقاط صورة"),
                 onTap: () {
                   Navigator.pop(context);
@@ -318,7 +330,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library),
+                leading: Icon(Icons.photo_library, color: AppColors.primaryColor),
                 title: const Text("اختيار من المعرض"),
                 onTap: () {
                   Navigator.pop(context);
@@ -342,12 +354,21 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("تعديل $fieldName"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            "تعديل $fieldName",
+            style: AppStyles.styleSemiBold18(context),
+          ),
           content: TextField(
             controller: controller,
             decoration: InputDecoration(
               labelText: fieldName,
               border: const OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.primaryColor),
+              ),
             ),
           ),
           actions: [
@@ -356,6 +377,9 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
               child: const Text("إلغاء"),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+              ),
               onPressed: () {
                 // Update the field value
                 setState(() {
@@ -383,7 +407,13 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("اختر اللغة"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            "اختر اللغة",
+            style: AppStyles.styleSemiBold18(context),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -392,6 +422,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                 leading: Radio(
                   value: "ar",
                   groupValue: "ar",
+                  activeColor: AppColors.primaryColor,
                   onChanged: (value) {
                     Navigator.pop(context);
                   },
@@ -402,6 +433,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                 leading: Radio(
                   value: "en",
                   groupValue: "ar",
+                  activeColor: AppColors.primaryColor,
                   onChanged: (value) {
                     Navigator.pop(context);
                   },
@@ -420,7 +452,13 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("تسجيل الخروج"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            "تسجيل الخروج",
+            style: AppStyles.styleSemiBold18(context),
+          ),
           content: const Text("هل أنت متأكد من أنك تريد تسجيل الخروج؟"),
           actions: [
             TextButton(
@@ -447,19 +485,31 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("حول التطبيق"),
-          content: const Column(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            "حول التطبيق",
+            style: AppStyles.styleSemiBold18(context),
+          ),
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("SuperCycle App"),
-              Text("الإصدار: 1.0.0"),
-              SizedBox(height: 10),
-              Text("تطبيق إدارة الدراجات الهوائية"),
+              Text("SuperCycle App", style: AppStyles.styleSemiBold14(context)),
+              Text("الإصدار: 1.0.0", style: AppStyles.styleSemiBold12(context)),
+              const SizedBox(height: 10),
+              Text(
+                "تطبيق إدارة إعادة التدوير",
+                style: AppStyles.styleSemiBold12(context),
+              ),
             ],
           ),
           actions: [
-            TextButton(
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+              ),
               onPressed: () => Navigator.pop(context),
               child: const Text("حسناً"),
             ),
@@ -473,14 +523,20 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
   void _navigateToSecurity() {
     // Navigate to security settings
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("سيتم فتح صفحة الأمان والخصوصية")),
+      SnackBar(
+        content: const Text("سيتم فتح صفحة الأمان والخصوصية"),
+        backgroundColor: AppColors.primaryColor,
+      ),
     );
   }
 
   void _navigateToHelp() {
     // Navigate to help page
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("سيتم فتح صفحة المساعدة")));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("سيتم فتح صفحة المساعدة"),
+        backgroundColor: AppColors.primaryColor,
+      ),
+    );
   }
 }

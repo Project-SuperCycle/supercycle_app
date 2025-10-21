@@ -109,27 +109,6 @@ class _RepresentativeShipmentDetailsViewBodyState
                         RepresentativeShipmentDetailsHeader(
                           shipment: widget.shipment,
                         ),
-                        const SizedBox(height: 6),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: RatingBar.builder(
-                            initialRating: 3,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            ignoreGestures: true,
-                            unratedColor: Color(0xFFBDBDBD),
-                            itemSize: 25,
-                            itemCount: 5,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 6.0),
-                            itemBuilder: (context, _) => Icon(
-                              FontAwesomeIcons.solidStar,
-                              color: Color(0xFFF9B023),
-                            ),
-                            onRatingUpdate: (rating) {
-                              debugPrint(rating.toString());
-                            },
-                          ),
-                        ),
                         const SizedBox(height: 12),
                         const ProgressBar(completedSteps: 1),
                         const SizedBox(height: 20),

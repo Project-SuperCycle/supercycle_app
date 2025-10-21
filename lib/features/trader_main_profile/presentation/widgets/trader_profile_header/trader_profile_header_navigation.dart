@@ -17,7 +17,7 @@ class TraderProfileHeaderNavigation extends StatelessWidget {
           // Menu Button (Edit trader_main_profile)
           IconButton(
             onPressed: () {
-              GoRouter.of(context).go(EndPoints.editTraderProfileView);
+              GoRouter.of(context).go(EndPoints.editProfileView);
             },
             icon: const Icon(Icons.menu, color: Colors.white, size: 28),
           ),

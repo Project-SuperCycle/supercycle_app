@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/representative_shipment_edit_body.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_rejected_body/representative_shipment_rejected_body.dart';
 
 class RepresentativeShipmentEditView extends StatelessWidget {
   final SingleShipmentModel shipment;
