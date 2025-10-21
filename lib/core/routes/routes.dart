@@ -15,7 +15,6 @@ import 'package:supercycle_app/features/edit_profile/presentation/view/edit_prof
 import 'package:supercycle_app/features/representative_main_profile/presentation/view/representative_profile_view.dart';
 import 'package:supercycle_app/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/views/representative_shipment_rejected_view.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
 import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
@@ -370,6 +369,26 @@ class AppRouter {
         ),
       ),
 
+      // Edit Profile View Route
+      GoRoute(
+        path: EndPoints.editProfileView,
+        name: 'Edit Profile',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child:
+              EditProfileView(), // Replace with your actual home widget
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      ),
+
       // Shipments Calender View Route
       GoRoute(
         path: EndPoints.shipmentsCalendarView,
@@ -428,7 +447,7 @@ class AppRouter {
         ),
       ),
 
-      // Trader Edit Profile View Route
+      //Trader Edit Profile View Route
       GoRoute(
         path: EndPoints.editTraderProfileView,
         name: 'Trader Edit Profile',
@@ -530,27 +549,6 @@ class AppRouter {
         ),
       ),
 
-      // Representative Shipment Reject View Route
-      GoRoute(
-        path: EndPoints.representativeShipmentRejectedView,
-        name: 'Representative Shipment Reject ',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: RepresentativeShipmentRejectedView(
-            shipment: state.extra as SingleShipmentModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
-      ),
 
       // Representative Shipment Edit View Route
       GoRoute(

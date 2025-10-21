@@ -135,15 +135,24 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
   Widget _buildDrawerItemsList() {
     final items = [
       {
+        'icon': Icons.person,
+        'title': 'الصفحة الشخصية',
+        'onTap': () {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('أنت في الصفحة الشخصية'),
+              backgroundColor: Color(0xFF10B981),
+            ),
+          );
+        },
+      },
+      {
         'icon': Icons.edit,
         'title': 'تعديل البروفايل',
         'onTap': () {
           Navigator.pop(context);
-          if (widget.isTrader) {
-            GoRouter.of(context).go(EndPoints.editTraderProfileView);
-          } else {
-            GoRouter.of(context).go(EndPoints.editRepresentativeProfileView);
-          }
+          GoRouter.of(context).go(EndPoints.editProfileView);
         },
       },
       {
@@ -163,14 +172,15 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
         'icon': Icons.eco,
         'title': 'أثرك البيئي',
         'onTap': () {
+          Navigator.pop(context);
           GoRouter.of(context).push(EndPoints.environmentalImpactView);
         },
-
       },
       {
         'icon': Icons.help_outline,
         'title': 'المساعدة والدعم',
         'onTap': () {
+          Navigator.pop(context);
           GoRouter.of(context).push(EndPoints.contactUsView);
         },
       },
@@ -179,21 +189,16 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
     return SliverList.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return GestureDetector(
+        return _buildDrawerItem(
+          icon: items[index]['icon'] as IconData,
+          title: items[index]['title'] as String,
+          isActive: activeIndex == index,
           onTap: () {
-            if (activeIndex != index) {
-              setState(() {
-                activeIndex = index;
-              });
-            }
-            items[index]['onTap'] as VoidCallback;
+            setState(() {
+              activeIndex = index;
+            });
+            (items[index]['onTap'] as VoidCallback)();
           },
-          child: _buildDrawerItem(
-            icon: items[index]['icon'] as IconData,
-            title: items[index]['title'] as String,
-            isActive: activeIndex == index,
-            onTap: items[index]['onTap'] as VoidCallback,
-          ),
         );
       },
     );
@@ -207,38 +212,36 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
-      child: GestureDetector(
+      child: ListTile(
         onTap: onTap,
-        child: ListTile(
-          leading: Icon(
-            icon,
-            color: isActive ? const Color(0xFF10B981) : Colors.grey[600],
-            size: 24,
-          ),
-          title: FittedBox(
-            alignment: AlignmentDirectional.centerStart,
-            fit: BoxFit.scaleDown,
-            child: Text(
-              title,
-              style: isActive
-                  ? AppStyles.styleBold16(context)
-                  : AppStyles.styleMedium16(context),
-            ),
-          ),
-          trailing: isActive
-              ? Container(
-            width: 3.5,
-            height: 40,
-            decoration: const BoxDecoration(
-              color: Color(0xFF10B981),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
-              ),
-            ),
-          )
-              : null,
+        leading: Icon(
+          icon,
+          color: isActive ? const Color(0xFF10B981) : Colors.grey[600],
+          size: 24,
         ),
+        title: FittedBox(
+          alignment: AlignmentDirectional.centerStart,
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title,
+            style: isActive
+                ? AppStyles.styleBold16(context)
+                : AppStyles.styleMedium16(context),
+          ),
+        ),
+        trailing: isActive
+            ? Container(
+          width: 3.5,
+          height: 40,
+          decoration: const BoxDecoration(
+            color: Color(0xFF10B981),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+            ),
+          ),
+        )
+            : null,
       ),
     );
   }
@@ -251,22 +254,20 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
-      child: GestureDetector(
+      child: ListTile(
         onTap: onTap,
-        child: ListTile(
-          leading: Icon(
-            icon,
-            color: isLogout ? Colors.red : Colors.grey[600],
-            size: 24,
-          ),
-          title: FittedBox(
-            alignment: AlignmentDirectional.centerStart,
-            fit: BoxFit.scaleDown,
-            child: Text(
-              title,
-              style: AppStyles.styleMedium16(context).copyWith(
-                color: isLogout ? Colors.red : Colors.black87,
-              ),
+        leading: Icon(
+          icon,
+          color: isLogout ? Colors.red : Colors.grey[600],
+          size: 24,
+        ),
+        title: FittedBox(
+          alignment: AlignmentDirectional.centerStart,
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title,
+            style: AppStyles.styleMedium16(context).copyWith(
+              color: isLogout ? Colors.red : Colors.black87,
             ),
           ),
         ),
