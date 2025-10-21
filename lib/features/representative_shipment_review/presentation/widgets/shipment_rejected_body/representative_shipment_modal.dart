@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/models/single_shipment_model.dart';
+import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:io';
@@ -13,11 +16,11 @@ class RepresentativeShipmentModal {
       BuildContext context, {
         required ShipmentActionType actionType,
         required Function(File?, String, double) onSubmit,
+        required SingleShipmentModel shipment, // ✅ new param
       }) {
     final isReject = actionType == ShipmentActionType.reject;
-    final primaryColor = isReject
-        ? const Color(0xFFE53935)
-        : const Color(0xFF00C853);
+    final primaryColor =
+    isReject ? const Color(0xFFE53935) : const Color(0xFF00C853);
     final gradientColors = isReject
         ? [const Color(0xFFE53935), const Color(0xFFD32F2F)]
         : [const Color(0xFF00C853), const Color(0xFF00B248)];
@@ -30,6 +33,7 @@ class RepresentativeShipmentModal {
             backgroundColor: Colors.white,
             hasTopBarLayer: false,
             child: _ModalContent(
+              shipment: shipment, // ✅ pass it down
               actionType: actionType,
               primaryColor: primaryColor,
               gradientColors: gradientColors,
@@ -54,6 +58,7 @@ class _ModalContent extends StatefulWidget {
   final List<Color> gradientColors;
   final Function(File?, String, double) onSubmit;
   final VoidCallback onClose;
+  final SingleShipmentModel shipment; // ✅ Added model
 
   const _ModalContent({
     required this.actionType,
@@ -61,6 +66,7 @@ class _ModalContent extends StatefulWidget {
     required this.gradientColors,
     required this.onSubmit,
     required this.onClose,
+    required this.shipment, // ✅ Constructor param
   });
 
   @override
@@ -240,7 +246,8 @@ class _ModalContentState extends State<_ModalContent>
                   ],
                 ),
               ),
-              Icon(Icons.arrow_back_ios_rounded,
+              Icon(
+                Icons.arrow_back_ios_rounded,
                 size: 16,
                 color: Colors.grey[400],
               ),
@@ -275,7 +282,8 @@ class _ModalContentState extends State<_ModalContent>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: const TextStyle(fontSize: 14)),
-        backgroundColor: isError ? const Color(0xFFE53935) : const Color(0xFFFF9800),
+        backgroundColor:
+        isError ? const Color(0xFFE53935) : const Color(0xFFFF9800),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -283,6 +291,7 @@ class _ModalContentState extends State<_ModalContent>
     );
   }
 
+  // ✅ Updated to access shipment
   Future<void> _onSubmitTap() async {
     if (_rating == 0.0) {
       _showSnackBar('يرجى تقييم الشحنة');
@@ -310,7 +319,6 @@ class _ModalContentState extends State<_ModalContent>
     }
 
     setState(() => _isSubmitting = true);
-
     await Future.delayed(const Duration(milliseconds: 500));
 
     Logger().i(isReject ? 'Reject Tapped' : 'Confirm Tapped');
@@ -318,9 +326,21 @@ class _ModalContentState extends State<_ModalContent>
     Logger().w("FEEDBACK: ${_feedbackController.text}");
     Logger().w("RATING: $_rating");
 
+
+
     widget.onSubmit(_selectedImage, _feedbackController.text, _rating);
+
+    if (isReject) {
+      var updatedShipment = widget.shipment.copyWith(
+        status: "مرفوضة"
+      );
+      GoRouter.of(context).push(EndPoints.representativeShipmentDetailsView, extra: updatedShipment);
+    } else {
+      GoRouter.of(context).push(EndPoints.representativeShipmentReviewView, extra: widget.shipment);
+    }
   }
 
+  // UI builders remain identical below ↓↓↓
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -351,7 +371,7 @@ class _ModalContentState extends State<_ModalContent>
     );
   }
 
-  Widget _buildHeader() {
+Widget _buildHeader() {
     return FadeTransition(
       opacity: _headerFadeAnimation,
       child: SlideTransition(
