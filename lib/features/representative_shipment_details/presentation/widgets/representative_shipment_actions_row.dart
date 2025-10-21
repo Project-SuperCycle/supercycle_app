@@ -16,6 +16,7 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
     RepresentativeShipmentModal.show(
       context,
       actionType: ShipmentActionType.confirm,
+      shipment: shipment,
       onSubmit: (File? image, String notes, double rating) {
         Logger().i('✅ Confirm Shipment');
         Logger().w("SHIPMENT ID: ${shipment.id}");
@@ -47,8 +48,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           ),
         );
 
-        // يمكنك العودة للصفحة السابقة
-        // GoRouter.of(context).pop();
       },
     );
   }
@@ -57,22 +56,13 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
     RepresentativeShipmentModal.show(
       context,
       actionType: ShipmentActionType.reject,
+      shipment: shipment,
       onSubmit: (File? image, String reason, double rating) {
         Logger().i('❌ Reject Shipment');
         Logger().w("SHIPMENT ID: ${shipment.id}");
         Logger().w("IMAGE: $image");
         Logger().w("REJECTION REASON: $reason");
         Logger().w("RATING: $rating");
-
-        // هنا أضف منطق إرسال البيانات للـ API
-        // BlocProvider.of<ShipmentBloc>(context).add(
-        //   RejectShipmentEvent(
-        //     shipmentId: shipment.id,
-        //     image: image!,
-        //     reason: reason,
-        //     rating: rating,
-        //   ),
-        // );
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -88,8 +78,7 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           ),
         );
 
-        // يمكنك العودة للصفحة السابقة
-        // GoRouter.of(context).pop();
+
       },
     );
   }
@@ -99,7 +88,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // زر تأكيد الشحنة - يفتح Modal أزرق
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -129,7 +117,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           ),
         ),
 
-        // زر تعديل
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -164,7 +151,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           ),
         ),
 
-        // زر رفض الشحنة - يفتح Modal أحمر
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
