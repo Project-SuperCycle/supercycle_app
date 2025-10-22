@@ -6,7 +6,7 @@ import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_rejected_body/representative_shipment_modal.dart';
+import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/rep_shipment_action_modal/representative_shipment_modal.dart';
 
 class RepresentativeShipmentActionsRow extends StatelessWidget {
   final SingleShipmentModel shipment;
@@ -47,7 +47,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             duration: Duration(seconds: 2),
           ),
         );
-
       },
     );
   }
@@ -77,8 +76,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             duration: Duration(seconds: 2),
           ),
         );
-
-
       },
     );
   }
@@ -107,9 +104,9 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   'تأكيد الشحنة',
-                  style: AppStyles.styleBold14(context).copyWith(
-                    color: Colors.white,
-                  ),
+                  style: AppStyles.styleBold14(
+                    context,
+                  ).copyWith(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -141,9 +138,9 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   'تعديل',
-                  style: AppStyles.styleBold14(context).copyWith(
-                    color: Colors.white,
-                  ),
+                  style: AppStyles.styleBold14(
+                    context,
+                  ).copyWith(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -170,9 +167,9 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   'رفض الشحنة',
-                  style: AppStyles.styleBold14(context).copyWith(
-                    color: Colors.white,
-                  ),
+                  style: AppStyles.styleBold14(
+                    context,
+                  ).copyWith(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),

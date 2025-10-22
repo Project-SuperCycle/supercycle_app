@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:io';
@@ -13,14 +14,15 @@ enum ShipmentActionType { reject, confirm }
 
 class RepresentativeShipmentModal {
   static void show(
-      BuildContext context, {
-        required ShipmentActionType actionType,
-        required Function(File?, String, double) onSubmit,
-        required SingleShipmentModel shipment, // ✅ new param
-      }) {
+    BuildContext context, {
+    required ShipmentActionType actionType,
+    required Function(File?, String, double) onSubmit,
+    required SingleShipmentModel shipment,
+  }) {
     final isReject = actionType == ShipmentActionType.reject;
-    final primaryColor =
-    isReject ? const Color(0xFFE53935) : const Color(0xFF00C853);
+    final primaryColor = isReject
+        ? const Color(0xFFE53935)
+        : const Color(0xFF00C853);
     final gradientColors = isReject
         ? [const Color(0xFFE53935), const Color(0xFFD32F2F)]
         : [const Color(0xFF00C853), const Color(0xFF00B248)];
@@ -33,7 +35,7 @@ class RepresentativeShipmentModal {
             backgroundColor: Colors.white,
             hasTopBarLayer: false,
             child: _ModalContent(
-              shipment: shipment, // ✅ pass it down
+              shipment: shipment,
               actionType: actionType,
               primaryColor: primaryColor,
               gradientColors: gradientColors,
@@ -58,7 +60,7 @@ class _ModalContent extends StatefulWidget {
   final List<Color> gradientColors;
   final Function(File?, String, double) onSubmit;
   final VoidCallback onClose;
-  final SingleShipmentModel shipment; // ✅ Added model
+  final SingleShipmentModel shipment;
 
   const _ModalContent({
     required this.actionType,
@@ -66,7 +68,7 @@ class _ModalContent extends StatefulWidget {
     required this.gradientColors,
     required this.onSubmit,
     required this.onClose,
-    required this.shipment, // ✅ Constructor param
+    required this.shipment,
   });
 
   @override
@@ -80,7 +82,6 @@ class _ModalContentState extends State<_ModalContent>
   File? _selectedImage;
   double _rating = 0.0;
   bool _isSubmitting = false;
-
   late AnimationController _headerController;
   late AnimationController _contentController;
   late Animation<double> _headerFadeAnimation;
@@ -100,7 +101,6 @@ class _ModalContentState extends State<_ModalContent>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-
     _contentController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -110,13 +110,13 @@ class _ModalContentState extends State<_ModalContent>
       CurvedAnimation(parent: _headerController, curve: Curves.easeOut),
     );
 
-    _headerSlideAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _headerController,
-      curve: Curves.easeOutCubic,
-    ));
+    _headerSlideAnimation =
+        Tween<Offset>(begin: const Offset(0, -0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _headerController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _contentFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -238,10 +238,7 @@ class _ModalContentState extends State<_ModalContent>
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -282,8 +279,9 @@ class _ModalContentState extends State<_ModalContent>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: const TextStyle(fontSize: 14)),
-        backgroundColor:
-        isError ? const Color(0xFFE53935) : const Color(0xFFFF9800),
+        backgroundColor: isError
+            ? const Color(0xFFE53935)
+            : const Color(0xFFFF9800),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -291,28 +289,23 @@ class _ModalContentState extends State<_ModalContent>
     );
   }
 
-  // ✅ Updated to access shipment
   Future<void> _onSubmitTap() async {
     if (_rating == 0.0) {
       _showSnackBar('يرجى تقييم الشحنة');
       return;
     }
-
     if (isReject && _rating > 2.0) {
       _showSnackBar('في حالة الرفض، يجب أن يكون التقييم 1 أو 2 فقط');
       return;
     }
-
     if (!isReject && _rating < 3.0) {
       _showSnackBar('في حالة التأكيد، يجب أن يكون التقييم من 3 إلى 5');
       return;
     }
-
     if (_selectedImage == null) {
       _showSnackBar('يرجى إضافة صورة الشحنة');
       return;
     }
-
     if (isReject && _feedbackController.text.trim().isEmpty) {
       _showSnackBar('يرجى إدخال سبب الرفض');
       return;
@@ -321,26 +314,22 @@ class _ModalContentState extends State<_ModalContent>
     setState(() => _isSubmitting = true);
     await Future.delayed(const Duration(milliseconds: 500));
 
-    Logger().i(isReject ? 'Reject Tapped' : 'Confirm Tapped');
-    Logger().w("IMAGE: $_selectedImage");
-    Logger().w("FEEDBACK: ${_feedbackController.text}");
-    Logger().w("RATING: $_rating");
-
-
-
     widget.onSubmit(_selectedImage, _feedbackController.text, _rating);
 
     if (isReject) {
-      var updatedShipment = widget.shipment.copyWith(
-        status: "مرفوضة"
+      var updatedShipment = widget.shipment.copyWith(status: "مرفوضة");
+      GoRouter.of(context).push(
+        EndPoints.representativeShipmentDetailsView,
+        extra: updatedShipment,
       );
-      GoRouter.of(context).push(EndPoints.representativeShipmentDetailsView, extra: updatedShipment);
     } else {
-      GoRouter.of(context).push(EndPoints.representativeShipmentReviewView, extra: widget.shipment);
+      GoRouter.of(context).push(
+        EndPoints.representativeShipmentReviewView,
+        extra: widget.shipment,
+      );
     }
   }
 
-  // UI builders remain identical below ↓↓↓
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -371,7 +360,7 @@ class _ModalContentState extends State<_ModalContent>
     );
   }
 
-Widget _buildHeader() {
+  Widget _buildHeader() {
     return FadeTransition(
       opacity: _headerFadeAnimation,
       child: SlideTransition(
@@ -387,62 +376,61 @@ Widget _buildHeader() {
               bottom: Radius.circular(32),
             ),
           ),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: Row(
-                children: [
-                  const SizedBox(width: 40),
-
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            isReject
-                                ? Icons.cancel_rounded
-                                : Icons.check_circle_rounded,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          isReject ? 'رفض الشحنة' : 'تأكيد الشحنة',
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          isReject
-                              ? 'يرجى تحديد سبب الرفض'
-                              : 'قم بتأكيد استلام الشحنة',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white.withOpacity(0.9),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
+          child: Column(
+            children: [
+              // Close button at the top
+              Padding(
+                padding: const EdgeInsets.only(top: 16, right: 16),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
                     onPressed: widget.onClose,
                     icon: const Icon(Icons.close_rounded, color: Colors.white),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
-                ],
+                ),
               ),
-            ),
+              // Centered icon and title
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(50),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isReject
+                            ? Icons.cancel_rounded
+                            : Icons.check_circle_rounded,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      isReject ? 'رفض الشحنة' : 'تأكيد الشحنة',
+                      style: AppStyles.styleBold22(
+                        context,
+                      ).copyWith(color: Colors.white),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isReject
+                          ? 'يرجى تحديد سبب الرفض'
+                          : 'قم بتأكيد استلام الشحنة',
+                      style: AppStyles.styleMedium14(
+                        context,
+                      ).copyWith(color: Colors.white.withAlpha(450)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -457,7 +445,7 @@ Widget _buildHeader() {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(25),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -471,7 +459,7 @@ Widget _buildHeader() {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFA726).withOpacity(0.15),
+                  color: const Color(0xFFFFA726).withAlpha(75),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -481,13 +469,7 @@ Widget _buildHeader() {
                 ),
               ),
               const SizedBox(width: 8),
-              const Text(
-                'تقييم الشحنة',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('تقييم الشحنة', style: AppStyles.styleSemiBold16(context)),
             ],
           ),
           const SizedBox(height: 10),
@@ -500,10 +482,8 @@ Widget _buildHeader() {
             itemSize: 40,
             unratedColor: Colors.grey[200],
             itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
-            itemBuilder: (context, _) => const Icon(
-              Icons.star_rounded,
-              color: Color(0xFFFFA726),
-            ),
+            itemBuilder: (context, _) =>
+                const Icon(Icons.star_rounded, color: Color(0xFFFFA726)),
             onRatingUpdate: (rating) {
               setState(() => _rating = rating);
               HapticFeedback.lightImpact();
@@ -523,10 +503,10 @@ Widget _buildHeader() {
               _rating == 0.0
                   ? 'لم يتم التقييم بعد'
                   : '${_rating.toStringAsFixed(1)} من 5.0 ⭐',
-              style: TextStyle(
-                fontSize: 14,
-                color: _rating == 0.0 ? Colors.grey[600] : const Color(0xFFFFA726),
-                fontWeight: FontWeight.w600,
+              style: AppStyles.styleSemiBold14(context).copyWith(
+                color: _rating == 0.0
+                    ? Colors.grey[600]
+                    : const Color(0xFFFFA726),
               ),
             ),
           ),
@@ -564,14 +544,7 @@ Widget _buildHeader() {
                 size: 20,
               ),
               const SizedBox(width: 8),
-
-              const Text(
-                'صورة الشحنة',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('صورة الشحنة', style: AppStyles.styleSemiBold16(context)),
             ],
           ),
           const SizedBox(height: 16),
@@ -596,95 +569,86 @@ Widget _buildHeader() {
               ),
               child: _selectedImage == null
                   ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: widget.primaryColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.add_photo_alternate_rounded,
-                      size: 40,
-                      color: widget.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'اضغط لإضافة صورة',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
-                ],
-              )
-                  : ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.file(
-                      _selectedImage!,
-                      fit: BoxFit.cover,
-                    ),
-                    Positioned(
-                      top: 12,
-                      left: 12,
-                      child: GestureDetector(
-                        onTap: _removeImage,
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
+                            color: widget.primaryColor.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
-                            Icons.close_rounded,
-                            color: Colors.white,
-                            size: 20,
+                          child: Icon(
+                            Icons.add_photo_alternate_rounded,
+                            size: 40,
+                            color: widget.primaryColor,
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 12,
-                      right: 12,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                        const SizedBox(height: 16),
+                        Text(
+                          'اضغط لإضافة صورة',
+                          style: AppStyles.styleSemiBold14(context),
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                            SizedBox(width: 6),
-                            Text(
-                              'تم الإضافة',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
+                      ],
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.file(_selectedImage!, fit: BoxFit.cover),
+                          Positioned(
+                            top: 12,
+                            left: 12,
+                            child: GestureDetector(
+                              onTap: _removeImage,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.6),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Positioned(
+                            bottom: 12,
+                            right: 12,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.6),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.check_circle_rounded,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    'تم الإضافة',
+                                    style: AppStyles.styleSemiBold12(
+                                      context,
+                                    ).copyWith(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
             ),
           ),
         ],
@@ -703,10 +667,7 @@ Widget _buildHeader() {
             children: [
               Text(
                 isReject ? ' سبب الرفض :' : 'ملاحظات :',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppStyles.styleSemiBold16(context),
               ),
             ],
           ),
@@ -728,12 +689,14 @@ Widget _buildHeader() {
             controller: _feedbackController,
             textAlign: TextAlign.right,
             maxLines: 5,
-            style: const TextStyle(fontSize: 15, height: 1.5),
+            style: AppStyles.styleRegular14(context),
             decoration: InputDecoration(
               hintText: isReject
                   ? 'صف سبب رفض الشحنة بالتفصيل...'
                   : 'أضف أي ملاحظات إضافية...',
-              hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+              hintStyle: AppStyles.styleRegular14(
+                context,
+              ).copyWith(color: Colors.grey[400]),
               filled: true,
               fillColor: Colors.grey[50],
               contentPadding: const EdgeInsets.all(20),
@@ -783,40 +746,35 @@ Widget _buildHeader() {
             padding: const EdgeInsets.symmetric(vertical: 18),
             child: _isSubmitting
                 ? const Center(
-              child: SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2.5,
-                ),
-              ),
-            )
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2.5,
+                      ),
+                    ),
+                  )
                 : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  isReject ? 'رفض الشحنة' : 'تأكيد الشحنة',
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        isReject ? 'رفض الشحنة' : 'تأكيد الشحنة',
+                        style: AppStyles.styleBold16(
+                          context,
+                        ).copyWith(color: Colors.white),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        isReject ? Icons.close_rounded : Icons.check_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 8),
-                Icon(
-                  isReject
-                      ? Icons.close_rounded
-                      : Icons.check_rounded,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ],
-            ),
           ),
         ),
       ),
     );
   }
 }
-
