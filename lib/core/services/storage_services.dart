@@ -117,6 +117,8 @@ abstract class StorageServices {
       doshMangerPhone: data['doshMangerPhone'],
       email: data['email'],
       role: data['role'],
+      displayName: data['displayName'],
+      phone: data['phone'],
     );
     return user;
   }
