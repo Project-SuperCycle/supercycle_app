@@ -13,6 +13,7 @@ class ClientDataContent extends StatefulWidget {
 
 class _ClientDataContentState extends State<ClientDataContent> {
   LoginedUserModel? entity;
+
   @override
   void initState() {
     super.initState();
@@ -30,73 +31,185 @@ class _ClientDataContentState extends State<ClientDataContent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DataRow(
-          label: '${S.of(context).entity_name}:  ',
+        // Business Info Section
+        _buildSectionHeader(
+          icon: Icons.business,
+          title: 'معلومات الجهة',
+          color: Colors.blue,
+        ),
+        const SizedBox(height: 16),
+        ModernDataRow(
+          icon: Icons.store,
+          label: '${S.of(context).entity_name}',
           value: entity?.bussinessName,
+          iconColor: Colors.blue,
         ),
-        const SizedBox(height: 20),
-        DataRow(
-          label: '${S.of(context).entity_type}:  ',
+        const SizedBox(height: 12),
+        ModernDataRow(
+          icon: Icons.category,
+          label: '${S.of(context).entity_type}',
           value: entity?.rawBusinessType,
+          iconColor: Colors.purple,
         ),
-        const SizedBox(height: 20),
-        DataRow(
-          label: '${S.of(context).entity_address}:  ',
+        const SizedBox(height: 12),
+        ModernDataRow(
+          icon: Icons.location_on,
+          label: '${S.of(context).entity_address}',
           value: entity?.bussinessAdress,
+          iconColor: Colors.red,
         ),
-        const SizedBox(height: 20),
-        DataRow(
-          label: '${S.of(context).administrator_name}:  ',
+
+        const SizedBox(height: 24),
+
+        // Administrator Info Section
+        _buildSectionHeader(
+          icon: Icons.person,
+          title: 'معلومات المسؤول',
+          color: Colors.green,
+        ),
+        const SizedBox(height: 16),
+        ModernDataRow(
+          icon: Icons.person_outline,
+          label: '${S.of(context).administrator_name}',
           value: entity?.doshMangerName,
+          iconColor: Colors.green,
         ),
-        const SizedBox(height: 20),
-        DataRow(
-          label: '${S.of(context).administrator_phone}: ',
+        const SizedBox(height: 12),
+        ModernDataRow(
+          icon: Icons.phone,
+          label: '${S.of(context).administrator_phone}',
           value: entity?.doshMangerPhone,
+          iconColor: Colors.orange,
         ),
-        const SizedBox(height: 20),
-        Divider(color: Colors.grey.shade300),
-        const SizedBox(height: 20),
-        DataRow(label: '${S.of(context).start_date}:  ', value: '15 Mar 2020'),
-        const SizedBox(height: 20),
-        DataRow(
-          label: '${S.of(context).payment_method}:  ',
+
+        const SizedBox(height: 24),
+
+        // Payment Info Section
+        _buildSectionHeader(
+          icon: Icons.payment,
+          title: 'معلومات الدفع',
+          color: Colors.teal,
+        ),
+        const SizedBox(height: 16),
+        ModernDataRow(
+          icon: Icons.calendar_today,
+          label: '${S.of(context).start_date}',
+          value: '15 Mar 2020',
+          iconColor: Colors.indigo,
+        ),
+        const SizedBox(height: 12),
+        ModernDataRow(
+          icon: Icons.account_balance,
+          label: '${S.of(context).payment_method}',
           value: 'تحويل بنكي',
+          iconColor: Colors.teal,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader({
+    required IconData icon,
+    required String title,
+    required Color color,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            size: 18,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[800],
+          ),
+        ),
       ],
     );
   }
 }
 
-class DataRow extends StatelessWidget {
-  final String? label;
+class ModernDataRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
   final String? value;
+  final Color iconColor;
 
-  const DataRow({super.key, required this.label, required this.value});
+  const ModernDataRow({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.iconColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      textDirection: TextDirection.ltr,
-      children: [
-        Flexible(
-          child: Text(
-            value ?? 'Unknown',
-            style: AppStyles.styleMedium14(
-              context,
-            ).copyWith(color: Colors.grey.shade600),
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.grey[200]!,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 16,
+              color: iconColor,
+            ),
           ),
-        ),
-        Text(
-          label ?? 'Unknown',
-          style: AppStyles.styleMedium14(
-            context,
-          ).copyWith(fontWeight: FontWeight.bold),
-        ),
-      ],
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              label,
+              style: AppStyles.styleMedium14(context).copyWith(
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[800],
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value ?? 'غير محدد',
+              style: AppStyles.styleMedium14(context).copyWith(
+                color: Colors.grey[700],
+                height: 1.4,
+              ),
+              textAlign: TextAlign.right,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

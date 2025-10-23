@@ -16,6 +16,7 @@ import 'package:supercycle_app/features/trader_shipment_details/presentation/wid
 import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_details_settings_icon.dart';
 import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_details_header.dart';
 import 'package:supercycle_app/features/shipment_preview/presentation/widgets/shipment_review_content.dart';
+import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/representative_card.dart';
 
 class ShipmentDetailsViewBody extends StatefulWidget {
   const ShipmentDetailsViewBody({super.key, required this.shipment});
@@ -100,15 +101,32 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                       children: [
                         (widget.shipment.status == 'pending')
                             ? Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: ShipmentDetailsSettingsIcon(
-                                  shipment: widget.shipment,
-                                ),
-                              )
+                          padding: const EdgeInsets.all(16.0),
+                          child: ShipmentDetailsSettingsIcon(
+                            shipment: widget.shipment,
+                          ),
+                        )
                             : const SizedBox.shrink(),
                         ShipmentDetailsHeader(shipment: widget.shipment),
                         const SizedBox(height: 16),
                         const ProgressBar(completedSteps: 1),
+                        const SizedBox(height: 20),
+
+                        // Representative Card
+                       if (widget.shipment.representitive != null)
+                          RepresentativeCard(
+                            representativeName: widget.shipment.representitive!.name,
+                            representativePhone: widget.shipment.representitive!.phone,
+                            representativeImage: widget.shipment.representitive!.image,
+                          ),
+
+                        // // Representative Card (مؤقت للتعديل)
+                        // RepresentativeCard(
+                        //   representativeName: 'محمد أحمد السيد',
+                        //   representativePhone: '01012345678',
+                        //   representativeImage: 'https://via.placeholder.com/150',
+                        // ),
+
                         const SizedBox(height: 20),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,

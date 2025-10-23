@@ -33,7 +33,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
         // TODO: implement listener
         if (state is GetShipmentSuccess) {
           GoRouter.of(context).push(
-            EndPoints.representativeShipmentDetailsView,
+            EndPoints.shipmentDetailsView,
             extra: state.shipment,
           );
         }
