@@ -1,4 +1,3 @@
-// Constants for profile view
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/features/representative_main_profile/data/models/representative_profile_data.dart';
 import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
@@ -11,7 +10,6 @@ class ProfileConstants {
   static const double cardBorderRadius = 20;
   static const double spacing = 16;
 
-  // Sample data - in real app, this would come from state management or API
   static final TraderProfileData sampleProfileData = TraderProfileData(
     name: "Carrefour",
     activityType: "متجر تجاري",
@@ -22,7 +20,6 @@ class ProfileConstants {
     requiredProducts: 3,
     availableProducts: 43,
     logoPath: 'assets/images/carrefour_logo.png',
-    // البيانات الجديدة
     branches: [
       BranchModel(
         name: "فرع التجمع الخامس",
@@ -30,6 +27,8 @@ class ProfileConstants {
         managerName: "محمد أحمد",
         managerPhone: "+201012345678",
         deliveryVolume: 1500,
+        recyclableTypes: ["كرتون بني", "ورق أبيض", "ورق برستول"],
+        deliverySchedule: "كل يوم أحد وأربعاء - 10 صباحاً",
       ),
       BranchModel(
         name: "فرع مدينة نصر",
@@ -37,6 +36,8 @@ class ProfileConstants {
         managerName: "أحمد علي",
         managerPhone: "+201123456789",
         deliveryVolume: 2300,
+        recyclableTypes: ["كرتون بني", "كرتون منيلا", "ورق وش و وش"],
+        deliverySchedule: "كل يوم اثنين وخميس - 2 مساءً",
       ),
       BranchModel(
         name: "فرع المعادي",
@@ -44,6 +45,8 @@ class ProfileConstants {
         managerName: "خالد حسن",
         managerPhone: "+201234567890",
         deliveryVolume: 1800,
+        recyclableTypes: ["ورق أبيض", "كرتون درجه تانيه", "كرتون درجه اولى"],
+        deliverySchedule: "كل يوم سبت - 11 صباحاً",
       ),
       BranchModel(
         name: "فرع الزمالك",
@@ -51,6 +54,8 @@ class ProfileConstants {
         managerName: "محمود سعيد",
         managerPhone: "+201098765432",
         deliveryVolume: 2100,
+        recyclableTypes: ["كرتون بني", "ورق أبيض", "ورق برستول", "كرتون درجه اولى"],
+        deliverySchedule: "كل يوم ثلاثاء - 9 صباحاً",
       ),
       BranchModel(
         name: "فرع الشروق",
@@ -58,6 +63,8 @@ class ProfileConstants {
         managerName: "عمر فاروق",
         managerPhone: "+201087654321",
         deliveryVolume: 1200,
+        recyclableTypes: ["كرتون بني", "ورق أبيض"],
+        deliverySchedule: "كل يوم جمعة - 3 مساءً",
       ),
       BranchModel(
         name: "فرع 6 أكتوبر",
@@ -65,15 +72,17 @@ class ProfileConstants {
         managerName: "يوسف إبراهيم",
         managerPhone: "+201076543210",
         deliveryVolume: 1900,
+        recyclableTypes: ["كرتون بني", "ورق أبيض"],
+        deliverySchedule: "كل يوم أحد وأربعاء - 1 مساءً",
       ),
     ],
     recyclableTypes: [
       "كرتون بني",
       "ورق أبيض",
-      "ورق وش و وش",
-      "ورق كوشية",
+      "كرتون درجه اولى",
+      "كرتون منيلا",
       "ورق برستول",
-      "ورق 4A",
+      "ورق وش و وش",
     ],
   );
 

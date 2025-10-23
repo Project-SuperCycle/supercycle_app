@@ -35,7 +35,6 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     );
   }
 
-  // ======= Header Section =======
   Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,12 +56,12 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
   Widget _buildViewToggleButton(IconData icon, bool isListButton) {
     final isActive = _isListView == isListButton;
     return IconButton(
-      icon: Icon(icon, color: isActive ? const Color(0xFF10B981) : Colors.grey),
+      icon: Icon(icon, color: isActive ? AppColors.primaryColor : Colors.grey),
       onPressed: () => setState(() => _isListView = isListButton),
     );
   }
 
-  // ======= List View =======
+
   Widget _buildBranchesList() {
     return ListView.builder(
       shrinkWrap: true,
@@ -80,12 +79,12 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
               decoration: _decorBox(),
               child: Row(
                 children: [
-                  const Icon(Icons.store_outlined,
-                      color: Color(0xFF10B981), size: 40),
+                  Icon(Icons.store_outlined,
+                      color: AppColors.primaryColor, size: 40),
                   const SizedBox(width: 16),
                   Expanded(child: _buildBranchInfo(branch)),
-                  const Icon(Icons.arrow_forward_ios,
-                      color: Color(0xFF10B981), size: 20),
+                  Icon(Icons.arrow_forward_ios,
+                      color: AppColors.primaryColor, size: 20),
                 ],
               ),
             ),
@@ -96,10 +95,10 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
   }
 
   BoxDecoration _decorBox() => BoxDecoration(
-    color: const Color(0xFF10B981).withAlpha(25),
+    color: AppColors.primaryColor.withAlpha(25),
     borderRadius: BorderRadius.circular(12),
     border: Border.all(
-      color: const Color(0xFF10B981).withAlpha(100),
+      color: AppColors.primaryColor.withAlpha(100),
       width: 1.5,
     ),
   );
@@ -111,7 +110,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
         Text(
           branch.name,
           style: AppStyles.styleSemiBold16(context)
-              .copyWith(color: const Color(0xFF059669)),
+              .copyWith(color: AppColors.primaryColor),
         ),
         const SizedBox(height: 4),
         Text(
@@ -123,62 +122,143 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     );
   }
 
-  // ======= Chart View =======
   Widget _buildBranchesChart() {
     final branches = widget.branches;
-    final maxVolume = branches.isNotEmpty
-        ? branches.map((b) => b.deliveryVolume).reduce((a, b) => a > b ? a : b)
-        : 1.0;
+    if (branches.isEmpty) {
+      return const Center(child: Text("لا توجد بيانات للفروع"));
+    }
 
-    return Column(
-      children: branches.map((branch) {
-        final percentage = branch.deliveryVolume / maxVolume;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: InkWell(
-            onTap: () => _showBranchDetails(branch),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildChartRow(branch),
-                const SizedBox(height: 8),
-                _buildProgressBar(percentage),
-              ],
+    final maxVolume = branches.map((b) => b.deliveryVolume).reduce((a, b) => a > b ? a : b);
+
+    return SizedBox(
+      height: 300,
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY: maxVolume * 1.2,
+          borderData: FlBorderData(show: false),
+          gridData: const FlGridData(show: false),
+          titlesData: FlTitlesData(
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: true, reservedSize: 50),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 60,
+                getTitlesWidget: (value, meta) {
+                  final index = value.toInt();
+                  if (index < 0 || index >= branches.length) return const SizedBox();
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      branches[index].name,
+                      style: AppStyles.styleSemiBold12(context),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildChartRow(BranchModel branch) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(branch.name, style: AppStyles.styleSemiBold14(context)),
-        Text(
-          "${branch.deliveryVolume} كجم",
-          style: AppStyles.styleSemiBold12(context)
-              .copyWith(color: const Color(0xFF059669)),
+          barGroups: List.generate(branches.length, (index) {
+            final branch = branches[index];
+            return BarChartGroupData(
+              x: index,
+              barRods: [
+                BarChartRodData(
+                  toY: branch.deliveryVolume.toDouble(),
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(6),
+                  width: 22,
+                ),
+              ],
+              showingTooltipIndicators: [0],
+            );
+          }),
+          barTouchData: BarTouchData(
+            enabled: true,
+            touchTooltipData: BarTouchTooltipData(
+              tooltipRoundedRadius: 8,
+              getTooltipColor: (_) => AppColors.primaryColor.withOpacity(0.9),
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                final branch = branches[group.x.toInt()];
+                return BarTooltipItem(
+                  "${branch.name}\n${branch.deliveryVolume} كجم",
+                  const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                );
+              },
+            ),
+          ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildProgressBar(double value) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: LinearProgressIndicator(
-        value: value,
-        minHeight: 20,
-        backgroundColor: Colors.grey.shade200,
-        valueColor:
-        const AlwaysStoppedAnimation<Color>(Color(0xFF10B981)),
       ),
     );
   }
 
-  // ======= Branch Details BottomSheet =======
+  Widget _buildTypesSection(List<String> types) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.category, color: AppColors.primaryColor, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "الأنواع المتعامل بها",
+                  style: AppStyles.styleSemiBold12(context)
+                      .copyWith(color: AppColors.subTextColor),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: types.map((type) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withAlpha(25),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: AppColors.primaryColor.withAlpha(100),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        type,
+                        style: AppStyles.styleSemiBold12(context).copyWith(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showBranchDetails(BranchModel branch) {
     showModalBottomSheet(
       context: context,
@@ -188,7 +268,6 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     );
   }
 
-  // ======= Types Section =======
   Widget _buildTypeUsed() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,15 +280,14 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
           runSpacing: 8,
           children: widget.types.map((type) {
             return Container(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: _decorBox().copyWith(
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 type,
                 style: AppStyles.styleSemiBold12(context)
-                    .copyWith(color: const Color(0xFF059669)),
+                    .copyWith(color: AppColors.primaryColor),
               ),
             );
           }).toList(),
@@ -219,7 +297,6 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
   }
 }
 
-// ======= Separate Widget for BottomSheet =======
 class _BranchDetailsSheet extends StatelessWidget {
   const _BranchDetailsSheet({required this.branch});
 
@@ -260,13 +337,63 @@ class _BranchDetailsSheet extends StatelessWidget {
             _DetailRow(Icons.phone, "رقم تواصل المسؤول", branch.managerPhone),
             _DetailRow(Icons.inventory_2, "حجم التوريدات",
                 "${branch.deliveryVolume} كجم"),
+            _DetailRow(Icons.schedule, "ميعاد التسليم", branch.deliverySchedule),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.category, color: AppColors.primaryColor, size: 24),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "الأنواع المتعامل بها",
+                          style: AppStyles.styleSemiBold12(context)
+                              .copyWith(color: AppColors.subTextColor),
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 6,
+                          children: branch.recyclableTypes.map((type) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withAlpha(25),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: AppColors.primaryColor.withAlpha(100),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                type,
+                                style: AppStyles.styleSemiBold12(context).copyWith(
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF10B981),
+                  backgroundColor: AppColors.primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -284,7 +411,6 @@ class _BranchDetailsSheet extends StatelessWidget {
   }
 }
 
-// ======= Row Widget for Each Detail =======
 class _DetailRow extends StatelessWidget {
   const _DetailRow(this.icon, this.label, this.value);
 
@@ -298,7 +424,7 @@ class _DetailRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
-          Icon(icon, color: const Color(0xFF10B981), size: 24),
+          Icon(icon, color: AppColors.primaryColor, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
