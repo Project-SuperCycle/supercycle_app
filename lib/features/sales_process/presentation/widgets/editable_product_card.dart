@@ -218,7 +218,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
     // Return widget.product.unit only if it exists in options
     if (options.contains(widget.product.unit)) {
-      return widget.product.unit;
+      return widget.product.unit ?? "";
     }
 
     // Default to first unit if current unit is invalid

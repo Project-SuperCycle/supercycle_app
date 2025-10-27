@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_destination_section.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
@@ -8,7 +8,7 @@ import 'package:supercycle_app/features/representative_shipment_review/presentat
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_weight_section.dart';
 
 class ShipmentSegmentStep2 extends StatefulWidget {
-  final ShipmentSegmentData segment;
+  final ShipmentSegmentModel segment;
   final bool isWeighted;
   final VoidCallback onUploadPressed;
 
@@ -34,11 +34,11 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
           child: SegmentCardProgress(currentStep: currentStep),
         ),
-        SegmentTruckInfo(truckNumber: widget.segment.truckNumber),
+        SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
         SizedBox(height: 4),
         SegmentDestinationSection(
-          destinationTitle: widget.segment.destinationTitle,
-          destinationAddress: widget.segment.destinationAddress,
+          destinationTitle: widget.segment.destName!,
+          destinationAddress: widget.segment.destAddress!,
         ),
         SegmentProductsDetails(quantity: 3, productType: "ورق أبيض"),
         SegmentWeightSection(

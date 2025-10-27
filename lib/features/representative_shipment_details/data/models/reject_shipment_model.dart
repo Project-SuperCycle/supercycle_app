@@ -1,7 +1,9 @@
+import 'dart:io';
+
 class RejectShipmentModel {
   final String shipmentID;
   final String reason;
-  final List<String> images;
+  final List<File> images;
   final num rank;
 
   RejectShipmentModel({
@@ -15,7 +17,7 @@ class RejectShipmentModel {
     return RejectShipmentModel(
       shipmentID: json['shipmentID'] as String,
       reason: json['reason'] as String,
-      images: List<String>.from(json['images'] as List),
+      images: json['images'] as List<File>,
       rank: json['rank'] as num,
     );
   }
@@ -36,11 +38,15 @@ class RejectShipmentModel {
     return 'RejectSegmentModel(shipmentID: $shipmentID, reason: $reason, images: $images, rank: $rank)';
   }
 
+  Map<String, dynamic> toMap() {
+    return {'reason': reason, 'rank': rank};
+  }
+
   // Optional: copyWith method for creating modified copies
   RejectShipmentModel copyWith({
     String? shipmentID,
     String? reason,
-    List<String>? images,
+    List<File>? images,
     num? rank,
   }) {
     return RejectShipmentModel(

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/errors/failures.dart';
+import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/core/services/api_endpoints.dart';
 import 'package:supercycle_app/core/services/api_services.dart';
 import 'package:supercycle_app/features/representative_shipment_details/data/models/accept_shipment_model.dart';
@@ -19,12 +22,13 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
   }) async {
     // TODO: implement acceptShipment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _acceptFormData(acceptModel: acceptModel);
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.acceptRepShipment.replaceFirst(
           '{id}',
           acceptModel.shipmentID,
         ),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -63,12 +67,13 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
   }) async {
     // TODO: implement rejectShipment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _rejectFormData(rejectModel: rejectModel);
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.rejectRepShipment.replaceFirst(
           '{id}',
           rejectModel.shipmentID,
         ),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -107,12 +112,14 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
   }) async {
     // TODO: implement updateShipment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _updateFormData(updateModel: updateModel);
+
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.updateRepShipment.replaceFirst(
           '{id}',
           updateModel.shipmentID,
         ),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -143,5 +150,50 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
         ),
       );
     }
+  }
+
+  Future<FormData> _acceptFormData({
+    required AcceptShipmentModel acceptModel,
+  }) async {
+    List<File> images = acceptModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...acceptModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
+  }
+
+  Future<FormData> _rejectFormData({
+    required RejectShipmentModel rejectModel,
+  }) async {
+    List<File> images = rejectModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...rejectModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
+  }
+
+  Future<FormData> _updateFormData({
+    required UpdateShipmentModel updateModel,
+  }) async {
+    List<File> images = updateModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...updateModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
   }
 }

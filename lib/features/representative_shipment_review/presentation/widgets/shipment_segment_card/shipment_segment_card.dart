@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
 
 class ShipmentSegmentCard extends StatefulWidget {
-  final ShipmentSegmentData segment;
+  final ShipmentSegmentModel segment;
   const ShipmentSegmentCard({super.key, required this.segment});
 
   @override
@@ -60,8 +60,8 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         child: Column(
           children: [
             SegmentCardHeader(
-              driverName: widget.segment.driverName,
-              phoneNumber: widget.segment.phoneNumber,
+              driverName: widget.segment.driverName!,
+              phoneNumber: widget.segment.driverPhone!,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),

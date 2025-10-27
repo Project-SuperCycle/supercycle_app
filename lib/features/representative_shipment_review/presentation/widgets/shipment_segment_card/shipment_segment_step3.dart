@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_action_button.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_deliverd_section.dart';
@@ -10,7 +10,7 @@ import 'package:supercycle_app/features/representative_shipment_review/presentat
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_weight_info.dart';
 
 class ShipmentSegmentStep3 extends StatefulWidget {
-  final ShipmentSegmentData segment;
+  final ShipmentSegmentModel segment;
   final bool isDelivered;
   final VoidCallback onDeliveredPressed;
   const ShipmentSegmentStep3({
@@ -42,11 +42,11 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
           child: SegmentCardProgress(currentStep: currentStep),
         ),
-        SegmentTruckInfo(truckNumber: widget.segment.truckNumber),
+        SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
         SizedBox(height: 4),
         SegmentDestinationSection(
-          destinationTitle: widget.segment.destinationTitle,
-          destinationAddress: widget.segment.destinationAddress,
+          destinationTitle: widget.segment.destName!,
+          destinationAddress: widget.segment.destAddress!,
         ),
         SizedBox(height: 20),
         Container(

@@ -2,15 +2,14 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/representative_shipment_review_header.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_card.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_states_row/representative_shipment_states.dart';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 
 class RepresentativeShipmentReviewBody extends StatefulWidget {
   const RepresentativeShipmentReviewBody({super.key, required this.shipment});
@@ -99,15 +98,22 @@ class _RepresentativeShipmentReviewBodyState
                       const SizedBox(height: 16),
                       Center(
                         child: ShipmentSegmentCard(
-                          segment: ShipmentSegmentData(
+                          segment: ShipmentSegmentModel(
+                            id: "1",
+                            status: "تم التحرك",
                             driverName: 'محمد أيمن',
-                            phoneNumber: '0105325656',
-                            truckNumber: '328 ص ي م',
-                            destinationTitle: 'وجهه السيارة 1 :',
-                            destinationAddress:
+                            driverPhone: '0105325656',
+                            vehicleNumber: '328 ص ي م',
+                            destName: 'وجهه السيارة 1 :',
+                            destAddress:
                                 'مصنع أكتوبر 15 شارع الجمهورية، المبنى الثالث',
-                            productType: 'ورق ابيض',
-                            quantity: '2 طن',
+                            items: [
+                              DoshItemModel(
+                                id: '1101',
+                                name: 'ورق أبيض',
+                                quantity: 500,
+                              ),
+                            ],
                           ),
                         ),
                       ),

@@ -1,14 +1,14 @@
 class DoshItemModel {
   final String id;
   final String name;
-  final String unit;
+  final String? unit;
   final num quantity;
 
   DoshItemModel({
     required this.id,
     required this.name,
     required this.quantity,
-    required this.unit,
+    this.unit = "كجم",
   });
 
   factory DoshItemModel.fromJson(Map<String, dynamic> json) {

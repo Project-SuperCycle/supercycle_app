@@ -6,6 +6,8 @@ import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/models/accept_shipment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/models/reject_shipment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/rep_shipment_action_modal/representative_shipment_modal.dart';
 
 class RepresentativeShipmentActionsRow extends StatelessWidget {
@@ -17,22 +19,21 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
       context,
       actionType: ShipmentActionType.confirm,
       shipment: shipment,
-      onSubmit: (File? image, String notes, double rating) {
+      onSubmit: (List<File> images, String notes, double rating) {
         Logger().i('✅ Confirm Shipment');
-        Logger().w("SHIPMENT ID: ${shipment.id}");
-        Logger().w("IMAGE: $image");
-        Logger().w("NOTES: $notes");
-        Logger().w("RATING: $rating");
+        AcceptShipmentModel acceptShipmentModel = AcceptShipmentModel(
+          shipmentID: shipment.id,
+          notes: notes,
+          images: images,
+          rank: rating,
+        );
+
+        Logger().w("ACCEPT SHIPMENT MODEL: $acceptShipmentModel");
 
         // هنا أضف منطق إرسال البيانات للـ API
-        // BlocProvider.of<ShipmentBloc>(context).add(
-        //   ConfirmShipmentEvent(
-        //     shipmentId: shipment.id,
-        //     image: image!,
-        //     notes: notes,
-        //     rating: rating,
-        //   ),
-        // );
+        // BlocProvider.of<AcceptShipmentCubit>(
+        //   context,
+        // ).acceptShipment(acceptModel: acceptShipmentModel);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -56,12 +57,20 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
       context,
       actionType: ShipmentActionType.reject,
       shipment: shipment,
-      onSubmit: (File? image, String reason, double rating) {
+      onSubmit: (List<File> images, String reason, double rating) {
         Logger().i('❌ Reject Shipment');
-        Logger().w("SHIPMENT ID: ${shipment.id}");
-        Logger().w("IMAGE: $image");
-        Logger().w("REJECTION REASON: $reason");
-        Logger().w("RATING: $rating");
+
+        RejectShipmentModel rejectShipmentModel = RejectShipmentModel(
+          shipmentID: shipment.id,
+          reason: reason,
+          images: images,
+          rank: rating,
+        );
+
+        Logger().w("REJECT SHIPMENT MODEL: $rejectShipmentModel");
+        // BlocProvider.of<RejectShipmentCubit>(
+        //   context,
+        // ).rejectShipment(rejectModel: rejectShipmentModel);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

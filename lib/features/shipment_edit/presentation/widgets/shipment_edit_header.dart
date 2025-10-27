@@ -13,6 +13,7 @@ class ShipmentEditHeader extends StatefulWidget {
   final Function(List<File>) onImagesChanged;
   final Function(DateTime?) onDateTimeChanged;
   final SingleShipmentModel shipment;
+  final bool showDateIcon;
 
   const ShipmentEditHeader({
     super.key,
@@ -20,6 +21,7 @@ class ShipmentEditHeader extends StatefulWidget {
     required this.onImagesChanged,
     required this.onDateTimeChanged,
     required this.shipment,
+    this.showDateIcon = true,
   });
 
   @override
@@ -200,7 +202,9 @@ class _ShipmentEditHeaderState extends State<ShipmentEditHeader> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    widget.showDateIcon
+                        ? SizedBox(height: 5)
+                        : SizedBox(height: 15),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Row(
@@ -218,18 +222,20 @@ class _ShipmentEditHeaderState extends State<ShipmentEditHeader> {
                               context,
                             ).copyWith(color: AppColors.subTextColor),
                           ),
-                          IconButton(
-                            style: IconButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              backgroundColor: Colors.grey.shade100,
-                            ),
-                            onPressed: _selectDate,
-                            icon: const Icon(
-                              Icons.edit_calendar_sharp,
-                              color: Colors.black54,
-                              size: 25,
-                            ),
-                          ),
+                          widget.showDateIcon
+                              ? IconButton(
+                                  style: IconButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    backgroundColor: Colors.grey.shade100,
+                                  ),
+                                  onPressed: _selectDate,
+                                  icon: const Icon(
+                                    Icons.edit_calendar_sharp,
+                                    color: Colors.black54,
+                                    size: 25,
+                                  ),
+                                )
+                              : SizedBox.shrink(),
                         ],
                       ),
                     ),

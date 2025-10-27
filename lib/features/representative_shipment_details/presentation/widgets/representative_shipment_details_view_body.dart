@@ -1,7 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
@@ -190,9 +188,11 @@ class _RepresentativeShipmentDetailsViewBodyState
                           shipmentID: widget.shipment.id,
                         ),
                         const SizedBox(height: 25),
-                        RepresentativeShipmentActionsRow(
-                          shipment: widget.shipment,
-                        ),
+                        (widget.shipment.status != "approved")
+                            ? RepresentativeShipmentActionsRow(
+                                shipment: widget.shipment,
+                              )
+                            : SizedBox.shrink(),
                         const SizedBox(height: 30),
                       ],
                     ),

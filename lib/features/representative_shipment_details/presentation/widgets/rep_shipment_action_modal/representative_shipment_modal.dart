@@ -16,7 +16,7 @@ class RepresentativeShipmentModal {
   static void show(
     BuildContext context, {
     required ShipmentActionType actionType,
-    required Function(File?, String, double) onSubmit,
+    required Function(List<File>, String, double) onSubmit,
     required SingleShipmentModel shipment,
   }) {
     final isReject = actionType == ShipmentActionType.reject;
@@ -39,9 +39,9 @@ class RepresentativeShipmentModal {
               actionType: actionType,
               primaryColor: primaryColor,
               gradientColors: gradientColors,
-              onSubmit: (image, feedback, rating) {
+              onSubmit: (images, feedback, rating) {
                 Navigator.of(modalSheetContext).pop();
-                onSubmit(image, feedback, rating);
+                onSubmit(images, feedback, rating);
               },
               onClose: () => Navigator.of(modalSheetContext).pop(),
             ),
@@ -58,7 +58,7 @@ class _ModalContent extends StatefulWidget {
   final ShipmentActionType actionType;
   final Color primaryColor;
   final List<Color> gradientColors;
-  final Function(File?, String, double) onSubmit;
+  final Function(List<File>, String, double) onSubmit;
   final VoidCallback onClose;
   final SingleShipmentModel shipment;
 
@@ -79,7 +79,8 @@ class _ModalContentState extends State<_ModalContent>
     with TickerProviderStateMixin {
   final TextEditingController _feedbackController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  File? _selectedImage;
+  final List<File> _selectedImages = [];
+  static const int _maxImages = 5;
   double _rating = 0.0;
   bool _isSubmitting = false;
   late AnimationController _headerController;
@@ -89,6 +90,7 @@ class _ModalContentState extends State<_ModalContent>
   late Animation<double> _contentFadeAnimation;
 
   bool get isReject => widget.actionType == ShipmentActionType.reject;
+  bool get canAddMoreImages => _selectedImages.length < _maxImages;
 
   @override
   void initState() {
@@ -138,6 +140,11 @@ class _ModalContentState extends State<_ModalContent>
   }
 
   Future<void> _pickImage() async {
+    if (!canAddMoreImages) {
+      _showSnackBar('لقد وصلت للحد الأقصى من الصور (5 صور)');
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -178,10 +185,11 @@ class _ModalContentState extends State<_ModalContent>
                       _buildImageSourceOption(
                         icon: Icons.photo_library_rounded,
                         title: 'اختيار من المعرض',
-                        subtitle: 'اختر صورة موجودة',
+                        subtitle:
+                            'اختر صور موجودة (حد أقصى ${_maxImages - _selectedImages.length})',
                         onTap: () async {
                           Navigator.pop(context);
-                          await _getImage(ImageSource.gallery);
+                          await _getMultipleImages();
                         },
                       ),
                       const SizedBox(height: 20),
@@ -256,6 +264,11 @@ class _ModalContentState extends State<_ModalContent>
   }
 
   Future<void> _getImage(ImageSource source) async {
+    if (!canAddMoreImages) {
+      _showSnackBar('لقد وصلت للحد الأقصى من الصور (5 صور)');
+      return;
+    }
+
     try {
       final XFile? pickedFile = await _picker.pickImage(
         source: source,
@@ -263,16 +276,57 @@ class _ModalContentState extends State<_ModalContent>
         maxHeight: 1800,
         imageQuality: 85,
       );
+
       if (pickedFile != null) {
-        setState(() => _selectedImage = File(pickedFile.path));
+        setState(() {
+          _selectedImages.add(File(pickedFile.path));
+        });
+        HapticFeedback.mediumImpact();
       }
     } catch (e) {
       _showSnackBar('حدث خطأ أثناء اختيار الصورة', isError: true);
     }
   }
 
-  void _removeImage() {
-    setState(() => _selectedImage = null);
+  Future<void> _getMultipleImages() async {
+    if (!canAddMoreImages) {
+      _showSnackBar('لقد وصلت للحد الأقصى من الصور (5 صور)');
+      return;
+    }
+
+    try {
+      final List<XFile> pickedFiles = await _picker.pickMultiImage(
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
+
+      if (pickedFiles.isNotEmpty) {
+        final remainingSlots = _maxImages - _selectedImages.length;
+        final imagesToAdd = pickedFiles.take(remainingSlots).toList();
+
+        setState(() {
+          _selectedImages.addAll(imagesToAdd.map((xFile) => File(xFile.path)));
+        });
+
+        HapticFeedback.mediumImpact();
+
+        if (pickedFiles.length > remainingSlots) {
+          _showSnackBar(
+            'تم إضافة $remainingSlots صورة فقط (الحد الأقصى 5 صور)',
+          );
+        }
+      }
+    } catch (e) {
+      _showSnackBar('حدث خطأ أثناء اختيار الصور', isError: true);
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _selectedImages.removeAt(index);
+    });
+    HapticFeedback.lightImpact();
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
@@ -294,18 +348,22 @@ class _ModalContentState extends State<_ModalContent>
       _showSnackBar('يرجى تقييم الشحنة');
       return;
     }
+
     if (isReject && _rating > 2.0) {
       _showSnackBar('في حالة الرفض، يجب أن يكون التقييم 1 أو 2 فقط');
       return;
     }
+
     if (!isReject && _rating < 3.0) {
       _showSnackBar('في حالة التأكيد، يجب أن يكون التقييم من 3 إلى 5');
       return;
     }
-    if (_selectedImage == null) {
-      _showSnackBar('يرجى إضافة صورة الشحنة');
+
+    if (_selectedImages.isEmpty) {
+      _showSnackBar('يرجى إضافة صورة واحدة على الأقل للشحنة');
       return;
     }
+
     if (isReject && _feedbackController.text.trim().isEmpty) {
       _showSnackBar('يرجى إدخال سبب الرفض');
       return;
@@ -314,7 +372,7 @@ class _ModalContentState extends State<_ModalContent>
     setState(() => _isSubmitting = true);
     await Future.delayed(const Duration(milliseconds: 500));
 
-    widget.onSubmit(_selectedImage, _feedbackController.text, _rating);
+    widget.onSubmit(_selectedImages, _feedbackController.text, _rating);
 
     if (isReject) {
       var updatedShipment = widget.shipment.copyWith(status: "مرفوضة");
@@ -378,7 +436,6 @@ class _ModalContentState extends State<_ModalContent>
           ),
           child: Column(
             children: [
-              // Close button at the top
               Padding(
                 padding: const EdgeInsets.only(top: 16, right: 16),
                 child: Align(
@@ -391,7 +448,6 @@ class _ModalContentState extends State<_ModalContent>
                   ),
                 ),
               ),
-              // Centered icon and title
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 child: Column(
@@ -544,111 +600,134 @@ class _ModalContentState extends State<_ModalContent>
                 size: 20,
               ),
               const SizedBox(width: 8),
-              Text('صورة الشحنة', style: AppStyles.styleSemiBold16(context)),
+              Text('صور الشحنة', style: AppStyles.styleSemiBold16(context)),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: widget.primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${_selectedImages.length}/$_maxImages',
+                  style: AppStyles.styleSemiBold12(
+                    context,
+                  ).copyWith(color: widget.primaryColor),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
-          GestureDetector(
-            onTap: _pickImage,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: double.infinity,
-              height: 180,
+
+          // Grid of images
+          if (_selectedImages.isNotEmpty)
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1,
+              ),
+              itemCount: _selectedImages.length + (canAddMoreImages ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == _selectedImages.length) {
+                  return _buildAddImageButton();
+                }
+                return _buildImageThumbnail(index);
+              },
+            )
+          else
+            _buildAddImageButton(isLarge: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddImageButton({bool isLarge = false}) {
+    return GestureDetector(
+      onTap: _pickImage,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        width: double.infinity,
+        height: isLarge ? 180 : null,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(isLarge ? 20 : 12),
               decoration: BoxDecoration(
-                color: _selectedImage == null
-                    ? Colors.grey[50]
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: _selectedImage == null
-                      ? Colors.grey[300]!
-                      : widget.primaryColor.withOpacity(0.5),
-                  width: 2,
-                  strokeAlign: BorderSide.strokeAlignInside,
+                color: widget.primaryColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.add_photo_alternate_rounded,
+                size: isLarge ? 40 : 24,
+                color: widget.primaryColor,
+              ),
+            ),
+            if (isLarge) ...[
+              const SizedBox(height: 16),
+              Text(
+                'اضغط لإضافة صور',
+                style: AppStyles.styleSemiBold14(context),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'حد أقصى 5 صور',
+                style: AppStyles.styleRegular12(
+                  context,
+                ).copyWith(color: Colors.grey[600]),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageThumbnail(int index) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.file(_selectedImages[index], fit: BoxFit.cover),
+          Positioned(
+            top: 4,
+            left: 4,
+            child: GestureDetector(
+              onTap: () => _removeImage(index),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.close_rounded,
+                  color: Colors.white,
+                  size: 16,
                 ),
               ),
-              child: _selectedImage == null
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: widget.primaryColor.withOpacity(0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.add_photo_alternate_rounded,
-                            size: 40,
-                            color: widget.primaryColor,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'اضغط لإضافة صورة',
-                          style: AppStyles.styleSemiBold14(context),
-                        ),
-                      ],
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(14),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.file(_selectedImage!, fit: BoxFit.cover),
-                          Positioned(
-                            top: 12,
-                            left: 12,
-                            child: GestureDetector(
-                              onTap: _removeImage,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.6),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.close_rounded,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 12,
-                            right: 12,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.check_circle_rounded,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
-                                  SizedBox(width: 6),
-                                  Text(
-                                    'تم الإضافة',
-                                    style: AppStyles.styleSemiBold12(
-                                      context,
-                                    ).copyWith(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+            ),
+          ),
+          Positioned(
+            bottom: 4,
+            right: 4,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '${index + 1}',
+                style: AppStyles.styleBold12(
+                  context,
+                ).copyWith(color: Colors.white),
+              ),
             ),
           ),
         ],
@@ -666,7 +745,7 @@ class _ModalContentState extends State<_ModalContent>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                isReject ? ' سبب الرفض :' : 'ملاحظات :',
+                isReject ? 'سبب الرفض :' : 'ملاحظات :',
                 style: AppStyles.styleSemiBold16(context),
               ),
             ],

@@ -23,8 +23,8 @@ class ShipmentSegmentModel {
     required this.vehicleNumber,
     required this.driverName,
     required this.driverPhone,
-    required this.weightReport,
-    required this.inspectedItems,
+    this.weightReport,
+    this.inspectedItems,
   });
 
   factory ShipmentSegmentModel.fromJson(Map<String, dynamic> json) {
