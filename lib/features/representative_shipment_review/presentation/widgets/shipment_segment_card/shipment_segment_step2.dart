@@ -42,8 +42,10 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
         ),
         SegmentProductsDetails(quantity: 3, productType: "ورق أبيض"),
         SegmentWeightSection(
-          onImageSelected: (File? image) {},
+          onImagesSelected: (List<File>? image) {},
           onUploadTap: widget.onUploadPressed,
+          shipmentID: widget.segment.id!,
+          segmentID: widget.segment.id!,
         ),
       ],
     );

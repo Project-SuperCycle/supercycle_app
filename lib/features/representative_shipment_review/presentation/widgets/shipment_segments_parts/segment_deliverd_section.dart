@@ -4,9 +4,14 @@ import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class SegmentDeliverdSection extends StatelessWidget {
+class SegmentDeliverdSection extends StatefulWidget {
   const SegmentDeliverdSection({super.key});
 
+  @override
+  State<SegmentDeliverdSection> createState() => _SegmentDeliverdSectionState();
+}
+
+class _SegmentDeliverdSectionState extends State<SegmentDeliverdSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
