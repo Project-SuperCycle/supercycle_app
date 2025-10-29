@@ -1,8 +1,10 @@
+import 'dart:io';
+
 class DeliverSegmentModel {
   final String shipmentID;
   final String segmentID;
   final String receivedByName;
-  final List<String> images;
+  final List<File> images;
 
   DeliverSegmentModel({
     required this.shipmentID,
@@ -16,7 +18,7 @@ class DeliverSegmentModel {
       shipmentID: json['shipmentID'] as String,
       segmentID: json['segmentID'] as String,
       receivedByName: json['receivedByName'] as String,
-      images: List<String>.from(json['images'] as List),
+      images: List<File>.from(json['images'] as List),
     );
   }
 
@@ -41,7 +43,7 @@ class DeliverSegmentModel {
     String? shipmentID,
     String? segmentID,
     String? receivedByName,
-    List<String>? images,
+    List<File>? images,
   }) {
     return DeliverSegmentModel(
       shipmentID: shipmentID ?? this.shipmentID,

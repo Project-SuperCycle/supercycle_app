@@ -17,6 +17,7 @@ import 'package:supercycle_app/features/representative_shipment_details/presenta
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_header.dart';
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_notes.dart';
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_notes_content.dart';
+import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_review_button.dart';
 
 class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
   const RepresentativeShipmentDetailsViewBody({
@@ -188,8 +189,12 @@ class _RepresentativeShipmentDetailsViewBodyState
                           shipmentID: widget.shipment.id,
                         ),
                         const SizedBox(height: 25),
-                        (widget.shipment.status != "approved")
+                        (widget.shipment.status == "approved")
                             ? RepresentativeShipmentActionsRow(
+                                shipment: widget.shipment,
+                              )
+                            : (widget.shipment.status == "routed")
+                            ? RepresentativeShipmentReviewButton(
                                 shipment: widget.shipment,
                               )
                             : SizedBox.shrink(),

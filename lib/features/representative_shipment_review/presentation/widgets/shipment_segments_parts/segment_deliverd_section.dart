@@ -1,10 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/deliver_segment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/segment_deliver_modal/segment_deliver_modal.dart';
 
 class SegmentDeliverdSection extends StatefulWidget {
+  // Maximum number of images allowed
   const SegmentDeliverdSection({super.key});
 
   @override

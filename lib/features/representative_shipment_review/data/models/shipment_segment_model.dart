@@ -29,43 +29,36 @@ class ShipmentSegmentModel {
 
   factory ShipmentSegmentModel.fromJson(Map<String, dynamic> json) {
     return ShipmentSegmentModel(
-      id: json['_id'] as String,
-      status: json['status'] as String,
-      items: (json['items'] == null)
-          ? null
-          : json['items']
-                .map(
-                  (item) =>
-                      DoshItemModel.fromJson(item as Map<String, dynamic>),
-                )
-                .toList(),
+      id: json['_id'],
+      status: json['status'],
+      items: List<DoshItemModel>.from(
+        json['items'].map((x) => DoshItemModel.fromJson(x)),
+      ),
       destName: json['destinationId'] == null
           ? null
-          : json['destinationId']['name'] as String,
+          : json['destinationId']['name'],
       destAddress: json['destinationId'] == null
           ? null
-          : json['destinationId']['address'] as String,
+          : json['destinationId']['address'],
       vehicleNumber: json['vehicleId'] == null
           ? null
-          : json['vehicleId']['licensePlate'] as String,
+          : json['vehicleId']['licensePlate'],
       driverName: json['vehicleId'] == null
           ? null
-          : json['vehicleId']['driverName'] as String,
+          : json['vehicleId']['driverName'],
       driverPhone: json['vehicleId'] == null
           ? null
-          : json['vehicleId']['driverPhone'] as String,
-      weightReport: WeightReportModel.fromJson(
-        json['weightReport'] as Map<String, dynamic>,
-      ),
-      inspectedItems: (json['inspectedItems'] == null)
+          : json['vehicleId']['driverPhone'],
+      weightReport: json['weightReport'] == null
           ? null
-          : (json['inspectedItems'] as List)
-                .map(
-                  (item) => InspectedDoshItemModel.fromJson(
-                    item as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+          : WeightReportModel.fromJson(json['weightReport']),
+      inspectedItems: json['inspectedItems'] == null
+          ? []
+          : List<InspectedDoshItemModel>.from(
+              json['inspectedItems'].map(
+                (x) => InspectedDoshItemModel.fromJson(x),
+              ),
+            ),
     );
   }
 

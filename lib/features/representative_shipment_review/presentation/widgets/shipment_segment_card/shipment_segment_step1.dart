@@ -35,8 +35,8 @@ class _ShipmentSegmentStep1State extends State<ShipmentSegmentStep1> {
         SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
         SizedBox(height: 4),
         SegmentDestinationSection(
-          destinationTitle: widget.segment.destName!,
-          destinationAddress: widget.segment.destAddress!,
+          destinationTitle: widget.segment.destName ?? "",
+          destinationAddress: widget.segment.destAddress ?? "",
         ),
         SegmentProductsDetails(quantity: 3, productType: "ورق أبيض"),
         Padding(

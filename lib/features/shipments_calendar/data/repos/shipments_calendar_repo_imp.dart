@@ -125,6 +125,7 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
       );
     } on TypeError catch (typeError) {
       // أخطاء النوع (مثل null safety)
+      Logger().e("ERROR REPO ${typeError.stackTrace}");
       return left(
         ServerFailure(
           'Data parsing error: ${typeError.toString()}',

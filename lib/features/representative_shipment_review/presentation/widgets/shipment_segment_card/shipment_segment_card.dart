@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
@@ -82,6 +84,9 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         segment: widget.segment,
         isDelivered: isDelivered,
         onDeliveredPressed: onDeliveredPressed,
+        onImagesSelected: (List<File>? image) {},
+        shipmentID: widget.segment.id!,
+        segmentID: widget.segment.id!,
       );
     }
 

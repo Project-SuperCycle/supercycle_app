@@ -60,7 +60,7 @@ class _RepresentativeShipmentEditBodyState
   }
 
   void _getShipmentAddress() async {
-    addressController.text = widget.shipment.customPickupAddress;
+    addressController.text = widget.shipment.customPickupAddress ?? '';
   }
 
   // Callback functions for shipment data

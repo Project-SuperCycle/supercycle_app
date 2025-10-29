@@ -84,38 +84,30 @@ class _RepresentativeShipmentReviewBodyState
                   ),
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RepresentativeShipmentReviewHeader(
-                        shipment: widget.shipment,
-                      ),
-                      const SizedBox(height: 6),
-                      RepresentativeShipmentStates(),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: ShipmentSegmentCard(
-                          segment: ShipmentSegmentModel(
-                            id: "1",
-                            status: "تم التحرك",
-                            driverName: 'محمد أيمن',
-                            driverPhone: '0105325656',
-                            vehicleNumber: '328 ص ي م',
-                            destName: 'وجهه السيارة 1 :',
-                            destAddress:
-                                'مصنع أكتوبر 15 شارع الجمهورية، المبنى الثالث',
-                            items: [
-                              DoshItemModel(
-                                id: '1101',
-                                name: 'ورق أبيض',
-                                quantity: 500,
-                              ),
-                            ],
-                          ),
+                  child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RepresentativeShipmentReviewHeader(
+                              shipment: widget.shipment,
+                            ),
+                            const SizedBox(height: 6),
+                            RepresentativeShipmentStates(),
+                            const SizedBox(height: 16),
+                          ],
                         ),
+                      ),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return ShipmentSegmentCard(
+                            segment: widget.shipment.segments[index],
+                          );
+                        }, childCount: widget.shipment.segments.length),
                       ),
                     ],
                   ),
