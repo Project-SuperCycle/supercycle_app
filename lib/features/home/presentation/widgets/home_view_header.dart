@@ -46,8 +46,8 @@ class HomeViewHeader extends StatelessWidget {
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              UserProfileWelcomeCard(),
               HomeHeaderNavActions(onDrawerPressed: onDrawerPressed),
+              UserProfileWelcomeCard(),
             ],
           ),
           const SizedBox(height: 20),

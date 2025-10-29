@@ -33,9 +33,36 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.end,
       textDirection: TextDirection.ltr,
       children: [
+        Column(
+          textDirection: TextDirection.ltr,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              S.of(context).welcome,
+              style: AppStyles.styleMedium14(context).copyWith(
+                color: const Color(0xFFD1FAE5),
+              ),
+            ),
+            const SizedBox(height: 4),
+            GestureDetector(
+              onTap: () {
+                GoRouter.of(context).push(EndPoints.traderProfileView);
+              },
+              child: Text(
+                managerName,
+                textDirection: TextDirection.ltr,
+                style: AppStyles.styleBold18(context).copyWith(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(width: 12),
         Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -65,33 +92,6 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Column(
-          textDirection: TextDirection.ltr,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              S.of(context).welcome,
-              style: AppStyles.styleMedium14(context).copyWith(
-                color: const Color(0xFFD1FAE5),
-              ),
-            ),
-            const SizedBox(height: 4),
-            GestureDetector(
-              onTap: () {
-                GoRouter.of(context).push(EndPoints.traderProfileView);
-              },
-              child: Text(
-                managerName,
-                textDirection: TextDirection.ltr,
-                style: AppStyles.styleBold18(context).copyWith(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
         ),
       ],
     );

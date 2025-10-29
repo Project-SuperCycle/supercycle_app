@@ -16,7 +16,6 @@ class HomeViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todayShipments = _getTodayShipments();
-
     return Container(
       color: Colors.grey[50],
       child: SingleChildScrollView(

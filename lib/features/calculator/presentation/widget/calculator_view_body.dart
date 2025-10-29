@@ -7,6 +7,8 @@ import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
+import 'package:supercycle_app/core/widgets/shipment/back_and_drawer_bar.dart';
 
 class CalculatorViewBody extends StatefulWidget {
   const CalculatorViewBody({super.key});
@@ -46,11 +48,12 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: const CustomDrawer(),
       body: Container(
         decoration: const BoxDecoration(gradient: kGradientBackground),
         child: SafeArea(
           child: Directionality(
-            textDirection: TextDirection.rtl, // ✅ لضبط الاتجاه العربي
+            textDirection: TextDirection.rtl,
             child: Column(
               children: [
                 // ======= Header & Back Button =======
@@ -78,25 +81,7 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        child: CustomBackButton(
-                          color: Colors.white,
-                          size: 24,
-                          onPressed: () {
-                            GoRouter.of(context).pop();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                BackAndDrawerBar(),
 
                 Expanded(
                   child: Center(

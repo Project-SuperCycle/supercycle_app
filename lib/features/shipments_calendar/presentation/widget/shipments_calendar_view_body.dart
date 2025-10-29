@@ -6,8 +6,9 @@ import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
+import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
-import 'package:supercycle_app/core/widgets/shipment/back_and_info_bar.dart';
+import 'package:supercycle_app/core/widgets/shipment/back_and_drawer_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
@@ -53,6 +54,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: const CustomDrawer(),
       key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -65,7 +67,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                 children: [
                   const ShipmentLogo(),
                   const SizedBox(height: 20),
-                  BackAndInfoBar(),
+                  BackAndDrawerBar(),
                 ],
               ),
               // Scrollable main content
