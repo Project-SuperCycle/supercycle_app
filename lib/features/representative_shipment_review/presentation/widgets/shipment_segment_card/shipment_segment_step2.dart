@@ -40,7 +40,13 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
           destinationTitle: widget.segment.destName!,
           destinationAddress: widget.segment.destAddress!,
         ),
-        SegmentProductsDetails(quantity: 3, productType: "ورق أبيض"),
+        if (widget.segment.items.isNotEmpty)
+          ...widget.segment.items.map((item) {
+            return SegmentProductsDetails(
+              quantity: item.quantity ?? 0,
+              productType: item.name ?? "",
+            );
+          }),
         SegmentWeightSection(
           onImagesSelected: (List<File>? image) {},
           onUploadTap: widget.onUploadPressed,

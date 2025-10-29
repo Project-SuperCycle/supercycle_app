@@ -336,7 +336,7 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
             onTap: _toggleWeightData,
             content: SegmentWeightInfo(
               imagePath: AppAssets.miniature,
-              weight: '25.5',
+              segment: widget.segment,
             ),
           ),
         ),

@@ -32,7 +32,7 @@ Future<void> showCustomConfirmationDialog({
                       color: AppColors.primaryColor,
                     ),
                     SizedBox(width: 10),
-                    Text(title, style: AppStyles.styleMedium16(context)),
+                    Text(title, style: AppStyles.styleSemiBold16(context)),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -40,7 +40,7 @@ Future<void> showCustomConfirmationDialog({
                   alignment: Alignment.centerLeft,
                   child: Text(
                     message,
-                    style: AppStyles.styleRegular16(context),
+                    style: AppStyles.styleRegular14(context),
                   ),
                 ),
                 const SizedBox(height: 25),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/helpers/custom_confirm_dialog.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
@@ -22,10 +23,16 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   bool isDelivered = false;
 
   void onMovedPressed() {
-    setState(() {
-      isMoved = true;
-    });
-    Logger().i("isMoved: $isMoved");
+    showCustomConfirmationDialog(
+      context: context,
+      title: 'هل أنت متأكد؟',
+      message: 'من تحريك العربية',
+      onConfirmed: () {
+        setState(() {
+          isMoved = true;
+        });
+      },
+    );
   }
 
   void onWeightedPressed() {

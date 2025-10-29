@@ -97,7 +97,9 @@ class _RepresentativeShipmentReviewBodyState
                               shipment: widget.shipment,
                             ),
                             const SizedBox(height: 6),
-                            RepresentativeShipmentStates(),
+                            RepresentativeShipmentStates(
+                              shipment: widget.shipment,
+                            ),
                             const SizedBox(height: 16),
                           ],
                         ),

@@ -4,7 +4,7 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class ShipmentStateInfoRow extends StatelessWidget {
   final String title;
-  final String value;
+  final num value;
   final Color valColor;
 
   const ShipmentStateInfoRow({
@@ -33,7 +33,7 @@ class ShipmentStateInfoRow extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              value,
+              value.toString(),
               style: AppStyles.styleBold14(context).copyWith(color: valColor),
             ),
           ),
