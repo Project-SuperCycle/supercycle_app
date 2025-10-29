@@ -8,7 +8,6 @@ import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
-import 'package:supercycle_app/core/widgets/shipment/back_and_drawer_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
@@ -79,7 +78,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: const CustomDrawer(),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -93,8 +91,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                 child: Column(
                   children: [
                     const ShipmentLogo(),
-                    const SizedBox(height: 15),
-                    BackAndDrawerBar(),
                     const SizedBox(height: 20),
                   ],
                 ),

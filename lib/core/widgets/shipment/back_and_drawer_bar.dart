@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 
 class BackAndDrawerBar extends StatelessWidget {
@@ -21,7 +22,11 @@ class BackAndDrawerBar extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          CustomBackButton(size: 25, color: Colors.white),
+          CustomBackButton(
+            size: 25,
+            color: Colors.white,
+            onPressed: () => GoRouter.of(context).pop(),
+          ),
         ],
       ),
     );

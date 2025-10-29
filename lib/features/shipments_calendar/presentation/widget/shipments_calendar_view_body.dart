@@ -8,7 +8,6 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
-import 'package:supercycle_app/core/widgets/shipment/back_and_drawer_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
@@ -27,8 +26,6 @@ class ShipmentsCalendarViewBody extends StatefulWidget {
 }
 
 class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
-  int _page = 3;
-  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   DateTime _currentDate = DateTime.now();
@@ -42,11 +39,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
     BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
   }
 
-  void _onNavigationTap(int index) {
-    setState(() {
-      _page = index;
-    });
-  }
+
 
   static const String _imageUrl =
       "https://moe-ye.net/wp-content/uploads/2021/08/IMG-20210808-WA0001.jpg";
@@ -62,15 +55,12 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
         child: SafeArea(
           child: Column(
             children: [
-              // Fixed header section
               Column(
                 children: [
                   const ShipmentLogo(),
                   const SizedBox(height: 20),
-                  BackAndDrawerBar(),
                 ],
               ),
-              // Scrollable main content
               Expanded(
                 child:
                     BlocConsumer<
@@ -117,11 +107,6 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomCurvedNavigationBar(
-        currentIndex: _page,
-        navigationKey: _bottomNavigationKey,
-        onTap: _onNavigationTap,
-      ),
     );
   }
 
@@ -155,7 +140,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding: const EdgeInsets.symmetric(vertical: 5),
-                height: 280,
+                height: 320,
                 child: ShipmentsCalendarGrid(
                   shipments: shipments,
                   currentDate: _currentDate,
