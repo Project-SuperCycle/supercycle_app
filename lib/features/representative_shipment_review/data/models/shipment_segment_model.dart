@@ -39,7 +39,8 @@ class ShipmentSegmentModel {
           : json['destinationId']['name'],
       destAddress: json['destinationId'] == null
           ? null
-          : json['destinationId']['address'],
+          : json['destinationId']['address'] ??
+                json['destinationId']['location'],
       vehicleNumber: json['vehicleId'] == null
           ? null
           : json['vehicleId']['licensePlate'],

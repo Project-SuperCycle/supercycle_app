@@ -10,6 +10,7 @@ class ShipmentSegmentStep1 extends StatefulWidget {
   final ShipmentSegmentModel segment;
   final bool isMoved;
   final VoidCallback onMovedPressed;
+
   const ShipmentSegmentStep1({
     super.key,
     required this.segment,
@@ -33,12 +34,19 @@ class _ShipmentSegmentStep1State extends State<ShipmentSegmentStep1> {
           child: SegmentCardProgress(currentStep: currentStep),
         ),
         SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         SegmentDestinationSection(
           destinationTitle: widget.segment.destName ?? "",
           destinationAddress: widget.segment.destAddress ?? "",
         ),
-        SegmentProductsDetails(quantity: 3, productType: "ورق أبيض"),
+        // Dynamically display products
+        if (widget.segment.items.isNotEmpty)
+          ...widget.segment.items.map((item) {
+            return SegmentProductsDetails(
+              quantity: item.quantity ?? 0,
+              productType: item.name ?? "",
+            );
+          }),
         Padding(
           padding: const EdgeInsets.only(right: 25.0),
           child: Row(
