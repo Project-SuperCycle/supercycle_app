@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'dart:io';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_state.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/fail_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/segment_fail_modal/segment_fail_modal.dart';
 
 class SegmentWeightSection extends StatefulWidget {
-  final VoidCallback? onUploadTap;
+  final VoidCallback? onWeightedPressed;
   final Function(List<File>?)? onImagesSelected;
   final int maxImages; // Maximum number of images allowed
   final String shipmentID;
   final String segmentID;
+  final TextEditingController weightController;
 
   const SegmentWeightSection({
     super.key,
-    this.onUploadTap,
+    this.onWeightedPressed,
     this.onImagesSelected,
     this.maxImages = 5,
     required this.shipmentID,
     required this.segmentID,
+    required this.weightController,
   });
 
   @override
@@ -28,7 +34,6 @@ class SegmentWeightSection extends StatefulWidget {
 }
 
 class _SegmentWeightSectionState extends State<SegmentWeightSection> {
-  final TextEditingController _weightController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   final List<File> _selectedImages = [];
   bool _isButtonEnabled = false;
@@ -36,19 +41,20 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
   @override
   void initState() {
     super.initState();
-    _weightController.addListener(_updateButtonState);
+    widget.weightController.addListener(_updateButtonState);
   }
 
   @override
   void dispose() {
-    _weightController.removeListener(_updateButtonState);
-    _weightController.dispose();
+    widget.weightController.removeListener(_updateButtonState);
+    widget.weightController.dispose();
     super.dispose();
   }
 
   void _updateButtonState() {
     final newState =
-        _selectedImages.isNotEmpty && _weightController.text.trim().isNotEmpty;
+        _selectedImages.isNotEmpty &&
+        widget.weightController.text.trim().isNotEmpty;
     if (_isButtonEnabled != newState) {
       setState(() {
         _isButtonEnabled = newState;
@@ -296,7 +302,7 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
     _updateButtonState();
   }
 
-  String get weightValue => _weightController.text;
+  String get weightValue => widget.weightController.text;
   List<File> get selectedImages => _selectedImages;
 
   @override
@@ -529,7 +535,7 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
                   const SizedBox(width: 20),
                   Expanded(
                     child: TextField(
-                      controller: _weightController,
+                      controller: widget.weightController,
                       textAlign: TextAlign.right,
                       keyboardType: TextInputType.number,
                       style: AppStyles.styleMedium14(context),
@@ -562,69 +568,99 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
               const SizedBox(height: 24),
 
               // Upload button
-              Row(
-                textDirection: TextDirection.rtl,
-                children: [
-                  Expanded(
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      child: ElevatedButton(
-                        onPressed: _isButtonEnabled
-                            ? () {
-                                widget.onUploadTap?.call();
-                              }
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _isButtonEnabled
-                              ? AppColors.primaryColor
-                              : const Color(0xFFBDBDBD),
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          disabledBackgroundColor: const Color(0xFFBDBDBD),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+              BlocConsumer<WeighSegmentCubit, WeighSegmentState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                  if (state is WeighSegmentSuccess) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                  }
+                  if (state is WeighSegmentFailure) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+                  }
+                },
+                builder: (context, state) {
+                  if (state is WeighSegmentLoading) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CustomLoadingIndicator(),
                         ),
-                        child: Text(
-                          'رفع الوزنة',
-                          style: AppStyles.styleBold14(context).copyWith(
-                            color: _isButtonEnabled
-                                ? Colors.white
-                                : AppColors.mainTextColor,
+                      ],
+                    );
+                  }
+                  return Row(
+                    textDirection: TextDirection.rtl,
+                    children: [
+                      Expanded(
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: ElevatedButton(
+                            onPressed: _isButtonEnabled
+                                ? () {
+                                    widget.onWeightedPressed?.call();
+                                  }
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isButtonEnabled
+                                  ? AppColors.primaryColor
+                                  : const Color(0xFFBDBDBD),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              disabledBackgroundColor: const Color(0xFFBDBDBD),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'رفع الوزنة',
+                              style: AppStyles.styleBold14(context).copyWith(
+                                color: _isButtonEnabled
+                                    ? Colors.white
+                                    : AppColors.mainTextColor,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _showFailModal(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.failureColor,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          disabledBackgroundColor: const Color(0xFFBDBDBD),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _showFailModal(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.failureColor,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              disabledBackgroundColor: const Color(0xFFBDBDBD),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'عطلة',
+                              style: AppStyles.styleBold14(
+                                context,
+                              ).copyWith(color: Colors.white),
+                            ),
                           ),
                         ),
-                        child: Text(
-                          'عطلة',
-                          style: AppStyles.styleBold14(
-                            context,
-                          ).copyWith(color: Colors.white),
-                        ),
                       ),
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ],
           ),

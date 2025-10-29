@@ -107,6 +107,7 @@ class _RepresentativeShipmentReviewBodyState
                       SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
                           return ShipmentSegmentCard(
+                            shipmentID: widget.shipment.id,
                             segment: widget.shipment.segments[index],
                           );
                         }, childCount: widget.shipment.segments.length),

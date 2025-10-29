@@ -1,17 +1,26 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/helpers/custom_confirm_dialog.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/start_segment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
 
 class ShipmentSegmentCard extends StatefulWidget {
+  final String shipmentID;
   final ShipmentSegmentModel segment;
-  const ShipmentSegmentCard({super.key, required this.segment});
+  const ShipmentSegmentCard({
+    super.key,
+    required this.segment,
+    required this.shipmentID,
+  });
 
   @override
   State<ShipmentSegmentCard> createState() => _ShipmentSegmentCardState();
@@ -22,12 +31,29 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   bool isWeighted = false;
   bool isDelivered = false;
 
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isMoved = widget.segment.status == "in_transit_to_scale";
+      isWeighted = widget.segment.status == "in_transit_to_destination";
+      isDelivered = widget.segment.status == "delivered";
+    });
+  }
+
   void onMovedPressed() {
+    StartSegmentModel startModel = StartSegmentModel(
+      shipmentID: widget.shipmentID,
+      segmentID: widget.segment.id,
+    );
     showCustomConfirmationDialog(
       context: context,
       title: 'هل أنت متأكد؟',
       message: 'من تحريك العربية',
       onConfirmed: () {
+        BlocProvider.of<StartSegmentCubit>(
+          context,
+        ).startSegment(startModel: startModel);
         setState(() {
           isMoved = true;
         });
@@ -39,7 +65,6 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
     setState(() {
       isWeighted = true;
     });
-    Logger().i("isWeighted: $isWeighted");
   }
 
   void onDeliveredPressed() {
@@ -92,22 +117,24 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         isDelivered: isDelivered,
         onDeliveredPressed: onDeliveredPressed,
         onImagesSelected: (List<File>? image) {},
-        shipmentID: widget.segment.id!,
-        segmentID: widget.segment.id!,
+        shipmentID: widget.shipmentID,
+        segmentID: widget.segment.id,
       );
     }
 
     // Step 2: Show if moved to warehouse (isMoved = true)
     if (isMoved) {
       return ShipmentSegmentStep2(
+        shipmentID: widget.shipmentID,
         segment: widget.segment,
         isWeighted: isWeighted,
-        onUploadPressed: onWeightedPressed,
+        onWeightedPressed: onWeightedPressed,
       );
     }
 
     // Step 1: Default initial step
     return ShipmentSegmentStep1(
+      shipmentID: widget.shipmentID,
       segment: widget.segment,
       isMoved: isMoved,
       onMovedPressed: onMovedPressed,

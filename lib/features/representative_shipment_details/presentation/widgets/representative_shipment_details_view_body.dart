@@ -193,7 +193,10 @@ class _RepresentativeShipmentDetailsViewBodyState
                             ? RepresentativeShipmentActionsRow(
                                 shipment: widget.shipment,
                               )
-                            : (widget.shipment.status == "routed")
+                            : (widget.shipment.status == "routed" ||
+                                  widget.shipment.status ==
+                                      "delivery_in_transit" ||
+                                  widget.shipment.status == "delivered")
                             ? RepresentativeShipmentReviewButton(
                                 shipment: widget.shipment,
                               )

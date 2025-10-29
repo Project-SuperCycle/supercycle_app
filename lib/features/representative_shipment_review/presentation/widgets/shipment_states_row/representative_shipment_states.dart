@@ -26,7 +26,11 @@ class _RepresentativeShipmentStatesState
     setState(() {
       totalSegments = widget.shipment.segments.length;
       movedSegments = widget.shipment.segments
-          .where((segment) => segment.status == 'in_transit_to_scale')
+          .where(
+            (segment) =>
+                segment.status == 'in_transit_to_scale' ||
+                segment.status == 'in_transit_to_destination',
+          )
           .length;
       deliveredSegments = widget.shipment.segments
           .where((segment) => segment.status == 'delivered')

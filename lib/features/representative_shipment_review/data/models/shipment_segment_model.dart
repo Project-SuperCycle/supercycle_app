@@ -3,7 +3,7 @@ import 'package:supercycle_app/features/representative_shipment_review/data/mode
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 
 class ShipmentSegmentModel {
-  final String? id;
+  final String id;
   final String? status;
   final List<DoshItemModel> items;
   final String? destName;

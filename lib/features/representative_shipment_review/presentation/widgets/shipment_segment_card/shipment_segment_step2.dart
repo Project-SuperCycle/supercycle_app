@@ -1,6 +1,10 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_destination_section.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
@@ -8,15 +12,17 @@ import 'package:supercycle_app/features/representative_shipment_review/presentat
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_weight_section.dart';
 
 class ShipmentSegmentStep2 extends StatefulWidget {
+  final String shipmentID;
   final ShipmentSegmentModel segment;
   final bool isWeighted;
-  final VoidCallback onUploadPressed;
+  final VoidCallback onWeightedPressed;
 
   const ShipmentSegmentStep2({
     super.key,
+    required this.shipmentID,
     required this.segment,
     required this.isWeighted,
-    required this.onUploadPressed,
+    required this.onWeightedPressed,
   });
 
   @override
@@ -25,6 +31,22 @@ class ShipmentSegmentStep2 extends StatefulWidget {
 
 class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
   int currentStep = 1;
+  List<File> images = [];
+  TextEditingController weightController = TextEditingController();
+
+  void onWeightedPressed() {
+    widget.onWeightedPressed;
+    WeighSegmentModel weighModel = WeighSegmentModel(
+      shipmentID: widget.shipmentID,
+      segmentID: widget.segment.id,
+      images: images,
+      actualWeightKg: double.tryParse(weightController.text) ?? 0.0,
+    );
+
+    BlocProvider.of<WeighSegmentCubit>(
+      context,
+    ).weighSegment(weighModel: weighModel);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +65,20 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
         if (widget.segment.items.isNotEmpty)
           ...widget.segment.items.map((item) {
             return SegmentProductsDetails(
-              quantity: item.quantity ?? 0,
-              productType: item.name ?? "",
+              quantity: item.quantity,
+              productType: item.name,
             );
           }),
         SegmentWeightSection(
-          onImagesSelected: (List<File>? image) {},
-          onUploadTap: widget.onUploadPressed,
-          shipmentID: widget.segment.id!,
-          segmentID: widget.segment.id!,
+          weightController: weightController,
+          onImagesSelected: (List<File>? weightImages) {
+            setState(() {
+              images = weightImages ?? [];
+            });
+          },
+          onWeightedPressed: onWeightedPressed,
+          shipmentID: widget.shipmentID,
+          segmentID: widget.segment.id,
         ),
       ],
     );

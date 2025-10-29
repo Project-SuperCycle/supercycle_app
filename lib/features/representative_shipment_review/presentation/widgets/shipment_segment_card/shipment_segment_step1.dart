@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_state.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_action_button.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
@@ -7,12 +11,14 @@ import 'package:supercycle_app/features/representative_shipment_review/presentat
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_truck_info.dart';
 
 class ShipmentSegmentStep1 extends StatefulWidget {
+  final String shipmentID;
   final ShipmentSegmentModel segment;
   final bool isMoved;
   final VoidCallback onMovedPressed;
 
   const ShipmentSegmentStep1({
     super.key,
+    required this.shipmentID,
     required this.segment,
     required this.isMoved,
     required this.onMovedPressed,
@@ -43,8 +49,8 @@ class _ShipmentSegmentStep1State extends State<ShipmentSegmentStep1> {
         if (widget.segment.items.isNotEmpty)
           ...widget.segment.items.map((item) {
             return SegmentProductsDetails(
-              quantity: item.quantity ?? 0,
-              productType: item.name ?? "",
+              quantity: item.quantity,
+              productType: item.name,
             );
           }),
         Padding(
@@ -52,9 +58,32 @@ class _ShipmentSegmentStep1State extends State<ShipmentSegmentStep1> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SegmentActionButton(
-                title: "تم التحرك",
-                onPressed: widget.onMovedPressed,
+              BlocConsumer<StartSegmentCubit, StartSegmentState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                  if (state is StartSegmentSuccess) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                  }
+                  if (state is StartSegmentFailure) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+                  }
+                },
+                builder: (context, state) {
+                  return (state is StartSegmentLoading)
+                      ? SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Center(child: CustomLoadingIndicator()),
+                        )
+                      : SegmentActionButton(
+                          title: "تم التحرك",
+                          onPressed: widget.onMovedPressed,
+                        );
+                },
               ),
             ],
           ),
