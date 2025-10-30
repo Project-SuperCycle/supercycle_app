@@ -113,7 +113,6 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
     // TODO: implement updateShipment
     try {
       FormData formData = await _updateFormData(updateModel: updateModel);
-
       final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.updateRepShipment.replaceFirst(
           '{id}',

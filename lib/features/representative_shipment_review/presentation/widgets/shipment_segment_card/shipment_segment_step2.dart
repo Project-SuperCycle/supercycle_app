@@ -2,10 +2,13 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_deliverd_section.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_destination_section.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_truck_info.dart';
@@ -75,17 +78,23 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
               productType: item.name,
             );
           }),
-        SegmentWeightSection(
-          weightController: weightController,
-          onImagesSelected: (List<File>? weightImages) {
-            setState(() {
-              images = weightImages ?? [];
-            });
-          },
-          onWeightedPressed: onWeightedPressed,
-          shipmentID: widget.shipmentID,
-          segmentID: widget.segment.id,
-        ),
+        widget.segment.status == "failed"
+            ? SegmentStateInfo(
+                title: "حدث مشكلة",
+                icon: FontAwesomeIcons.xmark,
+                mainColor: AppColors.failureColor,
+              )
+            : SegmentWeightSection(
+                weightController: weightController,
+                onImagesSelected: (List<File>? weightImages) {
+                  setState(() {
+                    images = weightImages ?? [];
+                  });
+                },
+                onWeightedPressed: onWeightedPressed,
+                shipmentID: widget.shipmentID,
+                segmentID: widget.segment.id,
+              ),
       ],
     );
   }
