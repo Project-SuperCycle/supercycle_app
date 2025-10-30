@@ -48,6 +48,10 @@ class UpdateShipmentModel {
     return 'UpdateShipmentModel(shipmentID: $shipmentID, updatedItems: $updatedItems, notes: $notes, images: ${images.length} files, rank: $rank)';
   }
 
+  Map<String, dynamic> toMap() {
+    return {'notes': notes, 'rank': rank, 'updatedItems': updatedItems};
+  }
+
   // Optional: copyWith method for creating modified copies
   UpdateShipmentModel copyWith({
     String? shipmentID,

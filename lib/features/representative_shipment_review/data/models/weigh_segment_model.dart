@@ -1,8 +1,10 @@
+import 'dart:io';
+
 class WeighSegmentModel {
   final String shipmentID;
   final String segmentID;
   final num actualWeightKg;
-  final List<String> images;
+  final List<File> images;
 
   WeighSegmentModel({
     required this.shipmentID,
@@ -16,7 +18,7 @@ class WeighSegmentModel {
       shipmentID: json['shipmentID'] as String,
       segmentID: json['segmentID'] as String,
       actualWeightKg: json['actualWeightKg'] as num,
-      images: List<String>.from(json['images'] as List),
+      images: List<File>.from(json['images'] as List),
     );
   }
 
@@ -36,12 +38,16 @@ class WeighSegmentModel {
     return 'WeighSegmentModel(shipmentID: $shipmentID, segmentID: $segmentID, actualWeightKg: $actualWeightKg, images: $images)';
   }
 
+  Map<String, dynamic> toMap() {
+    return {'actualWeightKg': actualWeightKg};
+  }
+
   // Optional: copyWith method for creating modified copies
   WeighSegmentModel copyWith({
     String? shipmentID,
     String? segmentID,
     num? actualWeightKg,
-    List<String>? images,
+    List<File>? images,
   }) {
     return WeighSegmentModel(
       shipmentID: shipmentID ?? this.shipmentID,

@@ -6,8 +6,8 @@ class WeightReportModel {
 
   factory WeightReportModel.fromJson(Map<String, dynamic> json) {
     return WeightReportModel(
-      actualWeightKg: json['actualWeightKg'] as num,
-      images: List<String>.from(json['images'] as List),
+      actualWeightKg: json['actualWeightKg'] ?? 0.0,
+      images: List<String>.from(json['images']),
     );
   }
 

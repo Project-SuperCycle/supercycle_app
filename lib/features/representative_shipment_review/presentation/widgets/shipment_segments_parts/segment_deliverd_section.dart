@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
-class SegmentDeliverdSection extends StatelessWidget {
-  const SegmentDeliverdSection({super.key});
+class SegmentStateInfo extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color mainColor;
+
+  const SegmentStateInfo({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.mainColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +40,12 @@ class SegmentDeliverdSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "تم التسليم",
+                      title,
                       style: AppStyles.styleBold12(context),
                       textDirection: TextDirection.rtl,
                     ),
                     const SizedBox(width: 6),
-                    Icon(
-                      Icons.check_circle_outline_rounded,
-                      size: 25,
-                      color: AppColors.primaryColor,
-                    ),
+                    Icon(icon, size: 25, color: mainColor),
                   ],
                 ),
               ),
@@ -50,7 +54,7 @@ class SegmentDeliverdSection extends StatelessWidget {
             SvgPicture.asset(
               AppAssets.rectangleBorder2,
               fit: BoxFit.fill,
-              color: AppColors.primaryColor,
+              colorFilter: ColorFilter.mode(mainColor, BlendMode.srcIn),
             ),
           ],
         ),

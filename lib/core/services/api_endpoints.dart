@@ -16,8 +16,8 @@ abstract class ApiEndpoints {
   static const String getAllNotes = '/shipments/{id}/notes';
 
   // Representative
-  static const String getRepresentativeShipments = '/representatives/shipments';
-  static const String getRepresentativeShipmentById = '/shipments/{id}';
+  static const String getRepShipments = '/representatives/shipments';
+  static const String getRepShipmentById = '/shipments/{id}';
   static const String updateRepShipment =
       '/representatives/shipments/{id}/modify';
   static const String acceptRepShipment =

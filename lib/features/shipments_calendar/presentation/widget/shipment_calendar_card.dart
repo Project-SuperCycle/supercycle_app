@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
@@ -36,6 +37,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
             EndPoints.representativeShipmentDetailsView,
             extra: state.shipment,
           );
+          Logger().d("SHIPMENT ${state.shipment}");
         }
         if (state is GetShipmentFailure) {
           ScaffoldMessenger.of(

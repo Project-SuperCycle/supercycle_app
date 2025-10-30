@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/errors/failures.dart';
+import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/core/services/api_endpoints.dart';
 import 'package:supercycle_app/core/services/api_services.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/deliver_segment_model.dart';
@@ -20,11 +23,12 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   }) async {
     // TODO: implement deliverSegment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _deliverFormData(deliverModel: deliverModel);
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.deliverShipmentSegment
             .replaceFirst('{shipmentId}', deliverModel.shipmentID)
             .replaceFirst('{segmentId}', deliverModel.segmentID),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -63,11 +67,13 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   }) async {
     // TODO: implement failSegment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _failFormData(failModel: failModel);
+
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.failShipmentSegment
             .replaceFirst('{shipmentId}', failModel.shipmentID)
             .replaceFirst('{segmentId}', failModel.segmentID),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -132,8 +138,9 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
           422, // Unprocessable Entity
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       // أي أخطاء أخرى غير متوقعة
+      Logger().e("START REPO $stackTrace");
       return left(
         ServerFailure(
           'Unexpected error occurred: ${e.toString()}',
@@ -149,11 +156,13 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   }) async {
     // TODO: implement weighSegment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _weighFormData(weighModel: weighModel);
+
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.weighShipmentSegment
             .replaceFirst('{shipmentId}', weighModel.shipmentID)
             .replaceFirst('{segmentId}', weighModel.segmentID),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -184,5 +193,48 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
         ),
       );
     }
+  }
+
+  Future<FormData> _weighFormData({
+    required WeighSegmentModel weighModel,
+  }) async {
+    List<File> images = weighModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...weighModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
+  }
+
+  Future<FormData> _deliverFormData({
+    required DeliverSegmentModel deliverModel,
+  }) async {
+    List<File> images = deliverModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...deliverModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
+  }
+
+  Future<FormData> _failFormData({required FailSegmentModel failModel}) async {
+    List<File> images = failModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...failModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
   }
 }

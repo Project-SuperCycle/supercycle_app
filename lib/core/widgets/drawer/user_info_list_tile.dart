@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
@@ -12,8 +13,9 @@ class UserInfoListTile extends StatefulWidget {
 }
 
 class _UserInfoListTileState extends State<UserInfoListTile> {
-  late String managerName;
-  late String businessType;
+  String userName = '';
+  String businessType = '';
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -23,14 +25,36 @@ class _UserInfoListTileState extends State<UserInfoListTile> {
 
   void getUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
+    Logger().w("user: $user");
     setState(() {
-      managerName = (user != null) ? user.doshMangerName : '';
-      businessType = (user != null) ? user.rawBusinessType : '';
+      if (user != null) {
+        if (user.role == "representative") {
+          userName = user.displayName ?? '';
+          businessType = "مندوب";
+        } else {
+          userName = user.doshMangerName ?? '';
+          businessType = user.rawBusinessType ?? '';
+        }
+      }
+      isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Card(
+        color: const Color(0xFFFAFAFA),
+        elevation: 0,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return Card(
       color: const Color(0xFFFAFAFA),
       elevation: 0,
@@ -43,7 +67,7 @@ class _UserInfoListTileState extends State<UserInfoListTile> {
           title: FittedBox(
             fit: BoxFit.scaleDown,
             alignment: AlignmentDirectional.centerStart,
-            child: Text(managerName, style: AppStyles.styleSemiBold16(context)),
+            child: Text(userName, style: AppStyles.styleSemiBold16(context)),
           ),
           subtitle: FittedBox(
             fit: BoxFit.scaleDown,
