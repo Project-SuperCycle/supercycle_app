@@ -5,15 +5,21 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 class SegmentActionButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String title;
+  final Color? backgroundColor;
 
-  const SegmentActionButton({super.key, this.onPressed, required this.title});
+  const SegmentActionButton({
+    super.key,
+    this.onPressed,
+    this.backgroundColor,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: backgroundColor ?? AppColors.primaryColor,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 2,

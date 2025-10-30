@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -7,7 +6,6 @@ import 'package:supercycle_app/core/helpers/custom_confirm_dialog.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/start_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
@@ -37,7 +35,9 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
     setState(() {
       isMoved = widget.segment.status == "in_transit_to_scale";
       isWeighted = widget.segment.status == "in_transit_to_destination";
-      isDelivered = widget.segment.status == "delivered";
+      isDelivered =
+          widget.segment.status == "delivered" ||
+          widget.segment.status == "failed";
     });
   }
 
@@ -111,7 +111,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   /// Determines which step to display based on current state
   Widget _buildCurrentStep() {
     // Step 3: Show if weight is uploaded (isWeighted = true)
-    if (isWeighted) {
+    if (isWeighted || isDelivered) {
       return ShipmentSegmentStep3(
         segment: widget.segment,
         isDelivered: isDelivered,

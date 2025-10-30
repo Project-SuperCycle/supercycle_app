@@ -46,6 +46,9 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
     BlocProvider.of<WeighSegmentCubit>(
       context,
     ).weighSegment(weighModel: weighModel);
+    setState(() {
+      currentStep = 1;
+    });
   }
 
   @override
@@ -54,7 +57,10 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-          child: SegmentCardProgress(currentStep: currentStep),
+          child: SegmentCardProgress(
+            currentStep: currentStep,
+            segmentStatus: widget.segment.status!,
+          ),
         ),
         SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
         SizedBox(height: 4),

@@ -1,14 +1,18 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/deliver_segment_cubit/deliver_segment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/deliver_segment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/fail_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/segment_deliver_modal/segment_deliver_modal.dart';
+import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/segment_fail_modal/segment_fail_modal.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_action_button.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_deliverd_section.dart';
@@ -43,7 +47,6 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
   bool isWeightDataExpanded = false;
   int currentStep = 2;
   final TextEditingController _weightController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
   final List<File> _selectedImages = [];
   bool _isButtonEnabled = false;
 
@@ -57,6 +60,9 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
   void initState() {
     super.initState();
     _weightController.addListener(_updateButtonState);
+    setState(() {
+      currentStep = widget.isDelivered == true ? 3 : 2;
+    });
   }
 
   @override
@@ -82,20 +88,22 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
       shipmentID: widget.shipmentID,
       onSubmit: (List<File> images, String name) {
         Logger().i('✅ Deliver Shipment Segment');
-        DeliverSegmentModel deliverSegmentModel = DeliverSegmentModel(
+        DeliverSegmentModel deliverModel = DeliverSegmentModel(
           shipmentID: widget.shipmentID,
           segmentID: widget.segmentID,
           receivedByName: name,
           images: images,
         );
 
-        Logger().w("DELIVER SEGMENT MODEL: $deliverSegmentModel");
+        Logger().w("DELIVER SEGMENT MODEL: $deliverModel");
 
         // هنا أضف منطق إرسال البيانات للـ API
-        // BlocProvider.of<AcceptShipmentCubit>(
-        //   context,
-        // ).acceptShipment(acceptModel: acceptShipmentModel);
-
+        BlocProvider.of<DeliverSegmentCubit>(
+          context,
+        ).deliverSegment(deliverModel: deliverModel);
+        setState(() {
+          currentStep = 3;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -113,197 +121,43 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
     );
   }
 
-  Future<void> _pickImage() async {
-    if (_selectedImages.length >= widget.maxImages) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('لا يمكن إضافة أكثر من ${widget.maxImages} صور'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      return;
-    }
+  void _showFailModal(BuildContext context) {
+    SegmentFailModal.show(
+      context,
+      shipmentID: widget.shipmentID,
+      onSubmit: (List<File> images, String reason) {
+        Logger().i('✅ Fail Shipment Segment');
+        FailSegmentModel failModel = FailSegmentModel(
+          shipmentID: widget.shipmentID,
+          segmentID: widget.segmentID,
+          reason: reason,
+          images: images,
+        );
 
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+        Logger().w("FAIL SEGMENT MODEL: $failModel");
+
+        // هنا أضف منطق إرسال البيانات للـ API
+        BlocProvider.of<FailSegmentCubit>(
+          context,
+        ).failSegment(failModel: failModel);
+        setState(() {
+          currentStep = 3;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
               children: [
-                const SizedBox(height: 12),
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      _buildImageSourceOption(
-                        icon: Icons.photo_camera_rounded,
-                        title: 'التقاط صورة',
-                        subtitle: 'استخدم الكاميرا',
-                        onTap: () async {
-                          Navigator.pop(context);
-                          await _getImage(ImageSource.camera);
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      _buildImageSourceOption(
-                        icon: Icons.photo_library_rounded,
-                        title: 'اختيار من المعرض',
-                        subtitle:
-                            'اختر صور موجودة (حد أقصى ${5 - _selectedImages.length})',
-                        onTap: () async {
-                          Navigator.pop(context);
-                          await _getMultipleImages();
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-                ),
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text('تم تأكيد الشحنة بنجاح'),
               ],
             ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
           ),
         );
       },
     );
-  }
-
-  Widget _buildImageSourceOption({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[200]!),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withAlpha(50),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: AppColors.primaryColor, size: 28),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.arrow_back_ios_rounded,
-                size: 16,
-                color: Colors.grey[400],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _getImage(ImageSource source) async {
-    try {
-      final XFile? pickedFile = await _picker.pickImage(
-        source: source,
-        maxWidth: 1800,
-        maxHeight: 1800,
-        imageQuality: 85,
-      );
-      if (pickedFile != null) {
-        setState(() {
-          _selectedImages.add(File(pickedFile.path));
-        });
-        widget.onImagesSelected?.call(_selectedImages);
-        _updateButtonState();
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ أثناء اختيار الصورة: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  Future<void> _getMultipleImages() async {
-    try {
-      final remainingSlots = widget.maxImages - _selectedImages.length;
-      final List<XFile> pickedFiles = await _picker.pickMultiImage(
-        maxWidth: 1800,
-        maxHeight: 1800,
-        imageQuality: 85,
-      );
-
-      if (pickedFiles.isNotEmpty) {
-        final imagesToAdd = pickedFiles.take(remainingSlots).toList();
-        setState(() {
-          _selectedImages.addAll(imagesToAdd.map((xFile) => File(xFile.path)));
-        });
-
-        if (pickedFiles.length > remainingSlots) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'تم إضافة $remainingSlots صور فقط. الحد الأقصى ${widget.maxImages} صور',
-              ),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        }
-
-        widget.onImagesSelected?.call(_selectedImages);
-        _updateButtonState();
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ أثناء اختيار الصور: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   String get weightValue => _weightController.text;
@@ -315,7 +169,10 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-          child: SegmentCardProgress(currentStep: currentStep),
+          child: SegmentCardProgress(
+            currentStep: currentStep,
+            segmentStatus: widget.segment.status!,
+          ),
         ),
         SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
         SizedBox(height: 4),
@@ -341,21 +198,42 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
           ),
         ),
         const SizedBox(height: 20),
-        widget.isDelivered
-            ? SegmentDeliverdSection()
+
+        widget.segment.status == "failed"
+            ? SegmentStateInfo(
+                title: "حدث مشكلة",
+                icon: FontAwesomeIcons.xmark,
+                mainColor: AppColors.failureColor,
+              )
+            : widget.isDelivered
+            ? SegmentStateInfo(
+                title: "تم التسليم",
+                icon: Icons.check_circle_outline_rounded,
+                mainColor: AppColors.primaryColor,
+              )
             : Padding(
-                padding: const EdgeInsets.only(right: 25.0),
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
+                  textDirection: TextDirection.rtl,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    SegmentActionButton(
-                      title: "تم التوصيل",
-                      onPressed: () {
-                        _showDeliverModal(context);
-                        setState(() {
-                          currentStep = 3;
-                        });
-                      },
+                    Expanded(
+                      child: SegmentActionButton(
+                        title: "تم التوصيل",
+                        onPressed: () {
+                          _showDeliverModal(context);
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: SegmentActionButton(
+                        backgroundColor: AppColors.failureColor,
+                        title: "عطلة",
+                        onPressed: () {
+                          _showFailModal(context);
+                        },
+                      ),
                     ),
                   ],
                 ),

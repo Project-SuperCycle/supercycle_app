@@ -6,6 +6,7 @@ import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'dart:io';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_state.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/models/fail_segment_model.dart';
@@ -68,19 +69,19 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
       shipmentID: widget.shipmentID,
       onSubmit: (List<File> images, String reason) {
         Logger().i('✅ Fail Shipment Segment');
-        FailSegmentModel failSegmentModel = FailSegmentModel(
+        FailSegmentModel failModel = FailSegmentModel(
           shipmentID: widget.shipmentID,
           segmentID: widget.segmentID,
           reason: reason,
           images: images,
         );
 
-        Logger().w("FAIL SEGMENT MODEL: $failSegmentModel");
+        Logger().w("FAIL SEGMENT MODEL: $failModel");
 
         // هنا أضف منطق إرسال البيانات للـ API
-        // BlocProvider.of<AcceptShipmentCubit>(
-        //   context,
-        // ).acceptShipment(acceptModel: acceptShipmentModel);
+        BlocProvider.of<FailSegmentCubit>(
+          context,
+        ).failSegment(failModel: failModel);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

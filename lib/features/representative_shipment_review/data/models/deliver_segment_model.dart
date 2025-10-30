@@ -38,6 +38,10 @@ class DeliverSegmentModel {
     return 'DeliverSegmentModel(shipmentID: $shipmentID, segmentID: $segmentID, receivedByName: $receivedByName, images: $images)';
   }
 
+  Map<String, dynamic> toMap() {
+    return {'receivedByName': receivedByName};
+  }
+
   // Optional: copyWith method for creating modified copies
   DeliverSegmentModel copyWith({
     String? shipmentID,

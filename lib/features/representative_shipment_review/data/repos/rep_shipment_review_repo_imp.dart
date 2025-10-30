@@ -23,11 +23,12 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   }) async {
     // TODO: implement deliverSegment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _deliverFormData(deliverModel: deliverModel);
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.deliverShipmentSegment
             .replaceFirst('{shipmentId}', deliverModel.shipmentID)
             .replaceFirst('{segmentId}', deliverModel.segmentID),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -66,11 +67,13 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   }) async {
     // TODO: implement failSegment
     try {
-      final response = await apiServices.post(
+      FormData formData = await _failFormData(failModel: failModel);
+
+      final response = await apiServices.postFormData(
         endPoint: ApiEndpoints.failShipmentSegment
             .replaceFirst('{shipmentId}', failModel.shipmentID)
             .replaceFirst('{segmentId}', failModel.segmentID),
-        data: {},
+        data: formData,
       );
       String message = response["message"];
       return right(message);
@@ -202,6 +205,34 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
     // Create FormData
     final formData = FormData.fromMap({
       ...weighModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
+  }
+
+  Future<FormData> _deliverFormData({
+    required DeliverSegmentModel deliverModel,
+  }) async {
+    List<File> images = deliverModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...deliverModel.toMap(),
+      'images': imagesFiles, // Add the converted MultipartFiles
+    });
+    return formData;
+  }
+
+  Future<FormData> _failFormData({required FailSegmentModel failModel}) async {
+    List<File> images = failModel.images;
+    List<MultipartFile> imagesFiles =
+        await ShipmentManager.createMultipartImages(images: images);
+
+    // Create FormData
+    final formData = FormData.fromMap({
+      ...failModel.toMap(),
       'images': imagesFiles, // Add the converted MultipartFiles
     });
     return formData;

@@ -1,24 +1,20 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/deliver_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/segment_deliver_modal/segment_deliver_modal.dart';
 
-class SegmentDeliverdSection extends StatefulWidget {
-  // Maximum number of images allowed
-  const SegmentDeliverdSection({super.key});
+class SegmentStateInfo extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color mainColor;
 
-  @override
-  State<SegmentDeliverdSection> createState() => _SegmentDeliverdSectionState();
-}
+  const SegmentStateInfo({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.mainColor,
+  });
 
-class _SegmentDeliverdSectionState extends State<SegmentDeliverdSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,16 +40,12 @@ class _SegmentDeliverdSectionState extends State<SegmentDeliverdSection> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "تم التسليم",
+                      title,
                       style: AppStyles.styleBold12(context),
                       textDirection: TextDirection.rtl,
                     ),
                     const SizedBox(width: 6),
-                    Icon(
-                      Icons.check_circle_outline_rounded,
-                      size: 25,
-                      color: AppColors.primaryColor,
-                    ),
+                    Icon(icon, size: 25, color: mainColor),
                   ],
                 ),
               ),
@@ -62,7 +54,7 @@ class _SegmentDeliverdSectionState extends State<SegmentDeliverdSection> {
             SvgPicture.asset(
               AppAssets.rectangleBorder2,
               fit: BoxFit.fill,
-              color: AppColors.primaryColor,
+              colorFilter: ColorFilter.mode(mainColor, BlendMode.srcIn),
             ),
           ],
         ),

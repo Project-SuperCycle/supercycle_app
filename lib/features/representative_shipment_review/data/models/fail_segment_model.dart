@@ -38,7 +38,7 @@ class FailSegmentModel {
 
   // toMap method - returns Map<String, String> without images
   Map<String, String> toMap() {
-    return {'shipmentID': shipmentID, 'segmentID': segmentID, 'reason': reason};
+    return {'reason': reason};
   }
 
   // toString method for debugging

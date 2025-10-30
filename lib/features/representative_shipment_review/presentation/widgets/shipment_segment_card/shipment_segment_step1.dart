@@ -32,12 +32,23 @@ class _ShipmentSegmentStep1State extends State<ShipmentSegmentStep1> {
   int currentStep = -1;
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      currentStep = widget.isMoved == true ? 0 : -1;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-          child: SegmentCardProgress(currentStep: currentStep),
+          child: SegmentCardProgress(
+            currentStep: currentStep,
+            segmentStatus: widget.segment.status!,
+          ),
         ),
         SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
         const SizedBox(height: 4),
