@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/features/calculator/presentation/widget/calculator_view_body.dart';
 
 class CalculatorView extends StatelessWidget {
@@ -6,6 +7,11 @@ class CalculatorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CalculatorViewBody();
+    return Scaffold(
+      body:  CalculatorViewBody(),
+      bottomNavigationBar:  CustomCurvedNavigationBar(
+        currentIndex: 0,
+      ),
+    );
   }
 }

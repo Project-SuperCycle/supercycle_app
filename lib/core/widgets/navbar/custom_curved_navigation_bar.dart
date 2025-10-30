@@ -28,15 +28,16 @@ class CustomCurvedNavigationBar extends StatefulWidget {
 
 class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   late int _currentIndex;
-
   bool isUserLoggedIn = true;
 
   void getUser() async {
     LoginedUserModel? user = await StorageServices.getUserData();
     Logger().w("user: $user");
-    setState(() {
-      isUserLoggedIn = (user != null);
-    });
+    if (mounted) {
+      setState(() {
+        isUserLoggedIn = (user != null);
+      });
+    }
   }
 
   @override
@@ -47,6 +48,10 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   }
 
   void _handleTap(int index) {
+    Logger().d("🔵 TAP: index=$index, current=$_currentIndex");
+
+    if (!mounted) return;
+
     setState(() {
       _currentIndex = index;
     });
@@ -55,30 +60,56 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       widget.onTap!(index);
     }
 
-    _navigateToScreen(index);
+    // ✅ استخدم Future.microtask لضمان تنفيذ النافجيشن بعد البناء
+    Future.microtask(() {
+      if (mounted) {
+        _navigateToScreen(index);
+      }
+    });
   }
 
   void _navigateToScreen(int index) {
-    switch (index) {
-      case 0:
-        GoRouter.of(context).push(EndPoints.calculatorView);
-        break;
-      case 1:
-        isUserLoggedIn
-            ? GoRouter.of(context).push(EndPoints.salesProcessView)
-            : GoRouter.of(context).push(EndPoints.signInView);
-        break;
-      case 2:
-        GoRouter.of(context).push(EndPoints.homeView);
-        break;
-      case 3:
-        isUserLoggedIn
-            ? GoRouter.of(context).push(EndPoints.shipmentsCalendarView)
-            : GoRouter.of(context).push(EndPoints.signInView);
-        break;
-      case 4:
-        GoRouter.of(context).push(EndPoints.contactUsView);
-        break;
+    if (!mounted) return;
+
+    Logger().d("🚀 NAVIGATE: index=$index");
+
+    // ✅ احصل على الـ router من context
+    final router = GoRouter.of(context);
+
+    try {
+      switch (index) {
+        case 0:
+          Logger().d("➡️ Going to Calculator");
+          router.go(EndPoints.calculatorView);
+          break;
+        case 1:
+          Logger().d("➡️ Going to Sales/SignIn");
+          if (isUserLoggedIn) {
+            router.go(EndPoints.salesProcessView);
+          } else {
+            router.go(EndPoints.signInView);
+          }
+          break;
+        case 2:
+          Logger().d("➡️ Going to Home");
+          router.go(EndPoints.homeView);
+          break;
+        case 3:
+          Logger().d("➡️ Going to Calendar/SignIn");
+          if (isUserLoggedIn) {
+            router.go(EndPoints.shipmentsCalendarView);
+          } else {
+            router.go(EndPoints.signInView);
+          }
+          break;
+        case 4:
+          Logger().d("➡️ Going to Contact");
+          router.go(EndPoints.contactUsView);
+          break;
+      }
+      Logger().d("✅ Navigation command executed");
+    } catch (e) {
+      Logger().e("❌ Navigation error: $e");
     }
   }
 

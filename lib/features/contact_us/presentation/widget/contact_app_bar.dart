@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/contact_strings.dart';
 
@@ -38,13 +37,6 @@ class ContactAppBar extends StatelessWidget implements PreferredSizeWidget {
         ).copyWith(fontWeight: FontWeight.bold, color: Colors.white),
       ),
       centerTitle: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.arrow_forward_ios_rounded),
-          onPressed: isLoading ? null : onBack,
-        ),
-        const SizedBox(width: 8),
-      ],
     );
   }
 

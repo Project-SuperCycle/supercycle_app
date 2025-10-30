@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-// Model للفرع
 class BranchModel {
   final String name;
   final String address;
   final String managerName;
   final String managerPhone;
   final int deliveryVolume;
+  final List<String> recyclableTypes;
+  final String deliverySchedule;
 
   const BranchModel({
     required this.name,
@@ -14,6 +15,8 @@ class BranchModel {
     required this.managerName,
     required this.managerPhone,
     required this.deliveryVolume,
+    required this.recyclableTypes,
+    required this.deliverySchedule,
   });
 
   factory BranchModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +26,11 @@ class BranchModel {
       managerName: json['managerName'] ?? '',
       managerPhone: json['managerPhone'] ?? '',
       deliveryVolume: json['deliveryVolume'] ?? 0,
+      recyclableTypes: (json['recyclableTypes'] as List?)
+          ?.map((type) => type.toString())
+          .toList() ??
+          [],
+      deliverySchedule: json['deliverySchedule'] ?? '',
     );
   }
 
@@ -33,6 +41,8 @@ class BranchModel {
       'managerName': managerName,
       'managerPhone': managerPhone,
       'deliveryVolume': deliveryVolume,
+      'recyclableTypes': recyclableTypes,
+      'deliverySchedule': deliverySchedule,
     };
   }
 
@@ -42,6 +52,8 @@ class BranchModel {
     String? managerName,
     String? managerPhone,
     int? deliveryVolume,
+    List<String>? recyclableTypes,
+    String? deliverySchedule,
   }) {
     return BranchModel(
       name: name ?? this.name,
@@ -49,6 +61,8 @@ class BranchModel {
       managerName: managerName ?? this.managerName,
       managerPhone: managerPhone ?? this.managerPhone,
       deliveryVolume: deliveryVolume ?? this.deliveryVolume,
+      recyclableTypes: recyclableTypes ?? this.recyclableTypes,
+      deliverySchedule: deliverySchedule ?? this.deliverySchedule,
     );
   }
 }

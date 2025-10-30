@@ -7,8 +7,8 @@ import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
+import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
@@ -91,22 +91,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                 child: Column(
                   children: [
                     const ShipmentLogo(),
-                    const SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            textDirection: TextDirection.ltr,
-                            Icons.info_outline,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          CustomBackButton(color: Colors.white, size: 25),
-                        ],
-                      ),
-                    ),
                     const SizedBox(height: 20),
                   ],
                 ),

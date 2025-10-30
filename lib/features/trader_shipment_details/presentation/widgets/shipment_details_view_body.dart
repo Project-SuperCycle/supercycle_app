@@ -7,6 +7,8 @@ import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
+import 'package:supercycle_app/core/widgets/shipment/back_and_drawer_bar.dart';
+import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
@@ -16,6 +18,7 @@ import 'package:supercycle_app/features/trader_shipment_details/presentation/wid
 import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_details_settings_icon.dart';
 import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_details_header.dart';
 import 'package:supercycle_app/features/shipment_preview/presentation/widgets/shipment_review_content.dart';
+import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/representative_card.dart';
 
 class ShipmentDetailsViewBody extends StatefulWidget {
   const ShipmentDetailsViewBody({super.key, required this.shipment});
@@ -48,6 +51,7 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: const CustomDrawer(),
       key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -61,21 +65,7 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                   children: [
                     const ShipmentLogo(),
                     const SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            textDirection: TextDirection.ltr,
-                            Icons.info_outline,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          CustomBackButton(color: Colors.white, size: 25),
-                        ],
-                      ),
-                    ),
+                    BackAndDrawerBar(),
                   ],
                 ),
               ),
@@ -100,15 +90,32 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                       children: [
                         (widget.shipment.status == 'pending')
                             ? Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: ShipmentDetailsSettingsIcon(
-                                  shipment: widget.shipment,
-                                ),
-                              )
+                          padding: const EdgeInsets.all(16.0),
+                          child: ShipmentDetailsSettingsIcon(
+                            shipment: widget.shipment,
+                          ),
+                        )
                             : const SizedBox.shrink(),
                         ShipmentDetailsHeader(shipment: widget.shipment),
                         const SizedBox(height: 16),
                         const ProgressBar(completedSteps: 1),
+                        const SizedBox(height: 20),
+
+                        // Representative Card
+                       if (widget.shipment.representitive != null)
+                          RepresentativeCard(
+                            representativeName: widget.shipment.representitive!.name,
+                            representativePhone: widget.shipment.representitive!.phone,
+                            representativeImage: widget.shipment.representitive!.image,
+                          ),
+
+                        // // Representative Card (مؤقت للتعديل)
+                        // RepresentativeCard(
+                        //   representativeName: 'محمد أحمد السيد',
+                        //   representativePhone: '01012345678',
+                        //   representativeImage: 'https://via.placeholder.com/150',
+                        // ),
+
                         const SizedBox(height: 20),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
