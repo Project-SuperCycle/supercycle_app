@@ -2,9 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
@@ -17,13 +15,13 @@ import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/models/update_shipment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_notes_content.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
 import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_details_notes.dart';
-import 'package:supercycle_app/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
-import 'package:supercycle_app/features/shipment_edit/data/models/edit_shipment_model.dart';
 import 'package:supercycle_app/features/shipment_edit/presentation/widgets/shipment_edit_header.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 import 'dart:io';
@@ -62,7 +60,7 @@ class _RepresentativeShipmentEditBodyState
   }
 
   void _getShipmentAddress() async {
-    addressController.text = widget.shipment.customPickupAddress;
+    addressController.text = widget.shipment.customPickupAddress ?? '';
   }
 
   // Callback functions for shipment data
@@ -149,6 +147,7 @@ class _RepresentativeShipmentEditBodyState
                           selectedImages: selectedImages,
                           onImagesChanged: _onImagesChanged,
                           onDateTimeChanged: _onDateTimeChanged,
+                          showDateIcon: false,
                         ),
                         const SizedBox(height: 20),
                         const ProgressBar(completedSteps: 0),
@@ -264,37 +263,17 @@ class _RepresentativeShipmentEditBodyState
   }
 
   void _confirmProcess() async {
-    EditShipmentModel shipment = EditShipmentModel(
-      customPickupAddress: addressController.text.isEmpty
-          ? widget.shipment.customPickupAddress
-          : addressController.text,
-      requestedPickupAt: selectedDateTime ?? widget.shipment.requestedPickupAt,
+    UpdateShipmentModel updateShipmentModel = UpdateShipmentModel(
+      shipmentID: widget.shipment.id,
+      rank: 4.0,
       images: selectedImages,
-      items: products.isEmpty ? widget.shipment.items : products,
-      userNotes: notes.isEmpty ? widget.shipment.userNotes : notes.first,
+      updatedItems: products.isEmpty ? widget.shipment.items : products,
+      notes: notes.isEmpty ? widget.shipment.userNotes : notes.first,
     );
 
-    FormData updatedShipment = await _createFormData(shipment);
-
-    Logger().i("SHIPMENT: ${updatedShipment.fields}");
-
-    BlocProvider.of<ShipmentEditCubit>(
+    BlocProvider.of<UpdateShipmentCubit>(
       context,
-    ).editShipment(shipment: updatedShipment, id: widget.shipment.id);
-    GoRouter.of(context).push(EndPoints.homeView);
-  }
-
-  Future<FormData> _createFormData(EditShipmentModel shipment) async {
-    Logger().i("EDIT-SHIPMENT: ${shipment.toMap()}");
-    List<File> images = widget.shipment.images;
-    List<MultipartFile> imagesFiles =
-        await ShipmentManager.createMultipartImages(images: images);
-
-    // Create FormData
-    final formData = FormData.fromMap({
-      ...shipment.toMap(),
-      'uploadedImages': imagesFiles, // Add the converted MultipartFiles
-    });
-    return formData;
+    ).updateShipmet(updateModel: updateShipmentModel);
+    GoRouter.of(context).pushReplacement(EndPoints.shipmentsCalendarView);
   }
 }

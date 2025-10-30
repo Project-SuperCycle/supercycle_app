@@ -1,15 +1,24 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_rejected_body/representative_shipment_modal.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_state.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_state.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/models/accept_shipment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_details/data/models/reject_shipment_model.dart';
+import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/rep_shipment_action_modal/representative_shipment_modal.dart';
 
 class RepresentativeShipmentActionsRow extends StatelessWidget {
   final SingleShipmentModel shipment;
+
   const RepresentativeShipmentActionsRow({super.key, required this.shipment});
 
   void _showConfirmModal(BuildContext context) {
@@ -17,22 +26,21 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
       context,
       actionType: ShipmentActionType.confirm,
       shipment: shipment,
-      onSubmit: (File? image, String notes, double rating) {
+      onSubmit: (List<File> images, String notes, double rating) {
         Logger().i('✅ Confirm Shipment');
-        Logger().w("SHIPMENT ID: ${shipment.id}");
-        Logger().w("IMAGE: $image");
-        Logger().w("NOTES: $notes");
-        Logger().w("RATING: $rating");
+        AcceptShipmentModel acceptShipmentModel = AcceptShipmentModel(
+          shipmentID: shipment.id,
+          notes: notes,
+          images: images,
+          rank: rating,
+        );
+
+        Logger().w("ACCEPT SHIPMENT MODEL: $acceptShipmentModel");
 
         // هنا أضف منطق إرسال البيانات للـ API
-        // BlocProvider.of<ShipmentBloc>(context).add(
-        //   ConfirmShipmentEvent(
-        //     shipmentId: shipment.id,
-        //     image: image!,
-        //     notes: notes,
-        //     rating: rating,
-        //   ),
-        // );
+        BlocProvider.of<AcceptShipmentCubit>(
+          context,
+        ).acceptShipment(acceptModel: acceptShipmentModel);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -47,7 +55,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             duration: Duration(seconds: 2),
           ),
         );
-
       },
     );
   }
@@ -57,12 +64,20 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
       context,
       actionType: ShipmentActionType.reject,
       shipment: shipment,
-      onSubmit: (File? image, String reason, double rating) {
+      onSubmit: (List<File> images, String reason, double rating) {
         Logger().i('❌ Reject Shipment');
-        Logger().w("SHIPMENT ID: ${shipment.id}");
-        Logger().w("IMAGE: $image");
-        Logger().w("REJECTION REASON: $reason");
-        Logger().w("RATING: $rating");
+
+        RejectShipmentModel rejectShipmentModel = RejectShipmentModel(
+          shipmentID: shipment.id,
+          reason: reason,
+          images: images,
+          rank: rating,
+        );
+
+        Logger().w("REJECT SHIPMENT MODEL: $rejectShipmentModel");
+        BlocProvider.of<RejectShipmentCubit>(
+          context,
+        ).rejectShipment(rejectModel: rejectShipmentModel);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -77,8 +92,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             duration: Duration(seconds: 2),
           ),
         );
-
-
       },
     );
   }
@@ -91,28 +104,54 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 10,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () => _showConfirmModal(context),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  'تأكيد الشحنة',
-                  style: AppStyles.styleBold14(context).copyWith(
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+            child: BlocConsumer<AcceptShipmentCubit, AcceptShipmentState>(
+              listener: (context, state) {
+                // TODO: implement listener
+                if (state is AcceptRepShipmentFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          Icon(Icons.cancel, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(state.errorMessage),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                return (state is AcceptRepShipmentLoading)
+                    ? SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: const CustomLoadingIndicator(),
+                      )
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () => _showConfirmModal(context),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'تأكيد الشحنة',
+                            style: AppStyles.styleBold14(
+                              context,
+                            ).copyWith(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+              },
             ),
           ),
         ),
@@ -141,9 +180,9 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   'تعديل',
-                  style: AppStyles.styleBold14(context).copyWith(
-                    color: Colors.white,
-                  ),
+                  style: AppStyles.styleBold14(
+                    context,
+                  ).copyWith(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -154,28 +193,54 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.failureColor,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 10,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () => _showRejectModal(context),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  'رفض الشحنة',
-                  style: AppStyles.styleBold14(context).copyWith(
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+            child: BlocConsumer<RejectShipmentCubit, RejectShipmentState>(
+              listener: (context, state) {
+                // TODO: implement listener
+                if (state is RejectRepShipmentFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          Icon(Icons.cancel, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(state.errorMessage),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                return (state is RejectRepShipmentLoading)
+                    ? SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: const CustomLoadingIndicator(),
+                      )
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.failureColor,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () => _showRejectModal(context),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'رفض الشحنة',
+                            style: AppStyles.styleBold14(
+                              context,
+                            ).copyWith(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+              },
             ),
           ),
         ),

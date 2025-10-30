@@ -48,7 +48,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     if (user == null) {
       return;
     }
-    addressController.text = user.bussinessAdress;
+    addressController.text = user.bussinessAdress ?? "";
   }
 
   void _onImagesChanged(List<File> images) {

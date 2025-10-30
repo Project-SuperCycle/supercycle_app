@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
 
 class SegmentWeightInfo extends StatelessWidget {
   final String imagePath;
-  final String weight;
-  final String? unit;
+  final ShipmentSegmentModel segment;
 
   const SegmentWeightInfo({
     super.key,
     required this.imagePath,
-    required this.weight,
-    this.unit = 'طن',
+    required this.segment,
   });
 
   @override
@@ -69,7 +68,13 @@ class SegmentWeightInfo extends StatelessWidget {
               ),
             ),
           ),
-          SegmentProductsDetails(quantity: 2000, productType: "ورق أبيض"),
+          if (segment.items.isNotEmpty)
+            ...segment.items.map((item) {
+              return SegmentProductsDetails(
+                quantity: item.quantity ?? 0,
+                productType: item.name ?? "",
+              );
+            }),
         ],
       ),
     );

@@ -1,34 +1,48 @@
-import 'package:hive_flutter/adapters.dart';
-
 class LoginedUserModel {
-  final String bussinessName;
-  final String rawBusinessType;
-  final String bussinessAdress;
-  final String doshMangerName;
-  final String doshMangerPhone;
-  final String email;
-  final String role;
+  final String? bussinessName;
+  final String? rawBusinessType;
+  final String? bussinessAdress;
+  final String? doshMangerName;
+  final String? doshMangerPhone;
+  final String? email;
+  final String? role;
+  final String? phone;
+  final String? displayName;
 
   LoginedUserModel({
-    required this.bussinessName,
-    required this.rawBusinessType,
-    required this.bussinessAdress,
-    required this.doshMangerName,
-    required this.doshMangerPhone,
-    required this.email,
-    required this.role,
+    this.bussinessName,
+    this.rawBusinessType,
+    this.bussinessAdress,
+    this.doshMangerName,
+    this.doshMangerPhone,
+    this.email,
+    this.role,
+    this.phone,
+    this.displayName,
   });
 
   // fromJson constructor
   factory LoginedUserModel.fromJson(Map<String, dynamic> json) {
     return LoginedUserModel(
-      bussinessName: json['profile']['bussinessName'] as String,
-      rawBusinessType: json['profile']['rawBusinessType'] as String,
-      bussinessAdress: json['profile']['bussinessAdress'] as String,
-      doshMangerName: json['profile']['doshMangerName'] as String,
-      doshMangerPhone: json['profile']['doshMangerPhone'] as String,
-      email: json['email'] as String,
-      role: json['role'] as String,
+      bussinessName: (json['profile'] == null)
+          ? null
+          : json['profile']['bussinessName'],
+      rawBusinessType: (json['profile'] == null)
+          ? null
+          : json['profile']['rawBusinessType'],
+      bussinessAdress: (json['profile'] == null)
+          ? null
+          : json['profile']['bussinessAdress'],
+      doshMangerName: (json['profile'] == null)
+          ? null
+          : json['profile']['doshMangerName'],
+      doshMangerPhone: (json['profile'] == null)
+          ? null
+          : json['profile']['doshMangerPhone'],
+      email: json['email'],
+      role: json['role'],
+      phone: json['phone'],
+      displayName: json['displayName'],
     );
   }
 
@@ -42,13 +56,15 @@ class LoginedUserModel {
       'doshMangerPhone': doshMangerPhone,
       'email': email,
       'role': role,
+      'phone': phone,
+      'displayName': displayName,
     };
   }
 
   // Optional: toString method for debugging
   @override
   String toString() {
-    return 'LoginedUserModel(bussinessName: $bussinessName, rawBusinessType: $rawBusinessType, bussinessAdress: $bussinessAdress, doshMangerName: $doshMangerName, doshMangerPhone: $doshMangerPhone, email: $email, role: $role)';
+    return 'LoginedUserModel(bussinessName: $bussinessName, rawBusinessType: $rawBusinessType, bussinessAdress: $bussinessAdress, doshMangerName: $doshMangerName, doshMangerPhone: $doshMangerPhone, email: $email, role: $role, phone: $phone, displayName: $displayName)';
   }
 
   // Optional: copyWith method for creating modified copies
@@ -60,6 +76,8 @@ class LoginedUserModel {
     String? doshMangerPhone,
     String? email,
     String? role,
+    String? phone,
+    String? displayName,
   }) {
     return LoginedUserModel(
       bussinessName: bussinessName ?? this.bussinessName,
@@ -69,6 +87,8 @@ class LoginedUserModel {
       doshMangerPhone: doshMangerPhone ?? this.doshMangerPhone,
       email: email ?? this.email,
       role: role ?? this.role,
+      phone: phone ?? this.phone,
+      displayName: displayName ?? this.displayName,
     );
   }
 }

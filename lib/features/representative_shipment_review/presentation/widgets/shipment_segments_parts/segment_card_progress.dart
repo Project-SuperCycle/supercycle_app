@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class SegmentCardProgress extends StatefulWidget {
+  final String segmentStatus;
   final int currentStep;
   final Color activeColor;
   final Color inactiveColor;
@@ -10,6 +12,7 @@ class SegmentCardProgress extends StatefulWidget {
   const SegmentCardProgress({
     super.key,
     required this.currentStep,
+    required this.segmentStatus,
     this.activeColor = Colors.blueAccent,
     this.inactiveColor = const Color(0xFFE0E0E0),
     this.completedColor = const Color(0xFF3BC577),
@@ -25,6 +28,23 @@ class _SegmentCardProgressState extends State<SegmentCardProgress> {
     StepData(title: 'تم الوزن', icon: Icons.local_shipping_rounded),
     StepData(title: 'تم التسليم', icon: Icons.check_circle_rounded),
   ];
+  Color activeColor = Colors.blueAccent;
+  Color completedColor = const Color(0xFF3BC577);
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      activeColor = widget.segmentStatus == "failed"
+          ? AppColors.failureColor
+          : widget.activeColor;
+
+      completedColor = widget.segmentStatus == "failed"
+          ? AppColors.failureColor
+          : widget.completedColor;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -66,9 +86,9 @@ class _SegmentCardProgressState extends State<SegmentCardProgress> {
 
     Color circleColor;
     if (isCompleted) {
-      circleColor = widget.completedColor;
+      circleColor = completedColor;
     } else if (isActive) {
-      circleColor = widget.activeColor;
+      circleColor = activeColor;
     } else {
       circleColor = widget.inactiveColor;
     }
@@ -78,7 +98,9 @@ class _SegmentCardProgressState extends State<SegmentCardProgress> {
       width: 25,
       decoration: BoxDecoration(shape: BoxShape.circle, color: circleColor),
       child: Center(
-        child: isCompleted
+        child: (widget.segmentStatus == "failed")
+            ? const Icon(Icons.close_rounded, color: Colors.white, size: 15)
+            : isCompleted
             ? const Icon(Icons.check_rounded, color: Colors.white, size: 15)
             : Icon(steps[index].icon, color: Colors.white, size: 15),
       ),
@@ -91,7 +113,7 @@ class _SegmentCardProgressState extends State<SegmentCardProgress> {
     return Container(
       height: 4,
       decoration: BoxDecoration(
-        color: isCompleted ? widget.completedColor : widget.inactiveColor,
+        color: isCompleted ? completedColor : widget.inactiveColor,
         borderRadius: BorderRadius.circular(4),
       ),
     );

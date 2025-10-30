@@ -15,7 +15,8 @@ class UserProfileWelcomeCard extends StatefulWidget {
 }
 
 class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
-  late String managerName = '';
+  late String userName = '';
+  late String userRole = '';
 
   @override
   void initState() {
@@ -26,7 +27,18 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   void getUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
     setState(() {
-      managerName = (user != null) ? user.doshMangerName : '';
+      if (user != null) {
+        if (user.doshMangerName != null) {
+          userName = user.doshMangerName!;
+          userRole = user.role!;
+        } else {
+          userName = user.displayName!;
+          userRole = user.role!;
+        }
+      } else {
+        userName = '';
+        userRole = '';
+      }
     });
   }
 
@@ -66,10 +78,10 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
         Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+            border: Border.all(color: Colors.white.withAlpha(150), width: 2),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withAlpha(25),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -80,7 +92,13 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             radius: 32,
             child: GestureDetector(
               onTap: () {
-                GoRouter.of(context).push(EndPoints.representativeProfileView);
+                if (userRole == "representative") {
+                  GoRouter.of(
+                    context,
+                  ).push(EndPoints.representativeProfileView);
+                } else {
+                  GoRouter.of(context).push(EndPoints.traderProfileView);
+                }
               },
               child: ClipOval(
                 child: Image.asset(
@@ -92,6 +110,28 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
               ),
             ),
           ),
+        ),
+        const SizedBox(width: 12),
+        Column(
+          textDirection: TextDirection.ltr,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              S.of(context).welcome,
+              style: AppStyles.styleMedium14(
+                context,
+              ).copyWith(color: const Color(0xFFD1FAE5)),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              userName,
+              textDirection: TextDirection.ltr,
+              style: AppStyles.styleBold18(
+                context,
+              ).copyWith(color: Colors.white),
+            ),
+          ],
         ),
       ],
     );

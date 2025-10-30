@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 
@@ -12,6 +13,24 @@ class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
     emit(GetAllShipmentsLoading());
     try {
       var result = await shipmentsCalendarRepo.getAllShipments();
+      result.fold(
+        (failure) {
+          emit(GetAllShipmentsFailure(errorMessage: failure.errMessage));
+        },
+        (shipments) {
+          emit(GetAllShipmentsSuccess(shipments: shipments));
+          // Store user globally
+        },
+      );
+    } catch (error) {
+      emit(GetAllShipmentsFailure(errorMessage: error.toString()));
+    }
+  }
+
+  Future<void> getAllRepShipments() async {
+    emit(GetAllShipmentsLoading());
+    try {
+      var result = await shipmentsCalendarRepo.getAllRepShipments();
       result.fold(
         (failure) {
           emit(GetAllShipmentsFailure(errorMessage: failure.errMessage));
@@ -41,7 +60,7 @@ class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
           // Store user globally
         },
       );
-    } catch (error) {
+    } catch (error, stackTrace) {
       emit(GetShipmentFailure(errorMessage: error.toString()));
     }
   }

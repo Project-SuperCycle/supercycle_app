@@ -59,7 +59,7 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
   }
 
   void _getShipmentAddress() async {
-    addressController.text = widget.shipment.customPickupAddress;
+    addressController.text = widget.shipment.customPickupAddress ?? '';
   }
 
   // Callback functions for shipment data
@@ -242,7 +242,7 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
   void _confirmProcess() async {
     EditShipmentModel shipment = EditShipmentModel(
       customPickupAddress: addressController.text.isEmpty
-          ? widget.shipment.customPickupAddress
+          ? widget.shipment.customPickupAddress ?? ""
           : addressController.text,
       requestedPickupAt: selectedDateTime ?? widget.shipment.requestedPickupAt,
       images: selectedImages,

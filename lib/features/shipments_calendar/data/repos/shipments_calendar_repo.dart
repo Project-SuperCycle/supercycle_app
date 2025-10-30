@@ -6,6 +6,8 @@ import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_
 abstract class ShipmentsCalendarRepo {
   Future<Either<Failure, List<ShipmentModel>>> getAllShipments();
 
+  Future<Either<Failure, List<ShipmentModel>>> getAllRepShipments();
+
   Future<Either<Failure, SingleShipmentModel>> getShipmentById({
     required String shipmentId,
   });

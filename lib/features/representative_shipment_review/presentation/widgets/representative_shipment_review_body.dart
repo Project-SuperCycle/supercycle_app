@@ -2,15 +2,14 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_data.dart';
+import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/representative_shipment_review_header.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_card.dart';
 import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_states_row/representative_shipment_states.dart';
+import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 
 class RepresentativeShipmentReviewBody extends StatefulWidget {
   const RepresentativeShipmentReviewBody({super.key, required this.shipment});
@@ -85,31 +84,33 @@ class _RepresentativeShipmentReviewBodyState
                   ),
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RepresentativeShipmentReviewHeader(
-                        shipment: widget.shipment,
-                      ),
-                      const SizedBox(height: 6),
-                      RepresentativeShipmentStates(),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: ShipmentSegmentCard(
-                          segment: ShipmentSegmentData(
-                            driverName: 'محمد أيمن',
-                            phoneNumber: '0105325656',
-                            truckNumber: '328 ص ي م',
-                            destinationTitle: 'وجهه السيارة 1 :',
-                            destinationAddress:
-                                'مصنع أكتوبر 15 شارع الجمهورية، المبنى الثالث',
-                            productType: 'ورق ابيض',
-                            quantity: '2 طن',
-                          ),
+                  child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RepresentativeShipmentReviewHeader(
+                              shipment: widget.shipment,
+                            ),
+                            const SizedBox(height: 6),
+                            RepresentativeShipmentStates(
+                              shipment: widget.shipment,
+                            ),
+                            const SizedBox(height: 16),
+                          ],
                         ),
+                      ),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return ShipmentSegmentCard(
+                            shipmentID: widget.shipment.id,
+                            segment: widget.shipment.segments[index],
+                          );
+                        }, childCount: widget.shipment.segments.length),
                       ),
                     ],
                   ),

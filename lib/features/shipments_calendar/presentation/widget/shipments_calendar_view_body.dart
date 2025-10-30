@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
@@ -16,6 +17,7 @@ import 'package:supercycle_app/features/shipments_calendar/presentation/widget/s
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_grid.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_header.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calender_title.dart';
+import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
 
 class ShipmentsCalendarViewBody extends StatefulWidget {
   const ShipmentsCalendarViewBody({super.key});
@@ -36,7 +38,19 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
+    loadUserCalender();
+  }
+
+  void loadUserCalender() async {
+    LoginedUserModel? user = await StorageServices.getUserData();
+    Logger().d("USER: $user");
+    if (user != null) {
+      if (user.role == "representative") {
+        BlocProvider.of<ShipmentsCalendarCubit>(context).getAllRepShipments();
+      } else {
+        BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
+      }
+    }
   }
 
 
