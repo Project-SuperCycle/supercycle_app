@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
@@ -12,24 +19,11 @@ class TraderProfileInfoCard2 extends StatefulWidget {
 }
 
 class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
-  List<ShipmentModel> transactions = [
-    ShipmentModel(
-      id: "1101",
-      shipmentNumber: "SC-1101",
-      customPickupAddress: "جسر السويس - القاهرة",
-      requestedPickupAt: DateTime.now(),
-      status: "pending",
-      totalQuantityKg: 3000,
-    ),
-    ShipmentModel(
-      id: "1102",
-      shipmentNumber: "SC-1102",
-      customPickupAddress: "جسر السويس - القاهرة",
-      requestedPickupAt: DateTime.now(),
-      status: "pending",
-      totalQuantityKg: 3000,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +53,56 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ListView.builder(
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: transactions.length,
-              itemBuilder: (context, index) {
-                final transaction = transactions[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: ShipmentsCalendarCard(shipment: transaction),
+            child: BlocConsumer<ShipmentsCalendarCubit, ShipmentsCalendarState>(
+              listener: (context, state) {
+                // TODO: implement listener
+                if (state is GetAllShipmentsFailure) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+                }
+              },
+              builder: (context, state) {
+                if (state is GetAllShipmentsLoading) {
+                  return Center(child: CustomLoadingIndicator());
+                }
+                if (state is GetAllShipmentsSuccess &&
+                    state.shipments.isNotEmpty) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.shipments.length,
+                    itemBuilder: (context, index) {
+                      final transaction = state.shipments[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: ShipmentsCalendarCard(shipment: transaction),
+                      );
+                    },
+                  );
+                }
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          AppAssets.boxIcon,
+                          height: 100,
+                          colorFilter: ColorFilter.mode(
+                            Colors.black.withAlpha(150),
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'لا يوجد معاملات',
+                          style: AppStyles.styleSemiBold22(context),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             ),

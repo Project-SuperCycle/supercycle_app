@@ -10,6 +10,7 @@ import 'package:supercycle_app/features/trader_main_profile/presentation/widgets
 
 class TraderProfileViewBody extends StatefulWidget {
   final UserProfileModel userProfile;
+
   const TraderProfileViewBody({super.key, required this.userProfile});
 
   @override
@@ -69,8 +70,10 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
                   _buildPageContent(
                     TraderProfileInfoCard1(userProfile: widget.userProfile),
                   ),
-                  _buildPageContent(const TraderProfileInfoCard2()),
-                  _buildPageContent(const TraderProfileInfoCard3()),
+                  _buildPageContent(TraderProfileInfoCard2()),
+                  _buildPageContent(
+                    TraderProfileInfoCard3(user: widget.userProfile),
+                  ),
                 ],
               ),
             ),

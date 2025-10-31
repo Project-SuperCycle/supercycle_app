@@ -1,7 +1,12 @@
+import 'package:supercycle_app/core/models/trader_branch_model.dart';
+
 class UserProfileModel {
   // Basic Info
   final String email;
   final String role;
+
+  // Main Branch
+  final TraderBranchModel? branch;
 
   // Profile
   final String? businessName;
@@ -9,13 +14,6 @@ class UserProfileModel {
   final String? businessAddress;
   final String? doshManagerName;
   final String? doshManagerPhone;
-
-  // Main Branch
-  final String? branchName;
-  final String? address;
-  final String? contactName;
-  final String? contactPhone;
-  final DateTime? createdAt;
 
   // Stats
   final num? totalShipmentsCount;
@@ -38,11 +36,6 @@ class UserProfileModel {
     required this.businessAddress,
     required this.doshManagerName,
     required this.doshManagerPhone,
-    required this.branchName,
-    required this.address,
-    required this.contactName,
-    required this.contactPhone,
-    required this.createdAt,
     required this.totalShipmentsCount,
     required this.fullyDeliveredCount,
     required this.partiallyDeliveredCount,
@@ -52,6 +45,7 @@ class UserProfileModel {
     required this.repPhone,
     required this.repEmail,
     required this.repName,
+    required this.branch,
   });
 
   // Factory constructor for creating a new instance from a map (JSON)
@@ -74,20 +68,8 @@ class UserProfileModel {
       doshManagerPhone: (json['profile'] != null)
           ? json['profile']['doshMangerPhone']
           : null,
-      branchName: (json['mainBranch'] != null)
-          ? json['mainBranch']['branchName']
-          : null,
-      address: (json['mainBranch'] != null)
-          ? json['mainBranch']['address']
-          : null,
-      contactName: (json['mainBranch'] != null)
-          ? json['mainBranch']['contactName']
-          : null,
-      contactPhone: (json['mainBranch'] != null)
-          ? json['mainBranch']['contactPhone']
-          : null,
-      createdAt: (json['mainBranch'] != null)
-          ? DateTime.parse(json['mainBranch']['createdAt'])
+      branch: (json['mainBranch'] != null)
+          ? TraderBranchModel.fromJson(json['mainBranch'])
           : null,
       totalShipmentsCount: (json['stats'] != null)
           ? json['stats']['totalShipmentsCount']
@@ -124,11 +106,7 @@ class UserProfileModel {
     String? businessAddress,
     String? doshManagerName,
     String? doshManagerPhone,
-    String? branchName,
-    String? address,
-    String? contactName,
-    String? contactPhone,
-    DateTime? createdAt,
+    TraderBranchModel? branch,
     num? totalShipmentsCount,
     num? fullyDeliveredCount,
     num? partiallyDeliveredCount,
@@ -147,11 +125,7 @@ class UserProfileModel {
       businessAddress: businessAddress ?? this.businessAddress,
       doshManagerName: doshManagerName ?? this.doshManagerName,
       doshManagerPhone: doshManagerPhone ?? this.doshManagerPhone,
-      branchName: branchName ?? this.branchName,
-      address: address ?? this.address,
-      contactName: contactName ?? this.contactName,
-      contactPhone: contactPhone ?? this.contactPhone,
-      createdAt: createdAt ?? this.createdAt,
+      branch: branch ?? this.branch,
       totalShipmentsCount: totalShipmentsCount ?? this.totalShipmentsCount,
       fullyDeliveredCount: fullyDeliveredCount ?? this.fullyDeliveredCount,
       partiallyDeliveredCount:

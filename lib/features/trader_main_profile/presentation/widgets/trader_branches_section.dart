@@ -39,10 +39,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          "الفروع المتعاونة",
-          style: AppStyles.styleSemiBold18(context),
-        ),
+        Text("الفروع المتعاونة", style: AppStyles.styleSemiBold18(context)),
         Row(
           children: [
             _buildViewToggleButton(Icons.list, true),
@@ -61,7 +58,6 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     );
   }
 
-
   Widget _buildBranchesList() {
     return ListView.builder(
       shrinkWrap: true,
@@ -79,12 +75,18 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
               decoration: _decorBox(),
               child: Row(
                 children: [
-                  Icon(Icons.store_outlined,
-                      color: AppColors.primaryColor, size: 40),
+                  Icon(
+                    Icons.store_outlined,
+                    color: AppColors.primaryColor,
+                    size: 40,
+                  ),
                   const SizedBox(width: 16),
                   Expanded(child: _buildBranchInfo(branch)),
-                  Icon(Icons.arrow_forward_ios,
-                      color: AppColors.primaryColor, size: 20),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.primaryColor,
+                    size: 20,
+                  ),
                 ],
               ),
             ),
@@ -109,14 +111,16 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
       children: [
         Text(
           branch.name,
-          style: AppStyles.styleSemiBold16(context)
-              .copyWith(color: AppColors.primaryColor),
+          style: AppStyles.styleSemiBold16(
+            context,
+          ).copyWith(color: AppColors.primaryColor),
         ),
         const SizedBox(height: 4),
         Text(
           "كمية التوريدات: ${branch.deliveryVolume} كجم",
-          style: AppStyles.styleSemiBold12(context)
-              .copyWith(color: AppColors.subTextColor),
+          style: AppStyles.styleSemiBold12(
+            context,
+          ).copyWith(color: AppColors.subTextColor),
         ),
       ],
     );
@@ -128,7 +132,9 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
       return const Center(child: Text("لا توجد بيانات للفروع"));
     }
 
-    final maxVolume = branches.map((b) => b.deliveryVolume).reduce((a, b) => a > b ? a : b);
+    final maxVolume = branches
+        .map((b) => b.deliveryVolume)
+        .reduce((a, b) => a > b ? a : b);
 
     return SizedBox(
       height: 300,
@@ -154,7 +160,8 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
                 reservedSize: 60,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
-                  if (index < 0 || index >= branches.length) return const SizedBox();
+                  if (index < 0 || index >= branches.length)
+                    return const SizedBox();
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
@@ -221,8 +228,9 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
               children: [
                 Text(
                   "الأنواع المتعامل بها",
-                  style: AppStyles.styleSemiBold12(context)
-                      .copyWith(color: AppColors.subTextColor),
+                  style: AppStyles.styleSemiBold12(
+                    context,
+                  ).copyWith(color: AppColors.subTextColor),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -244,9 +252,9 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
                       ),
                       child: Text(
                         type,
-                        style: AppStyles.styleSemiBold12(context).copyWith(
-                          color: AppColors.primaryColor,
-                        ),
+                        style: AppStyles.styleSemiBold12(
+                          context,
+                        ).copyWith(color: AppColors.primaryColor),
                       ),
                     );
                   }).toList(),
@@ -272,8 +280,10 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("الأنواع المتعامل بيها:",
-            style: AppStyles.styleSemiBold18(context)),
+        Text(
+          "الأنواع المتعامل بيها:",
+          style: AppStyles.styleSemiBold18(context),
+        ),
         const SizedBox(height: 10),
         Wrap(
           spacing: 8,
@@ -286,8 +296,9 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
               ),
               child: Text(
                 type,
-                style: AppStyles.styleSemiBold12(context)
-                    .copyWith(color: AppColors.primaryColor),
+                style: AppStyles.styleSemiBold12(
+                  context,
+                ).copyWith(color: AppColors.primaryColor),
               ),
             );
           }).toList(),
@@ -335,9 +346,16 @@ class _BranchDetailsSheet extends StatelessWidget {
             _DetailRow(Icons.location_on, "عنوان الفرع", branch.address),
             _DetailRow(Icons.person, "اسم المسؤول", branch.managerName),
             _DetailRow(Icons.phone, "رقم تواصل المسؤول", branch.managerPhone),
-            _DetailRow(Icons.inventory_2, "حجم التوريدات",
-                "${branch.deliveryVolume} كجم"),
-            _DetailRow(Icons.schedule, "ميعاد التسليم", branch.deliverySchedule),
+            _DetailRow(
+              Icons.inventory_2,
+              "حجم التوريدات",
+              "${branch.deliveryVolume} كجم",
+            ),
+            _DetailRow(
+              Icons.schedule,
+              "ميعاد التسليم",
+              branch.deliverySchedule,
+            ),
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Row(
@@ -351,8 +369,9 @@ class _BranchDetailsSheet extends StatelessWidget {
                       children: [
                         Text(
                           "الأنواع المتعامل بها",
-                          style: AppStyles.styleSemiBold12(context)
-                              .copyWith(color: AppColors.subTextColor),
+                          style: AppStyles.styleSemiBold12(
+                            context,
+                          ).copyWith(color: AppColors.subTextColor),
                         ),
                         const SizedBox(height: 8),
                         Wrap(
@@ -374,9 +393,9 @@ class _BranchDetailsSheet extends StatelessWidget {
                               ),
                               child: Text(
                                 type,
-                                style: AppStyles.styleSemiBold12(context).copyWith(
-                                  color: AppColors.primaryColor,
-                                ),
+                                style: AppStyles.styleSemiBold12(
+                                  context,
+                                ).copyWith(color: AppColors.primaryColor),
                               ),
                             );
                           }).toList(),
@@ -399,9 +418,12 @@ class _BranchDetailsSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: Text("إغلاق",
-                    style: AppStyles.styleSemiBold16(context)
-                        .copyWith(color: Colors.white)),
+                child: Text(
+                  "إغلاق",
+                  style: AppStyles.styleSemiBold16(
+                    context,
+                  ).copyWith(color: Colors.white),
+                ),
               ),
             ),
           ],
@@ -430,9 +452,12 @@ class _DetailRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    style: AppStyles.styleSemiBold12(context)
-                        .copyWith(color: AppColors.subTextColor)),
+                Text(
+                  label,
+                  style: AppStyles.styleSemiBold12(
+                    context,
+                  ).copyWith(color: AppColors.subTextColor),
+                ),
                 const SizedBox(height: 4),
                 Text(value, style: AppStyles.styleSemiBold14(context)),
               ],

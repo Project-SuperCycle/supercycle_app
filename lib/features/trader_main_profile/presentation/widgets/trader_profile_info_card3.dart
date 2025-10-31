@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_uncontracted_message.dart';
 
 class TraderProfileInfoCard3 extends StatelessWidget {
-  const TraderProfileInfoCard3({super.key});
+  final UserProfileModel user;
+  const TraderProfileInfoCard3({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -16,84 +18,90 @@ class TraderProfileInfoCard3 extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withAlpha(25),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                _buildContractSection(
-                  icon: Icons.calendar_today,
-                  title: 'مدة التعاقد',
-                  content: [
-                    'تاريخ بدء التعاقد: 7 يوليو 2025',
-                    'مدة التعاقد: 3 شهور',
-                  ],
-                  context: context,
-                ),
-                _divider(),
-                _buildContractSection(
-                  icon: Icons.article_outlined,
-                  title: 'الشروط العامة',
-                  content: [
-                    'الأنواع: كرتون بنى - ورق ابيض',
-                    'الكمية الكلية: 70 (30 في الأسبوع الأول - 40 في التالي)',
-                    'التسليم: 50 من الأول - 15 من التالي',
-                    'بدء الشراء من الأسبوع الثالث',
-                  ],
-                  context: context,
-                ),
-                _divider(),
-                _buildContractSection(
-                  icon: Icons.attach_money,
-                  title: 'السعر الكلي',
-                  content: ['السعر الكلي: 2 مليون جنيه مصري'],
-                  highlight: true,
-                  context: context,
-                ),
-                _divider(),
-                _buildContractSection(
-                  icon: Icons.payment,
-                  title: 'طريقة الدفع',
-                  content: [
-                    'الدفعة الأولى: 700 ألف',
-                    'دفعتين إضافيتين حتى الدفعة الثالثة',
-                  ],
-                  context: context,
-                ),
-                _divider(),
-                _buildContractSection(
-                  icon: Icons.local_shipping_outlined,
-                  title: 'شروط التسليم',
-                  content: ['المكان: فرع المعادي', 'الموعد: يوم 7 من كل شهر'],
-                  context: context,
-                ),
-                _divider(),
-                _buildContractSection(
-                  icon: Icons.warning_amber_outlined,
-                  title: 'شروط خاصة',
-                  content: [
-                    'في حالة عدم الرضا عن الشحنة يتم رفضها',
-                    'التأخير في الشحن يترتب عليه غرامة',
-                  ],
-                  context: context,
-                ),
-              ],
-            ),
-          ),
-        ),
+        (user.role == "trader_uncontracted")
+            ? TraderUncontractedMessage()
+            : _buildContractInfo(context),
       ],
+    );
+  }
+
+  Widget _buildContractInfo(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withAlpha(25),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            _buildContractSection(
+              icon: Icons.calendar_today,
+              title: 'مدة التعاقد',
+              content: [
+                'تاريخ بدء التعاقد: 7 يوليو 2025',
+                'مدة التعاقد: 3 شهور',
+              ],
+              context: context,
+            ),
+            _divider(),
+            _buildContractSection(
+              icon: Icons.article_outlined,
+              title: 'الشروط العامة',
+              content: [
+                'الأنواع: كرتون بنى - ورق ابيض',
+                'الكمية الكلية: 70 (30 في الأسبوع الأول - 40 في التالي)',
+                'التسليم: 50 من الأول - 15 من التالي',
+                'بدء الشراء من الأسبوع الثالث',
+              ],
+              context: context,
+            ),
+            _divider(),
+            _buildContractSection(
+              icon: Icons.attach_money,
+              title: 'السعر الكلي',
+              content: ['السعر الكلي: 2 مليون جنيه مصري'],
+              highlight: true,
+              context: context,
+            ),
+            _divider(),
+            _buildContractSection(
+              icon: Icons.payment,
+              title: 'طريقة الدفع',
+              content: [
+                'الدفعة الأولى: 700 ألف',
+                'دفعتين إضافيتين حتى الدفعة الثالثة',
+              ],
+              context: context,
+            ),
+            _divider(),
+            _buildContractSection(
+              icon: Icons.local_shipping_outlined,
+              title: 'شروط التسليم',
+              content: ['المكان: فرع المعادي', 'الموعد: يوم 7 من كل شهر'],
+              context: context,
+            ),
+            _divider(),
+            _buildContractSection(
+              icon: Icons.warning_amber_outlined,
+              title: 'شروط خاصة',
+              content: [
+                'في حالة عدم الرضا عن الشحنة يتم رفضها',
+                'التأخير في الشحن يترتب عليه غرامة',
+              ],
+              context: context,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
