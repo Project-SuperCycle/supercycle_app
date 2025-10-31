@@ -355,8 +355,9 @@ class AppRouter {
         path: EndPoints.representativeProfileView,
         name: 'Representative Profile',
         pageBuilder: (context, state) => CustomTransitionPage(
-          child:
-              RepresentativeProfileView(), // Replace with your actual home widget
+          child: RepresentativeProfileView(
+            userProfile: state.extra as UserProfileModel,
+          ), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
