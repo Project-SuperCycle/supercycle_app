@@ -6,8 +6,8 @@ import 'package:supercycle_app/features/home/presentation/widgets/home_view_head
 import 'package:supercycle_app/features/home/presentation/widgets/types_section/types_list_view.dart';
 import 'package:supercycle_app/features/home/presentation/widgets/types_section/types_section_header.dart';
 import 'package:supercycle_app/features/home/presentation/widgets/today_shipments_card.dart';
-import 'package:supercycle_app/features/representative_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key, required this.onDrawerPressed});
@@ -74,7 +74,10 @@ class HomeViewBody extends StatelessWidget {
     ];
   }
 
-  void _navigateToShipmentDetails(BuildContext context, String shipmentId) async {
+  void _navigateToShipmentDetails(
+    BuildContext context,
+    String shipmentId,
+  ) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -90,17 +93,12 @@ class HomeViewBody extends StatelessWidget {
         shipmentId: shipmentId,
       );
 
-      await context.read<NotesCubit>().getAllNotes(
-        shipmentId: shipmentId,
-      );
+      await context.read<NotesCubit>().getAllNotes(shipmentId: shipmentId);
 
       if (context.mounted) {
         Navigator.pop(context);
 
-        context.pushNamed(
-          'ShipmentDetails',
-          extra: shipmentId,
-        );
+        context.pushNamed('ShipmentDetails', extra: shipmentId);
       }
     } catch (e) {
       if (context.mounted) {

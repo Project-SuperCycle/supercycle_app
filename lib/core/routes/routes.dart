@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' hide CustomTransitionPage;
 import 'package:supercycle_app/core/helpers/page_transition.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/features/calculator/presentation/view/calculator_view.dart';
 import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
@@ -374,8 +375,7 @@ class AppRouter {
         path: EndPoints.editProfileView,
         name: 'Edit Profile',
         pageBuilder: (context, state) => CustomTransitionPage(
-          child:
-              EditProfileView(), // Replace with your actual home widget
+          child: EditProfileView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
@@ -433,7 +433,9 @@ class AppRouter {
         path: EndPoints.traderProfileView,
         name: 'Trader Profile',
         pageBuilder: (context, state) => CustomTransitionPage(
-          child: TraderProfileView(), // Replace with your actual home widget
+          child: TraderProfileView(
+            userProfile: state.extra as UserProfileModel,
+          ), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(
@@ -548,7 +550,6 @@ class AppRouter {
           transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
-
 
       // Representative Shipment Edit View Route
       GoRoute(

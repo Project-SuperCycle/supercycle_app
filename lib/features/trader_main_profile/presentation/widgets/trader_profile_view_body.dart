@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_section.dart';
@@ -7,14 +8,15 @@ import 'package:supercycle_app/features/trader_main_profile/presentation/widgets
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card3.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_page_indicator.dart';
 
-class ProfileViewBody extends StatefulWidget {
-  const ProfileViewBody({super.key});
+class TraderProfileViewBody extends StatefulWidget {
+  final UserProfileModel userProfile;
+  const TraderProfileViewBody({super.key, required this.userProfile});
 
   @override
-  State<ProfileViewBody> createState() => _ProfileViewBodyState();
+  State<TraderProfileViewBody> createState() => _TraderProfileViewBodyState();
 }
 
-class _ProfileViewBodyState extends State<ProfileViewBody> {
+class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
   int currentPage = 0;
   final PageController _pageController = PageController();
 
@@ -32,9 +34,7 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: ProfileHeaderSection(
-              profileData: ProfileConstants.sampleProfileData,
-            ),
+            child: TraderProfileHeaderSection(userProfile: widget.userProfile),
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -67,23 +67,15 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
                 },
                 children: [
                   _buildPageContent(
-                    TraderProfileInfoCard1(
-                      profileData: ProfileConstants.sampleProfileData,
-                    ),
+                    TraderProfileInfoCard1(userProfile: widget.userProfile),
                   ),
-                  _buildPageContent(
-                    const TraderProfileInfoCard2(),
-                  ),
-                  _buildPageContent(
-                    const TraderProfileInfoCard3(),
-                  ),
+                  _buildPageContent(const TraderProfileInfoCard2()),
+                  _buildPageContent(const TraderProfileInfoCard3()),
                 ],
               ),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 40),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
       ),
     );
@@ -92,12 +84,7 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
   Widget _buildPageContent(Widget card) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          card,
-          const SizedBox(height: 20),
-        ],
-      ),
+      child: Column(children: [card, const SizedBox(height: 20)]),
     );
   }
 }

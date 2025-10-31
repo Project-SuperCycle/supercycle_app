@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/functions/navigate_to_profile.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
@@ -46,35 +47,8 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      textDirection: TextDirection.ltr,
+      textDirection: TextDirection.rtl,
       children: [
-        Column(
-          textDirection: TextDirection.ltr,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              S.of(context).welcome,
-              style: AppStyles.styleMedium14(context).copyWith(
-                color: const Color(0xFFD1FAE5),
-              ),
-            ),
-            const SizedBox(height: 4),
-            GestureDetector(
-              onTap: () {
-                GoRouter.of(context).push(EndPoints.traderProfileView);
-              },
-              child: Text(
-                managerName,
-                textDirection: TextDirection.ltr,
-                style: AppStyles.styleBold18(context).copyWith(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 12),
         Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -91,15 +65,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             backgroundColor: Colors.white,
             radius: 32,
             child: GestureDetector(
-              onTap: () {
-                if (userRole == "representative") {
-                  GoRouter.of(
-                    context,
-                  ).push(EndPoints.representativeProfileView);
-                } else {
-                  GoRouter.of(context).push(EndPoints.traderProfileView);
-                }
-              },
+              onTap: () => navigateToProfile(context),
               child: ClipOval(
                 child: Image.asset(
                   AppAssets.defaultAvatar,
@@ -113,7 +79,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
         ),
         const SizedBox(width: 12),
         Column(
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirection.rtl,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

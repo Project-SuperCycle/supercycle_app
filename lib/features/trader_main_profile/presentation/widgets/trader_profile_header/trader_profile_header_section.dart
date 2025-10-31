@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
-import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
 
-class ProfileHeaderSection extends StatelessWidget {
-  const ProfileHeaderSection({super.key, required this.profileData});
-
-  final TraderProfileData profileData;
+class TraderProfileHeaderSection extends StatelessWidget {
+  final UserProfileModel userProfile;
+  const TraderProfileHeaderSection({super.key, required this.userProfile});
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +119,7 @@ class ProfileHeaderSection extends StatelessWidget {
                         color: Colors.white,
                         padding: const EdgeInsets.all(8),
                         child: Image.asset(
-                          profileData.logoPath,
+                          AppAssets.defaultAvatar,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return const Icon(
@@ -138,11 +137,10 @@ class ProfileHeaderSection extends StatelessWidget {
 
                   // Profile Name
                   Text(
-                    profileData.name,
-                    style: AppStyles.styleBold24(context).copyWith(
-                      color: Colors.white,
-                      fontSize: 28,
-                    ),
+                    userProfile.businessName!,
+                    style: AppStyles.styleBold24(
+                      context,
+                    ).copyWith(color: Colors.white, fontSize: 28),
                   ),
 
                   const SizedBox(height: 20),
@@ -158,10 +156,10 @@ class ProfileHeaderSection extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _StatCard(
-                          value: profileData.availableProducts
+                          value: userProfile.totalShipmentsCount!
                               .toString()
                               .padLeft(2, '0'),
-                          label: 'المنتجات\nالمتاحة',
+                          label: 'عدد شحناتك\nمعانا',
                         ),
                         Container(
                           height: 50,
@@ -169,10 +167,10 @@ class ProfileHeaderSection extends StatelessWidget {
                           color: Colors.white.withAlpha(80),
                         ),
                         _StatCard(
-                          value: profileData.requiredProducts
+                          value: userProfile.fullyDeliveredCount!
                               .toString()
                               .padLeft(2, '0'),
-                          label: 'المنتجات\nالمطلوبة',
+                          label: 'عدد شحنات\nتم تسليمها',
                         ),
                       ],
                     ),
@@ -199,10 +197,9 @@ class _StatCard extends StatelessWidget {
       children: [
         Text(
           value,
-          style: AppStyles.styleBold24(context).copyWith(
-            color: Colors.white,
-            fontSize: 32,
-          ),
+          style: AppStyles.styleBold24(
+            context,
+          ).copyWith(color: Colors.white, fontSize: 32),
         ),
         const SizedBox(height: 8),
         Text(
