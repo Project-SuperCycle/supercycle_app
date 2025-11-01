@@ -33,10 +33,9 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
       listener: (context, state) {
         // TODO: implement listener
         if (state is GetShipmentSuccess) {
-          GoRouter.of(context).push(
-            EndPoints.shipmentDetailsView,
-            extra: state.shipment,
-          );
+          GoRouter.of(
+            context,
+          ).push(EndPoints.shipmentDetailsView, extra: state.shipment);
           Logger().d("SHIPMENT ${state.shipment}");
         }
         if (state is GetShipmentFailure) {
@@ -158,7 +157,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                             style: AppStyles.styleSemiBold14(context),
                           ),
                           Text(
-                            widget.shipment.status,
+                            widget.shipment.status.toUpperCase(),
                             style: AppStyles.styleMedium14(context).copyWith(
                               color: (widget.shipment.status == 'Delivered')
                                   ? Colors.green[700]
