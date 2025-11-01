@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/badges_card.dart';
-import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/challenge_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle_app/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/environmental_achievements_tab.dart';
-import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/leader_boards_card.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/environmental_impact_header.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/environmental_impact_tab_bar.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/impact_tab/environmental_impact_tab.dart';
@@ -25,6 +25,7 @@ class _EnvironmentalImpactViewBodyState
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    BlocProvider.of<EcoCubit>(context).getTraderEcoInfo();
   }
 
   @override
@@ -36,29 +37,72 @@ class _EnvironmentalImpactViewBodyState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: CustomScrollView(
-        slivers: [
-          EnvironmentalImpactHeader(),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                EnvironmentalImpactTabBar(tabController: _tabController),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      EnvironmentalImpactTab(),
-                      EnvironmentalTreesTab(),
-                      EnvironmentalAchievementsTab(),
-                    ],
-                  ),
+      body: BlocConsumer<EcoCubit, EcoState>(
+        listener: (context, state) {
+          // TODO: implement listener
+
+          if (state is GetEcoDataFailure) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.errMessage)));
+          }
+        },
+        builder: (context, state) {
+          return CustomScrollView(
+            slivers: [
+              (state is GetEcoDataSuccess)
+                  ? EnvironmentalImpactHeader(ecoInfoModel: state.ecoInfoModel)
+                  : SliverToBoxAdapter(
+                      child: Center(
+                        child: SizedBox(
+                          height: 200,
+                          child: CustomLoadingIndicator(),
+                        ),
+                      ),
+                    ),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    EnvironmentalImpactTabBar(tabController: _tabController),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          EnvironmentalImpactTab(),
+                          (state is GetEcoDataSuccess)
+                              ? EnvironmentalTreesTab(
+                                  ecoInfoModel: state.ecoInfoModel,
+                                )
+                              : SliverToBoxAdapter(
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: 200,
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  ),
+                                ),
+                          (state is GetEcoDataSuccess)
+                              ? EnvironmentalAchievementsTab(
+                                  ecoInfoModel: state.ecoInfoModel,
+                                )
+                              : SliverToBoxAdapter(
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: 200,
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

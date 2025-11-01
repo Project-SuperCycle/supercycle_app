@@ -8,6 +8,7 @@ import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_type_model.dart';
 import 'package:supercycle_app/features/home/data/models/type_history_model.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 class HomeRepoImp implements HomeRepo {
   final ApiServices apiServices;
@@ -141,5 +142,63 @@ class HomeRepoImp implements HomeRepo {
         ),
       );
     }
+  }
+
+  @override
+  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipmets() async {
+    // TODO: implement fetchTodayShipmets
+    try {
+      final response = await apiServices.get(
+        endPoint: ApiEndpoints.getAllShipments,
+      );
+
+      var data = response['data'];
+      List<ShipmentModel> shipments = [];
+      for (var type in data) {
+        shipments.add(ShipmentModel.fromJson(type));
+      }
+
+      List<ShipmentModel> todayShipments = getTodayShipments(shipments);
+      return right(todayShipments);
+    } on DioException catch (dioError) {
+      return left(ServerFailure.fromDioError(dioError));
+    } on FormatException catch (formatError) {
+      return left(
+        ServerFailure(
+          formatError.toString(),
+          422, // Unprocessable Entity
+        ),
+      );
+    } on TypeError catch (typeError) {
+      // أخطاء النوع (مثل null safety)
+      return left(
+        ServerFailure(
+          'Data parsing error: ${typeError.toString()}',
+          422, // Unprocessable Entity
+        ),
+      );
+    } catch (e) {
+      // أي أخطاء أخرى غير متوقعة
+      return left(
+        ServerFailure(
+          'Unexpected error occurred: ${e.toString()}',
+          520, // Unknown Error
+        ),
+      );
+    }
+  }
+
+  List<ShipmentModel> getTodayShipments(List<ShipmentModel> shipments) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
+
+    return shipments.where((shipment) {
+      final pickupDate = shipment.requestedPickupAt;
+      return pickupDate.isAfter(
+            today.subtract(const Duration(microseconds: 1)),
+          ) &&
+          pickupDate.isBefore(tomorrow);
+    }).toList();
   }
 }

@@ -8,7 +8,10 @@ import 'package:supercycle_app/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle_app/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle_app/core/routes/routes.dart';
 import 'package:supercycle_app/core/services/services_locator.dart';
+import 'package:supercycle_app/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
+import 'package:supercycle_app/features/environment/data/repos/environment_repo_imp.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:supercycle_app/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
 import 'package:supercycle_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
@@ -134,6 +137,16 @@ void main() async {
           create: (context) => FailSegmentCubit(
             repShipmentReviewRepo: getIt.get<RepShipmentReviewRepoImp>(),
           ),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              TodayShipmentsCubit(homeRepo: getIt.get<HomeRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              EcoCubit(environmentRepoImp: getIt.get<EnvironmentRepoImp>()),
         ),
       ],
 

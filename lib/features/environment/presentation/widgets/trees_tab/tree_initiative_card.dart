@@ -3,10 +3,12 @@ import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class TreeInitiativeCard extends StatelessWidget {
-  const TreeInitiativeCard({super.key});
+  final num trees;
+  const TreeInitiativeCard({super.key, required this.trees});
 
   @override
   Widget build(BuildContext context) {
+    final kgNO = trees * 20;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -49,7 +51,7 @@ class TreeInitiativeCard extends StatelessWidget {
                       style: AppStyles.styleSemiBold14(context),
                     ),
                     Text(
-                      '12 شجرة',
+                      ' ${trees.toString().padLeft(2, '0')} شجرة',
                       style: AppStyles.styleBold20(
                         context,
                       ).copyWith(color: Color(0xFF059669)),
@@ -64,7 +66,7 @@ class TreeInitiativeCard extends StatelessWidget {
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        'تساهم في امتصاص 240 كجم من CO₂ سنويًا',
+                        'تساهم في امتصاص $kgNO كجم من CO₂ سنويًا',
                         style: AppStyles.styleSemiBold12(
                           context,
                         ).copyWith(color: AppColors.subTextColor),

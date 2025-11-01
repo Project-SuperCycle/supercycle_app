@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/environment/data/models/top_participant_model.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/leader_board_item.dart';
 
 class LeaderBoardsCard extends StatelessWidget {
-  const LeaderBoardsCard({super.key});
+  final List<TopParticipant> participants;
+  const LeaderBoardsCard({super.key, required this.participants});
 
   @override
   Widget build(BuildContext context) {
@@ -24,29 +26,21 @@ class LeaderBoardsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('لوحة المتصدرين', style: AppStyles.styleBold18(context)),
-          const SizedBox(height: 16),
-          LeaderBoardItem(
-            rank: '1',
-            name: 'شركة الخير للتجارة',
-            points: '15,450 نقطة',
-            color: const Color(0xFFF59E0B),
-            isHighlighted: false,
-          ),
-          const SizedBox(height: 12),
-          LeaderBoardItem(
-            rank: '2',
-            name: 'مؤسسة النور',
-            points: '12,890 نقطة',
-            color: Colors.grey,
-            isHighlighted: false,
-          ),
-          const SizedBox(height: 12),
-          LeaderBoardItem(
-            rank: '8',
-            name: 'أنت 🎉',
-            points: '2,450 نقطة',
-            color: const Color(0xFF059669),
-            isHighlighted: true,
+          ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            shrinkWrap: true,
+            itemCount: participants.length,
+            itemBuilder: (context, index) {
+              final participant = participants[index];
+              return LeaderBoardItem(
+                rank: (index + 1).toString(),
+                name: participant.user.bussinessName,
+                points:
+                    "${participant.totalPoints.toString().padLeft(2, '0')} نقطة",
+                color: const Color(0xFF059669),
+                isHighlighted: false,
+              );
+            },
           ),
         ],
       ),

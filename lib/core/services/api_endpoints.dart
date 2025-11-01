@@ -15,6 +15,8 @@ abstract class ApiEndpoints {
   static const String addNotes = '/shipments/{id}/notes';
   static const String getAllNotes = '/shipments/{id}/notes';
   static const String getProfileInfo = '/trader/me';
+  static const String contactUs = '/contact';
+  static const String getTraderEcoInfo = '/trader/eco/dashboard';
 
   // Representative
   static const String getRepShipments = '/representatives/shipments';

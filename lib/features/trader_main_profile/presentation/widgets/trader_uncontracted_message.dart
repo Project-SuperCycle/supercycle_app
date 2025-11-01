@@ -23,7 +23,7 @@ class TraderUncontractedMessage extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Colors.orange.shade400, Colors.orange.shade600],
+          colors: [Colors.orange.shade400, Colors.deepOrange.shade500],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [

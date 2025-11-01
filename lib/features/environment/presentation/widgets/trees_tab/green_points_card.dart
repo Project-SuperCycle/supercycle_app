@@ -3,10 +3,12 @@ import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class GreenPointsCard extends StatelessWidget {
-  const GreenPointsCard({super.key});
+  final num points;
+  const GreenPointsCard({super.key, required this.points});
 
   @override
   Widget build(BuildContext context) {
+    final remainingPoints = 3000 - points;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -22,7 +24,7 @@ class GreenPointsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '2,450',
+                    points.toString().padLeft(2, '0'),
                     style: AppStyles.styleSemiBold24(context).copyWith(
                       color: Colors.white,
                       fontSize: 32,
@@ -56,7 +58,7 @@ class GreenPointsCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              'تحتاج 550 نقطة أخرى لزراعة شجرتك التالية باسمك! 🌳',
+              ' تحتاج $remainingPoints نقطة أخرى لزراعة شجرتك التالية باسمك!🌳',
               style: AppStyles.styleSemiBold14(
                 context,
               ).copyWith(color: Color(0xFFD1FAE5)),

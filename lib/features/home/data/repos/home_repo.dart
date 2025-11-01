@@ -4,6 +4,7 @@ import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart'
     show DoshDataModel;
 import 'package:supercycle_app/features/home/data/models/dosh_type_model.dart';
 import 'package:supercycle_app/features/home/data/models/type_history_model.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 abstract class HomeRepo {
   Future<Either<Failure, List<DoshTypeModel>>> fetchDoshTypes();
@@ -13,4 +14,6 @@ abstract class HomeRepo {
   });
 
   Future<Either<Failure, List<DoshDataModel>>> fetchTypesData();
+
+  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipmets();
 }

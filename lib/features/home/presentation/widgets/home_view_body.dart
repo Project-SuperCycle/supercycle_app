@@ -15,7 +15,6 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todayShipments = _getTodayShipments();
     return Container(
       color: Colors.grey[50],
       child: SingleChildScrollView(
@@ -25,15 +24,7 @@ class HomeViewBody extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Today's Shipments Card
-            if (todayShipments.isNotEmpty) ...[
-              TodayShipmentsCard(
-                shipments: todayShipments,
-                onShipmentTap: (shipmentId) {
-                  _navigateToShipmentDetails(context, shipmentId);
-                },
-              ),
-              const SizedBox(height: 24),
-            ],
+            TodayShipmentsCard(),
 
             SalesChartCard(),
             const SizedBox(height: 32),
@@ -45,33 +36,6 @@ class HomeViewBody extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  // بيانات تجريبية - استبدلها لما الـ API يبقى جاهز
-  List<TodayShipment> _getTodayShipments() {
-    // TODO: استبدل بالبيانات الحقيقية من API
-    // مثال:
-    // final provider = context.read<ShipmentsCalendarCubit>();
-    // return provider.getTodayShipments();
-
-    // بيانات تجريبية:
-    return [
-      TodayShipment(
-        id: '12345',
-        time: '10:00 صباحاً',
-        location: 'القاهرة - المعادي',
-      ),
-      TodayShipment(
-        id: '12346',
-        time: '02:30 مساءً',
-        location: 'الجيزة - الدقي',
-      ),
-      TodayShipment(
-        id: '12347',
-        time: '05:00 مساءً',
-        location: 'الإسكندرية - سموحة',
-      ),
-    ];
   }
 
   void _navigateToShipmentDetails(

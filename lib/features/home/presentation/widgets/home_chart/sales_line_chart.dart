@@ -271,9 +271,15 @@ class SalesLineChartState extends State<SalesLineChart> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadTypeHistory("68a8567bf5a2951a1ee9e982");
+  }
+
   void _loadTypeHistory([String? typeId]) {
     final id = typeId ?? _selectedTypeId ?? '68a8567bf5a2951a1ee9e982';
-    context.read<HomeCubit>().fetchTypeHistory(typeId: id);
+    BlocProvider.of<HomeCubit>(context).fetchTypeHistory(typeId: id);
   }
 
   void _handleDropdownChange(String? value) {
@@ -388,7 +394,9 @@ class SalesLineChartState extends State<SalesLineChart> {
             ],
           ),
           child: DropdownButtonFormField<String>(
-            value: _selectedTypeName?.isNotEmpty == true ? _selectedTypeName : null,
+            value: _selectedTypeName?.isNotEmpty == true
+                ? _selectedTypeName
+                : null,
             items: options.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -411,9 +419,9 @@ class SalesLineChartState extends State<SalesLineChart> {
             icon: const Icon(Icons.arrow_drop_down_rounded, color: Colors.grey),
             decoration: InputDecoration(
               hintText: S.of(context).select_type,
-              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[500],
-              ),
+              hintStyle: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
             ),
@@ -421,7 +429,6 @@ class SalesLineChartState extends State<SalesLineChart> {
             borderRadius: BorderRadius.circular(16),
           ),
         );
-
       },
     );
   }
