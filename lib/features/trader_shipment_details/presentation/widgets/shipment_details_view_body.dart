@@ -1,13 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
-import 'package:supercycle_app/core/widgets/shipment/back_and_drawer_bar.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
@@ -51,7 +49,6 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: const CustomDrawer(),
       key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -65,7 +62,6 @@ class _ShipmentDetailsViewBodyState extends State<ShipmentDetailsViewBody> {
                   children: [
                     const ShipmentLogo(),
                     const SizedBox(height: 15),
-                    BackAndDrawerBar(),
                   ],
                 ),
               ),
