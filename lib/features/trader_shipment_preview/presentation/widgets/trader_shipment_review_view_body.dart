@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/functions/shipment_manager.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
@@ -81,22 +80,7 @@ class _TraderShipmentReviewViewBodyState
                 child: Column(
                   children: [
                     const ShipmentLogo(),
-                    const SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            textDirection: TextDirection.ltr,
-                            Icons.info_outline,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          CustomBackButton(color: Colors.white, size: 25),
-                        ],
-                      ),
-                    ),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),

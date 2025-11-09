@@ -18,7 +18,6 @@ class HomeViewBody extends StatelessWidget {
           children: [
             HomeViewHeader(onDrawerPressed: onDrawerPressed),
             const SizedBox(height: 24),
-
             // Today's Shipments Card
             TodayShipmentsCard(),
             SalesChartCard(),

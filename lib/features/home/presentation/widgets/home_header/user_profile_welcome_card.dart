@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/functions/navigate_to_profile.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
@@ -49,40 +48,10 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
       mainAxisAlignment: MainAxisAlignment.end,
       textDirection: TextDirection.ltr,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withAlpha(150), width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(25),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 32,
-            child: GestureDetector(
-              onTap: () =>
-                  (userName.isNotEmpty) ? navigateToProfile(context) : null,
-              child: ClipOval(
-                child: Image.asset(
-                  AppAssets.defaultAvatar,
-                  height: 64,
-                  width: 64,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
         Column(
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirection.ltr,
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               S.of(context).welcome,
@@ -99,6 +68,43 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
               ).copyWith(color: Colors.white),
             ),
           ],
+        ),
+        const SizedBox(width: 12),
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white.withAlpha(150), width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(25),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 32,
+            child: GestureDetector(
+              onTap: () {
+                if (userRole == "representative") {
+                  GoRouter.of(
+                    context,
+                  ).push(EndPoints.representativeProfileView);
+                } else {
+                  GoRouter.of(context).push(EndPoints.traderProfileView);
+                }
+              },
+              child: ClipOval(
+                child: Image.asset(
+                  AppAssets.defaultAvatar,
+                  height: 64,
+                  width: 64,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
