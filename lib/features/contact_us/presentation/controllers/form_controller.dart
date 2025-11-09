@@ -33,6 +33,7 @@ class FormController {
       mobile: mobileController.text.trim(),
       message: messageController.text.trim(),
       isRagPaperMerchant: isRagPaperMerchant!,
+      subject: selectedTopic!,
     );
   }
 

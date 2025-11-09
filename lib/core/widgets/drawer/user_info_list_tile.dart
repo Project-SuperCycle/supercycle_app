@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
@@ -49,7 +50,7 @@ class _UserInfoListTileState extends State<UserInfoListTile> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(),
+            child: CustomLoadingIndicator(),
           ),
         ),
       );

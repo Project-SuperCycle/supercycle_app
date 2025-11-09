@@ -1,23 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle_app/core/helpers/custom_dropdown.dart'
-    show CustomDropdown;
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/services/dosh_types_manager.dart';
 import 'package:supercycle_app/core/services/services_locator.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
+import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart';
-import 'package:supercycle_app/features/home/data/models/type_history_model.dart'
-    show TypeHistoryModel;
-import 'package:supercycle_app/generated/l10n.dart' show S;
+import 'package:supercycle_app/features/home/data/models/type_history_model.dart';
+import 'package:supercycle_app/generated/l10n.dart';
 
 // Data model for chart (wrapper around TypeHistoryModel)
 class ChartPriceData {
   final String month;
   final double price;
-
   const ChartPriceData({required this.month, required this.price});
 
   factory ChartPriceData.fromTypeHistory(TypeHistoryModel typeHistory) {
@@ -29,13 +26,10 @@ class ChartPriceData {
 
   static String _formatMonth(String monthString) {
     if (!monthString.contains('-')) return monthString;
-
     final parts = monthString.split('-');
     if (parts.length < 2) return monthString;
-
     final monthNum = int.tryParse(parts[1]);
     if (monthNum == null || monthNum < 1 || monthNum > 12) return monthString;
-
     const months = [
       'Jan',
       'Feb',
@@ -79,7 +73,6 @@ class _LineChart extends StatelessWidget {
   LineChartData get chartData {
     final max = _getMaxPrice();
     final min = _getMinPrice();
-
     return LineChartData(
       lineTouchData: _buildLineTouchData(),
       gridData: const FlGridData(show: false),
@@ -101,10 +94,8 @@ class _LineChart extends StatelessWidget {
         getTooltipItems: (spots) => spots.map((spot) {
           final index = spot.x.toInt();
           if (index < 0 || index >= priceData.length) return null;
-
           final price =
               priceFormatter?.call(spot.y) ?? '\$${spot.y.toStringAsFixed(1)}';
-
           return LineTooltipItem(
             '${priceData[index].month}\n$price',
             const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -126,7 +117,6 @@ class _LineChart extends StatelessWidget {
   SideTitles _buildLeftTitles() {
     final max = _getMaxPrice();
     final min = _getMinPrice();
-
     return SideTitles(
       showTitles: true,
       interval: priceInterval ?? ((max - min) / 4),
@@ -160,16 +150,13 @@ class _LineChart extends StatelessWidget {
           fontFamily: 'Cairo',
           color: Colors.grey,
         );
-
         final index = value.toInt();
         if (index < 0 || index >= priceData.length) {
           return const SizedBox.shrink();
         }
-
         if (!showAllMonths && index % 3 != 0 && index != priceData.length - 1) {
           return const SizedBox.shrink();
         }
-
         return SideTitleWidget(
           meta: meta,
           space: 10,
@@ -222,7 +209,6 @@ class _LineChart extends StatelessWidget {
   double _getMinPrice() {
     if (minPrice != null) return minPrice!;
     if (priceData.isEmpty) return 0.0;
-
     final dataMin = priceData
         .map((e) => e.price)
         .reduce((a, b) => a < b ? a : b);
@@ -271,37 +257,97 @@ class SalesLineChartState extends State<SalesLineChart> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadTypeHistory("68a8567bf5a2951a1ee9e982");
+  }
+
   void _loadTypeHistory([String? typeId]) {
     final id = typeId ?? _selectedTypeId ?? '68a8567bf5a2951a1ee9e982';
-    context.read<HomeCubit>().fetchTypeHistory(typeId: id);
+    BlocProvider.of<HomeCubit>(context).fetchTypeHistory(typeId: id);
   }
 
   void _handleDropdownChange(String? value) {
-    if (value == null || _doshData.isEmpty) return;
+    Logger().i("_handleDropdownChange | VALUE: $value");
+    Logger().i("_doshData length: ${_doshData.length}");
 
-    final selectedType = _doshData.firstWhere(
-      (e) => e.name == value,
-      orElse: () => _doshData.first,
-    );
+    if (value == null || value.isEmpty) {
+      Logger().w("Value is null or empty");
+      return;
+    }
 
-    setState(() {
-      _selectedTypeId = selectedType.id;
-      _selectedTypeName = selectedType.name;
-    });
+    // إذا كانت _doshData فارغة، استخدم DoshTypesManager
+    if (_doshData.isEmpty) {
+      Logger().w("_doshData is empty, trying to get from DoshTypesManager");
+      try {
+        final typesList = getIt<DoshTypesManager>().typesList;
+        Logger().i("DoshTypesManager types count: ${typesList.length}");
 
-    _loadTypeHistory(selectedType.id);
+        if (typesList.isEmpty) {
+          Logger().e("DoshTypesManager is also empty, cannot proceed");
+          return;
+        }
+
+        // البحث عن النوع المحدد في DoshTypesManager
+        final selectedType = typesList.firstWhere(
+          (e) => e.name == value,
+          orElse: () {
+            Logger().e("Type not found in DoshTypesManager: $value");
+            return typesList.first;
+          },
+        );
+
+        Logger().d(
+          "SELECTED TYPE from DoshTypesManager: ${selectedType.name} | ID: ${selectedType.id}",
+        );
+
+        setState(() {
+          _selectedTypeId = selectedType.id;
+          _selectedTypeName = selectedType.name;
+        });
+
+        _loadTypeHistory(selectedType.id);
+        return;
+      } catch (e) {
+        Logger().e("Error accessing DoshTypesManager: $e");
+        return;
+      }
+    }
+
+    // إذا كانت _doshData موجودة، استخدمها
+    try {
+      final selectedType = _doshData.firstWhere(
+        (e) => e.name == value,
+        orElse: () {
+          Logger().e("Type not found in _doshData: $value");
+          return _doshData.first;
+        },
+      );
+
+      Logger().d(
+        "SELECTED TYPE from _doshData: ${selectedType.name} | ID: ${selectedType.id}",
+      );
+
+      setState(() {
+        _selectedTypeId = selectedType.id;
+        _selectedTypeName = selectedType.name;
+      });
+
+      _loadTypeHistory(selectedType.id);
+    } catch (e) {
+      Logger().e("Error in _handleDropdownChange: $e");
+    }
   }
 
   void _initializeSelection(List<DoshDataModel> data) {
     if (_isInitialized || data.isEmpty) return;
-
     setState(() {
       _doshData = data;
       _selectedTypeId = data.first.id;
       _selectedTypeName = data.first.name;
       _isInitialized = true;
     });
-
     _loadTypeHistory(_selectedTypeId);
   }
 
@@ -374,6 +420,12 @@ class SalesLineChartState extends State<SalesLineChart> {
             ? _doshData.map((e) => e.name).toList()
             : _typeOptions;
 
+        // التأكد من أن القيمة المحددة موجودة في القائمة
+        final currentValue =
+            (_selectedTypeName != null && options.contains(_selectedTypeName))
+            ? _selectedTypeName
+            : (options.isNotEmpty ? options.first : null);
+
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
@@ -388,40 +440,50 @@ class SalesLineChartState extends State<SalesLineChart> {
             ],
           ),
           child: DropdownButtonFormField<String>(
-            value: _selectedTypeName?.isNotEmpty == true ? _selectedTypeName : null,
+            value: currentValue,
+            isExpanded: true, // إضافة isExpanded لحل مشكلة الـ layout
             items: options.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Row(
+                  mainAxisSize: MainAxisSize.min, // إضافة mainAxisSize
                   children: [
                     const Icon(Icons.recycling, color: Colors.green, size: 20),
                     const SizedBox(width: 10),
-                    Text(
-                      value,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
+                    Flexible(
+                      // تغيير من Expanded إلى Flexible
+                      child: Text(
+                        value,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   ],
                 ),
               );
             }).toList(),
-            onChanged: _handleDropdownChange, // نفس الفنكشن القديمة
+            onChanged: (value) {
+              Logger().i("Dropdown value changed to: $value");
+              _handleDropdownChange(value);
+            },
             icon: const Icon(Icons.arrow_drop_down_rounded, color: Colors.grey),
             decoration: InputDecoration(
               hintText: S.of(context).select_type,
-              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[500],
-              ),
+              hintStyle: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
+              isDense: true,
             ),
             dropdownColor: Colors.white,
             borderRadius: BorderRadius.circular(16),
           ),
         );
-
       },
     );
   }
@@ -458,18 +520,14 @@ class SalesLineChartState extends State<SalesLineChart> {
             child: CircularProgressIndicator(color: AppColors.primaryColor),
           );
         }
-
         if (state is FetchTypeHistoryFailure) {
           return _buildErrorWidget(state.message);
         }
-
         if (state is FetchTypeHistorySuccess) {
           if (state.history.isEmpty) return _buildNoDataWidget();
-
           final chartData = state.history
               .map(ChartPriceData.fromTypeHistory)
               .toList();
-
           return _LineChart(
             priceData: chartData,
             priceFormatter: widget.priceFormatter,
@@ -479,7 +537,6 @@ class SalesLineChartState extends State<SalesLineChart> {
             showAllMonths: widget.showAllMonths,
           );
         }
-
         return _buildInitialWidget();
       },
     );

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -19,10 +20,12 @@ class _SplashViewState extends State<SplashView>
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
 
+  LoginedUserModel? user;
+
   @override
   void initState() {
     super.initState();
-
+    getUserData();
     // Initialize animation controller
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 2500),
@@ -50,9 +53,9 @@ class _SplashViewState extends State<SplashView>
 
     // Navigate to onboard screen after animation completes (3000ms total)
     Future.delayed(const Duration(milliseconds: 3000), () {
-      if (mounted) {
-        GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView);
-      }
+      (user == null && mounted)
+          ? GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView)
+          : GoRouter.of(context).pushReplacement(EndPoints.homeView);
     });
   }
 
@@ -60,6 +63,10 @@ class _SplashViewState extends State<SplashView>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  void getUserData() async {
+    user = await StorageServices.getUserData();
   }
 
   @override

@@ -53,6 +53,7 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
           : MainAxisAlignment.end,
       children: [
         _buildDrawerButton(),
+        SizedBox(width: 10),
         if (isUserLoggedIn) _buildNotificationButton(),
       ],
     );
@@ -104,10 +105,7 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
                   color: Colors.red,
                   shape: BoxShape.circle,
                 ),
-                constraints: const BoxConstraints(
-                  minWidth: 8,
-                  minHeight: 8,
-                ),
+                constraints: const BoxConstraints(minWidth: 8, minHeight: 8),
               ),
             ),
           ],

@@ -3,12 +3,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:supercycle_app/core/cubits/add_notes_cubit/add_notes_cubit.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle_app/core/cubits/local_cubit/local_cubit.dart';
 import 'package:supercycle_app/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle_app/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle_app/core/routes/routes.dart';
 import 'package:supercycle_app/core/services/services_locator.dart';
+import 'package:supercycle_app/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
+import 'package:supercycle_app/features/environment/data/repos/environment_repo_imp.dart';
 import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:supercycle_app/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
 import 'package:supercycle_app/features/home/data/repos/home_repo_imp.dart';
 import 'package:supercycle_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
@@ -19,14 +24,11 @@ import 'package:supercycle_app/features/representative_shipment_review/data/cubi
 import 'package:supercycle_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
 import 'package:supercycle_app/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 import 'package:supercycle_app/features/trader_shipment_details/data/cubits/shipment_cubit/shipment_cubit.dart';
 import 'package:supercycle_app/features/trader_shipment_details/data/repos/shipment_details_repo_imp.dart';
 import 'package:supercycle_app/features/trader_shipment_details/data/repos/shipment_notes_repo_imp.dart';
 import 'package:supercycle_app/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
 import 'package:supercycle_app/features/shipment_edit/data/repos/shipment_edit_repo_imp.dart';
-import 'package:supercycle_app/features/shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
-import 'package:supercycle_app/features/shipment_preview/data/repos/shipment_preview_repo_imp.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 import 'package:supercycle_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
@@ -35,6 +37,8 @@ import 'package:supercycle_app/features/sign_up/data/managers/sign_up_cubit/sign
     show SignUpCubit;
 import 'package:supercycle_app/features/sign_up/data/repos/signup_repo_imp.dart'
     show SignUpRepoImp;
+import 'package:supercycle_app/features/trader_shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
+import 'package:supercycle_app/features/trader_shipment_preview/data/repos/trader_shipment_preview_repo_imp.dart';
 import 'package:supercycle_app/firebase_options.dart'
     show DefaultFirebaseOptions;
 
@@ -73,7 +77,7 @@ void main() async {
 
         BlocProvider(
           create: (context) => CreateShipmentCubit(
-            shipmentReviewRepo: getIt.get<ShipmentReviewRepoImp>(),
+            shipmentReviewRepo: getIt.get<TraderShipmentPreviewRepoImp>(),
           ),
         ),
 
@@ -84,8 +88,15 @@ void main() async {
         ),
 
         BlocProvider(
-          create: (context) =>
-              NotesCubit(shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>()),
+          create: (context) => AllNotesCubit(
+            shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) => AddNotesCubit(
+            shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>(),
+          ),
         ),
 
         BlocProvider(
@@ -134,6 +145,16 @@ void main() async {
           create: (context) => FailSegmentCubit(
             repShipmentReviewRepo: getIt.get<RepShipmentReviewRepoImp>(),
           ),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              TodayShipmentsCubit(homeRepo: getIt.get<HomeRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              EcoCubit(environmentRepoImp: getIt.get<EnvironmentRepoImp>()),
         ),
       ],
 

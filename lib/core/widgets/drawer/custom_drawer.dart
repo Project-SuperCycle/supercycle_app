@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supercycle_app/core/functions/navigate_to_profile.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/drawer/user_info_list_tile.dart';
 import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle_app/generated/l10n.dart';
 
 class CustomDrawer extends StatefulWidget {
-  const CustomDrawer({
-    super.key,
-    this.isInProfilePage = false,
-  });
+  const CustomDrawer({super.key, this.isInProfilePage = false});
 
   final bool isInProfilePage;
 
@@ -24,6 +21,7 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   bool isUserLoggedIn = false;
+  LoginedUserModel? user;
 
   @override
   void initState() {
@@ -32,7 +30,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   void getUserData() async {
-    LoginedUserModel? user = await StorageServices.getUserData();
+    user = await StorageServices.getUserData();
     if (mounted) {
       setState(() {
         isUserLoggedIn = (user != null);
@@ -49,14 +47,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
     FacebookAuth.instance.logOut();
 
     // الانتقال لصفحة تسجيل الدخول
-    if (mounted) {
-      GoRouter.of(context).go(EndPoints.signInView);
-    }
+    GoRouter.of(context).pushReplacement(EndPoints.homeView);
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentLocation = GoRouter.of(context).routeInformationProvider.value.uri.path;
+    final currentLocation = GoRouter.of(
+      context,
+    ).routeInformationProvider.value.uri.path;
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -84,10 +82,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Divider(
-                  color: Colors.grey[300],
-                  thickness: 1,
-                ),
+                child: Divider(color: Colors.grey[300], thickness: 1),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 10)),
@@ -101,43 +96,51 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'الرئيسية',
                     isActive: currentLocation == EndPoints.homeView,
                     onTap: () {
+                      GoRouter.of(context).push(EndPoints.homeView);
                       Navigator.pop(context);
-                      GoRouter.of(context).go(EndPoints.homeView);
                     },
                   ),
 
                   _buildDrawerItem(
                     icon: Icons.person_rounded,
                     title: 'الملف الشخصي',
-                    isActive: currentLocation == EndPoints.representativeProfileView ||
+                    isActive:
+                        currentLocation ==
+                            EndPoints.representativeProfileView ||
                         currentLocation == EndPoints.editProfileView,
                     onTap: () {
+                      if (user == null) {
+                        GoRouter.of(context).push(EndPoints.signInView);
+                      } else {
+                        navigateToProfile(context);
+                      }
                       Navigator.pop(context);
-                      GoRouter.of(context).go(EndPoints.representativeProfileView);
                     },
                   ),
 
-                  if (widget.isInProfilePage)
-                    _buildChildDrawerItem(
-                      icon: Icons.edit_rounded,
-                      title: 'تعديل الملف الشخصي',
-                      onTap: () {
-                        Navigator.pop(context);
-                        GoRouter.of(context).go(EndPoints.editProfileView);
-                      },
-                    ),
-
+                  // if (widget.isInProfilePage)
+                  //   _buildChildDrawerItem(
+                  //     icon: Icons.edit_rounded,
+                  //     title: 'تعديل الملف الشخصي',
+                  //     onTap: () {
+                  //       Navigator.pop(context);
+                  //       GoRouter.of(context).go(EndPoints.editProfileView);
+                  //     },
+                  //   ),
                   _buildDrawerItem(
                     icon: Icons.calendar_today_rounded,
                     title: 'جدول الشحنات',
-                    isActive: currentLocation == EndPoints.shipmentsCalendarView,
+                    isActive:
+                        currentLocation == EndPoints.shipmentsCalendarView,
                     onTap: () {
-                      Navigator.pop(context);
                       if (isUserLoggedIn) {
-                        GoRouter.of(context).go(EndPoints.shipmentsCalendarView);
+                        GoRouter.of(
+                          context,
+                        ).push(EndPoints.shipmentsCalendarView);
                       } else {
-                        GoRouter.of(context).go(EndPoints.signInView);
+                        GoRouter.of(context).push(EndPoints.signInView);
                       }
+                      Navigator.pop(context);
                     },
                   ),
 
@@ -146,27 +149,34 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'حاسبة الشحنات',
                     isActive: currentLocation == EndPoints.calculatorView,
                     onTap: () {
+                      GoRouter.of(context).push(EndPoints.calculatorView);
                       Navigator.pop(context);
-                      GoRouter.of(context).go(EndPoints.calculatorView);
                     },
                   ),
 
-                  _buildDrawerItem(
-                    icon: Icons.eco_rounded,
-                    title: 'الأثر البيئي',
-                    isActive: currentLocation == EndPoints.environmentalImpactView,
-                    onTap: () {
-                      Navigator.pop(context);
-                      GoRouter.of(context).go(EndPoints.environmentalImpactView);
-                    },
-                  ),
+                  (user == null)
+                      ? SizedBox.shrink()
+                      : (user!.isEcoParticipant == false)
+                      ? SizedBox.shrink()
+                      : _buildDrawerItem(
+                          icon: Icons.eco_rounded,
+                          title: 'الأثر البيئي',
+                          isActive:
+                              currentLocation ==
+                              EndPoints.environmentalImpactView,
+                          onTap: () {
+                            GoRouter.of(
+                              context,
+                            ).push(EndPoints.environmentalImpactView);
+                            Navigator.pop(context);
+                          },
+                        ),
 
                   _buildDrawerItem(
                     icon: Icons.notifications_rounded,
                     title: 'الإشعارات',
                     isActive: false,
                     onTap: () {
-                      Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: const Text(
@@ -180,6 +190,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                         ),
                       );
+                      Navigator.pop(context);
                     },
                   ),
 
@@ -188,8 +199,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'الدعم والمساعدة',
                     isActive: currentLocation == EndPoints.contactUsView,
                     onTap: () {
+                      GoRouter.of(context).push(EndPoints.contactUsView);
                       Navigator.pop(context);
-                      GoRouter.of(context).go(EndPoints.contactUsView);
                     },
                   ),
                 ],
@@ -206,10 +217,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   // خط فاصل
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Divider(
-                      color: Colors.grey[300],
-                      thickness: 1,
-                    ),
+                    child: Divider(color: Colors.grey[300], thickness: 1),
                   ),
 
                   _buildBottomItem(
@@ -217,7 +225,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     asset: AppAssets.settingsIcon,
                     title: 'الإعدادات',
                     onTap: () {
-                      Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: const Text(
@@ -231,29 +238,30 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                         ),
                       );
+                      Navigator.pop(context);
                     },
                   ),
 
                   isUserLoggedIn
                       ? _buildBottomItem(
-                    icon: Icons.logout_rounded,
-                    asset: AppAssets.logoutIcon,
-                    title: 'تسجيل الخروج',
-                    isLogout: true,
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showLogoutDialog(context);
-                    },
-                  )
+                          icon: Icons.logout_rounded,
+                          asset: AppAssets.logoutIcon,
+                          title: 'تسجيل الخروج',
+                          isLogout: true,
+                          onTap: () {
+                            Navigator.pop(context);
+                            _showLogoutDialog(context);
+                          },
+                        )
                       : _buildBottomItem(
-                    icon: Icons.login_rounded,
-                    asset: AppAssets.loginIcon,
-                    title: 'تسجيل الدخول',
-                    onTap: () {
-                      Navigator.pop(context);
-                      GoRouter.of(context).go(EndPoints.signInView);
-                    },
-                  ),
+                          icon: Icons.login_rounded,
+                          asset: AppAssets.loginIcon,
+                          title: 'تسجيل الدخول',
+                          onTap: () {
+                            GoRouter.of(context).push(EndPoints.signInView);
+                            Navigator.pop(context);
+                          },
+                        ),
 
                   const SizedBox(height: 30),
                 ],
@@ -288,9 +296,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               children: [
                 Icon(
                   icon,
-                  color: isActive
-                      ? const Color(0xFF10B981)
-                      : Colors.grey[600],
+                  color: isActive ? const Color(0xFF10B981) : Colors.grey[600],
                   size: 24,
                 ),
                 const SizedBox(width: 16),
@@ -298,12 +304,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Text(
                     title,
                     style: isActive
-                        ? AppStyles.styleBold16(context).copyWith(
-                      color: const Color(0xFF10B981),
-                    )
-                        : AppStyles.styleMedium16(context).copyWith(
-                      color: Colors.grey[700],
-                    ),
+                        ? AppStyles.styleBold16(
+                            context,
+                          ).copyWith(color: const Color(0xFF10B981))
+                        : AppStyles.styleMedium16(
+                            context,
+                          ).copyWith(color: Colors.grey[700]),
                   ),
                 ),
                 if (isActive)
@@ -341,18 +347,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  color: const Color(0xFF10B981),
-                  size: 20,
-                ),
+                Icon(icon, color: const Color(0xFF10B981), size: 20),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     title,
-                    style: AppStyles.styleMedium14(context).copyWith(
-                      color: Colors.grey[700],
-                    ),
+                    style: AppStyles.styleMedium14(
+                      context,
+                    ).copyWith(color: Colors.grey[700]),
                   ),
                 ),
               ],
@@ -393,9 +395,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Expanded(
                   child: Text(
                     title,
-                    style: AppStyles.styleMedium16(context).copyWith(
-                      color: isLogout ? Colors.red : Colors.grey[700],
-                    ),
+                    style: AppStyles.styleMedium16(
+                      context,
+                    ).copyWith(color: isLogout ? Colors.red : Colors.grey[700]),
                   ),
                 ),
               ],
@@ -449,9 +451,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 // ======= الرسالة =======
                 Text(
                   'هل أنت متأكد من تسجيل الخروج من حسابك؟',
-                  style: AppStyles.styleMedium14(context).copyWith(
-                    color: Colors.grey[600],
-                  ),
+                  style: AppStyles.styleMedium14(
+                    context,
+                  ).copyWith(color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
 
@@ -475,9 +477,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                           child: Text(
                             'إلغاء',
-                            style: AppStyles.styleSemiBold16(context).copyWith(
-                              color: Colors.grey[700],
-                            ),
+                            style: AppStyles.styleSemiBold16(
+                              context,
+                            ).copyWith(color: Colors.grey[700]),
                           ),
                         ),
                       ),
@@ -504,9 +506,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                           child: Text(
                             'تسجيل الخروج',
-                            style: AppStyles.styleSemiBold16(context).copyWith(
-                              color: Colors.white,
-                            ),
+                            style: AppStyles.styleSemiBold16(
+                              context,
+                            ).copyWith(color: Colors.white),
                           ),
                         ),
                       ),

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/network_images_preview_dialog.dart';
+import 'package:supercycle_app/core/helpers/network_images_preview_dialog.dart';
 
 class RepresentativeShipmentDetailsHeader extends StatelessWidget {
   final SingleShipmentModel shipment;
@@ -52,7 +52,7 @@ class RepresentativeShipmentDetailsHeader extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                shipment.status,
+                shipment.status.toUpperCase(),
                 style: AppStyles.styleSemiBold16(
                   context,
                 ).copyWith(fontWeight: FontWeight.bold, color: Colors.blue),

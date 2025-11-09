@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_section.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_info_card.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 
 class RepresentativeProfileViewBody extends StatefulWidget {
-  const RepresentativeProfileViewBody({super.key});
+  final UserProfileModel userProfile;
+  const RepresentativeProfileViewBody({super.key, required this.userProfile});
 
   @override
   State<RepresentativeProfileViewBody> createState() =>
@@ -15,16 +19,23 @@ class RepresentativeProfileViewBody extends StatefulWidget {
 class _RepresentativeProfileViewBodyState
     extends State<RepresentativeProfileViewBody> {
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ShipmentsCalendarCubit>(
+      context,
+    ).getAllRepShipments(query: {"status": "delivered"});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      drawer:CustomDrawer(isInProfilePage: true),
+      drawer: CustomDrawer(isInProfilePage: true),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: RepresentativeProfileHeaderSection(
-              representativeProfileData:
-              ProfileConstants.sampleRepresentativeData,
+              userProfile: widget.userProfile,
             ),
           ),
           SliverToBoxAdapter(

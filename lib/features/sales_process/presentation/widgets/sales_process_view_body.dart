@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
@@ -7,7 +8,6 @@ import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_button.dart';
-import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
@@ -35,6 +35,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
   List<DoshItemModel> products = [];
   List<File> selectedImages = [];
   DateTime? selectedDateTime;
+  String userAddress = "";
   TextEditingController addressController = TextEditingController();
 
   @override
@@ -48,7 +49,10 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     if (user == null) {
       return;
     }
-    addressController.text = user.bussinessAdress ?? "";
+    setState(() {
+      userAddress = user.bussinessAdress ?? "";
+      addressController.text = userAddress;
+    });
   }
 
   void _onImagesChanged(List<File> images) {
@@ -89,10 +93,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
               // Header Section (Fixed)
               SliverToBoxAdapter(
                 child: Column(
-                  children: [
-                    const ShipmentLogo(),
-                    const SizedBox(height: 20),
-                  ],
+                  children: [const ShipmentLogo(), const SizedBox(height: 20)],
                 ),
               ),
               // White Container Content (Scrollable)
@@ -220,15 +221,22 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     });
   }
 
-  // دالة للتعامل مع إرسال البيانات
   void _handleSubmit() {
     CreateShipmentModel shipment = CreateShipmentModel(
-      customPickupAddress: addressController.text,
+      customPickupAddress: _handleAddress(),
       requestedPickupAt: selectedDateTime ?? DateTime.now(),
       images: selectedImages,
       items: products,
       userNotes: notes.isEmpty ? "" : notes.first,
     );
-    GoRouter.of(context).push(EndPoints.shipmentPreviewView, extra: shipment);
+    GoRouter.of(
+      context,
+    ).push(EndPoints.traderShipmentPreviewView, extra: shipment);
+  }
+
+  String _handleAddress() {
+    return (addressController.text.isNotEmpty)
+        ? addressController.text
+        : userAddress;
   }
 }

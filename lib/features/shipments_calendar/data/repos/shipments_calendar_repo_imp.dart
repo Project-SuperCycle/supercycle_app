@@ -13,11 +13,14 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
   ShipmentsCalendarRepoImp({required this.apiServices});
 
   @override
-  Future<Either<Failure, List<ShipmentModel>>> getAllShipments() async {
+  Future<Either<Failure, List<ShipmentModel>>> getAllShipments({
+    required Map<String, dynamic> query,
+  }) async {
     // TODO: implement getAllShipments
     try {
       final response = await apiServices.get(
         endPoint: ApiEndpoints.getAllShipments,
+        query: query,
       );
 
       var data = response["data"];
@@ -59,11 +62,14 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
   }
 
   @override
-  Future<Either<Failure, List<ShipmentModel>>> getAllRepShipments() async {
+  Future<Either<Failure, List<ShipmentModel>>> getAllRepShipments({
+    required Map<String, dynamic> query,
+  }) async {
     // TODO: implement getAllRepShipments
     try {
       final response = await apiServices.get(
         endPoint: ApiEndpoints.getRepShipments,
+        query: query,
       );
       var data = response["data"];
       List<ShipmentModel> shipments = [];

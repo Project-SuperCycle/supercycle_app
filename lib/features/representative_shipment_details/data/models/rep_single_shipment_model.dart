@@ -15,8 +15,8 @@ class RepSingleShipmentModel {
   final String userNotes;
   final num totalQuantityKg;
   final RepresentitiveModel? representitive;
-  final List<RepNoteModel> mainNotes;
-  final List<RepNoteModel> repNotes;
+  final List<ShipmentNoteModel> mainNotes;
+  final List<ShipmentNoteModel> repNotes;
   final List<ShipmentSegmentModel> segments;
 
   RepSingleShipmentModel({
@@ -37,18 +37,18 @@ class RepSingleShipmentModel {
 
   factory RepSingleShipmentModel.fromJson(Map<String, dynamic> json) {
     // Parse all notes first
-    List<RepNoteModel> allNotes = json['notes'] != null
-        ? List<RepNoteModel>.from(
-            json['notes'].map((x) => RepNoteModel.fromJson(x)),
+    List<ShipmentNoteModel> allNotes = json['notes'] != null
+        ? List<ShipmentNoteModel>.from(
+            json['notes'].map((x) => ShipmentNoteModel.fromJson(x)),
           )
         : [];
 
     // Filter notes based on authorRole
-    List<RepNoteModel> mainNotes = allNotes
+    List<ShipmentNoteModel> mainNotes = allNotes
         .where((note) => note.authorRole != 'representative')
         .toList();
 
-    List<RepNoteModel> repNotes = allNotes
+    List<ShipmentNoteModel> repNotes = allNotes
         .where((note) => note.authorRole == 'representative')
         .toList();
 
@@ -83,7 +83,7 @@ class RepSingleShipmentModel {
 
   Map<String, dynamic> toJson() {
     // Combine mainNotes and repNotes back into a single notes array
-    List<RepNoteModel> allNotes = [...mainNotes, ...repNotes];
+    List<ShipmentNoteModel> allNotes = [...mainNotes, ...repNotes];
 
     return {
       '_id': id,
@@ -126,8 +126,8 @@ class RepSingleShipmentModel {
     String? userNotes,
     num? totalQuantityKg,
     RepresentitiveModel? representitive,
-    List<RepNoteModel>? mainNotes,
-    List<RepNoteModel>? repNotes,
+    List<ShipmentNoteModel>? mainNotes,
+    List<ShipmentNoteModel>? repNotes,
     List<ShipmentSegmentModel>? segments,
   }) {
     return RepSingleShipmentModel(

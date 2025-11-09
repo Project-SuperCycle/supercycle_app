@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_view_body.dart';
 
 class RepresentativeProfileView extends StatelessWidget {
-  const RepresentativeProfileView({super.key});
+  final UserProfileModel userProfile;
+  const RepresentativeProfileView({super.key, required this.userProfile});
 
   @override
   Widget build(BuildContext context) {
-    return const RepresentativeProfileViewBody();
+    return RepresentativeProfileViewBody(userProfile: userProfile);
   }
 }

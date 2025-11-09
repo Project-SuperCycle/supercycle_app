@@ -8,6 +8,7 @@ class LoginedUserModel {
   final String? role;
   final String? phone;
   final String? displayName;
+  final bool? isEcoParticipant;
 
   LoginedUserModel({
     this.bussinessName,
@@ -19,6 +20,7 @@ class LoginedUserModel {
     this.role,
     this.phone,
     this.displayName,
+    this.isEcoParticipant,
   });
 
   // fromJson constructor
@@ -43,6 +45,7 @@ class LoginedUserModel {
       role: json['role'],
       phone: json['phone'],
       displayName: json['displayName'],
+      isEcoParticipant: json['isEcoParticipant'],
     );
   }
 
@@ -58,6 +61,7 @@ class LoginedUserModel {
       'role': role,
       'phone': phone,
       'displayName': displayName,
+      'isEcoParticipant': isEcoParticipant,
     };
   }
 
@@ -78,6 +82,7 @@ class LoginedUserModel {
     String? role,
     String? phone,
     String? displayName,
+    bool? isEcoParticipant,
   }) {
     return LoginedUserModel(
       bussinessName: bussinessName ?? this.bussinessName,
@@ -89,6 +94,7 @@ class LoginedUserModel {
       role: role ?? this.role,
       phone: phone ?? this.phone,
       displayName: displayName ?? this.displayName,
+      isEcoParticipant: isEcoParticipant ?? this.isEcoParticipant,
     );
   }
 }

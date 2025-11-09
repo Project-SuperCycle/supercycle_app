@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/features/environment/data/models/trader_eco_info_model.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/badges_card.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/challenge_card.dart';
 import 'package:supercycle_app/features/environment/presentation/widgets/achievements_tab/leader_boards_card.dart';
 
 class EnvironmentalAchievementsTab extends StatelessWidget {
-  const EnvironmentalAchievementsTab({super.key});
+  final TraderEcoInfoModel ecoInfoModel;
+  const EnvironmentalAchievementsTab({super.key, required this.ecoInfoModel});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class EnvironmentalAchievementsTab extends StatelessWidget {
         children: [
           BadgesCard(),
           const SizedBox(height: 12),
-          LeaderBoardsCard(),
+          LeaderBoardsCard(participants: ecoInfoModel.topParticipants),
           const SizedBox(height: 12),
           ChallengeCard(),
           const SizedBox(height: 80),

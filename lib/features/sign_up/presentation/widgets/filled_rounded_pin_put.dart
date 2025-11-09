@@ -5,7 +5,6 @@ import 'package:supercycle_app/core/utils/app_styles.dart';
 
 class FilledRoundedPinPut extends StatefulWidget {
   final TextEditingController controller;
-
   const FilledRoundedPinPut({super.key, required this.controller});
 
   @override
@@ -43,25 +42,28 @@ class FilledRoundedPinPutState extends State<FilledRoundedPinPut> {
 
     return SizedBox(
       height: 68,
-      child: Pinput(
-        length: length,
-        controller: widget.controller,
-        focusNode: focusNode,
-        defaultPinTheme: defaultPinTheme,
-        onCompleted: (pin) {
-          setState(() => showError = pin != '5555');
-        },
-        focusedPinTheme: defaultPinTheme.copyWith(
-          height: 68,
-          width: 64,
-          decoration: defaultPinTheme.decoration!.copyWith(
-            border: Border.all(color: borderColor),
+      child: Directionality(
+        textDirection: TextDirection.ltr, // Force LTR for pin input
+        child: Pinput(
+          length: length,
+          controller: widget.controller,
+          focusNode: focusNode,
+          defaultPinTheme: defaultPinTheme,
+          onCompleted: (pin) {
+            setState(() => showError = pin != '5555');
+          },
+          focusedPinTheme: defaultPinTheme.copyWith(
+            height: 68,
+            width: 64,
+            decoration: defaultPinTheme.decoration!.copyWith(
+              border: Border.all(color: borderColor),
+            ),
           ),
-        ),
-        errorPinTheme: defaultPinTheme.copyWith(
-          decoration: BoxDecoration(
-            color: errorColor,
-            borderRadius: BorderRadius.circular(8),
+          errorPinTheme: defaultPinTheme.copyWith(
+            decoration: BoxDecoration(
+              color: errorColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
       ),

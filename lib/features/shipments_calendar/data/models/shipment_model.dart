@@ -21,7 +21,7 @@ class ShipmentModel {
       shipmentNumber: json['shipmentNumber'] ?? "",
       customPickupAddress: json['customPickupAddress'] ?? "",
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
-      status: json['status'] as String,
+      status: json['statusDisplay'] as String,
       totalQuantityKg: json['totalQuantityKg'] as num? ?? 0,
     );
   }

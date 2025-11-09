@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart'
     show ProfileConstants;
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_branches_section.dart';
-import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_main_branch_section.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_row.dart';
 
 class TraderProfileInfoCard1 extends StatelessWidget {
-  const TraderProfileInfoCard1({super.key, required this.profileData});
+  final UserProfileModel userProfile;
 
-  final TraderProfileData profileData;
+  const TraderProfileInfoCard1({super.key, required this.userProfile});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +33,12 @@ class TraderProfileInfoCard1 extends StatelessWidget {
           children: [
             ..._buildProfileInfoRows(),
             const SizedBox(height: 30),
-            TraderBranchesSection(
-              branches: profileData.branches,
-              types: profileData.recyclableTypes,
-            ),
+            (userProfile.role == "trader_uncontracted")
+                ? TraderMainBranchSection(branch: userProfile.branch!)
+                : TraderBranchesSection(
+                    branches: ProfileConstants.sampleProfileData.branches,
+                    types: ProfileConstants.sampleProfileData.recyclableTypes,
+                  ),
           ],
         ),
       ),
@@ -46,27 +49,27 @@ class TraderProfileInfoCard1 extends StatelessWidget {
     final profileInfo = [
       ProfileInfoItem(
         label: "نوع النشاط",
-        value: profileData.activityType,
+        value: userProfile.rawBusinessType!,
         icon: Icons.business,
       ),
       ProfileInfoItem(
         label: "العنوان",
-        value: profileData.address,
+        value: userProfile.businessAddress!,
         icon: Icons.location_on,
       ),
       ProfileInfoItem(
         label: "اسم المسئول",
-        value: profileData.responsiblePerson,
+        value: userProfile.doshManagerName!,
         icon: Icons.person,
       ),
       ProfileInfoItem(
         label: "رقم الهاتف",
-        value: profileData.phoneNumber,
+        value: userProfile.doshManagerPhone!,
         icon: Icons.phone,
       ),
       ProfileInfoItem(
         label: "الايميل",
-        value: profileData.email,
+        value: userProfile.email,
         icon: Icons.email,
       ),
     ];
@@ -74,14 +77,14 @@ class TraderProfileInfoCard1 extends StatelessWidget {
     return profileInfo
         .map(
           (item) => Padding(
-        padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
-        child: TraderProfileInfoRow(
-          label: item.label,
-          value: item.value,
-          icon: item.icon,
-        ),
-      ),
-    )
+            padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
+            child: TraderProfileInfoRow(
+              label: item.label,
+              value: item.value,
+              icon: item.icon,
+            ),
+          ),
+        )
         .toList();
   }
 }

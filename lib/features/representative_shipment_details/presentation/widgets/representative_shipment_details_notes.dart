@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_state.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_state.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_add_note_sheet.dart';
+import 'package:supercycle_app/core/widgets/shipment_add_note_sheet.dart';
 
 class RepresentativeShipmentDetailsNotes extends StatefulWidget {
   final String shipmentID;
@@ -71,7 +71,7 @@ class _RepresentativeShipmentDetailsNotesState
               left: 0,
               right: 0,
               bottom: 0,
-              child: BlocConsumer<NotesCubit, NotesState>(
+              child: BlocConsumer<AllNotesCubit, AllNotesState>(
                 listener: (context, state) {
                   if (state is GetAllNotesSuccess) {
                     setState(() {

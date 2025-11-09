@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart' show CustomBackButton;
+import 'package:supercycle_app/core/helpers/custom_back_button.dart'
+    show CustomBackButton;
 import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle_app/features/environment/data/models/trader_eco_info_model.dart';
 
 class EnvironmentalImpactHeader extends StatelessWidget {
-  const EnvironmentalImpactHeader({super.key});
+  final TraderEcoInfoModel ecoInfoModel;
+  const EnvironmentalImpactHeader({super.key, required this.ecoInfoModel});
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-
       child: Container(
         decoration: BoxDecoration(
           gradient: kGradientContainer,
@@ -71,18 +73,22 @@ class EnvironmentalImpactHeader extends StatelessWidget {
                     color: Colors.white.withAlpha(20),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Expanded(
                         child: _StatCard(
-                          value: '847',
+                          value: ecoInfoModel.stats.totalRecycledKg
+                              .toString()
+                              .padLeft(2, '0'),
                           label: 'كجم تم تدويرها',
                         ),
                       ),
                       SizedBox(width: 16),
                       Expanded(
                         child: _StatCard(
-                          value: '12',
+                          value: ecoInfoModel.stats.treesPlanted
+                              .toString()
+                              .padLeft(2, '0'),
                           label: 'شجرة تم زراعتها',
                         ),
                       ),

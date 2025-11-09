@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
 import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
@@ -9,12 +10,11 @@ import 'package:supercycle_app/features/representative_main_profile/data/models/
 import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_image.dart';
 
 class RepresentativeProfileHeaderSection extends StatelessWidget {
+  final UserProfileModel userProfile;
   const RepresentativeProfileHeaderSection({
     super.key,
-    required this.representativeProfileData,
+    required this.userProfile,
   });
-
-  final RepresentativeProfileData representativeProfileData;
 
   @override
   Widget build(BuildContext context) {
@@ -105,19 +105,16 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                   const SizedBox(height: 30),
 
                   // Profile Image
-                  RepresentativProfileImage(
-                    logoPath: representativeProfileData.logoPath,
-                  ),
+                  RepresentativProfileImage(logoPath: AppAssets.defaultAvatar),
 
                   const SizedBox(height: 16),
 
                   // Profile Name
                   Text(
-                    representativeProfileData.name,
-                    style: AppStyles.styleBold24(context).copyWith(
-                      color: Colors.white,
-                      fontSize: 28,
-                    ),
+                    userProfile.repName!,
+                    style: AppStyles.styleBold24(
+                      context,
+                    ).copyWith(color: Colors.white, fontSize: 28),
                   ),
 
                   const SizedBox(height: 20),
@@ -133,10 +130,11 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _StatCard(
-                          value: representativeProfileData.weeklyShipments
-                              .toString()
-                              .padLeft(2, '0'),
-                          label: 'عدد شحناتك\nالأسبوع ده',
+                          value: userProfile.totalShipments.toString().padLeft(
+                            2,
+                            '0',
+                          ),
+                          label: 'عدد شحناتك\nمعانا',
                         ),
                         Container(
                           height: 50,
@@ -144,10 +142,11 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                           color: Colors.white.withAlpha(80),
                         ),
                         _StatCard(
-                          value: representativeProfileData.totalShipments
-                              .toString()
-                              .padLeft(2, '0'),
-                          label: 'شحنات\nمعنا',
+                          value: userProfile.delivered.toString().padLeft(
+                            2,
+                            '0',
+                          ),
+                          label: 'عدد شحناتك\nالتامة',
                         ),
                       ],
                     ),
@@ -207,10 +206,10 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 40),
                       child: Text(
-                        representativeProfileData.phoneNumber,
-                        style: AppStyles.styleMedium12(context).copyWith(
-                          color: Colors.grey[600],
-                        ),
+                        userProfile.repPhone!,
+                        style: AppStyles.styleMedium12(
+                          context,
+                        ).copyWith(color: Colors.grey[600]),
                         textDirection: TextDirection.ltr,
                       ),
                     ),
@@ -252,10 +251,10 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 40),
                       child: Text(
-                        representativeProfileData.email,
-                        style: AppStyles.styleMedium12(context).copyWith(
-                          color: Colors.grey[600],
-                        ),
+                        userProfile.repEmail!,
+                        style: AppStyles.styleMedium12(
+                          context,
+                        ).copyWith(color: Colors.grey[600]),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -283,10 +282,9 @@ class _StatCard extends StatelessWidget {
       children: [
         Text(
           value,
-          style: AppStyles.styleBold24(context).copyWith(
-            color: Colors.white,
-            fontSize: 32,
-          ),
+          style: AppStyles.styleBold24(
+            context,
+          ).copyWith(color: Colors.white, fontSize: 32),
         ),
         const SizedBox(height: 8),
         Text(

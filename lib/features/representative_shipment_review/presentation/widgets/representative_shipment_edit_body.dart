@@ -1,8 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/utils/app_assets.dart';
@@ -20,8 +20,7 @@ import 'package:supercycle_app/features/representative_shipment_details/data/mod
 import 'package:supercycle_app/features/representative_shipment_details/presentation/widgets/representative_shipment_notes_content.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_details_notes.dart';
+import 'package:supercycle_app/core/widgets/shipment/shipment_details_notes.dart';
 import 'package:supercycle_app/features/shipment_edit/presentation/widgets/shipment_edit_header.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 import 'dart:io';
@@ -54,7 +53,7 @@ class _RepresentativeShipmentEditBodyState
       products = widget.shipment.items;
       selectedDateTime = widget.shipment.requestedPickupAt;
     });
-    BlocProvider.of<NotesCubit>(
+    BlocProvider.of<AllNotesCubit>(
       context,
     ).getAllNotes(shipmentId: widget.shipment.id);
   }
