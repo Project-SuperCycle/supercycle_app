@@ -1,4 +1,4 @@
-import 'package:supercycle_app/core/models/trader_branch_model.dart';
+import 'package:supercycle_app/core/models/trader_main_branch_model.dart';
 
 class UserProfileModel {
   // Basic Info
@@ -6,7 +6,7 @@ class UserProfileModel {
   final String role;
 
   // Main Branch
-  final TraderBranchModel? branch;
+  final TraderMainBranchModel? branch;
 
   // Profile
   final String? businessName;
@@ -69,7 +69,7 @@ class UserProfileModel {
           ? json['profile']['doshMangerPhone']
           : null,
       branch: (json['mainBranch'] != null)
-          ? TraderBranchModel.fromJson(json['mainBranch'])
+          ? TraderMainBranchModel.fromJson(json['mainBranch'])
           : null,
       totalShipmentsCount: (json['stats'] != null)
           ? json['stats']['totalShipmentsCount']
@@ -106,7 +106,7 @@ class UserProfileModel {
     String? businessAddress,
     String? doshManagerName,
     String? doshManagerPhone,
-    TraderBranchModel? branch,
+    TraderMainBranchModel? branch,
     num? totalShipmentsCount,
     num? fullyDeliveredCount,
     num? partiallyDeliveredCount,

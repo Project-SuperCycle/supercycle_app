@@ -47,9 +47,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     FacebookAuth.instance.logOut();
 
     // الانتقال لصفحة تسجيل الدخول
-    if (mounted) {
-      GoRouter.of(context).go(EndPoints.signInView);
-    }
+    GoRouter.of(context).pushReplacement(EndPoints.homeView);
   }
 
   @override
@@ -158,7 +156,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
                   (user == null)
                       ? SizedBox.shrink()
-                      : (user!.role! == "representative")
+                      : (user!.isEcoParticipant == false)
                       ? SizedBox.shrink()
                       : _buildDrawerItem(
                           icon: Icons.eco_rounded,

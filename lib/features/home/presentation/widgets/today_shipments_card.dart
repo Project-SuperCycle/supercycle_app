@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
 import 'package:supercycle_app/core/services/storage_services.dart';
@@ -11,7 +12,6 @@ import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
 
 class TodayShipmentsCard extends StatefulWidget {
   const TodayShipmentsCard({super.key});
@@ -41,7 +41,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: shipmentID);
-    BlocProvider.of<NotesCubit>(context).getAllNotes(shipmentId: shipmentID);
+    BlocProvider.of<AllNotesCubit>(context).getAllNotes(shipmentId: shipmentID);
   }
 
   @override
@@ -57,7 +57,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withOpacity(0.3),
+            color: Colors.orange.withAlpha(75),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -111,7 +111,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withAlpha(50),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -183,7 +183,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
                                             extra: state.shipment,
                                           )
                                         : GoRouter.of(context).push(
-                                            EndPoints.shipmentDetailsView,
+                                            EndPoints.traderShipmentDetailsView,
                                             extra: state.shipment,
                                           );
                                   }
@@ -226,9 +226,9 @@ class _ShipmentItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withAlpha(50),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+          border: Border.all(color: Colors.white.withAlpha(75), width: 1),
         ),
         child: Row(
           children: [
@@ -264,7 +264,7 @@ class _ShipmentItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.access_time,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withAlpha(400),
                         size: 14,
                       ),
                       const SizedBox(width: 4),
@@ -277,7 +277,7 @@ class _ShipmentItem extends StatelessWidget {
                       const SizedBox(width: 12),
                       Icon(
                         Icons.location_on,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withAlpha(400),
                         size: 14,
                       ),
                       const SizedBox(width: 4),
@@ -301,7 +301,7 @@ class _ShipmentItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(50),
                 shape: BoxShape.circle,
               ),
               child: const Icon(

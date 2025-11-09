@@ -23,7 +23,6 @@ class _RepresentativeProfileInfoCardState
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ShipmentsCalendarCubit>(context).getAllRepShipments();
   }
 
   @override

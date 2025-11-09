@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle_app/core/models/user_profile_model.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
+import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_header_section.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card1.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_card2.dart';
@@ -20,6 +21,14 @@ class TraderProfileViewBody extends StatefulWidget {
 class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
   int currentPage = 0;
   final PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ShipmentsCalendarCubit>(
+      context,
+    ).getAllShipments(query: {"status": "delivered"});
+  }
 
   @override
   void dispose() {

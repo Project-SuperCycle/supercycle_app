@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -8,7 +7,6 @@ import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/utils/calendar_utils.dart';
 import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
-import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
@@ -46,14 +44,16 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
     Logger().d("USER: $user");
     if (user != null) {
       if (user.role == "representative") {
-        BlocProvider.of<ShipmentsCalendarCubit>(context).getAllRepShipments();
+        BlocProvider.of<ShipmentsCalendarCubit>(
+          context,
+        ).getAllRepShipments(query: {});
       } else {
-        BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
+        BlocProvider.of<ShipmentsCalendarCubit>(
+          context,
+        ).getAllShipments(query: {});
       }
     }
   }
-
-
 
   static const String _imageUrl =
       "https://moe-ye.net/wp-content/uploads/2021/08/IMG-20210808-WA0001.jpg";
@@ -70,10 +70,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
           child: Column(
             children: [
               Column(
-                children: [
-                  const ShipmentLogo(),
-                  const SizedBox(height: 20),
-                ],
+                children: [const ShipmentLogo(), const SizedBox(height: 20)],
               ),
               Expanded(
                 child:

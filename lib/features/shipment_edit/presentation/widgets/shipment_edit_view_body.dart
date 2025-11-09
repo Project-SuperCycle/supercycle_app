@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle_app/core/constants.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle_app/core/functions/shipment_manager.dart';
 import 'package:supercycle_app/core/models/single_shipment_model.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
@@ -19,12 +20,10 @@ import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
 import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/shipment_details_notes.dart';
+import 'package:supercycle_app/core/widgets/shipment/shipment_details_notes.dart';
 import 'package:supercycle_app/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
 import 'package:supercycle_app/features/shipment_edit/data/models/edit_shipment_model.dart';
 import 'package:supercycle_app/features/shipment_edit/presentation/widgets/shipment_edit_header.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/generated/l10n.dart';
 import 'dart:io';
 
@@ -53,7 +52,7 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
       products = widget.shipment.items;
       selectedDateTime = widget.shipment.requestedPickupAt;
     });
-    BlocProvider.of<NotesCubit>(
+    BlocProvider.of<AllNotesCubit>(
       context,
     ).getAllNotes(shipmentId: widget.shipment.id);
   }

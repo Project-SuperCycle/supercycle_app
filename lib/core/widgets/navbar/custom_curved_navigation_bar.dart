@@ -48,10 +48,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   }
 
   void _handleTap(int index) {
-    Logger().d("🔵 TAP: index=$index, current=$_currentIndex");
-
-    if (!mounted) return;
-
     setState(() {
       _currentIndex = index;
     });
@@ -60,56 +56,46 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       widget.onTap!(index);
     }
 
-    // ✅ استخدم Future.microtask لضمان تنفيذ النافجيشن بعد البناء
-    Future.microtask(() {
-      if (mounted) {
-        _navigateToScreen(index);
-      }
-    });
+    _navigateToScreen(index);
   }
 
   void _navigateToScreen(int index) {
     if (!mounted) return;
 
-    Logger().d("🚀 NAVIGATE: index=$index");
-
-    // ✅ احصل على الـ router من context
     final router = GoRouter.of(context);
 
     try {
       switch (index) {
         case 0:
-          Logger().d("➡️ Going to Calculator");
-          router.go(EndPoints.calculatorView);
+          router.push(EndPoints.calculatorView);
           break;
         case 1:
-          Logger().d("➡️ Going to Sales/SignIn");
           if (isUserLoggedIn) {
-            router.go(EndPoints.salesProcessView);
+            router.push(EndPoints.salesProcessView);
           } else {
-            router.go(EndPoints.signInView);
+            router.push(EndPoints.signInView);
           }
           break;
         case 2:
-          Logger().d("➡️ Going to Home");
-          router.go(EndPoints.homeView);
+          router.push(EndPoints.homeView);
           break;
         case 3:
-          Logger().d("➡️ Going to Calendar/SignIn");
           if (isUserLoggedIn) {
-            router.go(EndPoints.shipmentsCalendarView);
+            router.push(EndPoints.shipmentsCalendarView);
           } else {
-            router.go(EndPoints.signInView);
+            router.push(EndPoints.signInView);
           }
           break;
         case 4:
-          Logger().d("➡️ Going to Contact");
-          router.go(EndPoints.contactUsView);
+          router.push(EndPoints.contactUsView);
           break;
       }
-      Logger().d("✅ Navigation command executed");
     } catch (e) {
-      Logger().e("❌ Navigation error: $e");
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to navigate: ${e.toString()}')),
+        );
+      }
     }
   }
 

@@ -18,8 +18,8 @@ class SingleShipmentModel {
   final String userNotes;
   final num totalQuantityKg;
   final RepresentitiveModel? representitive;
-  final List<RepNoteModel> mainNotes;
-  final List<RepNoteModel> repNotes;
+  final List<ShipmentNoteModel> mainNotes;
+  final List<ShipmentNoteModel> repNotes;
   final List<ShipmentSegmentModel> segments;
 
   SingleShipmentModel({
@@ -41,18 +41,18 @@ class SingleShipmentModel {
 
   factory SingleShipmentModel.fromJson(Map<String, dynamic> json) {
     // Parse all notes first
-    List<RepNoteModel> allNotes = json['notes'] != null
-        ? List<RepNoteModel>.from(
-            json['notes'].map((x) => RepNoteModel.fromJson(x)),
+    List<ShipmentNoteModel> allNotes = json['notes'] != null
+        ? List<ShipmentNoteModel>.from(
+            json['notes'].map((x) => ShipmentNoteModel.fromJson(x)),
           )
         : [];
 
     // Filter notes based on authorRole
-    List<RepNoteModel> mainNotes = allNotes
+    List<ShipmentNoteModel> mainNotes = allNotes
         .where((note) => note.authorRole != 'representative')
         .toList();
 
-    List<RepNoteModel> repNotes = allNotes
+    List<ShipmentNoteModel> repNotes = allNotes
         .where((note) => note.authorRole == 'representative')
         .toList();
 
@@ -61,7 +61,7 @@ class SingleShipmentModel {
       shipmentNumber: json['shipmentNumber'] ?? "",
       customPickupAddress: json['customPickupAddress'],
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
-      status: json['status'] ?? "",
+      status: json['statusDisplay'] ?? "",
       uploadedImages: json['uploadedImages'] != null
           ? List<String>.from(json['uploadedImages'])
           : [],
@@ -72,8 +72,8 @@ class SingleShipmentModel {
           : [],
       userNotes: json['userNotes'] ?? '',
       totalQuantityKg: json['totalQuantityKg'] as num? ?? 0,
-      representitive: json['representitive'] != null
-          ? RepresentitiveModel.fromJson(json['representitive'])
+      representitive: json['representativeId'] != null
+          ? RepresentitiveModel.fromJson(json['representativeId'])
           : null,
       mainNotes: mainNotes,
       repNotes: repNotes,
@@ -87,7 +87,7 @@ class SingleShipmentModel {
 
   Map<String, dynamic> toJson() {
     // Combine mainNotes and repNotes back into a single notes array
-    List<RepNoteModel> allNotes = [...mainNotes, ...repNotes];
+    List<ShipmentNoteModel> allNotes = [...mainNotes, ...repNotes];
 
     return {
       '_id': id,
@@ -131,8 +131,8 @@ class SingleShipmentModel {
     String? userNotes,
     num? totalQuantityKg,
     RepresentitiveModel? representitive,
-    List<RepNoteModel>? mainNotes,
-    List<RepNoteModel>? repNotes,
+    List<ShipmentNoteModel>? mainNotes,
+    List<ShipmentNoteModel>? repNotes,
     List<ShipmentSegmentModel>? segments,
   }) {
     return SingleShipmentModel(

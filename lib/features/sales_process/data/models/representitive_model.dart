@@ -1,39 +1,48 @@
 class RepresentitiveModel {
-  final String image;
+  final String email;
   final String name;
   final String phone;
+  final String? image;
 
   RepresentitiveModel({
-    required this.image,
+    required this.email,
     required this.name,
     required this.phone,
+    required this.image,
   });
 
   factory RepresentitiveModel.fromJson(Map<String, dynamic> json) {
     return RepresentitiveModel(
-      image: json['image'] as String,
-      name: json['name'] ?? "",
-      phone: json['phone'] as String,
+      email: json['email'] ?? "",
+      name: json['fullName'] ?? "",
+      phone: json['phone'] ?? "",
+      image: json['image'],
     );
   }
 
   // toJson method
   Map<String, dynamic> toJson() {
-    return {'image': image, 'name': name, 'phone': phone};
+    return {'email': email, 'name': name, 'phone': phone};
   }
 
   // Optional: toString method for debugging
   @override
   String toString() {
-    return 'RepresentitiveModel(image: $image, name: $name, phone: $phone)';
+    return 'RepresentitiveModel(image: $email, name: $name, phone: $phone)';
   }
 
   // Optional: copyWith method for creating modified copies
-  RepresentitiveModel copyWith({String? image, String? name, String? phone}) {
+  RepresentitiveModel copyWith({
+    String? image,
+    String? name,
+    String? phone,
+    String? email,
+  }) {
     return RepresentitiveModel(
-      image: image ?? this.image,
+      email: email ?? this.email,
       name: name ?? this.name,
       phone: phone ?? this.phone,
+      image: image ?? this.image,
     );
   }
 }

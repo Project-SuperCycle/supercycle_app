@@ -22,7 +22,6 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ShipmentsCalendarCubit>(context).getAllShipments();
   }
 
   @override

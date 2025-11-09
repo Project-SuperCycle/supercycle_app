@@ -7,7 +7,7 @@ class ProgressBar extends StatelessWidget {
   const ProgressBar({
     super.key,
     required this.completedSteps,
-    this.totalSteps = 4, // العدد الافتراضي 4 نقاط
+    this.totalSteps = 5, // العدد الافتراضي 4 نقاط
   });
 
   @override
@@ -28,15 +28,11 @@ class ProgressBar extends StatelessWidget {
       bool isCompleted = i < completedSteps;
 
       // إضافة النقطة
-      widgets.add(
-        ProgressPoint(isCompleted: isCompleted),
-      );
+      widgets.add(ProgressPoint(isCompleted: isCompleted));
 
       // إضافة الخط إذا لم تكن النقطة الأخيرة
       if (i < totalSteps - 1) {
-        widgets.add(
-          ProgressLine(isCompleted: isCompleted),
-        );
+        widgets.add(ProgressLine(isCompleted: isCompleted));
       }
     }
 
@@ -47,10 +43,7 @@ class ProgressBar extends StatelessWidget {
 class ProgressPoint extends StatelessWidget {
   final bool isCompleted;
 
-  const ProgressPoint({
-    super.key,
-    required this.isCompleted,
-  });
+  const ProgressPoint({super.key, required this.isCompleted});
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +59,7 @@ class ProgressPoint extends StatelessWidget {
         ),
       ),
       child: isCompleted
-          ? const Icon(
-        Icons.check,
-        color: Colors.white,
-        size: 15,
-      )
+          ? const Icon(Icons.check, color: Colors.white, size: 15)
           : null,
     );
   }
@@ -79,10 +68,7 @@ class ProgressPoint extends StatelessWidget {
 class ProgressLine extends StatelessWidget {
   final bool isCompleted;
 
-  const ProgressLine({
-    super.key,
-    required this.isCompleted,
-  });
+  const ProgressLine({super.key, required this.isCompleted});
 
   @override
   Widget build(BuildContext context) {

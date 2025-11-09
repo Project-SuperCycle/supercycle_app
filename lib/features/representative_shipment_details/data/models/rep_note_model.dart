@@ -1,21 +1,23 @@
-class RepNoteModel {
+class ShipmentNoteModel {
   final String authorRole;
   final String content;
-  final List<String> images;
+  final List<String>? images;
   final DateTime createdAt;
 
-  RepNoteModel({
+  ShipmentNoteModel({
     required this.authorRole,
     required this.content,
-    required this.images,
+    this.images,
     required this.createdAt,
   });
 
-  factory RepNoteModel.fromJson(Map<String, dynamic> json) {
-    return RepNoteModel(
+  factory ShipmentNoteModel.fromJson(Map<String, dynamic> json) {
+    return ShipmentNoteModel(
       authorRole: json['authorRole'] as String,
       content: json['content'] as String,
-      images: List<String>.from(json['images'] as List),
+      images: (json['images'] == null)
+          ? null
+          : List<String>.from(json['images'] as List),
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
@@ -37,13 +39,13 @@ class RepNoteModel {
   }
 
   // Optional: copyWith method for creating modified copies
-  RepNoteModel copyWith({
+  ShipmentNoteModel copyWith({
     String? authorRole,
     String? content,
     List<String>? images,
     DateTime? createdAt,
   }) {
-    return RepNoteModel(
+    return ShipmentNoteModel(
       authorRole: authorRole ?? this.authorRole,
       content: content ?? this.content,
       images: images ?? this.images,

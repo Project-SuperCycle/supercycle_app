@@ -26,10 +26,11 @@ class BranchModel {
       managerName: json['managerName'] ?? '',
       managerPhone: json['managerPhone'] ?? '',
       deliveryVolume: json['deliveryVolume'] ?? 0,
-      recyclableTypes: (json['recyclableTypes'] as List?)
-          ?.map((type) => type.toString())
-          .toList() ??
-          [],
+      recyclableTypes: (json['recyclableTypes'] != null)
+          ? (json['recyclableTypes'] as List)
+                .map((type) => type.toString())
+                .toList()
+          : [],
       deliverySchedule: json['deliverySchedule'] ?? '',
     );
   }
@@ -104,13 +105,15 @@ class TraderProfileData {
       email: json['email'] ?? '',
       requiredProducts: json['requiredProducts'] ?? 0,
       availableProducts: json['availableProducts'] ?? 0,
-      branches: (json['branches'] as List?)
-          ?.map((branchJson) => BranchModel.fromJson(branchJson))
-          .toList() ??
+      branches:
+          (json['branches'] as List?)
+              ?.map((branchJson) => BranchModel.fromJson(branchJson))
+              .toList() ??
           [],
-      recyclableTypes: (json['recyclableTypes'] as List?)
-          ?.map((type) => type.toString())
-          .toList() ??
+      recyclableTypes:
+          (json['recyclableTypes'] as List?)
+              ?.map((type) => type.toString())
+              .toList() ??
           [],
       logoPath: json['logoPath'] ?? '',
     );

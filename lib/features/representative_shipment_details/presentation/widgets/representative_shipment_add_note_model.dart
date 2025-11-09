@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supercycle_app/core/cubits/add_notes_cubit/add_notes_cubit.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/models/create_notes_model.dart';
+import 'package:supercycle_app/core/models/create_notes_model.dart';
 
 class RepresentativeShipmentAddNoteModel extends StatefulWidget {
   final String shipmentId;
@@ -27,11 +28,11 @@ class _RepresentativeShipmentAddNoteModelState
   }
 
   void _addNote({required CreateNotesModel note, required String shipmentId}) {
-    BlocProvider.of<NotesCubit>(
+    BlocProvider.of<AddNotesCubit>(
       context,
     ).addNotes(notes: note, shipmentId: shipmentId);
 
-    BlocProvider.of<NotesCubit>(context).getAllNotes(shipmentId: shipmentId);
+    BlocProvider.of<AllNotesCubit>(context).getAllNotes(shipmentId: shipmentId);
   }
 
   @override

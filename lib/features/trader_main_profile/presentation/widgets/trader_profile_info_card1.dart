@@ -3,7 +3,7 @@ import 'package:supercycle_app/core/models/user_profile_model.dart';
 import 'package:supercycle_app/core/utils/profile_constants.dart'
     show ProfileConstants;
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_branches_section.dart';
-import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_main_branch_section.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_row.dart';
 
 class TraderProfileInfoCard1 extends StatelessWidget {
@@ -33,10 +33,12 @@ class TraderProfileInfoCard1 extends StatelessWidget {
           children: [
             ..._buildProfileInfoRows(),
             const SizedBox(height: 30),
-            TraderBranchesSection(
-              branches: ProfileConstants.sampleProfileData.branches,
-              types: ProfileConstants.sampleProfileData.recyclableTypes,
-            ),
+            (userProfile.role == "trader_uncontracted")
+                ? TraderMainBranchSection(branch: userProfile.branch!)
+                : TraderBranchesSection(
+                    branches: ProfileConstants.sampleProfileData.branches,
+                    types: ProfileConstants.sampleProfileData.recyclableTypes,
+                  ),
           ],
         ),
       ),

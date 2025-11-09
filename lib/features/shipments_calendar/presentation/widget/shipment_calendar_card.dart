@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle_app/core/routes/end_points.dart';
+import 'package:supercycle_app/core/services/storage_services.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/cubits/notes_cubit/notes_cubit.dart';
+import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
@@ -18,11 +20,28 @@ class ShipmentsCalendarCard extends StatefulWidget {
 }
 
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
+  String userRole = "";
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  void loadUserData() async {
+    LoginedUserModel? user = await StorageServices.getUserData();
+    if (user != null) {
+      setState(() {
+        userRole = user.role ?? "";
+      });
+    }
+  }
+
   void _showShipmentDetails(BuildContext context) {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: widget.shipment.id);
-    BlocProvider.of<NotesCubit>(
+    BlocProvider.of<AllNotesCubit>(
       context,
     ).getAllNotes(shipmentId: widget.shipment.id);
   }
@@ -33,10 +52,15 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
       listener: (context, state) {
         // TODO: implement listener
         if (state is GetShipmentSuccess) {
-          GoRouter.of(
-            context,
-          ).push(EndPoints.shipmentDetailsView, extra: state.shipment);
-          Logger().d("SHIPMENT ${state.shipment}");
+          (userRole == 'representative')
+              ? GoRouter.of(context).push(
+                  EndPoints.representativeShipmentDetailsView,
+                  extra: state.shipment,
+                )
+              : GoRouter.of(context).push(
+                  EndPoints.traderShipmentDetailsView,
+                  extra: state.shipment,
+                );
         }
         if (state is GetShipmentFailure) {
           ScaffoldMessenger.of(
@@ -202,7 +226,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   }
 
   String _formatTimeToArabic(DateTime dateTime) {
-    int hour = dateTime.hour;
+    int hour = dateTime.hour - 2;
     int displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
     String period = hour < 12 ? "صباحا" : "مساءا";
     return "$displayHour $period";

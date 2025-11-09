@@ -28,7 +28,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
       children: [
         _buildHeader(),
         const SizedBox(height: 12),
-        _isListView ? _buildBranchesList() : _buildBranchesChart(),
+        _buildBranchesList(),
         const SizedBox(height: 30),
         _buildTypeUsed(),
       ],
@@ -43,7 +43,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
         Row(
           children: [
             _buildViewToggleButton(Icons.list, true),
-            _buildViewToggleButton(Icons.bar_chart, false),
+            // _buildViewToggleButton(Icons.bar_chart, false),
           ],
         ),
       ],
@@ -53,7 +53,11 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
   Widget _buildViewToggleButton(IconData icon, bool isListButton) {
     final isActive = _isListView == isListButton;
     return IconButton(
-      icon: Icon(icon, color: isActive ? AppColors.primaryColor : Colors.grey),
+      icon: Icon(
+        icon,
+        color: isActive ? AppColors.primaryColor : Colors.grey,
+        size: 25,
+      ),
       onPressed: () => setState(() => _isListView = isListButton),
     );
   }

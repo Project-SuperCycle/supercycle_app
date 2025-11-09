@@ -19,9 +19,7 @@ import 'package:supercycle_app/features/representative_shipment_review/presentat
 import 'package:supercycle_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
 import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/views/shipment_details_view.dart';
 import 'package:supercycle_app/features/shipment_edit/presentation/views/shipment_edit_view.dart';
-import 'package:supercycle_app/features/shipment_preview/presentation/views/shipment_review_view.dart';
 import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
 import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
@@ -29,10 +27,12 @@ import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.
 import 'package:supercycle_app/features/splash/views/splash_view.dart';
 import 'package:supercycle_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 import 'package:supercycle_app/features/trader_main_profile/presentation/view/trader_profile_view.dart';
+import 'package:supercycle_app/features/trader_shipment_details/presentation/views/trader_shipment_details_view.dart';
+import 'package:supercycle_app/features/trader_shipment_preview/presentation/views/trader_shipment_review_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: EndPoints.homeView,
+    initialLocation: EndPoints.splashView,
     routes: [
       // Splash Screen Route - Choose your preferred transition
       GoRoute(
@@ -52,24 +52,18 @@ class AppRouter {
         name: 'FirstOnboarding',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const FirstOnboardingView(),
+          child:
+              const FirstOnboardingView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Slide transition from right to left
-            return SlideTransition(
-              position:
-                  Tween<Offset>(
-                    begin: const Offset(1.0, 0.0),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOutCubic,
-                    ),
-                  ),
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
               child: FadeTransition(opacity: animation, child: child),
             );
           },
-          transitionDuration: const Duration(milliseconds: 600),
+          transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
 
@@ -79,24 +73,18 @@ class AppRouter {
         name: 'SecondOnboarding',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const SecondOnboardingView(),
+          child:
+              const SecondOnboardingView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Smooth slide transition
-            return SlideTransition(
-              position:
-                  Tween<Offset>(
-                    begin: const Offset(1.0, 0.0),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOutCubic,
-                    ),
-                  ),
-              child: child,
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
 
@@ -106,24 +94,18 @@ class AppRouter {
         name: 'ThirdOnboarding',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const ThirdOnboardingView(),
+          child:
+              const ThirdOnboardingView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Smooth slide transition
-            return SlideTransition(
-              position:
-                  Tween<Offset>(
-                    begin: const Offset(1.0, 0.0),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOutCubic,
-                    ),
-                  ),
-              child: child,
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
 
@@ -133,24 +115,18 @@ class AppRouter {
         name: 'FourthOnboarding',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const FourthOnboardingView(),
+          child:
+              const FourthOnboardingView(), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Slide transition from right to left
-            return SlideTransition(
-              position:
-                  Tween<Offset>(
-                    begin: const Offset(1.0, 0.0),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOutCubic,
-                    ),
-                  ),
+            // Scale and fade transition
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              ),
               child: FadeTransition(opacity: animation, child: child),
             );
           },
-          transitionDuration: const Duration(milliseconds: 600),
+          transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
 
@@ -285,13 +261,13 @@ class AppRouter {
         ),
       ),
 
-      // Shipment Preview View Route
+      //Trader Shipment Preview View Route
       GoRoute(
-        path: EndPoints.shipmentPreviewView,
-        name: 'ShipmentPreview',
+        path: EndPoints.traderShipmentPreviewView,
+        name: 'TraderShipmentReview',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: ShipmentReviewView(
+          child: TraderShipmentReviewView(
             shipment: state.extra as CreateShipmentModel,
           ), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -306,13 +282,13 @@ class AppRouter {
           transitionDuration: const Duration(milliseconds: 400),
         ),
       ),
-      // Shipment Details View Route
+      // Trader Shipment Details View Route
       GoRoute(
-        path: EndPoints.shipmentDetailsView,
-        name: 'ShipmentDetails',
+        path: EndPoints.traderShipmentDetailsView,
+        name: 'TraderShipmentDetails',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: ShipmentDetailsView(
+          child: TraderShipmentDetailsView(
             shipment: state.extra as SingleShipmentModel,
           ), // Replace with your actual home widget
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

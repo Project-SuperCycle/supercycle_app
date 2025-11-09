@@ -47,7 +47,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      textDirection: TextDirection.rtl,
+      textDirection: TextDirection.ltr,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -65,7 +65,8 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             backgroundColor: Colors.white,
             radius: 32,
             child: GestureDetector(
-              onTap: () => navigateToProfile(context),
+              onTap: () =>
+                  (userName.isNotEmpty) ? navigateToProfile(context) : null,
               child: ClipOval(
                 child: Image.asset(
                   AppAssets.defaultAvatar,

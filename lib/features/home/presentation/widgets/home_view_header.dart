@@ -41,9 +41,9 @@ class HomeViewHeader extends StatelessWidget {
       child: Column(
         children: [
           HomeHeaderLogo(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           Row(
-            textDirection: TextDirection.ltr,
+            textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               HomeHeaderNavActions(onDrawerPressed: onDrawerPressed),
@@ -51,7 +51,6 @@ class HomeViewHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          RoundedSearchField(onChange: (value) {}, showClearButton: true),
         ],
       ),
     );
