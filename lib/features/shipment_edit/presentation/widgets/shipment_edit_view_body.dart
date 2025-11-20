@@ -204,7 +204,10 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
                           ],
                         ),
                         const SizedBox(height: 25),
-                        ShipmentDetailsNotes(shipmentID: widget.shipment.id),
+                        ShipmentDetailsNotes(
+                          notes: widget.shipment.mainNotes,
+                          shipmentID: widget.shipment.id,
+                        ),
                         const SizedBox(height: 30),
                         CustomButton(
                           onPress: () {

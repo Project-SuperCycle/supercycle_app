@@ -6,7 +6,6 @@ import 'package:supercycle_app/core/utils/app_assets.dart';
 import 'package:supercycle_app/core/utils/app_colors.dart';
 import 'package:supercycle_app/core/utils/app_styles.dart';
 import 'package:supercycle_app/core/widgets/custom_text_field.dart';
-import 'package:supercycle_app/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
@@ -60,10 +59,7 @@ class _TraderShipmentDetailsViewBodyState
               // Header Section (Fixed)
               SliverToBoxAdapter(
                 child: Column(
-                  children: [
-                    const ShipmentLogo(),
-                    const SizedBox(height: 15),
-                  ],
+                  children: [const ShipmentLogo(), const SizedBox(height: 15)],
                 ),
               ),
 
@@ -165,7 +161,10 @@ class _TraderShipmentDetailsViewBodyState
                           ],
                         ),
                         const SizedBox(height: 20),
-                        ShipmentDetailsNotes(shipmentID: widget.shipment.id),
+                        ShipmentDetailsNotes(
+                          notes: widget.shipment.mainNotes,
+                          shipmentID: widget.shipment.id,
+                        ),
                         const SizedBox(height: 30),
                       ],
                     ),
