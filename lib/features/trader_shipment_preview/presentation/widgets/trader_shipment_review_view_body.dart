@@ -3,25 +3,25 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/functions/shipment_manager.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
-import 'package:supercycle_app/core/widgets/custom_text_field.dart';
-import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
-import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
-import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
-import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
-import 'package:supercycle_app/features/trader_shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
-import 'package:supercycle_app/features/trader_shipment_preview/presentation/widgets/trader_shipment_review_content.dart';
-import 'package:supercycle_app/features/trader_shipment_preview/presentation/widgets/trader_shipment_review_header.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/custom_button.dart';
+import 'package:supercycle/core/widgets/custom_text_field.dart';
+import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
+import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
+import 'package:supercycle/core/widgets/shipment/notes_content.dart';
+import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
+import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
+import 'package:supercycle/features/sales_process/data/models/create_shipment_model.dart';
+import 'package:supercycle/features/trader_shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
+import 'package:supercycle/features/trader_shipment_preview/presentation/widgets/trader_shipment_review_content.dart';
+import 'package:supercycle/features/trader_shipment_preview/presentation/widgets/trader_shipment_review_header.dart';
+import 'package:supercycle/generated/l10n.dart';
 
 class TraderShipmentReviewViewBody extends StatefulWidget {
   const TraderShipmentReviewViewBody({super.key, required this.shipment});
@@ -78,10 +78,7 @@ class _TraderShipmentReviewViewBodyState
               // Header Section (Fixed)
               SliverToBoxAdapter(
                 child: Column(
-                  children: [
-                    const ShipmentLogo(),
-                    const SizedBox(height: 16),
-                  ],
+                  children: [const ShipmentLogo(), const SizedBox(height: 16)],
                 ),
               ),
 
@@ -113,6 +110,21 @@ class _TraderShipmentReviewViewBodyState
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: ExpandableSection(
+                            title: 'بياناتي',
+                            iconPath: AppAssets.entityCard,
+                            isExpanded: isClientDataExpanded,
+                            maxHeight: 320,
+                            onTap: _toggleClientData,
+                            content: const ClientDataContent(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ExpandableSection(
                             title: 'تفاصيل الشحنة',
                             iconPath: AppAssets.boxPerspective,
                             isExpanded: isShipmentDetailsExpanded,
@@ -121,21 +133,6 @@ class _TraderShipmentReviewViewBodyState
                             content: TraderShipmentReviewContent(
                               items: widget.shipment.items,
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'بياناتي',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isClientDataExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleClientData,
-                            content: const ClientDataContent(),
                           ),
                         ),
                         const SizedBox(height: 20),

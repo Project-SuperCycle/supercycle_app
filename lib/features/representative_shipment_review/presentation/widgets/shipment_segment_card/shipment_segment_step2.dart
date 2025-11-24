@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_deliverd_section.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_destination_section.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_truck_info.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_weight_section.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/weigh_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_deliverd_section.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_destination_section.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_truck_info.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_weight_section.dart';
 
 class ShipmentSegmentStep2 extends StatefulWidget {
   final String shipmentID;

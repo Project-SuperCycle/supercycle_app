@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/contact_strings.dart';
+import 'package:supercycle/core/utils/contact_strings.dart';
 
 class TopicDropdown extends StatelessWidget {
   final String? value;
@@ -24,7 +24,10 @@ class TopicDropdown extends StatelessWidget {
         hintText: ContactStrings.get('Select a topic', isArabic),
         filled: true,
         fillColor: Colors.grey.shade50,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -60,7 +63,11 @@ class TopicDropdown extends StatelessWidget {
         }
         return null;
       },
-      icon: const Icon(Icons.arrow_drop_down_rounded, color: Colors.grey, size: 28),
+      icon: const Icon(
+        Icons.arrow_drop_down_rounded,
+        color: Colors.grey,
+        size: 28,
+      ),
       dropdownColor: Colors.white,
       style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
     );

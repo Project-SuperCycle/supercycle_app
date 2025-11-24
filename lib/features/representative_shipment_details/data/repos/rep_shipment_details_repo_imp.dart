@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/functions/shipment_manager.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart';
-import 'package:supercycle_app/core/services/api_services.dart';
-import 'package:supercycle_app/features/representative_shipment_details/data/models/accept_shipment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_details/data/models/reject_shipment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_details/data/models/update_shipment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_details/data/repos/rep_shipment_details_repo.dart';
+import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/core/services/api_endpoints.dart';
+import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/features/representative_shipment_details/data/models/accept_shipment_model.dart';
+import 'package:supercycle/features/representative_shipment_details/data/models/reject_shipment_model.dart';
+import 'package:supercycle/features/representative_shipment_details/data/models/update_shipment_model.dart';
+import 'package:supercycle/features/representative_shipment_details/data/repos/rep_shipment_details_repo.dart';
 
 class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
   final ApiServices apiServices;

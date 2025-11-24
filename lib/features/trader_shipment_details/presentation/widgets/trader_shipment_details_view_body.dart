@@ -1,21 +1,21 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/custom_text_field.dart';
-import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
-import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
-import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
-import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/core/widgets/shipment/shipment_details_notes.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/trader_shipment_details_content.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/trader_shipment_details_header.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/trader_shipment_details_settings_icon.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/widgets/trader_shipment_representative_card.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/custom_text_field.dart';
+import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
+import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
+import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
+import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
+import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
+import 'package:supercycle/core/widgets/shipment/shipment_details_notes.dart';
+import 'package:supercycle/features/trader_shipment_details/presentation/widgets/trader_shipment_details_content.dart';
+import 'package:supercycle/features/trader_shipment_details/presentation/widgets/trader_shipment_details_header.dart';
+import 'package:supercycle/features/trader_shipment_details/presentation/widgets/trader_shipment_details_settings_icon.dart';
+import 'package:supercycle/features/trader_shipment_details/presentation/widgets/trader_shipment_representative_card.dart';
 
 class TraderShipmentDetailsViewBody extends StatefulWidget {
   const TraderShipmentDetailsViewBody({super.key, required this.shipment});

@@ -2,14 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/services/dosh_types_manager.dart';
-import 'package:supercycle_app/core/services/services_locator.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
-import 'package:supercycle_app/features/home/data/models/dosh_data_model.dart';
-import 'package:supercycle_app/features/home/data/models/type_history_model.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/services/dosh_types_manager.dart';
+import 'package:supercycle/core/services/services_locator.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:supercycle/features/home/data/models/dosh_data_model.dart';
+import 'package:supercycle/features/home/data/models/type_history_model.dart';
+import 'package:supercycle/generated/l10n.dart';
 
 // Data model for chart (wrapper around TypeHistoryModel)
 class ChartPriceData {
@@ -260,7 +260,6 @@ class SalesLineChartState extends State<SalesLineChart> {
   @override
   void initState() {
     super.initState();
-    _loadTypeHistory("68a8567bf5a2951a1ee9e982");
   }
 
   void _loadTypeHistory([String? typeId]) {

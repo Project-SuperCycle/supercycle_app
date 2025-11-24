@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_column.dart';
+import 'package:supercycle/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_column.dart';
 
 class TraderProfileStatsRow extends StatelessWidget {
   const TraderProfileStatsRow({

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
-import 'package:supercycle_app/features/home/data/models/dosh_type_model.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/custom_button.dart';
+import 'package:supercycle/features/home/data/models/dosh_type_model.dart';
+import 'package:supercycle/generated/l10n.dart';
 
 class TypeCardItem extends StatefulWidget {
   final DoshTypeModel typeModel;
@@ -68,8 +68,9 @@ class _TypeCardItemState extends State<TypeCardItem> {
             children: [
               // ======== IMAGE SECTION ========
               ClipRRect(
-                borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
                 child: Stack(
                   children: [
                     Image.asset(
@@ -114,8 +115,10 @@ class _TypeCardItemState extends State<TypeCardItem> {
               // ======== CONTENT SECTION ========
               Expanded(
                 child: Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -135,7 +138,9 @@ class _TypeCardItemState extends State<TypeCardItem> {
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(14),
@@ -147,19 +152,19 @@ class _TypeCardItemState extends State<TypeCardItem> {
                             children: [
                               Text(
                                 formatPriceRange(
-                                    typeModel.minPrice, typeModel.maxPrice),
-                                style:
-                                AppStyles.styleBold14(context).copyWith(
-                                  color: AppColors.primaryColor,
+                                  typeModel.minPrice,
+                                  typeModel.maxPrice,
                                 ),
+                                style: AppStyles.styleBold14(
+                                  context,
+                                ).copyWith(color: AppColors.primaryColor),
                               ),
                               const SizedBox(width: 6),
                               Text(
                                 "${S.of(context).money} / ${S.of(context).unit}",
-                                style:
-                                AppStyles.styleMedium12(context).copyWith(
-                                  color: AppColors.subTextColor,
-                                ),
+                                style: AppStyles.styleMedium12(
+                                  context,
+                                ).copyWith(color: AppColors.subTextColor),
                               ),
                             ],
                           ),
@@ -169,8 +174,9 @@ class _TypeCardItemState extends State<TypeCardItem> {
                       // ----- Button -----
                       CustomButton(
                         title: S.of(context).make_process,
-                        onPress: () => GoRouter.of(context)
-                            .push(EndPoints.salesProcessView),
+                        onPress: () => GoRouter.of(
+                          context,
+                        ).push(EndPoints.salesProcessView),
                       ),
                     ],
                   ),

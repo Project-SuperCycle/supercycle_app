@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/trader_main_profile/data/models/trader_profile_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class TraderBranchesSection extends StatefulWidget {

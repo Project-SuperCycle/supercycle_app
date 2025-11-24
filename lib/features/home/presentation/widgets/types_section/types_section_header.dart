@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
-import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle_app/features/home/presentation/widgets/types_section/types_filter_buttons_list.dart';
-import 'package:supercycle_app/generated/l10n.dart' show S;
+import 'package:supercycle/core/utils/app_assets.dart' show AppAssets;
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
+import 'package:supercycle/features/home/presentation/widgets/types_section/types_filter_buttons_list.dart';
+import 'package:supercycle/generated/l10n.dart' show S;
 
 class TypesSectionHeader extends StatefulWidget {
   const TypesSectionHeader({super.key});
@@ -78,14 +78,14 @@ class _TypesSectionHeaderState extends State<TypesSectionHeader> {
             curve: Curves.easeInOut,
             child: isExpanded
                 ? Column(
-              children: [
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TypesFilterButtonsList(),
-                ),
-              ],
-            )
+                    children: [
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TypesFilterButtonsList(),
+                      ),
+                    ],
+                  )
                 : const SizedBox.shrink(),
           ),
         ],

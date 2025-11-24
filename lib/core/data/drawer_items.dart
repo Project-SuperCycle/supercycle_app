@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/models/drawer_item_model.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/models/drawer_item_model.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/generated/l10n.dart';
 
 List<DrawerItemModel> getDrawerItems(BuildContext context) {
   return [
@@ -40,11 +40,7 @@ List<DrawerItemModel> getDrawerItems(BuildContext context) {
     ),
     DrawerItemModel(
       title: S.of(context).drawer_environmental_impact,
-      leading: Icon(
-        Icons.eco_outlined,
-        color: Colors.black45,
-        size: 30,
-      ),
+      leading: Icon(Icons.eco_outlined, color: Colors.black45, size: 30),
 
       onTap: () => GoRouter.of(context).push(EndPoints.environmentalImpactView),
     ),

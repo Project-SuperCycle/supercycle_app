@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/models/notifications_model.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/home/presentation/widgets/notifications/notification_item.dart';
-import 'package:supercycle_app/features/home/presentation/widgets/notifications/notifications_empty_state.dart';
+import 'package:supercycle/core/models/notifications_model.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/home/presentation/widgets/notifications/notification_item.dart';
+import 'package:supercycle/features/home/presentation/widgets/notifications/notifications_empty_state.dart';
 
 class NotificationsSheet extends StatefulWidget {
   const NotificationsSheet({super.key});
@@ -56,11 +56,7 @@ class _NotificationsSheetState extends State<NotificationsSheet>
         ),
       ),
       child: Column(
-        children: [
-          _buildHeader(context),
-          _buildTabs(context),
-          _buildContent(),
-        ],
+        children: [_buildHeader(context), _buildTabs(context), _buildContent()],
       ),
     );
   }
@@ -79,10 +75,7 @@ class _NotificationsSheetState extends State<NotificationsSheet>
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            'الإشعارات',
-            style: AppStyles.styleBold18(context),
-          ),
+          Text('الإشعارات', style: AppStyles.styleBold18(context)),
         ],
       ),
     );
@@ -91,9 +84,7 @@ class _NotificationsSheetState extends State<NotificationsSheet>
   Widget _buildTabs(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[200]!, width: 1),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey[200]!, width: 1)),
       ),
       child: TabBar(
         controller: _tabController,
@@ -124,9 +115,9 @@ class _NotificationsSheetState extends State<NotificationsSheet>
   }
 
   Widget _buildNotificationsList(
-      List<NotificationModel> notifications,
-      String type,
-      ) {
+    List<NotificationModel> notifications,
+    String type,
+  ) {
     if (notifications.isEmpty) {
       return NotificationsEmptyState(type: type);
     }

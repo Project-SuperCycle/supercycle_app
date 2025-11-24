@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/models/notifications_model.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle/core/models/notifications_model.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 
 class NotificationItem extends StatelessWidget {
-  const NotificationItem({
-    super.key,
-    required this.notification,
-    this.onTap,
-  });
+  const NotificationItem({super.key, required this.notification, this.onTap});
 
   final NotificationModel notification;
   final VoidCallback? onTap;
@@ -74,16 +70,16 @@ class NotificationItem extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           notification.message,
-          style: AppStyles.styleMedium12(context).copyWith(
-            color: Colors.grey[600],
-          ),
+          style: AppStyles.styleMedium12(
+            context,
+          ).copyWith(color: Colors.grey[600]),
         ),
         const SizedBox(height: 4),
         Text(
           notification.time,
-          style: AppStyles.styleRegular12(context).copyWith(
-            color: Colors.grey[400],
-          ),
+          style: AppStyles.styleRegular12(
+            context,
+          ).copyWith(color: Colors.grey[400]),
         ),
       ],
     );
@@ -100,4 +96,3 @@ class NotificationItem extends StatelessWidget {
     );
   }
 }
-

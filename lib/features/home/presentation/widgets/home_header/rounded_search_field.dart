@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart' show AppAssets;
-import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
-import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle_app/generated/l10n.dart' show S;
+import 'package:supercycle/core/utils/app_assets.dart' show AppAssets;
+import 'package:supercycle/core/utils/app_colors.dart' show AppColors;
+import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
+import 'package:supercycle/generated/l10n.dart' show S;
 
 class RoundedSearchField extends StatefulWidget {
   final ValueChanged<String> onChange;
@@ -121,15 +121,16 @@ class _RoundedSearchFieldState extends State<RoundedSearchField> {
           ),
           suffixIcon: widget.showClearButton && _showClearButton
               ? IconButton(
-            icon: Icon(Icons.clear, color: Colors.grey),
-            onPressed: _clearText,
-          )
+                  icon: Icon(Icons.clear, color: Colors.grey),
+                  onPressed: _clearText,
+                )
               : null,
           hintText: widget.hintText ?? S.of(context).search,
-          hintStyle: widget.hintStyle ??
-              AppStyles.styleSemiBold14(context).copyWith(
-                color: widget.hintTextColor ?? AppColors.subTextColor,
-              ),
+          hintStyle:
+              widget.hintStyle ??
+              AppStyles.styleSemiBold14(
+                context,
+              ).copyWith(color: widget.hintTextColor ?? AppColors.subTextColor),
         ),
       ),
     );

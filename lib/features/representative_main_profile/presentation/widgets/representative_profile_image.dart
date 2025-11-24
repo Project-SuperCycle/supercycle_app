@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart';
+import 'package:supercycle/core/utils/profile_constants.dart';
 
 class RepresentativProfileImage extends StatelessWidget {
   const RepresentativProfileImage({super.key, required this.logoPath});

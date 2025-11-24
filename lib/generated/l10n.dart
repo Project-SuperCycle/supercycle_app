@@ -54,9 +54,9 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `supercycle_app`
+  /// `supercycle`
   String get title {
-    return Intl.message('supercycle_app', name: 'title', desc: '', args: []);
+    return Intl.message('supercycle', name: 'title', desc: '', args: []);
   }
 
   /// `Language`
@@ -814,30 +814,30 @@ class S {
     return Intl.message('Skip', name: 'skip', desc: '', args: []);
   }
 
-  /// `supercycle_app Number One`
+  /// `supercycle Number One`
   String get onboarding_1 {
     return Intl.message(
-      'supercycle_app Number One',
+      'supercycle Number One',
       name: 'onboarding_1',
       desc: '',
       args: [],
     );
   }
 
-  /// `supercycle_app Number One`
+  /// `supercycle Number One`
   String get onboarding_2 {
     return Intl.message(
-      'supercycle_app Number One',
+      'supercycle Number One',
       name: 'onboarding_2',
       desc: '',
       args: [],
     );
   }
 
-  /// `supercycle_app Number One`
+  /// `supercycle Number One`
   String get onboarding_3 {
     return Intl.message(
-      'supercycle_app Number One',
+      'supercycle Number One',
       name: 'onboarding_3',
       desc: '',
       args: [],
@@ -854,10 +854,10 @@ class S {
     );
   }
 
-  /// `Welcome to supercycle_app`
+  /// `Welcome to supercycle`
   String get sign_in_alert_title {
     return Intl.message(
-      'Welcome to supercycle_app',
+      'Welcome to supercycle',
       name: 'sign_in_alert_title',
       desc: '',
       args: [],

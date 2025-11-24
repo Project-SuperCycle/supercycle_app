@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
+import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 
 class UpdateShipmentModel {
   final String shipmentID;

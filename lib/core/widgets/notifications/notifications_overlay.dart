@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/models/notifications_model.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/home/presentation/widgets/notifications/notification_item.dart';
+import 'package:supercycle/core/models/notifications_model.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/home/presentation/widgets/notifications/notification_item.dart';
 
 class NotificationsOverlay {
   static OverlayEntry? _overlayEntry;
@@ -86,18 +86,12 @@ class _NotificationsPanelState extends State<NotificationsPanel>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
     _controller.forward();
   }
@@ -134,9 +128,7 @@ class _NotificationsPanelState extends State<NotificationsPanel>
               opacity: _fadeAnimation,
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                child: Container(
-                  color: Colors.black.withOpacity(0.3),
-                ),
+                child: Container(color: Colors.black.withOpacity(0.3)),
               ),
             ),
           ),
@@ -192,9 +184,7 @@ class _NotificationsPanelState extends State<NotificationsPanel>
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[200]!, width: 1),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey[200]!, width: 1)),
       ),
       child: Row(
         children: [
@@ -215,15 +205,12 @@ class _NotificationsPanelState extends State<NotificationsPanel>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'الإشعارات',
-                  style: AppStyles.styleBold18(context),
-                ),
+                Text('الإشعارات', style: AppStyles.styleBold18(context)),
                 Text(
                   '${_allNotifications.where((n) => !n.isRead).length} إشعار جديد',
-                  style: AppStyles.styleRegular12(context).copyWith(
-                    color: Colors.grey[600],
-                  ),
+                  style: AppStyles.styleRegular12(
+                    context,
+                  ).copyWith(color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -262,17 +249,15 @@ class _NotificationsPanelState extends State<NotificationsPanel>
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected
-                ? const Color(0xFF10B981)
-                : Colors.grey[100],
+            color: isSelected ? const Color(0xFF10B981) : Colors.grey[100],
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: AppStyles.styleSemiBold14(context).copyWith(
-              color: isSelected ? Colors.white : Colors.grey[600],
-            ),
+            style: AppStyles.styleSemiBold14(
+              context,
+            ).copyWith(color: isSelected ? Colors.white : Colors.grey[600]),
           ),
         ),
       ),
@@ -327,17 +312,17 @@ class _NotificationsPanelState extends State<NotificationsPanel>
                   : _selectedTabIndex == 1
                   ? 'لا توجد إشعارات غير مقروءة'
                   : 'لا توجد إشعارات مقروءة',
-              style: AppStyles.styleMedium16(context).copyWith(
-                color: Colors.grey[600],
-              ),
+              style: AppStyles.styleMedium16(
+                context,
+              ).copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               'سيتم إعلامك عند وصول إشعارات جديدة',
-              style: AppStyles.styleRegular12(context).copyWith(
-                color: Colors.grey[400],
-              ),
+              style: AppStyles.styleRegular12(
+                context,
+              ).copyWith(color: Colors.grey[400]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -346,4 +331,3 @@ class _NotificationsPanelState extends State<NotificationsPanel>
     );
   }
 }
-

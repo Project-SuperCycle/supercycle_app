@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart';
-import 'package:supercycle_app/core/services/api_services.dart';
-import 'package:supercycle_app/features/environment/data/models/trader_eco_info_model.dart';
-import 'package:supercycle_app/features/environment/data/repos/environment_repo.dart';
+import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/services/api_endpoints.dart';
+import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/features/environment/data/models/trader_eco_info_model.dart';
+import 'package:supercycle/features/environment/data/repos/environment_repo.dart';
 
 class EnvironmentRepoImp implements EnvironmentRepo {
   final ApiServices apiServices;

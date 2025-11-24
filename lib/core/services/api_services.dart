@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 
 class ApiServices {
   final Dio _dio = Dio(

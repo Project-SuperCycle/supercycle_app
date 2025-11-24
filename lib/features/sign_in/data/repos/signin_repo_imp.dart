@@ -1,16 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show DioException;
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart'
-    show ApiEndpoints;
-import 'package:supercycle_app/core/services/api_services.dart'
-    show ApiServices;
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart';
-import 'package:supercycle_app/features/sign_in/data/repos/signin_repo.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/services/api_endpoints.dart' show ApiEndpoints;
+import 'package:supercycle/core/services/api_services.dart' show ApiServices;
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:supercycle/features/sign_in/data/models/signin_credentials_model.dart';
+import 'package:supercycle/features/sign_in/data/repos/signin_repo.dart';
 
 class SignInRepoImp implements SignInRepo {
   final ApiServices apiServices;

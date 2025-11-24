@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
+import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
 
 abstract class ShipmentsCalendarRepo {
   Future<Either<Failure, List<ShipmentModel>>> getAllShipments({

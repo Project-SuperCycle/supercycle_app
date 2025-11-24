@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/models/user_profile_model.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart';
-import 'package:supercycle_app/core/services/api_services.dart';
+import 'package:supercycle/core/models/user_profile_model.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/api_endpoints.dart';
+import 'package:supercycle/core/services/api_services.dart';
 
 Future<void> navigateToProfile(BuildContext context) async {
   try {

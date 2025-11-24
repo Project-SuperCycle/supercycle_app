@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:supercycle/generated/l10n.dart';
 
 class ClientDataContent extends StatefulWidget {
   const ClientDataContent({super.key});
@@ -123,11 +123,7 @@ class _ClientDataContentState extends State<ClientDataContent> {
             color: color.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            size: 18,
-            color: color,
-          ),
+          child: Icon(icon, size: 18, color: color),
         ),
         const SizedBox(width: 8),
         Text(
@@ -164,10 +160,7 @@ class ModernDataRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey[200]!,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey[200]!, width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -178,20 +171,15 @@ class ModernDataRow extends StatelessWidget {
               color: iconColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              icon,
-              size: 16,
-              color: iconColor,
-            ),
+            child: Icon(icon, size: 16, color: iconColor),
           ),
           const SizedBox(width: 8),
           Flexible(
             child: Text(
               label,
-              style: AppStyles.styleMedium14(context).copyWith(
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[800],
-              ),
+              style: AppStyles.styleMedium14(
+                context,
+              ).copyWith(fontWeight: FontWeight.w600, color: Colors.grey[800]),
               textAlign: TextAlign.left,
             ),
           ),
@@ -199,10 +187,9 @@ class ModernDataRow extends StatelessWidget {
           Expanded(
             child: Text(
               value ?? 'غير محدد',
-              style: AppStyles.styleMedium14(context).copyWith(
-                color: Colors.grey[700],
-                height: 1.4,
-              ),
+              style: AppStyles.styleMedium14(
+                context,
+              ).copyWith(color: Colors.grey[700], height: 1.4),
               textAlign: TextAlign.right,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

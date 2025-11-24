@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
-import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipments_calendar_view_body.dart';
+import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
+import 'package:supercycle/features/shipments_calendar/presentation/widget/shipments_calendar_view_body.dart';
 
 class ShipmentsCalendarView extends StatelessWidget {
   const ShipmentsCalendarView({super.key});
@@ -8,9 +8,7 @@ class ShipmentsCalendarView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ShipmentsCalendarViewBody(),
-      bottomNavigationBar: CustomCurvedNavigationBar(
-        currentIndex: 3,
-      ),
+      bottomNavigationBar: CustomCurvedNavigationBar(currentIndex: 3),
     );
   }
 }

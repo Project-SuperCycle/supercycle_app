@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/cubits/add_notes_cubit/add_notes_state.dart';
-import 'package:supercycle_app/core/models/create_notes_model.dart';
-import 'package:supercycle_app/features/trader_shipment_details/data/repos/shipment_notes_repo_imp.dart';
+import 'package:supercycle/core/cubits/add_notes_cubit/add_notes_state.dart';
+import 'package:supercycle/core/models/create_notes_model.dart';
+import 'package:supercycle/features/trader_shipment_details/data/repos/shipment_notes_repo_imp.dart';
 
 class AddNotesCubit extends Cubit<AddNotesState> {
   final ShipmentNotesRepoImp shipmentNotesRepo;

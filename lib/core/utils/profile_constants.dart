@@ -1,6 +1,6 @@
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/features/representative_main_profile/data/models/representative_profile_data.dart';
-import 'package:supercycle_app/features/trader_main_profile/data/models/trader_profile_data.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/features/representative_main_profile/data/models/representative_profile_data.dart';
+import 'package:supercycle/features/trader_main_profile/data/models/trader_profile_data.dart';
 
 class ProfileConstants {
   // UI Constants
@@ -54,7 +54,12 @@ class ProfileConstants {
         managerName: "محمود سعيد",
         managerPhone: "+201098765432",
         deliveryVolume: 2100,
-        recyclableTypes: ["كرتون بني", "ورق أبيض", "ورق برستول", "كرتون درجه اولى"],
+        recyclableTypes: [
+          "كرتون بني",
+          "ورق أبيض",
+          "ورق برستول",
+          "كرتون درجه اولى",
+        ],
         deliverySchedule: "كل يوم ثلاثاء - 9 صباحاً",
       ),
       BranchModel(
@@ -87,12 +92,12 @@ class ProfileConstants {
   );
 
   static RepresentativeProfileData sampleRepresentativeData =
-  RepresentativeProfileData(
-    name: "إسلام شاكر",
-    phoneNumber: "+201095767137",
-    email: "islamelzantot@gmail.com",
-    totalShipments: 20,
-    weeklyShipments: 5,
-    logoPath: AppAssets.defaultAvatar,
-  );
+      RepresentativeProfileData(
+        name: "إسلام شاكر",
+        phoneNumber: "+201095767137",
+        email: "islamelzantot@gmail.com",
+        totalShipments: 20,
+        weeklyShipments: 5,
+        logoPath: AppAssets.defaultAvatar,
+      );
 }

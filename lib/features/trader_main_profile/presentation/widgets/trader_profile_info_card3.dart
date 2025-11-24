@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/models/user_profile_model.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_uncontracted_message.dart';
+import 'package:supercycle/core/models/user_profile_model.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_uncontracted_message.dart';
 
 class TraderProfileInfoCard3 extends StatelessWidget {
   final UserProfileModel user;

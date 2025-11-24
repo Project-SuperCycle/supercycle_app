@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/features/environment/data/models/trader_eco_info_model.dart';
-import 'package:supercycle_app/features/environment/presentation/widgets/trees_tab/earn_points_card.dart';
-import 'package:supercycle_app/features/environment/presentation/widgets/trees_tab/eco_transaction_card.dart';
-import 'package:supercycle_app/features/environment/presentation/widgets/trees_tab/green_points_card.dart';
-import 'package:supercycle_app/features/environment/presentation/widgets/trees_tab/tree_initiative_card.dart';
+import 'package:supercycle/features/environment/data/models/trader_eco_info_model.dart';
+import 'package:supercycle/features/environment/presentation/widgets/trees_tab/earn_points_card.dart';
+import 'package:supercycle/features/environment/presentation/widgets/trees_tab/eco_transaction_card.dart';
+import 'package:supercycle/features/environment/presentation/widgets/trees_tab/green_points_card.dart';
+import 'package:supercycle/features/environment/presentation/widgets/trees_tab/tree_initiative_card.dart';
 
 class EnvironmentalTreesTab extends StatelessWidget {
   final TraderEcoInfoModel ecoInfoModel;

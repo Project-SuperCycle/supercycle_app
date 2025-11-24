@@ -1,5 +1,4 @@
-
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class SocialAuthResponseModel {
   final int status;
@@ -9,30 +8,26 @@ class SocialAuthResponseModel {
 
   const SocialAuthResponseModel({
     required this.status,
-     this.token,
-     this.message,
-     this.user,
+    this.token,
+    this.message,
+    this.user,
   });
 
-  
   factory SocialAuthResponseModel.fromJson(Map<String, dynamic> json) {
     return SocialAuthResponseModel(
       status: json['status'] as int,
       token: json['token'] ?? '',
       message: json['message'] ?? '',
-      user: json['user'] != null ? LoginedUserModel.fromJson(json['user']) : null,
+      user: json['user'] != null
+          ? LoginedUserModel.fromJson(json['user'])
+          : null,
     );
   }
-  
+
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'token': token,
-      'message': message,
-      'user': user,
-    };
+    return {'status': status, 'token': token, 'message': message, 'user': user};
   }
-  
+
   SocialAuthResponseModel copyWith({
     int? status,
     String? token,
@@ -51,5 +46,4 @@ class SocialAuthResponseModel {
   String toString() {
     return 'SocialAuthResponseModel(status: $status, token: $token, message: $message, user: $user)';
   }
-
 }

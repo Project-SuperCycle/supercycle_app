@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
-import 'package:supercycle_app/features/home/presentation/widgets/types_section/types_filter_button.dart'
+import 'package:supercycle/core/utils/app_colors.dart' show AppColors;
+import 'package:supercycle/features/home/presentation/widgets/types_section/types_filter_button.dart'
     show TypesFilterButton;
-import 'package:supercycle_app/generated/l10n.dart' show S;
+import 'package:supercycle/generated/l10n.dart' show S;
 
 class TypesFilterButtonsList extends StatelessWidget {
   const TypesFilterButtonsList({super.key});

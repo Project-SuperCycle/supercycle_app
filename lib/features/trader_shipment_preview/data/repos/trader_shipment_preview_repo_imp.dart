@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart';
-import 'package:supercycle_app/core/services/api_services.dart';
-import 'package:supercycle_app/features/trader_shipment_preview/data/repos/trader_shipment_preview_repo.dart';
+import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/services/api_endpoints.dart';
+import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/features/trader_shipment_preview/data/repos/trader_shipment_preview_repo.dart';
 
 class TraderShipmentPreviewRepoImp implements TraderShipmentPreviewRepo {
   final ApiServices apiServices;

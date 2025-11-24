@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
+import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
 
 class TypesFilterButton extends StatelessWidget {
   const TypesFilterButton({
@@ -41,10 +41,9 @@ class TypesFilterButton extends StatelessWidget {
           fit: BoxFit.scaleDown,
           child: Text(
             title,
-            style: AppStyles.styleSemiBold14(context).copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppStyles.styleSemiBold14(
+              context,
+            ).copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
       ),

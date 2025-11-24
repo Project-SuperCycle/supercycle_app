@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart';
-import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
-import 'package:supercycle_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/utils/profile_constants.dart';
+import 'package:supercycle/features/sales_process/presentation/views/sales_process_view.dart';
+import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
+import 'package:supercycle/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
 class RepresentativeProfileInfoCard extends StatefulWidget {
   const RepresentativeProfileInfoCard({super.key});

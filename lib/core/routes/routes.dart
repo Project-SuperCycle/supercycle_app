@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' hide CustomTransitionPage;
-import 'package:supercycle_app/core/helpers/page_transition.dart';
-import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/core/models/user_profile_model.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/features/calculator/presentation/view/calculator_view.dart';
-import 'package:supercycle_app/features/contact_us/presentation/view/contact_us_view.dart';
-import 'package:supercycle_app/features/environment/presentation/views/environmental_impact_view.dart';
-import 'package:supercycle_app/features/home/presentation/views/home_view.dart';
-import 'package:supercycle_app/features/onboarding/presentation/views/first_onboarding_view.dart';
-import 'package:supercycle_app/features/onboarding/presentation/views/fourth_onboarding_view.dart';
-import 'package:supercycle_app/features/onboarding/presentation/views/second_onboarding_view.dart';
-import 'package:supercycle_app/features/onboarding/presentation/views/third_onboarding_view.dart';
-import 'package:supercycle_app/features/edit_profile/presentation/view/edit_profile_view.dart';
-import 'package:supercycle_app/features/representative_main_profile/presentation/view/representative_profile_view.dart';
-import 'package:supercycle_app/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
-import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
-import 'package:supercycle_app/features/sales_process/presentation/views/sales_process_view.dart';
-import 'package:supercycle_app/features/shipment_edit/presentation/views/shipment_edit_view.dart';
-import 'package:supercycle_app/features/sign_in/presentation/views/sign_in_view.dart';
-import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_details_view.dart';
-import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_verify_view.dart';
-import 'package:supercycle_app/features/sign_up/presentation/views/sign_up_view.dart';
-import 'package:supercycle_app/features/splash/views/splash_view.dart';
-import 'package:supercycle_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/view/trader_profile_view.dart';
-import 'package:supercycle_app/features/trader_shipment_details/presentation/views/trader_shipment_details_view.dart';
-import 'package:supercycle_app/features/trader_shipment_preview/presentation/views/trader_shipment_review_view.dart';
+import 'package:supercycle/core/helpers/app_transitions.dart';
+import 'package:supercycle/core/helpers/page_transition.dart';
+import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/user_profile_model.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/features/calculator/presentation/view/calculator_view.dart';
+import 'package:supercycle/features/contact_us/presentation/view/contact_us_view.dart';
+import 'package:supercycle/features/environment/presentation/views/environmental_impact_view.dart';
+import 'package:supercycle/features/home/presentation/views/home_view.dart';
+import 'package:supercycle/features/onboarding/presentation/views/first_onboarding_view.dart';
+import 'package:supercycle/features/onboarding/presentation/views/fourth_onboarding_view.dart';
+import 'package:supercycle/features/onboarding/presentation/views/second_onboarding_view.dart';
+import 'package:supercycle/features/onboarding/presentation/views/third_onboarding_view.dart';
+import 'package:supercycle/features/edit_profile/presentation/view/edit_profile_view.dart';
+import 'package:supercycle/features/representative_main_profile/presentation/view/representative_profile_view.dart';
+import 'package:supercycle/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
+import 'package:supercycle/features/sales_process/data/models/create_shipment_model.dart';
+import 'package:supercycle/features/sales_process/presentation/views/sales_process_view.dart';
+import 'package:supercycle/features/shipment_edit/presentation/views/shipment_edit_view.dart';
+import 'package:supercycle/features/sign_in/presentation/views/sign_in_view.dart';
+import 'package:supercycle/features/sign_up/presentation/views/sign_up_details_view.dart';
+import 'package:supercycle/features/sign_up/presentation/views/sign_up_verify_view.dart';
+import 'package:supercycle/features/sign_up/presentation/views/sign_up_view.dart';
+import 'package:supercycle/features/splash/views/splash_view.dart';
+import 'package:supercycle/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/view/trader_profile_view.dart';
+import 'package:supercycle/features/trader_shipment_details/presentation/views/trader_shipment_details_view.dart';
+import 'package:supercycle/features/trader_shipment_preview/presentation/views/trader_shipment_review_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -38,32 +39,17 @@ class AppRouter {
       GoRoute(
         path: EndPoints.splashView,
         name: 'splash',
-        pageBuilder: (context, state) => TransitionHelper.createPage(
-          key: state.pageKey,
-          child: const SplashView(),
-          transition: PageTransitions.bounceScale,
-          duration: const Duration(milliseconds: 600),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, const SplashView()),
       ),
 
       // First Onboarding Route
       GoRoute(
         path: EndPoints.firstOnboardingView,
         name: 'FirstOnboarding',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child:
-              const FirstOnboardingView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          const FirstOnboardingView(),
         ),
       ),
 
@@ -71,20 +57,9 @@ class AppRouter {
       GoRoute(
         path: EndPoints.secondOnboardingView,
         name: 'SecondOnboarding',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child:
-              const SecondOnboardingView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          const SecondOnboardingView(),
         ),
       ),
 
@@ -92,20 +67,9 @@ class AppRouter {
       GoRoute(
         path: EndPoints.thirdOnboardingView,
         name: 'ThirdOnboarding',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child:
-              const ThirdOnboardingView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          const ThirdOnboardingView(),
         ),
       ),
 
@@ -113,20 +77,9 @@ class AppRouter {
       GoRoute(
         path: EndPoints.fourthOnboardingView,
         name: 'FourthOnboarding',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child:
-              const FourthOnboardingView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          const FourthOnboardingView(),
         ),
       ),
 
@@ -134,20 +87,8 @@ class AppRouter {
       GoRoute(
         path: EndPoints.homeView,
         name: 'Home',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: const HomeView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, const HomeView()),
       ),
 
       // SignIn View Route
@@ -156,7 +97,7 @@ class AppRouter {
         name: 'SignIn',
         pageBuilder: (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const SignInView(), // Replace with your actual home widget
+          child: const SignInView(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             // Scale and fade transition
             return ScaleTransition(

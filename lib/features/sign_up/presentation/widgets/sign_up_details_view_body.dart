@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocConsumer, BlocProvider;
 import 'package:go_router/go_router.dart' show GoRouter;
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/routes/end_points.dart' show EndPoints;
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/auth/auth_main_layout.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
-import 'package:supercycle_app/core/widgets/custom_text_form_field.dart';
-import 'package:supercycle_app/core/widgets/rounded_container.dart';
-import 'package:supercycle_app/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart';
-import 'package:supercycle_app/features/sign_up/data/models/business_information_model.dart'
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/routes/end_points.dart' show EndPoints;
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/auth/auth_main_layout.dart';
+import 'package:supercycle/core/widgets/custom_button.dart';
+import 'package:supercycle/core/widgets/custom_text_form_field.dart';
+import 'package:supercycle/core/widgets/rounded_container.dart';
+import 'package:supercycle/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart';
+import 'package:supercycle/features/sign_up/data/models/business_information_model.dart'
     show BusinessInformationModel;
-import 'package:supercycle_app/features/sign_up/presentation/widgets/privacy_policy_checkbox.dart'
+import 'package:supercycle/features/sign_up/presentation/widgets/privacy_policy_checkbox.dart'
     show PrivacyPolicyCheckbox;
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/generated/l10n.dart';
 
 class SignUpDetailsViewBody extends StatefulWidget {
   const SignUpDetailsViewBody({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 
 class GreenPointsCard extends StatelessWidget {
   final num points;

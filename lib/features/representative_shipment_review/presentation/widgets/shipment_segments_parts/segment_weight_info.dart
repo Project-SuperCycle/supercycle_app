@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
 
 class SegmentWeightInfo extends StatelessWidget {
   final String imagePath;

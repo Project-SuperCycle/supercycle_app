@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
-import 'package:supercycle_app/features/shipments_calendar/data/models/shipment_model.dart';
+import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
+import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
 
 class ShipmentsCalendarCard extends StatefulWidget {
   final ShipmentModel shipment;

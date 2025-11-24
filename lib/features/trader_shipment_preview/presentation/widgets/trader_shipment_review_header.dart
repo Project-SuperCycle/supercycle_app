@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supercycle_app/core/helpers/images_preview_dialog.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
+import 'package:supercycle/core/helpers/images_preview_dialog.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/sales_process/data/models/create_shipment_model.dart';
 
 class TraderShipmentReviewHeader extends StatelessWidget {
   const TraderShipmentReviewHeader({super.key, required this.shipment});

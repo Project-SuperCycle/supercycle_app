@@ -1,4 +1,4 @@
-import 'package:supercycle_app/core/utils/contact_strings.dart';
+import 'package:supercycle/core/utils/contact_strings.dart';
 
 class FormValidators {
   // Private constructor to prevent instantiation
@@ -16,7 +16,7 @@ class FormValidators {
     if (requiredError != null) return requiredError;
 
     final emailRegex = RegExp(
-        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
 
     if (!emailRegex.hasMatch(value!.trim())) {
