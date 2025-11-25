@@ -55,7 +55,7 @@ class _SplashViewState extends State<SplashView>
     Future.delayed(const Duration(milliseconds: 5000), () {
       (user == null && mounted)
           ? GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView)
-          : GoRouter.of(context).pushReplacement(EndPoints.homeView);
+          : GoRouter.of(context).go(EndPoints.homeView);
     });
   }
 

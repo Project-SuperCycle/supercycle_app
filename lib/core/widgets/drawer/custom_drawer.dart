@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/core/functions/navigate_to_profile.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
@@ -40,16 +41,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
   }
 
-  void logout() async {
+  void logout(BuildContext dialogContext) async {
+    // قفل الـ dialog الأول
+    GoRouter.of(dialogContext).go(EndPoints.homeView);
+
     // حذف البيانات
     await StorageServices.clearAll();
 
     // تسجيل الخروج من Google و Facebook
-    GoogleSignIn().signOut();
-    FacebookAuth.instance.logOut();
-
-    // الانتقال لصفحة تسجيل الدخول
-    GoRouter.of(context).pushReplacement(EndPoints.homeView);
+    await GoogleSignIn().signOut();
+    await FacebookAuth.instance.logOut();
   }
 
   @override
@@ -98,7 +99,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'الرئيسية',
                     isActive: currentLocation == EndPoints.homeView,
                     onTap: () {
-                      GoRouter.of(context).push(EndPoints.homeView);
+                      GoRouter.of(context).go(EndPoints.homeView);
                       Navigator.pop(context);
                     },
                   ),
@@ -503,8 +504,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            GoRouter.of(context).pop();
-                            logout();
+                            logout(context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,

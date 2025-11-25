@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart' hide CustomTransitionPage;
+import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/helpers/app_transitions.dart';
-import 'package:supercycle/core/helpers/page_transition.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
@@ -35,7 +34,7 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: EndPoints.splashView,
     routes: [
-      // Splash Screen Route - Choose your preferred transition
+      // Splash Screen Route
       GoRoute(
         path: EndPoints.splashView,
         name: 'splash',
@@ -95,40 +94,16 @@ class AppRouter {
       GoRoute(
         path: EndPoints.signInView,
         name: 'SignIn',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: const SignInView(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, const SignInView()),
       ),
 
       // SignUp View Route
       GoRoute(
         path: EndPoints.signUpView,
         name: 'SignUp',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: const SignUpView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, const SignUpView()),
       ),
 
       // SignUpVerify View Route
@@ -137,25 +112,9 @@ class AppRouter {
         name: 'SignUpVerify',
         pageBuilder: (context, state) {
           final credential = state.extra as String;
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: SignUpVerifyView(
-              credential: credential,
-            ), // Replace with your actual home widget
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  // Scale and fade transition
-                  return ScaleTransition(
-                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOut,
-                      ),
-                    ),
-                    child: FadeTransition(opacity: animation, child: child),
-                  );
-                },
-            transitionDuration: const Duration(milliseconds: 400),
+          return AppTransitions.ultraSmooth(
+            state.pageKey,
+            SignUpVerifyView(credential: credential),
           );
         },
       ),
@@ -164,20 +123,9 @@ class AppRouter {
       GoRoute(
         path: EndPoints.signUpDetailsView,
         name: 'SignUpDetails',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child:
-              const SignUpDetailsView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          const SignUpDetailsView(),
         ),
       ),
 
@@ -185,63 +133,31 @@ class AppRouter {
       GoRoute(
         path: EndPoints.salesProcessView,
         name: 'SalesProcess',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child:
-              const SalesProcessView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, const SalesProcessView()),
       ),
 
-      //Trader Shipment Preview View Route
+      // Trader Shipment Preview View Route
       GoRoute(
         path: EndPoints.traderShipmentPreviewView,
         name: 'TraderShipmentReview',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: TraderShipmentReviewView(
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          TraderShipmentReviewView(
             shipment: state.extra as CreateShipmentModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+          ),
         ),
       ),
+
       // Trader Shipment Details View Route
       GoRoute(
         path: EndPoints.traderShipmentDetailsView,
         name: 'TraderShipmentDetails',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: TraderShipmentDetailsView(
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          TraderShipmentDetailsView(
             shipment: state.extra as SingleShipmentModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+          ),
         ),
       ),
 
@@ -249,21 +165,9 @@ class AppRouter {
       GoRoute(
         path: EndPoints.shipmentEditView,
         name: 'ShipmentEdit',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: ShipmentEditView(
-            shipment: state.extra as SingleShipmentModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          ShipmentEditView(shipment: state.extra as SingleShipmentModel),
         ),
       ),
 
@@ -271,20 +175,11 @@ class AppRouter {
       GoRoute(
         path: EndPoints.representativeProfileView,
         name: 'Representative Profile',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: RepresentativeProfileView(
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          RepresentativeProfileView(
             userProfile: state.extra as UserProfileModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+          ),
         ),
       ),
 
@@ -292,117 +187,51 @@ class AppRouter {
       GoRoute(
         path: EndPoints.editProfileView,
         name: 'Edit Profile',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: EditProfileView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, EditProfileView()),
       ),
 
-      // Shipments Calender View Route
+      // Shipments Calendar View Route
       GoRoute(
         path: EndPoints.shipmentsCalendarView,
         name: 'Shipments Calendar',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child:
-              ShipmentsCalendarView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, ShipmentsCalendarView()),
       ),
 
       // Contact Us View Route
       GoRoute(
         path: EndPoints.contactUsView,
         name: 'Contact Us',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: ContactUsView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, ContactUsView()),
       ),
 
       // Trader Profile View Route
       GoRoute(
         path: EndPoints.traderProfileView,
         name: 'Trader Profile',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: TraderProfileView(
-            userProfile: state.extra as UserProfileModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          TraderProfileView(userProfile: state.extra as UserProfileModel),
         ),
       ),
 
-      //Trader Edit Profile View Route
+      // Trader Edit Profile View Route
       GoRoute(
         path: EndPoints.editTraderProfileView,
         name: 'Trader Edit Profile',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: EditProfileView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, EditProfileView()),
       ),
 
       // Environmental Impact View Route
       GoRoute(
         path: EndPoints.environmentalImpactView,
         name: 'Environmental Impact',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child:
-              EnvironmentalImpactView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          EnvironmentalImpactView(),
         ),
       ),
 
@@ -410,84 +239,43 @@ class AppRouter {
       GoRoute(
         path: EndPoints.calculatorView,
         name: 'Calculator',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: CalculatorView(), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, CalculatorView()),
       ),
 
       // Representative Shipment Details View Route
       GoRoute(
         path: EndPoints.representativeShipmentDetailsView,
         name: 'Representative Shipment Details',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: RepresentativeShipmentDetailsView(
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          RepresentativeShipmentDetailsView(
             shipment: state.extra as SingleShipmentModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+          ),
         ),
       ),
 
       // Representative Shipment Review View Route
       GoRoute(
         path: EndPoints.representativeShipmentReviewView,
-        name: 'Representative Shipment Review ',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: RepresentativeShipmentReviewView(
+        name: 'Representative Shipment Review',
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          RepresentativeShipmentReviewView(
             shipment: state.extra as SingleShipmentModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+          ),
         ),
       ),
 
       // Representative Shipment Edit View Route
       GoRoute(
         path: EndPoints.representativeShipmentEditView,
-        name: 'Representative Shipment Edit ',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: RepresentativeShipmentEditView(
+        name: 'Representative Shipment Edit',
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          RepresentativeShipmentEditView(
             shipment: state.extra as SingleShipmentModel,
-          ), // Replace with your actual home widget
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Scale and fade transition
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
+          ),
         ),
       ),
     ],

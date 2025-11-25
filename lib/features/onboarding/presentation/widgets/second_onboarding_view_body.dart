@@ -29,7 +29,7 @@ class SecondOnboardingViewBody extends StatelessWidget {
                   ).copyWith(color: AppColors.primaryColor),
                 ),
                 onPressed: () {
-                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
+                  GoRouter.of(context).go(EndPoints.homeView);
                 },
               ),
             ),

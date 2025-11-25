@@ -80,15 +80,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           }
           break;
         case 2:
-          {
-            final homeCubit = BlocProvider.of<HomeCubit>(context);
-            final todayCubit = BlocProvider.of<TodayShipmentsCubit>(context);
-
-            homeCubit.fetchDoshTypes();
-            homeCubit.fetchTypeHistory(typeId: "68a8567bf5a2951a1ee9e982");
-            todayCubit.fetchTodayShipments();
-            router.push(EndPoints.homeView);
-          }
+          router.go(EndPoints.homeView);
           break;
         case 3:
           if (isUserLoggedIn) {

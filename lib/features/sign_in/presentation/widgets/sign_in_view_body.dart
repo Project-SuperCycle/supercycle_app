@@ -120,7 +120,7 @@ class _SignInViewBodyState extends State<SignInViewBody> {
     return BlocConsumer<SignInCubit, SignInState>(
       listener: (context, state) {
         if (state is SignInSuccess) {
-          GoRouter.of(context).push(EndPoints.homeView);
+          GoRouter.of(context).go(EndPoints.homeView);
         }
         if (state is SignInFailure) {
           ScaffoldMessenger.of(
