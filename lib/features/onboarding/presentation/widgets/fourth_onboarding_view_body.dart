@@ -29,7 +29,7 @@ class FourthOnboardingViewBody extends StatelessWidget {
                   ).copyWith(color: AppColors.primaryColor),
                 ),
                 onPressed: () {
-                  GoRouter.of(context).go(EndPoints.homeView);
+                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
                 },
               ),
             ),
@@ -68,7 +68,7 @@ class FourthOnboardingViewBody extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: GestureDetector(
                 onTap: () {
-                  GoRouter.of(context).go(EndPoints.homeView);
+                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
                 },
                 child: Container(
                   width: 80,

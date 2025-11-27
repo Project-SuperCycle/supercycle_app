@@ -43,7 +43,7 @@ class SocialAuthRow extends StatelessWidget {
           if (state.socialAuth.status == 201) {
             GoRouter.of(context).push(EndPoints.signUpDetailsView);
           } else if (state.socialAuth.status == 200) {
-            GoRouter.of(context).go(EndPoints.homeView);
+            GoRouter.of(context).pushReplacement(EndPoints.homeView);
           }
         }
         if (state is SocialAuthFailure) {

@@ -29,7 +29,7 @@ class FirstOnboardingViewBody extends StatelessWidget {
                   ).copyWith(color: AppColors.primaryColor),
                 ),
                 onPressed: () {
-                  GoRouter.of(context).go(EndPoints.homeView);
+                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
                 },
               ),
             ),

@@ -259,7 +259,7 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
     BlocProvider.of<ShipmentEditCubit>(
       context,
     ).editShipment(shipment: updatedShipment, id: widget.shipment.id);
-    GoRouter.of(context).go(EndPoints.homeView);
+    GoRouter.of(context).pushReplacement(EndPoints.homeView);
   }
 
   Future<FormData> _createFormData(EditShipmentModel shipment) async {

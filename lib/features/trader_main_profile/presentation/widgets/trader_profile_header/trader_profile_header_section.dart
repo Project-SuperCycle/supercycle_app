@@ -89,7 +89,9 @@ class TraderProfileHeaderSection extends StatelessWidget {
                           color: Colors.white,
                           size: 24,
                           onPressed: () {
-                            GoRouter.of(context).go(EndPoints.homeView);
+                            GoRouter.of(
+                              context,
+                            ).pushReplacement(EndPoints.homeView);
                           },
                         ),
                       ),

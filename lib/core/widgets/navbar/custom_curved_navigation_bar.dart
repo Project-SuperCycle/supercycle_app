@@ -80,7 +80,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           }
           break;
         case 2:
-          router.go(EndPoints.homeView);
+          router.pushReplacement(EndPoints.homeView);
           break;
         case 3:
           if (isUserLoggedIn) {

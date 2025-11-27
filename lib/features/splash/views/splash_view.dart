@@ -19,16 +19,17 @@ class _SplashViewState extends State<SplashView>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-
+  late Animation<double> _progressAnimation;
   LoginedUserModel? user;
 
   @override
   void initState() {
     super.initState();
     getUserData();
-    // Initialize animation controller
+
+    // Initialize animation controller (7 seconds)
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 7000),
       vsync: this,
     );
 
@@ -36,7 +37,7 @@ class _SplashViewState extends State<SplashView>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
+        curve: const Interval(0.0, 0.3, curve: Curves.easeInOut),
       ),
     );
 
@@ -44,18 +45,27 @@ class _SplashViewState extends State<SplashView>
     _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
+        curve: const Interval(0.2, 0.5, curve: Curves.elasticOut),
       ),
+    );
+
+    // Create progress animation (0.0 to 1.0 over 7 seconds)
+    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.linear),
     );
 
     // Start animation
     _animationController.forward();
 
-    // Navigate to onboard screen after animation completes (3000ms total)
-    Future.delayed(const Duration(milliseconds: 5000), () {
-      (user == null && mounted)
-          ? GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView)
-          : GoRouter.of(context).go(EndPoints.homeView);
+    // Navigate after animation completes (7000ms)
+    Future.delayed(const Duration(milliseconds: 7000), () {
+      if (mounted) {
+        (user == null)
+            ? GoRouter.of(
+                context,
+              ).pushReplacement(EndPoints.firstOnboardingView)
+            : GoRouter.of(context).pushReplacement(EndPoints.homeView);
+      }
     });
   }
 
@@ -94,8 +104,9 @@ class _SplashViewState extends State<SplashView>
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: Container(
-                      width: screenSize.width * 0.8,
-                      height: screenSize.width * 0.8,
+                      width: screenSize.width * 0.5,
+                      height: screenSize.width * 0.5,
+                      margin: const EdgeInsets.symmetric(vertical: 30),
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(AppAssets.logo),
@@ -113,12 +124,45 @@ class _SplashViewState extends State<SplashView>
                 context,
               ).copyWith(color: AppColors.primaryColor),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               "بطريقة سهلة وآمنة",
               style: AppStyles.styleMedium18(
                 context,
               ).copyWith(color: AppColors.primaryColor),
+            ),
+            const SizedBox(height: 40),
+            // Circular Progress Indicator with Percentage
+            AnimatedBuilder(
+              animation: _progressAnimation,
+              builder: (context, child) {
+                final percentage = (_progressAnimation.value * 100).toInt();
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: CircularProgressIndicator(
+                        value: _progressAnimation.value,
+                        strokeWidth: 6,
+                        backgroundColor: AppColors.primaryColor.withOpacity(
+                          0.2,
+                        ),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '$percentage%',
+                      style: AppStyles.styleBold24(
+                        context,
+                      ).copyWith(color: AppColors.primaryColor, fontSize: 20),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
