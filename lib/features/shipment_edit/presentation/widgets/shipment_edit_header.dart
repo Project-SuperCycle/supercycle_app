@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/helpers/date_time_picker_util.dart';
-import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle/core/helpers/date_time_picker_util.dart';
+import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 import 'dart:io';
 import 'image_picker_widget.dart';
 import 'package:intl/intl.dart';

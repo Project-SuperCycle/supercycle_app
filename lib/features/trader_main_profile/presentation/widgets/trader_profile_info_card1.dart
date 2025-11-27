@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/models/user_profile_model.dart';
-import 'package:supercycle_app/core/utils/profile_constants.dart'
+import 'package:supercycle/core/models/user_profile_model.dart';
+import 'package:supercycle/core/utils/profile_constants.dart'
     show ProfileConstants;
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_branches_section.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_main_branch_section.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_info_row.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_branches_section.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_main_branch_section.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_profile_info_row.dart';
 
 class TraderProfileInfoCard1 extends StatelessWidget {
   final UserProfileModel userProfile;

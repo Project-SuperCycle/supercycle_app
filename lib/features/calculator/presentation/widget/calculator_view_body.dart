@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart';
-import 'package:supercycle_app/core/helpers/custom_dropdown.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/helpers/custom_dropdown.dart';
+import 'package:supercycle/core/services/dosh_types_manager.dart';
+import 'package:supercycle/core/services/services_locator.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 
 class CalculatorViewBody extends StatefulWidget {
   const CalculatorViewBody({super.key});
@@ -19,17 +18,38 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
   String? selectedType;
   final TextEditingController quantityController = TextEditingController();
 
-  final Map<String, double> productTypes = {
-    'Premium Coffee': 25.99,
-    'Organic Rice': 8.50,
-    'Fresh Salmon': 32.75,
-    'Imported Cheese': 45.20,
-    'Exotic Fruits': 18.90,
-    'Organic Nuts': 28.40,
-  };
+  // Get type options from DoshTypesManager
+  List<String> _getTypeOptions() {
+    try {
+      var typesList = getIt<DoshTypesManager>().typesList
+          .map((type) => type.name)
+          .where((name) => name.isNotEmpty)
+          .toSet()
+          .toList();
+
+      typesList.sort();
+      return typesList;
+    } catch (e) {
+      print('Error getting type options: $e');
+      return [];
+    }
+  }
+
+  // Get price for selected type
+  num _getPrice(String name) {
+    try {
+      var price = getIt<DoshTypesManager>().typesList
+          .firstWhere((type) => type.name == name)
+          .price;
+      return price;
+    } catch (e) {
+      print('Error getting price for $name: $e');
+      return 0;
+    }
+  }
 
   double get pricePerKg =>
-      selectedType != null ? productTypes[selectedType]! : 0.0;
+      selectedType != null ? _getPrice(selectedType!).toDouble() : 0.0;
 
   double get totalPrice {
     if (quantityController.text.isEmpty) return 0.0;
@@ -45,7 +65,7 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(  // ✅ امسحنا Scaffold من هنا
+    return Container(
       decoration: const BoxDecoration(gradient: kGradientBackground),
       child: SafeArea(
         child: Directionality(
@@ -54,8 +74,10 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
             children: [
               // ======= Header & Back Button =======
               Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 15,
+                ),
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +123,7 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                 gradient: LinearGradient(
                                   colors: [
                                     Color(0xFF059669),
-                                    Color(0xFF10B981)
+                                    Color(0xFF10B981),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.only(
@@ -113,8 +135,7 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                               child: Column(
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const Icon(
                                         Icons.calculate,
@@ -126,9 +147,9 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                         'إجمالي الشحنة',
                                         style: AppStyles.styleBold24(context)
                                             .copyWith(
-                                          color: Colors.white,
-                                          fontSize: 28,
-                                        ),
+                                              color: Colors.white,
+                                              fontSize: 28,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -137,8 +158,8 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                     'احسب تكلفة منتجك على الفور',
                                     style: AppStyles.styleSemiBold14(context)
                                         .copyWith(
-                                      color: Colors.white.withAlpha(200),
-                                    ),
+                                          color: Colors.white.withAlpha(200),
+                                        ),
                                   ),
                                 ],
                               ),
@@ -161,20 +182,23 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                       const SizedBox(width: 8),
                                       Text(
                                         'نوع الدشت',
-                                        style:
-                                        AppStyles.styleSemiBold14(context),
+                                        style: AppStyles.styleSemiBold14(
+                                          context,
+                                        ),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
                                   CustomDropdown(
-                                    options:
-                                    productTypes.keys.map((e) => e).toList(),
+                                    showBorder: false,
+                                    options: _getTypeOptions(),
                                     onChanged: (val) {
                                       setState(() {
                                         selectedType = val;
                                       });
                                     },
+                                    hintText: 'اختر نوع الدشت',
+                                    initialValue: selectedType,
                                   ),
                                   const SizedBox(height: 25),
 
@@ -189,8 +213,9 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                       const SizedBox(width: 8),
                                       Text(
                                         'الكمية (كجم)',
-                                        style:
-                                        AppStyles.styleSemiBold14(context),
+                                        style: AppStyles.styleSemiBold14(
+                                          context,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -207,9 +232,9 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                     child: TextField(
                                       controller: quantityController,
                                       keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
                                       decoration: const InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                           horizontal: 20,
@@ -218,8 +243,7 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                         border: InputBorder.none,
                                         hintText: 'ادخل الكمية ...',
                                       ),
-                                      style:
-                                      AppStyles.styleMedium14(context),
+                                      style: AppStyles.styleMedium14(context),
                                       onChanged: (value) => setState(() {}),
                                     ),
                                   ),
@@ -229,8 +253,9 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                   // --- Price Display Area ---
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFD1FAE5)
-                                          .withAlpha(100),
+                                      color: const Color(
+                                        0xFFD1FAE5,
+                                      ).withAlpha(100),
                                       borderRadius: BorderRadius.circular(20),
                                       border: Border.all(
                                         color: const Color(0xFF6EE7B7),
@@ -244,12 +269,13 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                         Text(
                                           'سعر الكجم',
                                           style: AppStyles.styleSemiBold16(
-                                              context),
+                                            context,
+                                          ),
                                         ),
                                         const SizedBox(height: 12),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
                                             ShaderMask(
                                               shaderCallback: (bounds) =>
@@ -261,22 +287,25 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                                   ).createShader(bounds),
                                               child: Text(
                                                 pricePerKg.toStringAsFixed(2),
-                                                style: AppStyles.styleBold24(
-                                                    context)
-                                                    .copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 36,
-                                                ),
+                                                style:
+                                                    AppStyles.styleBold24(
+                                                      context,
+                                                    ).copyWith(
+                                                      color: Colors.white,
+                                                      fontSize: 36,
+                                                    ),
                                               ),
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
                                               '/كجم',
-                                              style: AppStyles.styleSemiBold20(
-                                                context,
-                                              ).copyWith(
-                                                color: AppColors.subTextColor,
-                                              ),
+                                              style:
+                                                  AppStyles.styleSemiBold20(
+                                                    context,
+                                                  ).copyWith(
+                                                    color:
+                                                        AppColors.subTextColor,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -293,8 +322,9 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                                 Color(0xFF10B981),
                                               ],
                                             ),
-                                            borderRadius:
-                                            BorderRadius.circular(1),
+                                            borderRadius: BorderRadius.circular(
+                                              1,
+                                            ),
                                           ),
                                         ),
 
@@ -304,14 +334,16 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                         Text(
                                           'السعر الإجمالي',
                                           style: AppStyles.styleSemiBold16(
-                                              context),
+                                            context,
+                                          ),
                                         ),
                                         const SizedBox(height: 12),
                                         Container(
                                           decoration: BoxDecoration(
                                             gradient: kGradientContainer,
-                                            borderRadius:
-                                            BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
                                           ),
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 30,
@@ -321,12 +353,13 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
                                             fit: BoxFit.contain,
                                             child: Text(
                                               totalPrice.toStringAsFixed(2),
-                                              style: AppStyles.styleBold24(
-                                                  context)
-                                                  .copyWith(
-                                                color: Colors.white,
-                                                fontSize: 30,
-                                              ),
+                                              style:
+                                                  AppStyles.styleBold24(
+                                                    context,
+                                                  ).copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 30,
+                                                  ),
                                             ),
                                           ),
                                         ),

@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/auth/auth_main_header.dart';
-import 'package:supercycle_app/core/widgets/auth/auth_main_layout.dart';
-import 'package:supercycle_app/core/widgets/auth/custom_password_field.dart';
-import 'package:supercycle_app/core/widgets/auth/social_auth_row.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
-import 'package:supercycle_app/core/widgets/custom_text_form_field.dart';
-import 'package:supercycle_app/core/widgets/rounded_container.dart';
-import 'package:supercycle_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
-import 'package:supercycle_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
-import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart';
-import 'package:supercycle_app/features/sign_in/presentation/widgets/horizontal_labeled_divider.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/auth/auth_main_header.dart';
+import 'package:supercycle/core/widgets/auth/auth_main_layout.dart';
+import 'package:supercycle/core/widgets/auth/custom_password_field.dart';
+import 'package:supercycle/core/widgets/auth/social_auth_row.dart';
+import 'package:supercycle/core/widgets/custom_button.dart';
+import 'package:supercycle/core/widgets/custom_text_form_field.dart';
+import 'package:supercycle/core/widgets/rounded_container.dart';
+import 'package:supercycle/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
+import 'package:supercycle/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
+import 'package:supercycle/features/sign_in/data/models/signin_credentials_model.dart';
+import 'package:supercycle/features/sign_in/presentation/widgets/horizontal_labeled_divider.dart';
+import 'package:supercycle/generated/l10n.dart';
 
 class SignInViewBody extends StatefulWidget {
   const SignInViewBody({super.key});
@@ -120,7 +120,7 @@ class _SignInViewBodyState extends State<SignInViewBody> {
     return BlocConsumer<SignInCubit, SignInState>(
       listener: (context, state) {
         if (state is SignInSuccess) {
-          GoRouter.of(context).push(EndPoints.homeView);
+          GoRouter.of(context).go(EndPoints.homeView);
         }
         if (state is SignInFailure) {
           ScaffoldMessenger.of(
@@ -170,6 +170,21 @@ class _SignInViewBodyState extends State<SignInViewBody> {
                               controller: _controllers['password'],
                               activeValidator: false,
                               labelText: S.of(context).password,
+                            ),
+                            const SizedBox(height: 5),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                onTap: () => GoRouter.of(
+                                  context,
+                                ).push(EndPoints.forgetPasswordView),
+                                child: Text(
+                                  "${S.of(context).forgot_password}؟",
+                                  style: AppStyles.styleMedium16(
+                                    context,
+                                  ).copyWith(color: AppColors.failureColor),
+                                ),
+                              ),
                             ),
                             const SizedBox(height: 20),
                             (state is SignInLoading)

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 
 class EditProfileViewBody extends StatefulWidget {
   const EditProfileViewBody({super.key});
@@ -46,14 +46,17 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
                             onPressed: () => Navigator.pop(context),
                           ),
                           Text(
                             "تعديل الملف الشخصي",
-                            style: AppStyles.styleSemiBold18(context).copyWith(
-                              color: Colors.white,
-                            ),
+                            style: AppStyles.styleSemiBold18(
+                              context,
+                            ).copyWith(color: Colors.white),
                           ),
                           const SizedBox(width: 40), // For symmetry
                         ],
@@ -246,10 +249,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: AppStyles.styleSemiBold18(context),
-            ),
+            Text(title, style: AppStyles.styleSemiBold18(context)),
             const SizedBox(height: 16),
             ...children,
           ],
@@ -275,17 +275,13 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
           color: (textColor ?? AppColors.primaryColor).withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(
-          icon,
-          color: textColor ?? AppColors.primaryColor,
-          size: 24,
-        ),
+        child: Icon(icon, color: textColor ?? AppColors.primaryColor, size: 24),
       ),
       title: Text(
         title,
-        style: AppStyles.styleSemiBold14(context).copyWith(
-          color: textColor ?? Colors.black87,
-        ),
+        style: AppStyles.styleSemiBold14(
+          context,
+        ).copyWith(color: textColor ?? Colors.black87),
       ),
       subtitle: Text(
         subtitle,
@@ -293,13 +289,14 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
           color: textColor?.withOpacity(0.7) ?? AppColors.subTextColor,
         ),
       ),
-      trailing: trailing ??
+      trailing:
+          trailing ??
           (onTap != null
               ? Icon(
-            Icons.arrow_forward_ios,
-            size: 16,
-            color: textColor ?? Colors.grey,
-          )
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: textColor ?? Colors.grey,
+                )
               : null),
       onTap: onTap,
     );
@@ -330,7 +327,10 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_library, color: AppColors.primaryColor),
+                leading: Icon(
+                  Icons.photo_library,
+                  color: AppColors.primaryColor,
+                ),
                 title: const Text("اختيار من المعرض"),
                 onTap: () {
                   Navigator.pop(context);
@@ -410,10 +410,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          title: Text(
-            "اختر اللغة",
-            style: AppStyles.styleSemiBold18(context),
-          ),
+          title: Text("اختر اللغة", style: AppStyles.styleSemiBold18(context)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -488,10 +485,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          title: Text(
-            "حول التطبيق",
-            style: AppStyles.styleSemiBold18(context),
-          ),
+          title: Text("حول التطبيق", style: AppStyles.styleSemiBold18(context)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

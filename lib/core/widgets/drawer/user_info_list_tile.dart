@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class UserInfoListTile extends StatefulWidget {
   const UserInfoListTile({super.key});

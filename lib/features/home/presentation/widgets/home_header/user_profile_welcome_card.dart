@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle_app/generated/l10n.dart' show S;
+import 'package:supercycle/core/functions/navigate_to_profile.dart';
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:supercycle/generated/l10n.dart' show S;
 
 class UserProfileWelcomeCard extends StatefulWidget {
   const UserProfileWelcomeCard({super.key});
@@ -86,15 +85,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             backgroundColor: Colors.white,
             radius: 32,
             child: GestureDetector(
-              onTap: () {
-                if (userRole == "representative") {
-                  GoRouter.of(
-                    context,
-                  ).push(EndPoints.representativeProfileView);
-                } else {
-                  GoRouter.of(context).push(EndPoints.traderProfileView);
-                }
-              },
+              onTap: () => navigateToProfile(context),
               child: ClipOval(
                 child: Image.asset(
                   AppAssets.defaultAvatar,

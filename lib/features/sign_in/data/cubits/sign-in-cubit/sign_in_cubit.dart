@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
-import 'package:supercycle_app/features/sign_in/data/models/signin_credentials_model.dart'
+import 'package:supercycle/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
+import 'package:supercycle/features/sign_in/data/models/signin_credentials_model.dart'
     show SigninCredentialsModel;
-import 'package:supercycle_app/features/sign_in/data/repos/signin_repo_imp.dart'
+import 'package:supercycle/features/sign_in/data/repos/signin_repo_imp.dart'
     show SignInRepoImp;
 
 class SignInCubit extends Cubit<SignInState> {

@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
-import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
-import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/core/widgets/shipment/notes_content.dart';
-import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
-import 'package:supercycle_app/core/widgets/custom_text_field.dart';
-import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
-import 'package:supercycle_app/features/sales_process/data/models/create_shipment_model.dart';
-import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
-import 'package:supercycle_app/features/sales_process/presentation/widgets/sales_process_shipment_header.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/custom_button.dart';
+import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
+import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
+import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
+import 'package:supercycle/core/widgets/shipment/notes_content.dart';
+import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
+import 'package:supercycle/core/widgets/custom_text_field.dart';
+import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
+import 'package:supercycle/features/sales_process/data/models/create_shipment_model.dart';
+import 'package:supercycle/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
+import 'package:supercycle/features/sales_process/presentation/widgets/sales_process_shipment_header.dart';
+import 'package:supercycle/generated/l10n.dart';
 import 'dart:io';
 
 class SalesProcessViewBody extends StatefulWidget {
@@ -221,17 +220,73 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     });
   }
 
-  void _handleSubmit() {
-    CreateShipmentModel shipment = CreateShipmentModel(
-      customPickupAddress: _handleAddress(),
-      requestedPickupAt: selectedDateTime ?? DateTime.now(),
-      images: selectedImages,
-      items: products,
-      userNotes: notes.isEmpty ? "" : notes.first,
-    );
-    GoRouter.of(
-      context,
-    ).push(EndPoints.traderShipmentPreviewView, extra: shipment);
+  Future<void> _handleSubmit() async {
+    try {
+      // إنشاء الـ shipment object
+      CreateShipmentModel shipment = CreateShipmentModel(
+        customPickupAddress: _handleAddress(),
+        requestedPickupAt: selectedDateTime,
+        images: selectedImages,
+        items: products,
+        userNotes: notes.isEmpty ? "" : notes.first,
+      );
+
+      // التحقق من صحة البيانات قبل الحفظ
+      if (!_validateShipmentData(shipment)) {
+        // إظهار رسالة خطأ
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('برجاء التأكد من إدخال جميع البيانات المطلوبة'),
+          ),
+        );
+        return;
+      }
+
+      // إظهار loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      // إخفاء الـ loading indicator
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // التنقل فقط إذا تم الحفظ بنجاح
+      if (context.mounted) {
+        GoRouter.of(
+          context,
+        ).push(EndPoints.traderShipmentPreviewView, extra: shipment);
+      } else {
+        // إظهار رسالة خطأ في حالة فشل الحفظ
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('حدث خطأ أثناء حفظ البيانات')),
+          );
+        }
+      }
+    } catch (e) {
+      // إخفاء الـ loading indicator في حالة حدوث خطأ
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('حدث خطأ: ${e.toString()}')));
+      }
+    }
+  }
+
+  // دالة للتحقق من صحة البيانات
+  bool _validateShipmentData(CreateShipmentModel shipment) {
+    if (shipment.customPickupAddress.isEmpty) {
+      return false;
+    }
+    if (shipment.items.isEmpty) {
+      return false;
+    }
+    return true;
   }
 
   String _handleAddress() {

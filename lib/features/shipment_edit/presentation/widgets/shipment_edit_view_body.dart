@@ -3,28 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/constants.dart';
-import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
-import 'package:supercycle_app/core/functions/shipment_manager.dart';
-import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/custom_button.dart';
-import 'package:supercycle_app/core/widgets/shipment/client_data_content.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart';
-import 'package:supercycle_app/core/widgets/shipment/expandable_section.dart';
-import 'package:supercycle_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle_app/core/widgets/shipment/progress_widgets.dart';
-import 'package:supercycle_app/core/widgets/custom_text_field.dart';
-import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
-import 'package:supercycle_app/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
-import 'package:supercycle_app/core/widgets/shipment/shipment_details_notes.dart';
-import 'package:supercycle_app/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
-import 'package:supercycle_app/features/shipment_edit/data/models/edit_shipment_model.dart';
-import 'package:supercycle_app/features/shipment_edit/presentation/widgets/shipment_edit_header.dart';
-import 'package:supercycle_app/generated/l10n.dart';
+import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
+import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/custom_button.dart';
+import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
+import 'package:supercycle/core/helpers/custom_back_button.dart';
+import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
+import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
+import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
+import 'package:supercycle/core/widgets/custom_text_field.dart';
+import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
+import 'package:supercycle/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
+import 'package:supercycle/core/widgets/shipment/shipment_details_notes.dart';
+import 'package:supercycle/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
+import 'package:supercycle/features/shipment_edit/data/models/edit_shipment_model.dart';
+import 'package:supercycle/features/shipment_edit/presentation/widgets/shipment_edit_header.dart';
+import 'package:supercycle/generated/l10n.dart';
 import 'dart:io';
 
 class ShipmentEditViewBody extends StatefulWidget {
@@ -204,7 +204,10 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
                           ],
                         ),
                         const SizedBox(height: 25),
-                        ShipmentDetailsNotes(shipmentID: widget.shipment.id),
+                        ShipmentDetailsNotes(
+                          notes: widget.shipment.mainNotes,
+                          shipmentID: widget.shipment.id,
+                        ),
                         const SizedBox(height: 30),
                         CustomButton(
                           onPress: () {
@@ -256,7 +259,7 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
     BlocProvider.of<ShipmentEditCubit>(
       context,
     ).editShipment(shipment: updatedShipment, id: widget.shipment.id);
-    GoRouter.of(context).push(EndPoints.homeView);
+    GoRouter.of(context).go(EndPoints.homeView);
   }
 
   Future<FormData> _createFormData(EditShipmentModel shipment) async {

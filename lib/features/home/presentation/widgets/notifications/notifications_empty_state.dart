@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 
 class NotificationsEmptyState extends StatelessWidget {
-  const NotificationsEmptyState({
-    super.key,
-    required this.type,
-  });
+  const NotificationsEmptyState({super.key, required this.type});
 
   final String type;
 
@@ -22,12 +19,10 @@ class NotificationsEmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            type == 'الكل'
-                ? 'لا يوجد إشعارات بعد'
-                : 'لا توجد إشعارات $type',
-            style: AppStyles.styleMedium16(context).copyWith(
-              color: Colors.grey,
-            ),
+            type == 'الكل' ? 'لا يوجد إشعارات بعد' : 'لا توجد إشعارات $type',
+            style: AppStyles.styleMedium16(
+              context,
+            ).copyWith(color: Colors.grey),
           ),
         ],
       ),

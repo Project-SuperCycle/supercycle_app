@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/form_validators.dart';
-import 'package:supercycle_app/core/utils/contact_strings.dart';
+import 'package:supercycle/core/utils/form_validators.dart';
+import 'package:supercycle/core/utils/contact_strings.dart';
 import '../../data/models/contact_form_data.dart';
 
 class FormController {

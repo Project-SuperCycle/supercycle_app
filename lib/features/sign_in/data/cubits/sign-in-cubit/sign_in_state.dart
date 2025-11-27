@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart' show Equatable;
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 sealed class SignInState extends Equatable {
   const SignInState();

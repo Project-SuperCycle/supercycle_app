@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:supercycle_app/core/functions/shipment_manager.dart';
-import 'package:supercycle_app/features/sales_process/data/models/dosh_item_model.dart';
+import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 
 class CreateShipmentModel {
   final String customPickupAddress;
-  final DateTime requestedPickupAt;
+  final DateTime? requestedPickupAt;
   final List<File> images;
   final List<DoshItemModel> items;
   final String userNotes;
@@ -33,7 +33,9 @@ class CreateShipmentModel {
   Map<String, dynamic> toJson() {
     return {
       'customPickupAddress': customPickupAddress,
-      'requestedPickupAt': requestedPickupAt.toIso8601String(),
+      'requestedPickupAt': (requestedPickupAt != null)
+          ? requestedPickupAt!.toIso8601String()
+          : null,
       'images': images,
       'items': items,
       'userNotes': userNotes,

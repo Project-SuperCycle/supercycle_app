@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:logger/logger.dart' show Logger;
-import 'package:supercycle_app/core/cubits/social_auth/social_auth_cubit.dart';
-import 'package:supercycle_app/core/models/social_auth_request_model.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/services/social_auth_services.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
+import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
+import 'package:supercycle/core/models/social_auth_request_model.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/social_auth_services.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
 
 class SocialAuthRow extends StatelessWidget {
   const SocialAuthRow({super.key});
@@ -43,7 +43,7 @@ class SocialAuthRow extends StatelessWidget {
           if (state.socialAuth.status == 201) {
             GoRouter.of(context).push(EndPoints.signUpDetailsView);
           } else if (state.socialAuth.status == 200) {
-            GoRouter.of(context).push(EndPoints.homeView);
+            GoRouter.of(context).go(EndPoints.homeView);
           }
         }
         if (state is SocialAuthFailure) {

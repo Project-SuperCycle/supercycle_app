@@ -2,14 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/helpers/custom_confirm_dialog.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/start_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
+import 'package:supercycle/core/helpers/custom_confirm_dialog.dart';
+import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/start_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
 
 class ShipmentSegmentCard extends StatefulWidget {
   final String shipmentID;

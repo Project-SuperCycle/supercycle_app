@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 
 class RepresentativeShipmentNotesContent extends StatefulWidget {
   const RepresentativeShipmentNotesContent({super.key});

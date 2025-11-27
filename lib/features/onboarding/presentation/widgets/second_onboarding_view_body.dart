@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart' show AppColors;
-import 'package:supercycle_app/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle_app/features/onboarding/presentation/widgets/partial_circle_border_painter.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_colors.dart' show AppColors;
+import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
+import 'package:supercycle/features/onboarding/presentation/widgets/partial_circle_border_painter.dart';
 
-import 'package:supercycle_app/generated/l10n.dart' show S;
+import 'package:supercycle/generated/l10n.dart' show S;
 
 class SecondOnboardingViewBody extends StatelessWidget {
   const SecondOnboardingViewBody({super.key});
@@ -29,7 +29,7 @@ class SecondOnboardingViewBody extends StatelessWidget {
                   ).copyWith(color: AppColors.primaryColor),
                 ),
                 onPressed: () {
-                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
+                  GoRouter.of(context).go(EndPoints.homeView);
                 },
               ),
             ),

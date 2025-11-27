@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle_app/core/helpers/custom_back_button.dart';
+import 'package:supercycle/core/helpers/custom_back_button.dart';
 
 class BackAndDrawerBar extends StatelessWidget {
   const BackAndDrawerBar({super.key});
@@ -16,11 +16,7 @@ class BackAndDrawerBar extends StatelessWidget {
             onPressed: () {
               Scaffold.of(context).openEndDrawer();
             },
-            icon: const Icon(
-              Icons.menu,
-              size: 25,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.menu, size: 25, color: Colors.white),
           ),
           CustomBackButton(
             size: 25,

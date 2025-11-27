@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
-import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_state.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/shipment_add_note_sheet.dart';
+import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
+import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_state.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/shipment_add_note_sheet.dart';
 
 class RepresentativeShipmentDetailsNotes extends StatefulWidget {
   final String shipmentID;

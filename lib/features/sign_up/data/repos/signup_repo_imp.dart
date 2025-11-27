@@ -1,14 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show DioException;
-import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart'
-    show ApiEndpoints;
-import 'package:supercycle_app/core/services/api_services.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/features/sign_up/data/models/business_information_model.dart';
-import 'package:supercycle_app/features/sign_up/data/models/otp_verification_model.dart';
-import 'package:supercycle_app/features/sign_up/data/models/signup_credentials_model.dart';
-import 'package:supercycle_app/features/sign_up/data/repos/signup_repo.dart'
+import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/services/api_endpoints.dart' show ApiEndpoints;
+import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/features/sign_up/data/models/business_information_model.dart';
+import 'package:supercycle/features/sign_up/data/models/otp_verification_model.dart';
+import 'package:supercycle/features/sign_up/data/models/signup_credentials_model.dart';
+import 'package:supercycle/features/sign_up/data/repos/signup_repo.dart'
     show SignUpRepo;
 
 class SignUpRepoImp implements SignUpRepo {

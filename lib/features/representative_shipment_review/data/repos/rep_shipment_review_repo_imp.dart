@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/errors/failures.dart';
-import 'package:supercycle_app/core/functions/shipment_manager.dart';
-import 'package:supercycle_app/core/services/api_endpoints.dart';
-import 'package:supercycle_app/core/services/api_services.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/deliver_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/fail_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/start_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
-import 'package:supercycle_app/features/representative_shipment_review/data/repos/rep_shipment_review_repo.dart';
+import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/core/services/api_endpoints.dart';
+import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/deliver_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/fail_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/start_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/weigh_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo.dart';
 
 class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   final ApiServices apiServices;

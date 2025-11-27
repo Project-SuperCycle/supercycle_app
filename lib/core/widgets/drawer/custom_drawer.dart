@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:supercycle_app/core/functions/navigate_to_profile.dart';
-import 'package:supercycle_app/core/routes/end_points.dart';
-import 'package:supercycle_app/core/services/storage_services.dart';
-import 'package:supercycle_app/core/utils/app_assets.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/drawer/user_info_list_tile.dart';
-import 'package:supercycle_app/features/sign_in/data/models/logined_user_model.dart';
+import 'package:logger/logger.dart';
+import 'package:supercycle/core/functions/navigate_to_profile.dart';
+import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/drawer/user_info_list_tile.dart';
+import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
+import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key, this.isInProfilePage = false});
@@ -38,16 +41,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
   }
 
-  void logout() async {
+  void logout(BuildContext dialogContext) async {
+    // قفل الـ dialog الأول
+    GoRouter.of(dialogContext).go(EndPoints.homeView);
+
     // حذف البيانات
     await StorageServices.clearAll();
 
     // تسجيل الخروج من Google و Facebook
-    GoogleSignIn().signOut();
-    FacebookAuth.instance.logOut();
-
-    // الانتقال لصفحة تسجيل الدخول
-    GoRouter.of(context).pushReplacement(EndPoints.homeView);
+    await GoogleSignIn().signOut();
+    await FacebookAuth.instance.logOut();
   }
 
   @override
@@ -96,7 +99,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'الرئيسية',
                     isActive: currentLocation == EndPoints.homeView,
                     onTap: () {
-                      GoRouter.of(context).push(EndPoints.homeView);
+                      GoRouter.of(context).go(EndPoints.homeView);
                       Navigator.pop(context);
                     },
                   ),
@@ -158,18 +161,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ? SizedBox.shrink()
                       : (user!.isEcoParticipant == false)
                       ? SizedBox.shrink()
-                      : _buildDrawerItem(
-                          icon: Icons.eco_rounded,
-                          title: 'الأثر البيئي',
-                          isActive:
-                              currentLocation ==
-                              EndPoints.environmentalImpactView,
-                          onTap: () {
-                            GoRouter.of(
-                              context,
-                            ).push(EndPoints.environmentalImpactView);
-                            Navigator.pop(context);
+                      : BlocListener<EcoCubit, EcoState>(
+                          listener: (context, state) {
+                            if (state is GetEcoDataSuccess) {
+                              GoRouter.of(
+                                context,
+                              ).push(EndPoints.environmentalImpactView);
+                              Navigator.pop(context);
+                            }
                           },
+                          child: _buildDrawerItem(
+                            icon: Icons.eco_rounded,
+                            title: 'الأثر البيئي',
+                            isActive:
+                                currentLocation ==
+                                EndPoints.environmentalImpactView,
+                            onTap: () {
+                              context.read<EcoCubit>().getTraderEcoInfo();
+                            },
+                          ),
                         ),
 
                   _buildDrawerItem(
@@ -284,7 +294,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Material(
         color: isActive
-            ? const Color(0xFF10B981).withOpacity(0.1)
+            ? const Color(0xFF10B981).withAlpha(25)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
@@ -494,8 +504,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context);
-                            logout();
+                            logout(context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,

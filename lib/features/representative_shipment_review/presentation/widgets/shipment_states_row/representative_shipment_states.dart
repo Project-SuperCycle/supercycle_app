@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/models/single_shipment_model.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/features/representative_shipment_review/presentation/widgets/shipment_states_row/shipment_state_info_row.dart';
+import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_states_row/shipment_state_info_row.dart';
 
 class RepresentativeShipmentStates extends StatefulWidget {
   final SingleShipmentModel shipment;

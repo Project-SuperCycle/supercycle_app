@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/core/utils/contact_strings.dart';
+import 'package:supercycle/core/utils/contact_strings.dart';
 
 class CompanyHeader extends StatelessWidget {
   final bool isArabic;
@@ -19,18 +19,14 @@ class CompanyHeader extends StatelessWidget {
       margin: const EdgeInsets.all(16),
       child: Card(
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               _buildLogo(),
               const SizedBox(width: 16),
-              Expanded(
-                child: _buildCompanyInfo(),
-              ),
+              Expanded(child: _buildCompanyInfo()),
             ],
           ),
         ),
@@ -49,23 +45,20 @@ class CompanyHeader extends StatelessWidget {
       child: ClipOval(
         child: logoUrl != null
             ? Image.network(
-          logoUrl!,
-          width: 60,
-          height: 60,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildFallbackIcon(),
-        )
+                logoUrl!,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    _buildFallbackIcon(),
+              )
             : _buildFallbackIcon(),
       ),
     );
   }
 
   Widget _buildFallbackIcon() {
-    return Icon(
-      Icons.store,
-      size: 30,
-      color: Colors.green.shade600,
-    );
+    return Icon(Icons.store, size: 30, color: Colors.green.shade600);
   }
 
   Widget _buildCompanyInfo() {
@@ -83,10 +76,7 @@ class CompanyHeader extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           ContactStrings.get('agentInfo', isArabic),
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 14,
-          ),
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
         ),
       ],
     );

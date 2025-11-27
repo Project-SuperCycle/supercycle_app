@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/services/dosh_types_manager.dart';
-import 'package:supercycle_app/core/services/services_locator.dart';
-import 'package:supercycle_app/features/home/data/managers/home_cubit/home_cubit.dart';
-import 'package:supercycle_app/features/home/presentation/widgets/types_section/type_card_item.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/services/dosh_types_manager.dart';
+import 'package:supercycle/core/services/services_locator.dart';
+import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:supercycle/features/home/presentation/widgets/types_section/type_card_item.dart';
 
 class TypesListView extends StatefulWidget {
   const TypesListView({super.key});
@@ -18,7 +18,6 @@ class _TypesListViewState extends State<TypesListView> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HomeCubit>(context).fetchDoshTypes();
   }
 
   @override

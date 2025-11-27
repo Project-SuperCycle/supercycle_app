@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle_app/features/representative_main_profile/data/models/representative_profile_data.dart';
-import 'package:supercycle_app/features/representative_main_profile/presentation/widgets/representative_profile_image.dart';
-import 'package:supercycle_app/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_column.dart';
+import 'package:supercycle/features/representative_main_profile/data/models/representative_profile_data.dart';
+import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_image.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_profile_header/trader_profile_stats_column.dart';
 
 class RepresentativeProfileStatsRow extends StatelessWidget {
   const RepresentativeProfileStatsRow({

@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_cubit.dart';
-import 'package:supercycle_app/core/cubits/all_notes_cubit/all_notes_state.dart';
-import 'package:supercycle_app/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle_app/core/utils/app_colors.dart';
-import 'package:supercycle_app/core/utils/app_styles.dart';
-import 'package:supercycle_app/core/widgets/notes/shipment_notes_card.dart';
-import 'package:supercycle_app/core/widgets/shipment_add_note_sheet.dart';
-import 'package:supercycle_app/features/representative_shipment_details/data/models/rep_note_model.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/notes/shipment_notes_card.dart';
+import 'package:supercycle/core/widgets/shipment_add_note_sheet.dart';
+import 'package:supercycle/features/representative_shipment_details/data/models/rep_note_model.dart';
 
 class ShipmentDetailsNotes extends StatefulWidget {
+  final List<ShipmentNoteModel> notes;
   final String shipmentID;
-  const ShipmentDetailsNotes({super.key, required this.shipmentID});
+  const ShipmentDetailsNotes({
+    super.key,
+    required this.shipmentID,
+    required this.notes,
+  });
 
   @override
   State<ShipmentDetailsNotes> createState() => _ShipmentDetailsNotesState();
 }
 
 class _ShipmentDetailsNotesState extends State<ShipmentDetailsNotes> {
-  List<String> notes = [];
+  List<ShipmentNoteModel> notes = [];
   TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    notes = widget.notes;
   }
 
   @override
@@ -45,38 +47,17 @@ class _ShipmentDetailsNotesState extends State<ShipmentDetailsNotes> {
     );
     (noteController.text.isNotEmpty)
         ? setState(() {
-            notes.add(noteController.text);
+            notes.add(
+              ShipmentNoteModel(
+                authorRole: 'trader_uncontracted',
+                content: noteController.text,
+                createdAt: DateTime.now(),
+              ),
+            );
           })
         : null;
     noteController.clear();
   }
-
-  final List<ShipmentNoteModel> mainNotes = [
-    ShipmentNoteModel(
-      authorRole: 'Admin',
-      content:
-          'Shipment #SH2024-1547 has been cleared by customs. Documents are ready for pickup at warehouse B.',
-      createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-    ),
-    ShipmentNoteModel(
-      authorRole: 'Trader',
-      content:
-          'Thank you for the update. Can you confirm the estimated delivery date? Our client is requesting an update.',
-      createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-    ),
-    ShipmentNoteModel(
-      authorRole: 'Admin',
-      content:
-          'Estimated delivery: November 11, 2025. The carrier will contact the recipient 24 hours before delivery.',
-      createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
-    ),
-    ShipmentNoteModel(
-      authorRole: 'Trader',
-      content:
-          'Perfect! I\'ve informed the client. Please ensure the delivery requires a signature upon receipt.',
-      createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -100,69 +81,29 @@ class _ShipmentDetailsNotesState extends State<ShipmentDetailsNotes> {
               left: 0,
               right: 0,
               bottom: 0,
-              child: BlocConsumer<AllNotesCubit, AllNotesState>(
-                listener: (context, state) {
-                  if (state is GetAllNotesSuccess) {
-                    setState(() {
-                      notes = state.notes;
-                    });
-                  }
-                  if (state is GetAllNotesFailure) {
-                    setState(() {
-                      notes = [];
-                    });
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
-                  }
-                },
-                builder: (context, state) {
-                  if (state is GetAllNotesSuccess) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: widget.notes.isEmpty
+                    ? Center(
+                        child: Text(
+                          "لا توجد ملاحظات",
+                          style: AppStyles.styleRegular16(
+                            context,
+                          ).copyWith(color: Colors.grey.shade600),
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: widget.notes.length,
+                          itemBuilder: (context, index) {
+                            return ShipmentNoteCard(note: widget.notes[index]);
+                          },
+                        ),
                       ),
-                      child: mainNotes.isEmpty
-                          ? Center(
-                              child: Text(
-                                "لا توجد ملاحظات",
-                                style: AppStyles.styleRegular16(
-                                  context,
-                                ).copyWith(color: Colors.grey.shade600),
-                              ),
-                            )
-                          : Expanded(
-                              child: ListView.builder(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                itemCount: mainNotes.length,
-                                itemBuilder: (context, index) {
-                                  return ShipmentNoteCard(
-                                    note: mainNotes[index],
-                                  );
-                                },
-                              ),
-                            ),
-                    );
-                  }
-                  if (state is GetAllNotesFailure) {
-                    return Center(
-                      child: Text(
-                        "حدث خطأ في تحميل الملاحظات",
-                        style: AppStyles.styleRegular16(
-                          context,
-                        ).copyWith(color: Colors.red.shade600),
-                      ),
-                    );
-                  }
-                  return const Center(child: CustomLoadingIndicator());
-                },
-                buildWhen: (prev, current) =>
-                    current is GetAllNotesSuccess ||
-                    current is GetAllNotesFailure ||
-                    current is GetAllNotesLoading,
               ),
             ),
             // Header overlay
