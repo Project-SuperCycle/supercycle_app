@@ -3,6 +3,7 @@ import 'package:supercycle/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle/core/services/api_services.dart';
 import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/features/environment/data/repos/environment_repo_imp.dart';
+import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:supercycle/features/home/data/repos/home_repo_imp.dart';
 import 'package:supercycle/features/representative_shipment_details/data/repos/rep_shipment_details_repo_imp.dart';
 import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
@@ -66,5 +67,9 @@ void setupServiceLocator() {
 
   getIt.registerSingleton<EnvironmentRepoImp>(
     EnvironmentRepoImp(apiServices: getIt.get<ApiServices>()),
+  );
+
+  getIt.registerSingleton<ForgetPasswordRepoImp>(
+    ForgetPasswordRepoImp(apiServices: getIt.get<ApiServices>()),
   );
 }

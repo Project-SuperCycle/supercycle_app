@@ -19,6 +19,10 @@ abstract class EndPoints {
   static const String editTraderProfileView = '/editTraderProfileView';
   static const String editProfileView = '/editProfileView';
 
+  static const String forgetPasswordView = '/forgetPasswordView';
+  static const String verifyResetOtpView = '/verifyResetOtpView';
+  static const String resetPasswordView = '/resetPasswordView';
+
   static const String representativeProfileView = '/representativeProfileView';
   static const String editRepresentativeProfileView =
       '/editRepresentativeProfileView';

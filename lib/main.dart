@@ -12,6 +12,8 @@ import 'package:supercycle/core/routes/routes.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
 import 'package:supercycle/features/environment/data/repos/environment_repo_imp.dart';
+import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
+import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:supercycle/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
 import 'package:supercycle/features/home/data/repos/home_repo_imp.dart';
@@ -159,6 +161,12 @@ void main() async {
         BlocProvider(
           create: (context) =>
               EcoCubit(environmentRepoImp: getIt.get<EnvironmentRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) => ForgetPasswordCubit(
+            forgetPasswordRepoImp: getIt.get<ForgetPasswordRepoImp>(),
+          ),
         ),
       ],
 

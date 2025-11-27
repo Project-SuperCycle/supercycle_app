@@ -171,6 +171,21 @@ class _SignInViewBodyState extends State<SignInViewBody> {
                               activeValidator: false,
                               labelText: S.of(context).password,
                             ),
+                            const SizedBox(height: 5),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                onTap: () => GoRouter.of(
+                                  context,
+                                ).push(EndPoints.forgetPasswordView),
+                                child: Text(
+                                  "${S.of(context).forgot_password}؟",
+                                  style: AppStyles.styleMedium16(
+                                    context,
+                                  ).copyWith(color: AppColors.failureColor),
+                                ),
+                              ),
+                            ),
                             const SizedBox(height: 20),
                             (state is SignInLoading)
                                 ? CustomLoadingIndicator()

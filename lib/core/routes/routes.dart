@@ -7,6 +7,8 @@ import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/features/calculator/presentation/view/calculator_view.dart';
 import 'package:supercycle/features/contact_us/presentation/view/contact_us_view.dart';
 import 'package:supercycle/features/environment/presentation/views/environmental_impact_view.dart';
+import 'package:supercycle/features/forget_password/presentation/views/forget_password_view.dart';
+import 'package:supercycle/features/forget_password/presentation/views/verify_reset_otp_view.dart';
 import 'package:supercycle/features/home/presentation/views/home_view.dart';
 import 'package:supercycle/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:supercycle/features/onboarding/presentation/views/fourth_onboarding_view.dart';
@@ -276,6 +278,24 @@ class AppRouter {
           RepresentativeShipmentEditView(
             shipment: state.extra as SingleShipmentModel,
           ),
+        ),
+      ),
+
+      // Forget Password View Route
+      GoRoute(
+        path: EndPoints.forgetPasswordView,
+        name: 'Forget Password',
+        pageBuilder: (context, state) =>
+            AppTransitions.ultraSmooth(state.pageKey, ForgetPasswordView()),
+      ),
+
+      // Verify Reset OTP View Route
+      GoRoute(
+        path: EndPoints.verifyResetOtpView,
+        name: 'Verify Reset OTP',
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          VerifyResetOtpView(email: state.extra as String),
         ),
       ),
     ],
