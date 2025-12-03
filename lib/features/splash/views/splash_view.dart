@@ -9,7 +9,6 @@ import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart'
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
-
   @override
   State<SplashView> createState() => _SplashViewState();
 }
@@ -19,53 +18,38 @@ class _SplashViewState extends State<SplashView>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-  late Animation<double> _progressAnimation;
+  bool isUser = false;
   LoginedUserModel? user;
-
   @override
   void initState() {
     super.initState();
     getUserData();
-
-    // Initialize animation controller (7 seconds)
+    // Initialize animation controller
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 7000),
+      duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
-
     // Create fade animation (opacity: 0.0 to 1.0)
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Interval(0.0, 0.3, curve: Curves.easeInOut),
+        curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
       ),
     );
-
     // Create scale animation (scale: 0.5 to 1.0)
     _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Interval(0.2, 0.5, curve: Curves.elasticOut),
+        curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
       ),
     );
-
-    // Create progress animation (0.0 to 1.0 over 7 seconds)
-    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.linear),
-    );
-
     // Start animation
     _animationController.forward();
-
-    // Navigate after animation completes (7000ms)
-    Future.delayed(const Duration(milliseconds: 7000), () {
-      if (mounted) {
-        (user == null)
-            ? GoRouter.of(
-                context,
-              ).pushReplacement(EndPoints.firstOnboardingView)
-            : GoRouter.of(context).pushReplacement(EndPoints.homeView);
-      }
+    // Navigate to onboard screen after animation completes (5000ms total)
+    Future.delayed(const Duration(milliseconds: 5000), () {
+      (isUser != true && mounted)
+          ? GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView)
+          : GoRouter.of(context).pushReplacement(EndPoints.homeView);
     });
   }
 
@@ -77,12 +61,15 @@ class _SplashViewState extends State<SplashView>
 
   void getUserData() async {
     user = await StorageServices.getUserData();
+    String userAuth = await StorageServices.readData("isUser");
+    setState(() {
+      isUser = (userAuth == "true") ? true : false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.sizeOf(context);
-
     return Scaffold(
       body: SizedBox(
         width: screenSize.width,
@@ -124,45 +111,12 @@ class _SplashViewState extends State<SplashView>
                 context,
               ).copyWith(color: AppColors.primaryColor),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               "بطريقة سهلة وآمنة",
               style: AppStyles.styleMedium18(
                 context,
               ).copyWith(color: AppColors.primaryColor),
-            ),
-            const SizedBox(height: 40),
-            // Circular Progress Indicator with Percentage
-            AnimatedBuilder(
-              animation: _progressAnimation,
-              builder: (context, child) {
-                final percentage = (_progressAnimation.value * 100).toInt();
-                return Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: CircularProgressIndicator(
-                        value: _progressAnimation.value,
-                        strokeWidth: 6,
-                        backgroundColor: AppColors.primaryColor.withOpacity(
-                          0.2,
-                        ),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.primaryColor,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '$percentage%',
-                      style: AppStyles.styleBold24(
-                        context,
-                      ).copyWith(color: AppColors.primaryColor, fontSize: 20),
-                    ),
-                  ],
-                );
-              },
             ),
           ],
         ),

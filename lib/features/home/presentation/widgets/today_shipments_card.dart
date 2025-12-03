@@ -253,7 +253,7 @@ class _ShipmentItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'شحنة #${shipment.id}',
+                    'شحنة #${shipment.shipmentNumber}',
                     style: AppStyles.styleBold14(
                       context,
                     ).copyWith(color: Colors.white),

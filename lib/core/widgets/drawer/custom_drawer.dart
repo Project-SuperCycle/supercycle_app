@@ -41,8 +41,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   void logout(BuildContext dialogContext) async {
-    GoRouter.of(dialogContext).pushReplacement(EndPoints.homeView);
-
     // حذف البيانات
     await StorageServices.clearAll();
 
@@ -50,6 +48,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
     await GoogleSignIn().signOut();
     await FacebookAuth.instance.logOut();
     // قفل الـ dialog الأول
+    Navigator.pop(dialogContext);
+    // انتقل إلى الصفحة الرئيسية
+    GoRouter.of(dialogContext).pushReplacement(EndPoints.homeView);
   }
 
   @override
@@ -110,13 +111,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         currentLocation ==
                             EndPoints.representativeProfileView ||
                         currentLocation == EndPoints.editProfileView,
-                    onTap: () {
+                    onTap: () async {
                       if (user == null) {
-                        GoRouter.of(context).push(EndPoints.signInView);
+                        if (context.mounted) {
+                          GoRouter.of(context).push(EndPoints.signInView);
+                        }
                       } else {
-                        navigateToProfile(context);
+                        if (context.mounted) {
+                          navigateToProfile(context);
+                        }
                       }
-                      Navigator.pop(context);
                     },
                   ),
 

@@ -14,8 +14,9 @@ class UserProfileWelcomeCard extends StatefulWidget {
 }
 
 class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
-  late String userName = '';
-  late String userRole = '';
+  String userName = '';
+  String userRole = '';
+  LoginedUserModel? user;
 
   @override
   void initState() {
@@ -24,15 +25,15 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   }
 
   void getUserData() async {
-    LoginedUserModel? user = await StorageServices.getUserData();
+    user = await StorageServices.getUserData();
     setState(() {
       if (user != null) {
-        if (user.doshMangerName != null) {
-          userName = user.doshMangerName!;
-          userRole = user.role!;
+        if (user!.doshMangerName != null) {
+          userName = user!.doshMangerName!;
+          userRole = user!.role!;
         } else {
-          userName = user.displayName!;
-          userRole = user.role!;
+          userName = user!.displayName!;
+          userRole = user!.role!;
         }
       } else {
         userName = '';
@@ -85,7 +86,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             backgroundColor: Colors.white,
             radius: 32,
             child: GestureDetector(
-              onTap: () => navigateToProfile(context),
+              onTap: () => (user != null) ? navigateToProfile(context) : null,
               child: ClipOval(
                 child: Image.asset(
                   AppAssets.defaultAvatar,

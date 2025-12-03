@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:supercycle/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle/features/home/presentation/widgets/home_view_body.dart';
@@ -33,15 +34,23 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: const CustomDrawer(),
-      backgroundColor: Colors.white,
-      body: HomeViewBody(onDrawerPressed: onDrawerPressed),
-      bottomNavigationBar: CustomCurvedNavigationBar(
-        currentIndex: _page,
-        navigationKey: _bottomNavigationKey,
-        onTap: _onNavigationTap,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: const CustomDrawer(),
+        backgroundColor: Colors.white,
+        body: HomeViewBody(onDrawerPressed: onDrawerPressed),
+        bottomNavigationBar: CustomCurvedNavigationBar(
+          currentIndex: _page,
+          navigationKey: _bottomNavigationKey,
+          onTap: _onNavigationTap,
+        ),
       ),
     );
   }

@@ -49,7 +49,7 @@ class TraderShipmentDetailsHeader extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                shipment.status.toUpperCase(),
+                shipment.statusDisplay.toUpperCase(),
                 style: AppStyles.styleSemiBold16(context).copyWith(
                   fontWeight: FontWeight.bold,
                   color: _getStatusColor(),

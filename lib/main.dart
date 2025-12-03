@@ -10,6 +10,7 @@ import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle/core/routes/routes.dart';
 import 'package:supercycle/core/services/services_locator.dart';
+import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
 import 'package:supercycle/features/environment/data/repos/environment_repo_imp.dart';
 import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
@@ -42,7 +43,6 @@ import 'package:supercycle/features/sign_up/data/repos/signup_repo_imp.dart'
 import 'package:supercycle/features/trader_shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
 import 'package:supercycle/features/trader_shipment_preview/data/repos/trader_shipment_preview_repo_imp.dart';
 import 'package:supercycle/firebase_options.dart' show DefaultFirebaseOptions;
-
 import 'generated/l10n.dart';
 
 void main() async {
@@ -66,52 +66,38 @@ void main() async {
               SocialAuthCubit(socialAuthRepo: getIt.get<SocialAuthRepoImp>()),
         ),
         BlocProvider(
-          create: (context) {
-            final cubit = HomeCubit(homeRepo: getIt.get<HomeRepoImp>());
-            // Call methods once when app starts
-            cubit.fetchTypesData();
-            cubit.fetchDoshTypes();
-            cubit.fetchTypeHistory(typeId: "68a8567bf5a2951a1ee9e982");
-            return cubit;
-          },
+          create: (context) => HomeCubit(homeRepo: getIt.get<HomeRepoImp>()),
         ),
-
         BlocProvider(
           create: (context) => CreateShipmentCubit(
             shipmentReviewRepo: getIt.get<TraderShipmentPreviewRepoImp>(),
           ),
         ),
-
         BlocProvider(
           create: (context) => ShipmentCubit(
             shipmentDetailsRepo: getIt.get<ShipmentDetailsRepoImp>(),
           ),
         ),
-
         BlocProvider(
           create: (context) => AllNotesCubit(
             shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>(),
           ),
         ),
-
         BlocProvider(
           create: (context) => AddNotesCubit(
             shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>(),
           ),
         ),
-
         BlocProvider(
           create: (context) => ShipmentsCalendarCubit(
             shipmentsCalendarRepo: getIt.get<ShipmentsCalendarRepoImp>(),
           ),
         ),
-
         BlocProvider(
           create: (context) => ShipmentEditCubit(
             shipmentEditRepo: getIt.get<ShipmentEditRepoImp>(),
           ),
         ),
-
         BlocProvider(
           create: (context) => AcceptShipmentCubit(
             repShipmentDetailsRepo: getIt.get<RepShipmentDetailsRepoImp>(),
@@ -157,19 +143,16 @@ void main() async {
             return cubit;
           },
         ),
-
         BlocProvider(
           create: (context) =>
               EcoCubit(environmentRepoImp: getIt.get<EnvironmentRepoImp>()),
         ),
-
         BlocProvider(
           create: (context) => ForgetPasswordCubit(
             forgetPasswordRepoImp: getIt.get<ForgetPasswordRepoImp>(),
           ),
         ),
       ],
-
       child: const MyApp(),
     ),
   );
@@ -190,12 +173,30 @@ class _MyAppState extends State<MyApp> {
       child: BlocBuilder<LocalCubit, LocalState>(
         builder: (context, state) {
           return MaterialApp.router(
+            title: 'Super Cycle',
             theme: ThemeData(scaffoldBackgroundColor: Colors.white),
             routerConfig: AppRouter.router,
             locale: (state is ChangeLocalState)
                 ? const Locale('ar')
                 : const Locale('ar'),
-            builder: DevicePreview.appBuilder,
+            builder: (context, child) {
+              // دمج DevicePreview مع الـ Custom Banner
+              child = DevicePreview.appBuilder(context, child);
+              return Directionality(
+                textDirection: TextDirection.rtl,
+                child: Banner(
+                  message: 'تجريبية', // غير النص للي تحبه
+                  location: BannerLocation.topStart, // أو topEnd
+                  color: Color(0xff803C2B), // غير اللون للي تحبه
+                  textStyle: AppStyles.styleBold12(context).copyWith(
+                    color: Colors.white,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w900,
+                  ),
+                  child: child,
+                ),
+              );
+            },
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
               S.delegate,

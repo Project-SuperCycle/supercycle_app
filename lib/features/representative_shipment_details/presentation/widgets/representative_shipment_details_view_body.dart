@@ -65,26 +65,9 @@ class _RepresentativeShipmentDetailsViewBodyState
             slivers: [
               // Header Section (Fixed)
               SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const ShipmentLogo(),
-                    const SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            textDirection: TextDirection.ltr,
-                            Icons.info_outline,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          CustomBackButton(color: Colors.white, size: 25),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: const ShipmentLogo(),
                 ),
               ),
 
@@ -128,7 +111,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                             ),
                           ),
                         ),
-                        const SizedBox(height: 25),
+                        const SizedBox(height: 20),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -182,7 +165,9 @@ class _RepresentativeShipmentDetailsViewBodyState
                             isExpanded: isNotesDataExpanded,
                             maxHeight: 200,
                             onTap: _toggleNotesData,
-                            content: const RepresentativeShipmentNotesContent(),
+                            content: RepresentativeShipmentNotesContent(
+                              notes: widget.shipment.mainNotes,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 25),

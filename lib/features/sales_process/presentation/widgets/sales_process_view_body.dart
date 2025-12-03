@@ -127,7 +127,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: ExpandableSection(
-                            title: 'بيانات جهة التعامل',
+                            title: 'بياناتي',
                             iconPath: AppAssets.entityCard,
                             isExpanded: isClientDataExpanded,
                             maxHeight: 320,

@@ -52,7 +52,7 @@ class RepresentativeShipmentDetailsHeader extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                shipment.status.toUpperCase(),
+                shipment.statusDisplay.toUpperCase(),
                 style: AppStyles.styleSemiBold16(
                   context,
                 ).copyWith(fontWeight: FontWeight.bold, color: Colors.blue),

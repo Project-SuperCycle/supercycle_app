@@ -21,6 +21,28 @@
     		</array>
     	</dict>
     </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>fbYOUR_FACEBOOK_APP_ID</string>
+        </array>
+      </dict>
+    </array>
+
+    <key>FacebookAppID</key>
+    <string>2056723885157530</string>
+    <key>FacebookClientToken</key>
+    <string>cd2437f23d7d15dd6da98de7eac256cd</string>
+    <key>FacebookDisplayName</key>
+    <string>SuperCycle</string>
+
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fb-messenger-share-api</string>
+    </array>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>

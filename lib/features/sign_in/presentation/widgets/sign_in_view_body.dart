@@ -126,9 +126,6 @@ class _SignInViewBodyState extends State<SignInViewBody> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
-          Logger().i(
-            "MESSAGE : ${state.message}  | STATUS CODE : ${state.statusCode}",
-          );
 
           if (state.statusCode == 200) {
             GoRouter.of(context).pushReplacement(EndPoints.signUpDetailsView);

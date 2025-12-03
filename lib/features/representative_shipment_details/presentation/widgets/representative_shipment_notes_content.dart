@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/notes/shipment_notes_card.dart';
+import 'package:supercycle/features/representative_shipment_details/data/models/rep_note_model.dart';
 
 class RepresentativeShipmentNotesContent extends StatefulWidget {
-  const RepresentativeShipmentNotesContent({super.key});
+  final List<ShipmentNoteModel> notes;
+  const RepresentativeShipmentNotesContent({super.key, required this.notes});
 
   @override
   State<RepresentativeShipmentNotesContent> createState() =>
@@ -11,39 +14,37 @@ class RepresentativeShipmentNotesContent extends StatefulWidget {
 
 class _RepresentativeShipmentNotesContentState
     extends State<RepresentativeShipmentNotesContent> {
-  List<String> notes = [
-    "شكرا جزيلا",
-    "ارجو الرد سريعا",
-    "شكرا جزيلا",
-    "ارجو الرد سريعا",
-    "شكرا جزيلا",
-    "ارجو الرد سريعا",
-    "شكرا جزيلا",
-    "ارجو الرد سريعا",
-    "شكرا جزيلا",
-    "ارجو الرد سريعا",
-  ];
+  List<ShipmentNoteModel> notes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      notes = widget.notes;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: notes
-            .map(
-              (note) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  "🟢 $note",
-                  style: AppStyles.styleRegular16(
-                    context,
-                  ).copyWith(height: 1.5),
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    );
+    return notes.isEmpty
+        ? Center(
+            child: Text(
+              "لا توجد ملاحظات",
+              style: AppStyles.styleRegular16(
+                context,
+              ).copyWith(color: Colors.grey.shade600),
+            ),
+          )
+        : ListView.builder(
+            shrinkWrap:
+                true, // مهم جداً: عشان الـ ListView ياخد المساحة اللي يحتاجها بس
+            physics:
+                const NeverScrollableScrollPhysics(), // نعطل scrolling الـ ListView عشان الـ parent يعمل scroll
+            padding: EdgeInsets.zero, // نشيل الـ padding الافتراضي
+            itemCount: notes.length,
+            itemBuilder: (context, index) {
+              return ShipmentNoteCard(note: notes[index]);
+            },
+          );
   }
 }

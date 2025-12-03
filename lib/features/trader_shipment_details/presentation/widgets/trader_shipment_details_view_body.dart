@@ -108,6 +108,21 @@ class _TraderShipmentDetailsViewBodyState
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: ExpandableSection(
+                            title: 'بياناتي',
+                            iconPath: AppAssets.entityCard,
+                            isExpanded: isClientDataExpanded,
+                            maxHeight: 320,
+                            onTap: _toggleClientData,
+                            content: const ClientDataContent(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ExpandableSection(
                             title: 'تفاصيل الشحنة',
                             iconPath: AppAssets.boxPerspective,
                             isExpanded: isShipmentDetailsExpanded,
@@ -116,21 +131,6 @@ class _TraderShipmentDetailsViewBodyState
                             content: TraderShipmentDetailsContent(
                               items: widget.shipment.items,
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'بياناتي',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isClientDataExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleClientData,
-                            content: const ClientDataContent(),
                           ),
                         ),
                         const SizedBox(height: 20),
