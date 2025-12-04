@@ -86,7 +86,9 @@ class _VerifyResetOtpViewBodyState extends State<VerifyResetOtpViewBody> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('تم التحقق من الرمز بنجاح')),
           );
-          GoRouter.of(context).push(EndPoints.resetPasswordView);
+          GoRouter.of(
+            context,
+          ).pushReplacement(EndPoints.resetPasswordView, extra: state.token);
         } else if (state is VerifyResetOtpFailure) {
           ScaffoldMessenger.of(
             context,

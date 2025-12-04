@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
@@ -29,7 +30,8 @@ class FirstOnboardingViewBody extends StatelessWidget {
                   ).copyWith(color: AppColors.primaryColor),
                 ),
                 onPressed: () {
-                  GoRouter.of(context).go(EndPoints.homeView);
+                  StorageServices.storeData("isUser", "true");
+                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
                 },
               ),
             ),

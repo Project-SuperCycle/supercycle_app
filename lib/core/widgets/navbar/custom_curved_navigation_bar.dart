@@ -35,7 +35,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
 
   void getUser() async {
     LoginedUserModel? user = await StorageServices.getUserData();
-    Logger().w("user: $user");
+    Logger().d("user: $user");
     if (mounted) {
       setState(() {
         isUserLoggedIn = (user != null);
@@ -51,6 +51,11 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   }
 
   void _handleTap(int index) {
+    // لو دوست على نفس الـ tab اللي أنت فيه، متعملش حاجة
+    if (_currentIndex == index) {
+      return;
+    }
+
     setState(() {
       _currentIndex = index;
     });
@@ -80,7 +85,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           }
           break;
         case 2:
-          router.go(EndPoints.homeView);
+          router.pushReplacement(EndPoints.homeView);
           break;
         case 3:
           if (isUserLoggedIn) {

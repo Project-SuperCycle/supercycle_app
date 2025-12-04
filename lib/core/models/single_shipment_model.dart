@@ -12,6 +12,7 @@ class SingleShipmentModel {
   final String? customPickupAddress;
   final DateTime requestedPickupAt;
   final String status;
+  final String statusDisplay;
   final List<String> uploadedImages;
   final List<File> images;
   final List<DoshItemModel> items;
@@ -28,6 +29,7 @@ class SingleShipmentModel {
     required this.customPickupAddress,
     required this.requestedPickupAt,
     required this.status,
+    required this.statusDisplay,
     required this.uploadedImages,
     required this.items,
     required this.userNotes,
@@ -61,7 +63,8 @@ class SingleShipmentModel {
       shipmentNumber: json['shipmentNumber'] ?? "",
       customPickupAddress: json['customPickupAddress'],
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
-      status: json['statusDisplay'] ?? "",
+      status: json['status'] ?? "",
+      statusDisplay: json['statusDisplay'] ?? "",
       uploadedImages: json['uploadedImages'] != null
           ? List<String>.from(json['uploadedImages'])
           : [],
@@ -95,6 +98,7 @@ class SingleShipmentModel {
       'customPickupAddress': customPickupAddress,
       'requestedPickupAt': requestedPickupAt.toIso8601String(),
       'status': status,
+      'statusDisplay': statusDisplay,
       'uploadedImages': uploadedImages,
       'items': items.map((item) => item.toJson()).toList(),
       'userNotes': userNotes,
@@ -125,6 +129,7 @@ class SingleShipmentModel {
     String? customPickupAddress,
     DateTime? requestedPickupAt,
     String? status,
+    String? statusDisplay,
     List<String>? uploadedImages,
     List<File>? images,
     List<DoshItemModel>? items,
@@ -141,6 +146,7 @@ class SingleShipmentModel {
       customPickupAddress: customPickupAddress ?? this.customPickupAddress,
       requestedPickupAt: requestedPickupAt ?? this.requestedPickupAt,
       status: status ?? this.status,
+      statusDisplay: statusDisplay ?? this.statusDisplay,
       uploadedImages: uploadedImages ?? this.uploadedImages,
       images: images ?? this.images,
       items: items ?? this.items,

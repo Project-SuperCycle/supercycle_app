@@ -189,15 +189,13 @@ class HomeRepoImp implements HomeRepo {
 
   List<ShipmentModel> getTodayShipments(List<ShipmentModel> shipments) {
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final tomorrow = today.add(const Duration(days: 1));
 
     return shipments.where((shipment) {
       final pickupDate = shipment.requestedPickupAt;
-      return pickupDate.isAfter(
-            today.subtract(const Duration(microseconds: 1)),
-          ) &&
-          pickupDate.isBefore(tomorrow);
+
+      return pickupDate.year == now.year &&
+          pickupDate.month == now.month &&
+          pickupDate.day == now.day;
     }).toList();
   }
 }

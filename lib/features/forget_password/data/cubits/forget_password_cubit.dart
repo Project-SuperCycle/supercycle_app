@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/features/forget_password/data/model/reset_password_model.dart';
 import 'package:supercycle/features/forget_password/data/model/verify_reset_otp_model.dart';
 import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
@@ -40,7 +41,6 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
         },
         (token) {
           emit(VerifyResetOtpSuccess(token: token));
-          // Store user globally
         },
       );
     } catch (error) {
@@ -58,7 +58,6 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
         },
         (message) {
           emit(ResetPasswordSuccess(message: message));
-          // Store user globally
         },
       );
     } catch (error) {

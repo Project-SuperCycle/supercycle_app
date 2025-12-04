@@ -223,7 +223,9 @@ class _RepresentativeShipmentEditBodyState
                             isExpanded: isNotesDataExpanded,
                             maxHeight: 200,
                             onTap: _toggleNotesData,
-                            content: const RepresentativeShipmentNotesContent(),
+                            content: RepresentativeShipmentNotesContent(
+                              notes: widget.shipment.mainNotes,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 25),

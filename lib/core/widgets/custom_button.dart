@@ -47,9 +47,12 @@ class CustomButton extends StatelessWidget {
           disabledBackgroundColor: Colors.transparent,
         ),
         onPressed: enabled ? onPress : null,
-        child: Text(
-          title,
-          style: AppStyles.styleBold16(context).copyWith(color: Colors.white),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title,
+            style: AppStyles.styleBold16(context).copyWith(color: Colors.white),
+          ),
         ),
       ),
     );

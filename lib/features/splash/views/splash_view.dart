@@ -9,7 +9,6 @@ import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart'
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
-
   @override
   State<SplashView> createState() => _SplashViewState();
 }
@@ -19,9 +18,8 @@ class _SplashViewState extends State<SplashView>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-
+  bool isUser = false;
   LoginedUserModel? user;
-
   @override
   void initState() {
     super.initState();
@@ -31,7 +29,6 @@ class _SplashViewState extends State<SplashView>
       duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
-
     // Create fade animation (opacity: 0.0 to 1.0)
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -39,7 +36,6 @@ class _SplashViewState extends State<SplashView>
         curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
       ),
     );
-
     // Create scale animation (scale: 0.5 to 1.0)
     _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
@@ -47,15 +43,13 @@ class _SplashViewState extends State<SplashView>
         curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
       ),
     );
-
     // Start animation
     _animationController.forward();
-
-    // Navigate to onboard screen after animation completes (3000ms total)
+    // Navigate to onboard screen after animation completes (5000ms total)
     Future.delayed(const Duration(milliseconds: 5000), () {
-      (user == null && mounted)
+      (isUser != true && mounted)
           ? GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView)
-          : GoRouter.of(context).go(EndPoints.homeView);
+          : GoRouter.of(context).pushReplacement(EndPoints.homeView);
     });
   }
 
@@ -67,12 +61,15 @@ class _SplashViewState extends State<SplashView>
 
   void getUserData() async {
     user = await StorageServices.getUserData();
+    String userAuth = await StorageServices.readData("isUser");
+    setState(() {
+      isUser = (userAuth == "true") ? true : false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.sizeOf(context);
-
     return Scaffold(
       body: SizedBox(
         width: screenSize.width,
@@ -94,8 +91,9 @@ class _SplashViewState extends State<SplashView>
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: Container(
-                      width: screenSize.width * 0.8,
-                      height: screenSize.width * 0.8,
+                      width: screenSize.width * 0.5,
+                      height: screenSize.width * 0.5,
+                      margin: const EdgeInsets.symmetric(vertical: 30),
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(AppAssets.logo),

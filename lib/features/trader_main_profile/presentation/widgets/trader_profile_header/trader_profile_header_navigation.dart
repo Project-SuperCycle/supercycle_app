@@ -30,7 +30,7 @@ class TraderProfileHeaderNavigation extends StatelessWidget {
             color: Colors.white,
             size: 28,
             onPressed: () {
-              GoRouter.of(context).go(EndPoints.homeView);
+              GoRouter.of(context).pushReplacement(EndPoints.homeView);
             },
           ),
         ],

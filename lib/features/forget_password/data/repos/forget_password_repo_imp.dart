@@ -19,7 +19,7 @@ class ForgetPasswordRepoImp implements ForgetPasswordRepo {
   ) async {
     // TODO: implement updatePassword
     try {
-      final response = await apiServices.patch(
+      final response = await apiServices.post(
         endPoint: ApiEndpoints.resetPassword,
         data: resetModel.toJson(),
       );
@@ -43,8 +43,8 @@ class ForgetPasswordRepoImp implements ForgetPasswordRepo {
         endPoint: ApiEndpoints.verifyResetOtp,
         data: verifyModel.toJson(),
       );
-      var message = response['message'];
-      return right(message);
+      var token = response['resetToken'];
+      return right(token);
     } catch (e) {
       if (e is DioException) {
         return left(ServerFailure.fromDioError(e));

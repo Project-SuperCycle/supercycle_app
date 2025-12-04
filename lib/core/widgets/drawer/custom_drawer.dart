@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/functions/navigate_to_profile.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
@@ -42,15 +41,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   void logout(BuildContext dialogContext) async {
-    // قفل الـ dialog الأول
-    GoRouter.of(dialogContext).go(EndPoints.homeView);
-
     // حذف البيانات
     await StorageServices.clearAll();
 
     // تسجيل الخروج من Google و Facebook
     await GoogleSignIn().signOut();
     await FacebookAuth.instance.logOut();
+    // قفل الـ dialog الأول
+    Navigator.pop(dialogContext);
+    // انتقل إلى الصفحة الرئيسية
+    GoRouter.of(dialogContext).pushReplacement(EndPoints.homeView);
   }
 
   @override
@@ -99,7 +99,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'الرئيسية',
                     isActive: currentLocation == EndPoints.homeView,
                     onTap: () {
-                      GoRouter.of(context).go(EndPoints.homeView);
+                      GoRouter.of(context).pushReplacement(EndPoints.homeView);
                       Navigator.pop(context);
                     },
                   ),
@@ -111,13 +111,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         currentLocation ==
                             EndPoints.representativeProfileView ||
                         currentLocation == EndPoints.editProfileView,
-                    onTap: () {
+                    onTap: () async {
                       if (user == null) {
-                        GoRouter.of(context).push(EndPoints.signInView);
+                        if (context.mounted) {
+                          GoRouter.of(context).push(EndPoints.signInView);
+                        }
                       } else {
-                        navigateToProfile(context);
+                        if (context.mounted) {
+                          navigateToProfile(context);
+                        }
                       }
-                      Navigator.pop(context);
                     },
                   ),
 

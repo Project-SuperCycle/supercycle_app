@@ -8,6 +8,7 @@ import 'package:supercycle/features/calculator/presentation/view/calculator_view
 import 'package:supercycle/features/contact_us/presentation/view/contact_us_view.dart';
 import 'package:supercycle/features/environment/presentation/views/environmental_impact_view.dart';
 import 'package:supercycle/features/forget_password/presentation/views/forget_password_view.dart';
+import 'package:supercycle/features/forget_password/presentation/views/reset_password_view.dart';
 import 'package:supercycle/features/forget_password/presentation/views/verify_reset_otp_view.dart';
 import 'package:supercycle/features/home/presentation/views/home_view.dart';
 import 'package:supercycle/features/onboarding/presentation/views/first_onboarding_view.dart';
@@ -296,6 +297,16 @@ class AppRouter {
         pageBuilder: (context, state) => AppTransitions.ultraSmooth(
           state.pageKey,
           VerifyResetOtpView(email: state.extra as String),
+        ),
+      ),
+
+      // Reset Password View Route
+      GoRoute(
+        path: EndPoints.resetPasswordView,
+        name: 'Reset Password',
+        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+          state.pageKey,
+          ResetPasswordView(token: state.extra as String),
         ),
       ),
     ],
