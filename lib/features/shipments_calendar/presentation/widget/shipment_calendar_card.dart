@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -15,12 +13,14 @@ import 'package:supercycle/features/shipments_calendar/data/models/shipment_mode
 class ShipmentsCalendarCard extends StatefulWidget {
   final ShipmentModel shipment;
   const ShipmentsCalendarCard({super.key, required this.shipment});
+
   @override
   State<ShipmentsCalendarCard> createState() => _ShipmentsCalendarCardState();
 }
 
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   String userRole = "";
+  bool _hasNavigated = false;
 
   @override
   void initState() {
@@ -28,9 +28,15 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
     loadUserData();
   }
 
+  @override
+  void dispose() {
+    _hasNavigated = false;
+    super.dispose();
+  }
+
   void loadUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
-    if (user != null) {
+    if (user != null && mounted) {
       setState(() {
         userRole = user.role ?? "";
       });
@@ -38,31 +44,34 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   }
 
   void _showShipmentDetails(BuildContext context) {
+    _hasNavigated = false;
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: widget.shipment.id);
-    BlocProvider.of<AllNotesCubit>(
-      context,
-    ).getAllNotes(shipmentId: widget.shipment.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<ShipmentsCalendarCubit, ShipmentsCalendarState>(
+      // ✅ استخدم listenWhen عشان نتحكم في متى الـ listener يتنفذ
+      listenWhen: (previous, current) {
+        // الـ listener يتنفذ بس لو الـ state اتغيرت فعلاً
+        return previous != current;
+      },
       listener: (context, state) {
-        // TODO: implement listener
-        if (state is GetShipmentSuccess) {
-          (userRole == 'representative')
-              ? GoRouter.of(context).push(
-                  EndPoints.representativeShipmentDetailsView,
-                  extra: state.shipment,
-                )
-              : GoRouter.of(context).push(
-                  EndPoints.traderShipmentDetailsView,
-                  extra: state.shipment,
-                );
+        if (state is GetShipmentSuccess && !_hasNavigated) {
+          // ✅ تأكد إن الـ navigation لسه ما حصلش
+          _hasNavigated = true;
+
+          final targetRoute = (userRole == 'representative')
+              ? EndPoints.representativeShipmentDetailsView
+              : EndPoints.traderShipmentDetailsView;
+
+          // ✅ استخدم go بدل push عشان ما يعملش stack
+          GoRouter.of(context).push(targetRoute, extra: state.shipment);
         }
-        if (state is GetShipmentFailure) {
+
+        if (state is GetShipmentFailure && mounted) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
@@ -129,7 +138,6 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                     ),
                     const SizedBox(height: 5),
                     Divider(
-                      radius: BorderRadius.circular(5),
                       color: Colors.grey.shade300,
                       thickness: 1.5,
                       indent: 10,

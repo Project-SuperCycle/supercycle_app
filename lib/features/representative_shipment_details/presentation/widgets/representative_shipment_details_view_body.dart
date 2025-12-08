@@ -1,8 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/helpers/custom_back_button.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
@@ -37,14 +36,41 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isShipmentDetailsExpanded = false;
   bool isClientDataExpanded = false;
   bool isNotesDataExpanded = false;
+  bool hasActionBeenTaken = false;
 
   int _page = 3;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // Key for SharedPreferences
+  String get _actionTakenKey => 'shipment_${widget.shipment.id}_action_taken';
+
   @override
   void initState() {
     super.initState();
+    _loadActionState();
+  }
+
+  /// Load action state from SharedPreferences
+  Future<void> _loadActionState() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      hasActionBeenTaken = prefs.getBool(_actionTakenKey) ?? false;
+    });
+  }
+
+  /// Save action state to SharedPreferences
+  Future<void> _saveActionState(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_actionTakenKey, value);
+  }
+
+  /// Mark action as taken
+  void _markActionAsTaken() {
+    setState(() {
+      hasActionBeenTaken = true;
+    });
+    _saveActionState(true);
   }
 
   void _onNavigationTap(int index) {
@@ -93,7 +119,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                           shipment: widget.shipment,
                         ),
                         const SizedBox(height: 12),
-                        const ProgressBar(completedSteps: 1),
+                        ProgressBar(completedSteps: _getProgressSteps()),
                         const SizedBox(height: 20),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -172,23 +198,10 @@ class _RepresentativeShipmentDetailsViewBodyState
                         ),
                         const SizedBox(height: 25),
                         RepresentativeShipmentDetailsNotes(
-                          shipmentID: widget.shipment.id,
+                          shipment: widget.shipment,
                         ),
                         const SizedBox(height: 25),
-                        (widget.shipment.status == "approved")
-                            ? RepresentativeShipmentActionsRow(
-                                shipment: widget.shipment,
-                              )
-                            : (widget.shipment.status == "routed" ||
-                                  widget.shipment.status ==
-                                      "delivery_in_transit" ||
-                                  widget.shipment.status == "delivered" ||
-                                  widget.shipment.status ==
-                                      "partially_delivered")
-                            ? RepresentativeShipmentReviewButton(
-                                shipment: widget.shipment,
-                              )
-                            : SizedBox.shrink(),
+                        _buildShipmentActions(),
                         const SizedBox(height: 30),
                       ],
                     ),
@@ -205,6 +218,76 @@ class _RepresentativeShipmentDetailsViewBodyState
         onTap: _onNavigationTap,
       ),
     );
+  }
+
+  int _getProgressSteps() {
+    switch (widget.shipment.status) {
+      case 'approved':
+        return 1;
+      case 'pending_admin_review':
+        return 2;
+      case 'routed':
+        return 3;
+      case 'delivery_in_transit':
+        return 4;
+      case 'delivered':
+      case 'complete_weighted':
+        return 5;
+      default:
+        return 0;
+    }
+  }
+
+  Widget _buildShipmentActions() {
+    final status = widget.shipment.status;
+
+    // إذا تم اتخاذ إجراء من قبل، لا تعرض الأزرار
+    if (hasActionBeenTaken && status == 'approved') {
+      return Center(
+        child: Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.green.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.green.shade300),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.check_circle, color: Colors.green.shade700),
+              SizedBox(width: 8),
+              Text(
+                'تم اتخاذ إجراء على هذه الشحنة',
+                style: AppStyles.styleSemiBold14(
+                  context,
+                ).copyWith(color: Colors.green.shade700),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (status == 'approved') {
+      return RepresentativeShipmentActionsRow(
+        shipment: widget.shipment,
+        onActionTaken: _markActionAsTaken,
+      );
+    }
+
+    const reviewStatuses = [
+      'routed',
+      'delivery_in_transit',
+      'delivered',
+      'partially_delivered',
+      'complete_weighted',
+    ];
+
+    if (reviewStatuses.contains(status)) {
+      return RepresentativeShipmentReviewButton(shipment: widget.shipment);
+    }
+
+    return const SizedBox.shrink();
   }
 
   void _toggleShipmentDetails() {

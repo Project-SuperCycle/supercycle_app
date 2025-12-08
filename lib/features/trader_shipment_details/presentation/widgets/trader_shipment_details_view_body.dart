@@ -197,15 +197,16 @@ class _TraderShipmentDetailsViewBodyState
 
   int _getProgressSteps() {
     switch (widget.shipment.status) {
-      case 'قيد المراجعة':
+      case 'pending':
         return 1;
-      case 'تمت الموافقة':
+      case 'approved':
         return 2;
-      case 'تمت المعاينة':
+      case 'pending_admin_review':
         return 3;
-      case 'جارِ الاستلام':
+      case 'routed':
         return 4;
-      case 'تم الاستلام':
+      case 'delivered':
+      case 'complete_weighted':
         return 5;
       default:
         return 0;

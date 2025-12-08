@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_state.dart';
-import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/shipment_add_note_sheet.dart';
 
 class RepresentativeShipmentDetailsNotes extends StatefulWidget {
-  final String shipmentID;
-  const RepresentativeShipmentDetailsNotes({
-    super.key,
-    required this.shipmentID,
-  });
+  final SingleShipmentModel shipment;
+  const RepresentativeShipmentDetailsNotes({super.key, required this.shipment});
 
   @override
   State<RepresentativeShipmentDetailsNotes> createState() =>
@@ -41,7 +35,7 @@ class _RepresentativeShipmentDetailsNotesState
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return ShipmentAddNoteSheet(
-          shipmentId: widget.shipmentID,
+          shipmentId: widget.shipment.id,
           noteController: noteController,
         );
       },
@@ -71,76 +65,38 @@ class _RepresentativeShipmentDetailsNotesState
               left: 0,
               right: 0,
               bottom: 0,
-              child: BlocConsumer<AllNotesCubit, AllNotesState>(
-                listener: (context, state) {
-                  if (state is GetAllNotesSuccess) {
-                    setState(() {
-                      notes = state.notes;
-                    });
-                  }
-                  if (state is GetAllNotesFailure) {
-                    setState(() {
-                      notes = [];
-                    });
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
-                  }
-                },
-                builder: (context, state) {
-                  if (state is GetAllNotesSuccess) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: widget.shipment.repNotes.isEmpty
+                    ? Center(
+                        child: Text(
+                          "لا توجد ملاحظات",
+                          style: AppStyles.styleRegular16(
+                            context,
+                          ).copyWith(color: Colors.grey.shade600),
+                        ),
+                      )
+                    : SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: widget.shipment.repNotes
+                              .map(
+                                (note) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Text(
+                                    "🟢 ${note.content}",
+                                    style: AppStyles.styleRegular16(
+                                      context,
+                                    ).copyWith(height: 1.5),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
-                      child: notes.isEmpty
-                          ? Center(
-                              child: Text(
-                                "لا توجد ملاحظات",
-                                style: AppStyles.styleRegular16(
-                                  context,
-                                ).copyWith(color: Colors.grey.shade600),
-                              ),
-                            )
-                          : SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: notes
-                                    .map(
-                                      (note) => Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: 8.0,
-                                        ),
-                                        child: Text(
-                                          "🟢 $note",
-                                          style: AppStyles.styleRegular16(
-                                            context,
-                                          ).copyWith(height: 1.5),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                    );
-                  }
-                  if (state is GetAllNotesFailure) {
-                    return Center(
-                      child: Text(
-                        "حدث خطأ في تحميل الملاحظات",
-                        style: AppStyles.styleRegular16(
-                          context,
-                        ).copyWith(color: Colors.red.shade600),
-                      ),
-                    );
-                  }
-                  return const Center(child: CustomLoadingIndicator());
-                },
-                buildWhen: (prev, current) =>
-                    current is GetAllNotesSuccess ||
-                    current is GetAllNotesFailure ||
-                    current is GetAllNotesLoading,
               ),
             ),
             // Header overlay

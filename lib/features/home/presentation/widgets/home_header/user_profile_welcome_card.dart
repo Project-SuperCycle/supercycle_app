@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/functions/navigate_to_profile.dart';
+import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
@@ -86,7 +88,9 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             backgroundColor: Colors.white,
             radius: 32,
             child: GestureDetector(
-              onTap: () => (user != null) ? navigateToProfile(context) : null,
+              onTap: () => (user != null)
+                  ? navigateToProfile(context)
+                  : GoRouter.of(context).pushReplacement(EndPoints.signInView),
               child: ClipOval(
                 child: Image.asset(
                   AppAssets.defaultAvatar,

@@ -18,8 +18,13 @@ import 'package:supercycle/features/representative_shipment_details/presentation
 
 class RepresentativeShipmentActionsRow extends StatelessWidget {
   final SingleShipmentModel shipment;
+  final VoidCallback onActionTaken;
 
-  const RepresentativeShipmentActionsRow({super.key, required this.shipment});
+  const RepresentativeShipmentActionsRow({
+    super.key,
+    required this.shipment,
+    required this.onActionTaken,
+  });
 
   void _showConfirmModal(BuildContext context) {
     RepresentativeShipmentModal.show(
@@ -37,10 +42,12 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
 
         Logger().w("ACCEPT SHIPMENT MODEL: $acceptShipmentModel");
 
-        // هنا أضف منطق إرسال البيانات للـ API
         BlocProvider.of<AcceptShipmentCubit>(
           context,
         ).acceptShipment(acceptModel: acceptShipmentModel);
+
+        // Mark action as taken
+        onActionTaken();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -79,6 +86,9 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           context,
         ).rejectShipment(rejectModel: rejectShipmentModel);
 
+        // Mark action as taken
+        onActionTaken();
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -96,6 +106,18 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
     );
   }
 
+  Future<void> _handleEdit(BuildContext context) async {
+    // Navigate to edit page and wait for result
+    final result = await GoRouter.of(
+      context,
+    ).push(EndPoints.representativeShipmentEditView, extra: shipment);
+
+    // If edit was successful, mark action as taken
+    if (result == true) {
+      onActionTaken();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -106,7 +128,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: BlocConsumer<AcceptShipmentCubit, AcceptShipmentState>(
               listener: (context, state) {
-                // TODO: implement listener
                 if (state is AcceptRepShipmentFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -155,7 +176,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             ),
           ),
         ),
-
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -170,12 +190,7 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onPressed: () {
-                GoRouter.of(context).push(
-                  EndPoints.representativeShipmentEditView,
-                  extra: shipment,
-                );
-              },
+              onPressed: () => _handleEdit(context),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
@@ -189,13 +204,11 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             ),
           ),
         ),
-
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: BlocConsumer<RejectShipmentCubit, RejectShipmentState>(
               listener: (context, state) {
-                // TODO: implement listener
                 if (state is RejectRepShipmentFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

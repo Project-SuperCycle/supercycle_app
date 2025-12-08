@@ -56,7 +56,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withOpacity(0.3),
+            color: Colors.orange.withAlpha(50),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -68,7 +68,12 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
         },
         builder: (context, state) {
           if (state is TodayShipmentsLoading) {
-            return const Center(child: CustomLoadingIndicator());
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: CustomLoadingIndicator(color: Colors.white),
+              ),
+            );
           }
 
           if (state is TodayShipmentsSuccess && state.shipments.isNotEmpty) {
@@ -110,7 +115,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withAlpha(100),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -225,9 +230,9 @@ class _ShipmentItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withAlpha(100),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+          border: Border.all(color: Colors.white.withAlpha(150), width: 1),
         ),
         child: Row(
           children: [
@@ -263,7 +268,7 @@ class _ShipmentItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.access_time,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withAlpha(400),
                         size: 14,
                       ),
                       const SizedBox(width: 4),
@@ -276,7 +281,7 @@ class _ShipmentItem extends StatelessWidget {
                       const SizedBox(width: 12),
                       Icon(
                         Icons.location_on,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withAlpha(400),
                         size: 14,
                       ),
                       const SizedBox(width: 4),
@@ -300,7 +305,7 @@ class _ShipmentItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(100),
                 shape: BoxShape.circle,
               ),
               child: const Icon(

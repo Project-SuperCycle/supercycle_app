@@ -5,8 +5,8 @@ class ApiServices {
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://supercycle-api-855015056699.europe-west1.run.app',
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
       headers: {'Accept': 'application/json', 'lang': 'ar'},
     ),
   );

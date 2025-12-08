@@ -46,7 +46,7 @@ class _SplashViewState extends State<SplashView>
     // Start animation
     _animationController.forward();
     // Navigate to onboard screen after animation completes (5000ms total)
-    Future.delayed(const Duration(milliseconds: 5000), () {
+    Future.delayed(const Duration(milliseconds: 3000), () {
       (isUser != true && mounted)
           ? GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView)
           : GoRouter.of(context).pushReplacement(EndPoints.homeView);
