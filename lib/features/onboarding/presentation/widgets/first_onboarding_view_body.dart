@@ -6,11 +6,20 @@ import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart' show AppColors;
 import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
 import 'package:supercycle/features/onboarding/presentation/widgets/partial_circle_border_painter.dart';
-
 import 'package:supercycle/generated/l10n.dart' show S;
 
 class FirstOnboardingViewBody extends StatelessWidget {
   const FirstOnboardingViewBody({super.key});
+
+  Future<void> _skipOnboarding(BuildContext context) async {
+    // خزن إن المستخدم شاف الـ onboarding
+    await StorageServices.storeData("hasSeenOnboarding", "true");
+    await StorageServices.storeData("isUser", "true");
+
+    if (context.mounted) {
+      context.go(EndPoints.homeView);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +32,13 @@ class FirstOnboardingViewBody extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
+                onPressed: () => _skipOnboarding(context),
                 child: Text(
                   S.of(context).skip,
                   style: AppStyles.styleSemiBold18(
                     context,
                   ).copyWith(color: AppColors.primaryColor),
                 ),
-                onPressed: () {
-                  StorageServices.storeData("isUser", "true");
-                  GoRouter.of(context).pushReplacement(EndPoints.homeView);
-                },
               ),
             ),
           ),
@@ -42,12 +48,12 @@ class FirstOnboardingViewBody extends StatelessWidget {
               context,
             ).copyWith(fontSize: 36, color: AppColors.primaryColor),
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Flexible(
             fit: FlexFit.tight,
             child: Image.asset(AppAssets.onboarding1, fit: BoxFit.cover),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
@@ -58,27 +64,24 @@ class FirstOnboardingViewBody extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           CustomPaint(
             painter: PartialCircleBorderPainter(
               color: AppColors.primaryColor,
               strokeWidth: 4,
-              percentage: 0.25, // 25% of the circle
+              percentage: 0.25,
             ),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: GestureDetector(
                 onTap: () {
-                  GoRouter.of(
-                    context,
-                  ).pushReplacement(EndPoints.secondOnboardingView);
+                  context.push(EndPoints.secondOnboardingView);
                 },
                 child: Container(
                   width: 80,
                   height: 80,
                   margin: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.primaryColor,
                     shape: BoxShape.circle,
                   ),
@@ -91,8 +94,7 @@ class FirstOnboardingViewBody extends StatelessWidget {
               ),
             ),
           ),
-
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
         ],
       ),
     );
