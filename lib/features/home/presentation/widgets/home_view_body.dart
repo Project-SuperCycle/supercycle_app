@@ -30,11 +30,20 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     cubit.fetchInitialData();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // إعادة تحميل بيانات المستخدم عند الرجوع للصفحة
+    loadUserData();
+  }
+
   void loadUserData() async {
     LoginedUserModel? loginedUser = await StorageServices.getUserData();
-    setState(() {
-      isUserLoggedIn = (loginedUser != null);
-    });
+    if (mounted) {
+      setState(() {
+        isUserLoggedIn = (loginedUser != null);
+      });
+    }
   }
 
   @override
@@ -43,6 +52,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       color: Colors.white,
       child: RefreshIndicator(
         onRefresh: () async {
+          loadUserData();
           await context.read<HomeCubit>().refreshData();
         },
         child: SingleChildScrollView(

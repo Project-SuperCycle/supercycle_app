@@ -40,17 +40,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
   }
 
-  void logout(BuildContext dialogContext) async {
-    // حذف البيانات
+  void logout(BuildContext context) async {
+    // حذف كل البيانات
     await StorageServices.clearAll();
 
     // تسجيل الخروج من Google و Facebook
     await GoogleSignIn().signOut();
     await FacebookAuth.instance.logOut();
-    // قفل الـ dialog الأول
-    Navigator.pop(dialogContext);
-    // انتقل إلى الصفحة الرئيسية
-    GoRouter.of(dialogContext).pushReplacement(EndPoints.homeView);
+
+    if (!context.mounted) return;
+
+    // قفل الـ dialog
+    Navigator.pop(context);
+
+    // قفل الـ drawer
+    Navigator.pop(context);
+
+    // استخدم go مع إعادة بناء الصفحة بالكامل
+    context.go(EndPoints.homeView);
   }
 
   @override
