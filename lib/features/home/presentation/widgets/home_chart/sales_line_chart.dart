@@ -260,6 +260,22 @@ class SalesLineChartState extends State<SalesLineChart> {
   @override
   void initState() {
     super.initState();
+
+    // عرض الداتا المخزنة لو موجودة
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<HomeCubit>();
+
+      // عرض TypesData المخزنة
+      if (cubit.cachedTypesData != null && cubit.cachedTypesData!.isNotEmpty) {
+        cubit.emit(FetchTypesDataSuccess(doshData: cubit.cachedTypesData!));
+      }
+
+      // عرض TypeHistory المخزنة
+      if (cubit.cachedTypeHistory != null &&
+          cubit.cachedTypeHistory!.isNotEmpty) {
+        cubit.emit(FetchTypeHistorySuccess(history: cubit.cachedTypeHistory!));
+      }
+    });
   }
 
   void _loadTypeHistory([String? typeId]) {
@@ -341,13 +357,19 @@ class SalesLineChartState extends State<SalesLineChart> {
 
   void _initializeSelection(List<DoshDataModel> data) {
     if (_isInitialized || data.isEmpty) return;
+
     setState(() {
       _doshData = data;
       _selectedTypeId = data.first.id;
       _selectedTypeName = data.first.name;
       _isInitialized = true;
     });
-    _loadTypeHistory(_selectedTypeId);
+
+    // لا تعمل fetch هنا لو الداتا موجودة في الـ cache
+    final cubit = context.read<HomeCubit>();
+    if (cubit.cachedTypeHistory == null || cubit.cachedTypeHistory!.isEmpty) {
+      _loadTypeHistory(_selectedTypeId);
+    }
   }
 
   @override
@@ -419,7 +441,6 @@ class SalesLineChartState extends State<SalesLineChart> {
             ? _doshData.map((e) => e.name).toList()
             : _typeOptions;
 
-        // التأكد من أن القيمة المحددة موجودة في القائمة
         final currentValue =
             (_selectedTypeName != null && options.contains(_selectedTypeName))
             ? _selectedTypeName
@@ -440,17 +461,16 @@ class SalesLineChartState extends State<SalesLineChart> {
           ),
           child: DropdownButtonFormField<String>(
             value: currentValue,
-            isExpanded: true, // إضافة isExpanded لحل مشكلة الـ layout
+            isExpanded: true,
             items: options.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Row(
-                  mainAxisSize: MainAxisSize.min, // إضافة mainAxisSize
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.recycling, color: Colors.green, size: 20),
                     const SizedBox(width: 10),
                     Flexible(
-                      // تغيير من Expanded إلى Flexible
                       child: Text(
                         value,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -519,14 +539,18 @@ class SalesLineChartState extends State<SalesLineChart> {
             child: CircularProgressIndicator(color: AppColors.primaryColor),
           );
         }
+
         if (state is FetchTypeHistoryFailure) {
           return _buildErrorWidget(state.message);
         }
+
         if (state is FetchTypeHistorySuccess) {
           if (state.history.isEmpty) return _buildNoDataWidget();
+
           final chartData = state.history
               .map(ChartPriceData.fromTypeHistory)
               .toList();
+
           return _LineChart(
             priceData: chartData,
             priceFormatter: widget.priceFormatter,
@@ -536,6 +560,7 @@ class SalesLineChartState extends State<SalesLineChart> {
             showAllMonths: widget.showAllMonths,
           );
         }
+
         return _buildInitialWidget();
       },
     );

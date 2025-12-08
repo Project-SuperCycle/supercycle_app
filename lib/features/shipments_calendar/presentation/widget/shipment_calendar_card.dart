@@ -20,18 +20,12 @@ class ShipmentsCalendarCard extends StatefulWidget {
 
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   String userRole = "";
-  bool _hasNavigated = false;
+  bool _isNavigating = false;
 
   @override
   void initState() {
     super.initState();
     loadUserData();
-  }
-
-  @override
-  void dispose() {
-    _hasNavigated = false;
-    super.dispose();
   }
 
   void loadUserData() async {
@@ -44,7 +38,12 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   }
 
   void _showShipmentDetails(BuildContext context) {
-    _hasNavigated = false;
+    if (_isNavigating) return;
+
+    setState(() {
+      _isNavigating = true;
+    });
+
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: widget.shipment.id);
@@ -53,28 +52,36 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ShipmentsCalendarCubit, ShipmentsCalendarState>(
-      // ✅ استخدم listenWhen عشان نتحكم في متى الـ listener يتنفذ
       listenWhen: (previous, current) {
-        // الـ listener يتنفذ بس لو الـ state اتغيرت فعلاً
         return previous != current;
       },
       listener: (context, state) {
-        if (state is GetShipmentSuccess && !_hasNavigated) {
-          // ✅ تأكد إن الـ navigation لسه ما حصلش
-          _hasNavigated = true;
-
+        if (state is GetShipmentSuccess && _isNavigating) {
           final targetRoute = (userRole == 'representative')
               ? EndPoints.representativeShipmentDetailsView
               : EndPoints.traderShipmentDetailsView;
 
-          // ✅ استخدم go بدل push عشان ما يعملش stack
-          GoRouter.of(context).push(targetRoute, extra: state.shipment);
+          // استخدم push مع then للرجوع
+          context.push(targetRoute, extra: state.shipment).then((_) {
+            // لما ترجع من الصفحة، reset الـ flag
+            if (mounted) {
+              setState(() {
+                _isNavigating = false;
+              });
+            }
+          });
         }
 
-        if (state is GetShipmentFailure && mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        if (state is GetShipmentFailure && _isNavigating) {
+          if (mounted) {
+            setState(() {
+              _isNavigating = false;
+            });
+
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
         }
       },
       child: Card(
@@ -114,7 +121,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -205,24 +212,37 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () => _showShipmentDetails(context),
+                onTap: _isNavigating
+                    ? null
+                    : () => _showShipmentDetails(context),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.only(
+                    color: _isNavigating
+                        ? AppColors.primaryColor.withOpacity(0.6)
+                        : AppColors.primaryColor,
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(12),
                       bottomRight: Radius.circular(12),
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'إظهار التفاصيل',
-                      style: AppStyles.styleSemiBold14(context).copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: _isNavigating
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            'إظهار التفاصيل',
+                            style: AppStyles.styleSemiBold14(context).copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ),
