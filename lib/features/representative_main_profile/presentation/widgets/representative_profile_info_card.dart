@@ -5,7 +5,6 @@ import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/utils/profile_constants.dart';
-import 'package:supercycle/features/sales_process/presentation/views/sales_process_view.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:supercycle/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
@@ -106,112 +105,13 @@ class _RepresentativeProfileInfoCardState
                 ),
               );
             },
+            buildWhen: (previous, current) =>
+                current is GetAllShipmentsLoading ||
+                current is GetAllShipmentsSuccess ||
+                current is GetAllShipmentsFailure,
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildTransactionCard(
-    BuildContext context, {
-    required String shipmentNumber,
-    required String deliveryDate,
-    required String quantity,
-    required String price,
-  }) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: const Color(0xFF10B981).withAlpha(50)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withAlpha(15),
-            blurRadius: 5,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildDetailRow(shipmentNumber),
-            const SizedBox(height: 8),
-            _buildDetailRow(deliveryDate),
-            const SizedBox(height: 8),
-            _buildDetailRow(quantity),
-            const SizedBox(height: 8),
-            _buildDetailRow(price),
-            const SizedBox(height: 15),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SalesProcessView()),
-                );
-              },
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF10B981),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF10B981).withAlpha(50),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  'إظهار التفاصيل',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String text) {
-    final parts = text.split(':');
-    final hasLabel = parts.length > 1;
-
-    return RichText(
-      textAlign: TextAlign.right,
-      text: TextSpan(
-        children: [
-          if (hasLabel)
-            TextSpan(
-              text: "${parts[0]}: ",
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          TextSpan(
-            text: hasLabel ? parts.sublist(1).join(':') : text,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black87,
-              fontWeight: FontWeight.normal,
-              height: 1.4,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

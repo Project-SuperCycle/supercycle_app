@@ -1,6 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
@@ -8,8 +7,6 @@ import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
-import 'package:supercycle/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class CustomCurvedNavigationBar extends StatefulWidget {
@@ -50,12 +47,38 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     _currentIndex = widget.currentIndex;
   }
 
-  void _handleTap(int index) {
-    // لو دوست على نفس الـ tab اللي أنت فيه، متعملش حاجة
-    if (_currentIndex == index) {
-      return;
-    }
+  // دالة للحصول على الـ route الحالي
+  String _getCurrentRoute() {
+    final router = GoRouter.of(context);
+    final location =
+        router.routerDelegate.currentConfiguration.last.matchedLocation;
+    return location;
+  }
 
+  // دالة لتحديد الـ route المطلوب بناءً على الـ index
+  String? _getTargetRoute(int index) {
+    switch (index) {
+      case 0:
+        return EndPoints.calculatorView;
+      case 1:
+        return isUserLoggedIn
+            ? EndPoints.salesProcessView
+            : EndPoints.signInView;
+      case 2:
+        return EndPoints.homeView;
+      case 3:
+        return isUserLoggedIn
+            ? EndPoints.shipmentsCalendarView
+            : EndPoints.signInView;
+      case 4:
+        return EndPoints.contactUsView;
+      default:
+        return null;
+    }
+  }
+
+  void _handleTap(int index) {
+    // تحديث الـ index الحالي
     setState(() {
       _currentIndex = index;
     });
@@ -64,6 +87,17 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       widget.onTap!(index);
     }
 
+    // التحقق من الـ route الحالي
+    final currentRoute = _getCurrentRoute();
+    final targetRoute = _getTargetRoute(index);
+
+    // لو الـ route الحالي هو نفس الـ target route، متعملش navigation
+    if (targetRoute != null && currentRoute == targetRoute) {
+      Logger().d("Already on the same route: $currentRoute");
+      return;
+    }
+
+    // لو مش نفس الـ route، اعمل navigation
     _navigateToScreen(index);
   }
 
@@ -81,7 +115,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           if (isUserLoggedIn) {
             router.push(EndPoints.salesProcessView);
           } else {
-            router.push(EndPoints.signInView);
+            router.pushReplacement(EndPoints.signInView);
           }
           break;
         case 2:
@@ -91,7 +125,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           if (isUserLoggedIn) {
             router.push(EndPoints.shipmentsCalendarView);
           } else {
-            router.push(EndPoints.signInView);
+            router.pushReplacement(EndPoints.signInView);
           }
           break;
         case 4:

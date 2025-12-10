@@ -5,10 +5,10 @@ import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
+
   @override
   State<SplashView> createState() => _SplashViewState();
 }
@@ -18,39 +18,38 @@ class _SplashViewState extends State<SplashView>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-  bool isUser = false;
-  LoginedUserModel? user;
+
   @override
   void initState() {
     super.initState();
-    getUserData();
+
     // Initialize animation controller
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    // Create fade animation (opacity: 0.0 to 1.0)
+
+    // Create fade animation
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
       ),
     );
-    // Create scale animation (scale: 0.5 to 1.0)
+
+    // Create scale animation
     _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
       ),
     );
+
     // Start animation
     _animationController.forward();
-    // Navigate to onboard screen after animation completes (5000ms total)
-    Future.delayed(const Duration(milliseconds: 5000), () {
-      (isUser != true && mounted)
-          ? GoRouter.of(context).pushReplacement(EndPoints.firstOnboardingView)
-          : GoRouter.of(context).pushReplacement(EndPoints.homeView);
-    });
+
+    // Navigate after animation
+    _navigateToNextScreen();
   }
 
   @override
@@ -59,12 +58,33 @@ class _SplashViewState extends State<SplashView>
     super.dispose();
   }
 
-  void getUserData() async {
-    user = await StorageServices.getUserData();
-    String userAuth = await StorageServices.readData("isUser");
-    setState(() {
-      isUser = (userAuth == "true") ? true : false;
-    });
+  Future<void> _navigateToNextScreen() async {
+    // انتظر الـ animation
+    await Future.delayed(const Duration(milliseconds: 2000));
+
+    if (!mounted) return;
+
+    // اقرأ البيانات
+    final hasSeenOnboarding = await StorageServices.readData(
+      "hasSeenOnboarding",
+    );
+    final userAuth = await StorageServices.readData("isUser");
+    final user = await StorageServices.getUserData();
+
+    // حدد الصفحة المناسبة
+    String targetRoute;
+
+    if (hasSeenOnboarding == "true" || userAuth == "true" || user != null) {
+      // المستخدم شاف الـ onboarding قبل كده أو مسجل دخول
+      targetRoute = EndPoints.homeView;
+    } else {
+      // أول مرة يفتح التطبيق
+      targetRoute = EndPoints.firstOnboardingView;
+    }
+
+    if (mounted) {
+      context.go(targetRoute);
+    }
   }
 
   @override
@@ -111,7 +131,7 @@ class _SplashViewState extends State<SplashView>
                 context,
               ).copyWith(color: AppColors.primaryColor),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               "بطريقة سهلة وآمنة",
               style: AppStyles.styleMedium18(

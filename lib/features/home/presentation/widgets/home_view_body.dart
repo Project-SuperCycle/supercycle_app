@@ -24,39 +24,53 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   void initState() {
     super.initState();
     loadUserData();
-    var cubit = BlocProvider.of<HomeCubit>(context);
-    cubit.fetchDoshTypes();
-    cubit.fetchTypesData();
-    cubit.fetchTypeHistory(typeId: "68a8567bf5a2951a1ee9e982");
+
+    // استدعاء الـ method الجديدة مرة واحدة بس
+    var cubit = BlocProvider.of<HomeCubit>(context, listen: false);
+    cubit.fetchInitialData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // إعادة تحميل بيانات المستخدم عند الرجوع للصفحة
+    loadUserData();
   }
 
   void loadUserData() async {
     LoginedUserModel? loginedUser = await StorageServices.getUserData();
-    setState(() {
-      isUserLoggedIn = (loginedUser != null);
-    });
+    if (mounted) {
+      setState(() {
+        isUserLoggedIn = (loginedUser != null);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[50],
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            HomeViewHeader(onDrawerPressed: widget.onDrawerPressed),
-            const SizedBox(height: 10),
-            // Today's Shipments Card
-            (isUserLoggedIn == false)
-                ? const SizedBox.shrink()
-                : TodayShipmentsCard(),
-            SalesChartCard(),
-            const SizedBox(height: 20),
-            TypesSectionHeader(),
-            const SizedBox(height: 12),
-            TypesListView(),
-            const SizedBox(height: 40),
-          ],
+      color: Colors.white,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          loadUserData();
+          await context.read<HomeCubit>().refreshData();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HomeViewHeader(onDrawerPressed: widget.onDrawerPressed),
+              const SizedBox(height: 10),
+              (isUserLoggedIn == false)
+                  ? const SizedBox.shrink()
+                  : TodayShipmentsCard(),
+              SalesChartCard(),
+              const SizedBox(height: 20),
+              TypesSectionHeader(),
+              const SizedBox(height: 12),
+              TypesListView(),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -15,12 +13,14 @@ import 'package:supercycle/features/shipments_calendar/data/models/shipment_mode
 class ShipmentsCalendarCard extends StatefulWidget {
   final ShipmentModel shipment;
   const ShipmentsCalendarCard({super.key, required this.shipment});
+
   @override
   State<ShipmentsCalendarCard> createState() => _ShipmentsCalendarCardState();
 }
 
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   String userRole = "";
+  bool _isNavigating = false;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
 
   void loadUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
-    if (user != null) {
+    if (user != null && mounted) {
       setState(() {
         userRole = user.role ?? "";
       });
@@ -38,34 +38,50 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   }
 
   void _showShipmentDetails(BuildContext context) {
+    if (_isNavigating) return;
+
+    setState(() {
+      _isNavigating = true;
+    });
+
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: widget.shipment.id);
-    BlocProvider.of<AllNotesCubit>(
-      context,
-    ).getAllNotes(shipmentId: widget.shipment.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<ShipmentsCalendarCubit, ShipmentsCalendarState>(
+      listenWhen: (previous, current) {
+        return previous != current;
+      },
       listener: (context, state) {
-        // TODO: implement listener
-        if (state is GetShipmentSuccess) {
-          (userRole == 'representative')
-              ? GoRouter.of(context).push(
-                  EndPoints.representativeShipmentDetailsView,
-                  extra: state.shipment,
-                )
-              : GoRouter.of(context).push(
-                  EndPoints.traderShipmentDetailsView,
-                  extra: state.shipment,
-                );
+        if (state is GetShipmentSuccess && _isNavigating) {
+          final targetRoute = (userRole == 'representative')
+              ? EndPoints.representativeShipmentDetailsView
+              : EndPoints.traderShipmentDetailsView;
+
+          // استخدم push مع then للرجوع
+          context.push(targetRoute, extra: state.shipment).then((_) {
+            // لما ترجع من الصفحة، reset الـ flag
+            if (mounted) {
+              setState(() {
+                _isNavigating = false;
+              });
+            }
+          });
         }
-        if (state is GetShipmentFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+
+        if (state is GetShipmentFailure && _isNavigating) {
+          if (mounted) {
+            setState(() {
+              _isNavigating = false;
+            });
+
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
         }
       },
       child: Card(
@@ -105,7 +121,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -129,7 +145,6 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                     ),
                     const SizedBox(height: 5),
                     Divider(
-                      radius: BorderRadius.circular(5),
                       color: Colors.grey.shade300,
                       thickness: 1.5,
                       indent: 10,
@@ -197,24 +212,37 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () => _showShipmentDetails(context),
+                onTap: _isNavigating
+                    ? null
+                    : () => _showShipmentDetails(context),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.only(
+                    color: _isNavigating
+                        ? AppColors.primaryColor.withOpacity(0.6)
+                        : AppColors.primaryColor,
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(12),
                       bottomRight: Radius.circular(12),
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'إظهار التفاصيل',
-                      style: AppStyles.styleSemiBold14(context).copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: _isNavigating
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            'إظهار التفاصيل',
+                            style: AppStyles.styleSemiBold14(context).copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ),

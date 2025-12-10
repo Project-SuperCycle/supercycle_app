@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercycle/core/helpers/custom_confirm_dialog.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
@@ -10,10 +11,15 @@ import 'package:supercycle/features/representative_shipment_review/presentation/
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_header.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_card_progress.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_truck_info.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_destination_section.dart';
+import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
 
 class ShipmentSegmentCard extends StatefulWidget {
   final String shipmentID;
   final ShipmentSegmentModel segment;
+
   const ShipmentSegmentCard({
     super.key,
     required this.segment,
@@ -28,17 +34,46 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   bool isMoved = false;
   bool isWeighted = false;
   bool isDelivered = false;
+  bool _isLoading = true;
+
+  // Keys for SharedPreferences
+  String get _movedKey => 'segment_${widget.segment.id}_isMoved';
+  String get _weightedKey => 'segment_${widget.segment.id}_isWeighted';
+  String get _deliveredKey => 'segment_${widget.segment.id}_isDelivered';
 
   @override
   void initState() {
     super.initState();
+    _loadSavedStates();
+  }
+
+  /// Load saved states from SharedPreferences
+  Future<void> _loadSavedStates() async {
+    final prefs = await SharedPreferences.getInstance();
+
     setState(() {
-      isMoved = widget.segment.status == "in_transit_to_scale";
-      isWeighted = widget.segment.status == "in_transit_to_destination";
+      // Check saved values first, if not found use status from API
+      isMoved =
+          prefs.getBool(_movedKey) ??
+          (widget.segment.status == "in_transit_to_scale");
+
+      isWeighted =
+          prefs.getBool(_weightedKey) ??
+          (widget.segment.status == "in_transit_to_destination");
+
       isDelivered =
-          widget.segment.status == "delivered" ||
-          widget.segment.status == "failed";
+          prefs.getBool(_deliveredKey) ??
+          (widget.segment.status == "delivered" ||
+              widget.segment.status == "failed");
+
+      _isLoading = false;
     });
+  }
+
+  /// Save states to SharedPreferences
+  Future<void> _saveState(String key, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, value);
   }
 
   void onMovedPressed() {
@@ -46,6 +81,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
       shipmentID: widget.shipmentID,
       segmentID: widget.segment.id,
     );
+
     showCustomConfirmationDialog(
       context: context,
       title: 'هل أنت متأكد؟',
@@ -54,9 +90,11 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         BlocProvider.of<StartSegmentCubit>(
           context,
         ).startSegment(startModel: startModel);
+
         setState(() {
           isMoved = true;
         });
+        _saveState(_movedKey, true);
       },
     );
   }
@@ -65,17 +103,34 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
     setState(() {
       isWeighted = true;
     });
+    _saveState(_weightedKey, true);
   }
 
   void onDeliveredPressed() {
     setState(() {
       isDelivered = true;
     });
+    _saveState(_deliveredKey, true);
     Logger().i("isDelivered: $isDelivered");
+  }
+
+  int get currentStep {
+    if (isDelivered) return 3;
+    if (isWeighted) return 2;
+    if (isMoved) return 1;
+    return 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        height: 200,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
@@ -99,7 +154,44 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: _buildCurrentStep(),
+              child: Column(
+                children: [
+                  // Common Progress Indicator
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 6,
+                    ),
+                    child: SegmentCardProgress(
+                      currentStep: currentStep,
+                      segmentStatus: widget.segment.status!,
+                    ),
+                  ),
+
+                  // Common Truck Info
+                  SegmentTruckInfo(truckNumber: widget.segment.vehicleNumber!),
+
+                  const SizedBox(height: 4),
+
+                  // Common Destination Section
+                  SegmentDestinationSection(
+                    destinationTitle: widget.segment.destName ?? "",
+                    destinationAddress: widget.segment.destAddress ?? "",
+                  ),
+
+                  // Common Products Details
+                  if (widget.segment.items.isNotEmpty)
+                    ...widget.segment.items.map((item) {
+                      return SegmentProductsDetails(
+                        quantity: item.quantity,
+                        productType: item.name,
+                      );
+                    }),
+
+                  // Step-specific content
+                  _buildCurrentStep(),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
           ],

@@ -18,19 +18,25 @@ class _TypesListViewState extends State<TypesListView> {
   @override
   void initState() {
     super.initState();
+    // عند فتح الـ widget، اعرض الداتا المخزنة لو موجودة
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<HomeCubit>();
+      if (cubit.cachedDoshTypes != null && cubit.cachedDoshTypes!.isNotEmpty) {
+        // عمل emit للداتا المخزنة عشان الـ UI يعرضها
+        cubit.emit(FetchDoshTypesSuccess(doshTypes: cubit.cachedDoshTypes!));
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
-        // TODO: implement listener
         if (state is FetchDoshTypesFailure) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
         }
-
         if (state is FetchDoshTypesSuccess) {
           List<DoshItem> typesList = state.doshTypes
               .map((e) => DoshItem(id: e.id, name: e.name, price: e.maxPrice))
@@ -42,6 +48,7 @@ class _TypesListViewState extends State<TypesListView> {
         if (state is FetchDoshTypesLoading) {
           return const Center(child: CustomLoadingIndicator());
         }
+
         if (state is FetchDoshTypesSuccess) {
           if (state.doshTypes.isEmpty) {
             return const Center(child: Text('No Dosh Types'));

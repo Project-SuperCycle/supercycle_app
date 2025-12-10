@@ -47,26 +47,9 @@ class _RepresentativeShipmentReviewBodyState
           slivers: [
             // Header Section (Fixed)
             SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const ShipmentLogo(),
-                  const SizedBox(height: 15),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          textDirection: TextDirection.ltr,
-                          Icons.info_outline,
-                          size: 25,
-                          color: Colors.white,
-                        ),
-                        CustomBackButton(color: Colors.white, size: 25),
-                      ],
-                    ),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: const ShipmentLogo(),
               ),
             ),
 
