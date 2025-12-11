@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/core/models/shipment_trader_model.dart';
 import 'package:supercycle/features/representative_shipment_details/data/models/rep_note_model.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
@@ -19,6 +20,7 @@ class SingleShipmentModel {
   final String userNotes;
   final num totalQuantityKg;
   final RepresentitiveModel? representitive;
+  final ShipmentTraderModel? trader;
   final List<ShipmentNoteModel> mainNotes;
   final List<ShipmentNoteModel> repNotes;
   final List<ShipmentSegmentModel> segments;
@@ -38,6 +40,7 @@ class SingleShipmentModel {
     required this.repNotes,
     required this.segments,
     this.representitive,
+    this.trader,
     this.images = const [],
   });
 
@@ -78,6 +81,9 @@ class SingleShipmentModel {
       representitive: json['representativeId'] != null
           ? RepresentitiveModel.fromJson(json['representativeId'])
           : null,
+      trader: json['traderId'] != null
+          ? ShipmentTraderModel.fromJson(json['traderId'])
+          : null,
       mainNotes: mainNotes,
       repNotes: repNotes,
       segments: json['segments'] != null
@@ -104,6 +110,7 @@ class SingleShipmentModel {
       'userNotes': userNotes,
       'totalQuantityKg': totalQuantityKg,
       'representitive': representitive?.toJson(),
+      'trader': trader?.toJson(),
       'notes': allNotes.map((note) => note.toJson()).toList(),
       'segments': segments.map((segment) => segment.toJson()).toList(),
     };
@@ -136,6 +143,7 @@ class SingleShipmentModel {
     String? userNotes,
     num? totalQuantityKg,
     RepresentitiveModel? representitive,
+    ShipmentTraderModel? trader,
     List<ShipmentNoteModel>? mainNotes,
     List<ShipmentNoteModel>? repNotes,
     List<ShipmentSegmentModel>? segments,
@@ -153,6 +161,7 @@ class SingleShipmentModel {
       userNotes: userNotes ?? this.userNotes,
       totalQuantityKg: totalQuantityKg ?? this.totalQuantityKg,
       representitive: representitive ?? this.representitive,
+      trader: trader ?? this.trader,
       mainNotes: mainNotes ?? this.mainNotes,
       repNotes: repNotes ?? this.repNotes,
       segments: segments ?? this.segments,

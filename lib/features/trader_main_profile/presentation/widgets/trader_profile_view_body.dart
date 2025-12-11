@@ -11,7 +11,6 @@ import 'package:supercycle/features/trader_main_profile/presentation/widgets/tra
 
 class TraderProfileViewBody extends StatefulWidget {
   final UserProfileModel userProfile;
-
   const TraderProfileViewBody({super.key, required this.userProfile});
 
   @override
@@ -20,20 +19,26 @@ class TraderProfileViewBody extends StatefulWidget {
 
 class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
   int currentPage = 0;
-  final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
-    ).getAllShipments(query: {"status": "delivered"});
+    ).getAllTraderDoneShipments(page: 1);
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
+  Widget _getCurrentPageContent() {
+    switch (currentPage) {
+      case 0:
+        return TraderProfileInfoCard1(userProfile: widget.userProfile);
+      case 1:
+        return TraderProfileInfoCard2();
+      case 2:
+        return TraderProfileInfoCard3(user: widget.userProfile);
+      default:
+        return TraderProfileInfoCard1(userProfile: widget.userProfile);
+    }
   }
 
   @override
@@ -54,11 +59,9 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
                 TraderProfilePageIndicator(
                   currentPage: currentPage,
                   onPageChanged: (index) {
-                    _pageController.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
+                    setState(() {
+                      currentPage = index;
+                    });
                   },
                 ),
                 const SizedBox(height: 20),
@@ -66,37 +69,14 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.65,
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-                children: [
-                  _buildPageContent(
-                    TraderProfileInfoCard1(userProfile: widget.userProfile),
-                  ),
-                  _buildPageContent(TraderProfileInfoCard2()),
-                  _buildPageContent(
-                    TraderProfileInfoCard3(user: widget.userProfile),
-                  ),
-                ],
-              ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _getCurrentPageContent(),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
       ),
-    );
-  }
-
-  Widget _buildPageContent(Widget card) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(children: [card, const SizedBox(height: 20)]),
     );
   }
 }

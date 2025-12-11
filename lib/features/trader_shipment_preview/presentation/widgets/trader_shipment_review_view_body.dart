@@ -115,7 +115,7 @@ class _TraderShipmentReviewViewBodyState
                             isExpanded: isClientDataExpanded,
                             maxHeight: 320,
                             onTap: _toggleClientData,
-                            content: const ClientDataContent(),
+                            content: ClientDataContent(),
                           ),
                         ),
                         const SizedBox(height: 20),

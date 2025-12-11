@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle/core/models/shipment_trader_model.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 import 'package:supercycle/generated/l10n.dart';
 
 class ClientDataContent extends StatefulWidget {
-  const ClientDataContent({super.key});
+  final ShipmentTraderModel? trader;
+  const ClientDataContent({super.key, this.trader});
 
   @override
   State<ClientDataContent> createState() => _ClientDataContentState();
 }
 
 class _ClientDataContentState extends State<ClientDataContent> {
-  LoginedUserModel? entity;
+  ShipmentTraderModel? entity;
 
   @override
   void initState() {
@@ -21,9 +23,21 @@ class _ClientDataContentState extends State<ClientDataContent> {
   }
 
   void getUserData() async {
+    if (widget.trader != null) {
+      setState(() {
+        entity = widget.trader;
+      });
+      return;
+    }
     LoginedUserModel? user = await StorageServices.getUserData();
     setState(() {
-      entity = user;
+      entity = ShipmentTraderModel(
+        bussinessName: user!.bussinessName!,
+        rawBusinessType: user.rawBusinessType!,
+        bussinessAdress: user.bussinessAdress!,
+        doshMangerName: user.doshMangerName!,
+        doshMangerPhone: user.doshMangerPhone!,
+      );
     });
   }
 
@@ -40,21 +54,21 @@ class _ClientDataContentState extends State<ClientDataContent> {
         const SizedBox(height: 16),
         ModernDataRow(
           icon: Icons.store,
-          label: '${S.of(context).entity_name}',
+          label: S.of(context).entity_name,
           value: entity?.bussinessName,
           iconColor: Colors.blue,
         ),
         const SizedBox(height: 12),
         ModernDataRow(
           icon: Icons.category,
-          label: '${S.of(context).entity_type}',
+          label: S.of(context).entity_type,
           value: entity?.rawBusinessType,
           iconColor: Colors.purple,
         ),
         const SizedBox(height: 12),
         ModernDataRow(
           icon: Icons.location_on,
-          label: '${S.of(context).entity_address}',
+          label: S.of(context).entity_address,
           value: entity?.bussinessAdress,
           iconColor: Colors.red,
         ),
@@ -70,14 +84,14 @@ class _ClientDataContentState extends State<ClientDataContent> {
         const SizedBox(height: 16),
         ModernDataRow(
           icon: Icons.person_outline,
-          label: '${S.of(context).administrator_name}',
+          label: S.of(context).administrator_name,
           value: entity?.doshMangerName,
           iconColor: Colors.green,
         ),
         const SizedBox(height: 12),
         ModernDataRow(
           icon: Icons.phone,
-          label: '${S.of(context).administrator_phone}',
+          label: S.of(context).administrator_phone,
           value: entity?.doshMangerPhone,
           iconColor: Colors.orange,
         ),
@@ -93,14 +107,14 @@ class _ClientDataContentState extends State<ClientDataContent> {
         const SizedBox(height: 16),
         ModernDataRow(
           icon: Icons.calendar_today,
-          label: '${S.of(context).start_date}',
+          label: S.of(context).start_date,
           value: '15 Mar 2020',
           iconColor: Colors.indigo,
         ),
         const SizedBox(height: 12),
         ModernDataRow(
           icon: Icons.account_balance,
-          label: '${S.of(context).payment_method}',
+          label: S.of(context).payment_method,
           value: 'تحويل بنكي',
           iconColor: Colors.teal,
         ),
@@ -120,7 +134,7 @@ class _ClientDataContentState extends State<ClientDataContent> {
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withAlpha(50),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, size: 18, color: color),
@@ -168,7 +182,7 @@ class ModernDataRow extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
+              color: iconColor.withAlpha(50),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, size: 16, color: iconColor),

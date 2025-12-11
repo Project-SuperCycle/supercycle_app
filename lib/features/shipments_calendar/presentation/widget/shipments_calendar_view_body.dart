@@ -32,27 +32,79 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
   DateTime? _selectedDate;
 
   List<ShipmentModel> shipments = [];
+  List<ShipmentModel> allShipments = [];
+  int currentPage = 1;
+  bool hasMoreData = true;
+  bool isLoadingMore = false;
+  String? userRole;
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     loadUserCalender();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (!isLoadingMore && hasMoreData) {
+        _loadMoreShipments();
+      }
+    }
   }
 
   void loadUserCalender() async {
     LoginedUserModel? user = await StorageServices.getUserData();
     Logger().d("USER: $user");
     if (user != null) {
-      if (user.role == "representative") {
-        BlocProvider.of<ShipmentsCalendarCubit>(
-          context,
-        ).getAllRepShipments(query: {});
-      } else {
-        BlocProvider.of<ShipmentsCalendarCubit>(
-          context,
-        ).getAllShipments(query: {});
-      }
+      setState(() {
+        userRole = user.role;
+      });
+      _fetchShipments(currentPage);
     }
+  }
+
+  void _fetchShipments(int page) {
+    if (userRole == "representative") {
+      BlocProvider.of<ShipmentsCalendarCubit>(
+        context,
+      ).getAllRepShipments(query: {"page": page.toString()});
+    } else {
+      BlocProvider.of<ShipmentsCalendarCubit>(
+        context,
+      ).getAllShipments(query: {"page": page.toString()});
+    }
+  }
+
+  void _loadMoreShipments() {
+    if (!isLoadingMore && hasMoreData) {
+      setState(() {
+        isLoadingMore = true;
+        currentPage++;
+      });
+      _fetchShipments(currentPage);
+    }
+  }
+
+  void _refreshShipments() {
+    setState(() {
+      currentPage = 1;
+      allShipments = [];
+      shipments = [];
+      hasMoreData = true;
+      isLoadingMore = false;
+    });
+    _fetchShipments(currentPage);
   }
 
   static const String _imageUrl =
@@ -79,30 +131,60 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                       ShipmentsCalendarState
                     >(
                       listener: (context, state) {
-                        // TODO: implement listener
                         if (state is GetAllShipmentsSuccess) {
                           setState(() {
-                            shipments = state.shipments;
+                            if (currentPage == 1) {
+                              allShipments = state.shipments;
+                            } else {
+                              allShipments.addAll(state.shipments);
+                            }
+                            shipments = allShipments;
+                            isLoadingMore = false;
+                            hasMoreData = state.shipments.length >= 10;
                           });
                         }
                         if (state is GetAllShipmentsFailure) {
-                          shipments = [];
+                          setState(() {
+                            isLoadingMore = false;
+                            if (currentPage == 1) {
+                              shipments = [];
+                              allShipments = [];
+                            }
+                          });
                           Logger().e(state.errorMessage);
                         }
                       },
                       builder: (context, state) {
-                        if (state is GetAllShipmentsLoading) {
+                        if (state is GetAllShipmentsLoading &&
+                            shipments.isEmpty) {
                           return const Center(
                             child: CustomLoadingIndicator(color: Colors.white),
                           );
                         }
-                        if (state is GetAllShipmentsFailure) {
+                        if (state is GetAllShipmentsFailure &&
+                            shipments.isEmpty) {
                           return Center(
-                            child: Text(
-                              state.errorMessage,
-                              style: AppStyles.styleMedium18(
-                                context,
-                              ).copyWith(color: Colors.red),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  state.errorMessage,
+                                  style: AppStyles.styleMedium18(
+                                    context,
+                                  ).copyWith(color: Colors.red),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton.icon(
+                                  onPressed: _refreshShipments,
+                                  icon: const Icon(Icons.refresh),
+                                  label: const Text('إعادة المحاولة'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: const Color(0xFF10B981),
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         }
@@ -136,38 +218,110 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
           topLeft: Radius.circular(50),
           topRight: Radius.circular(50),
         ),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(32), // Combined padding
-          child: Column(
-            children: [
-              ShipmentsCalenderTitle(),
-              const SizedBox(height: 20),
-              ShipmentsCalendarHeader(
-                currentDate: _currentDate,
-                onPreviousMonth: _navigateToPreviousMonth,
-                onNextMonth: _navigateToNextMonth,
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                height: 320,
-                child: ShipmentsCalendarGrid(
-                  shipments: shipments,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            _refreshShipments();
+          },
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              children: [
+                ShipmentsCalenderTitle(),
+                const SizedBox(height: 20),
+                ShipmentsCalendarHeader(
                   currentDate: _currentDate,
-                  selectedDate: _selectedDate,
-                  onDateSelected: _onDateSelected,
+                  onPreviousMonth: _navigateToPreviousMonth,
+                  onNextMonth: _navigateToNextMonth,
                 ),
-              ),
-              if (_selectedDate != null)
-                ShipmentsCalendarDetails(
-                  shipments: shipments,
-                  selectedDate: _selectedDate!,
-                  imageUrl: _imageUrl,
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  height: 320,
+                  child: ShipmentsCalendarGrid(
+                    shipments: shipments,
+                    currentDate: _currentDate,
+                    selectedDate: _selectedDate,
+                    onDateSelected: _onDateSelected,
+                  ),
                 ),
-            ],
+                if (_selectedDate != null)
+                  ShipmentsCalendarDetails(
+                    shipments: shipments,
+                    selectedDate: _selectedDate!,
+                    imageUrl: _imageUrl,
+                  ),
+                const SizedBox(height: 20),
+                _buildPaginationInfo(),
+                if (isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: CustomLoadingIndicator(),
+                  ),
+                if (!hasMoreData && shipments.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: Colors.green[600],
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'تم تحميل جميع الشحنات',
+                          style: AppStyles.styleMedium14(
+                            context,
+                          ).copyWith(color: Colors.green[600]),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPaginationInfo() {
+    if (shipments.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF10B981).withAlpha(25),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF10B981).withAlpha(100)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.inventory_2, color: const Color(0xFF10B981), size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'إجمالي الشحنات: ${shipments.length}',
+                style: AppStyles.styleSemiBold14(context),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.pages, color: const Color(0xFF10B981), size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'صفحة $currentPage',
+                style: AppStyles.styleSemiBold14(context),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

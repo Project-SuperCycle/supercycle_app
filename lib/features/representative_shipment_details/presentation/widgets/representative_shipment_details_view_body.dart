@@ -149,7 +149,9 @@ class _RepresentativeShipmentDetailsViewBodyState
                             isExpanded: isClientDataExpanded,
                             maxHeight: 320,
                             onTap: _toggleClientData,
-                            content: const ClientDataContent(),
+                            content: ClientDataContent(
+                              trader: widget.shipment.trader,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),

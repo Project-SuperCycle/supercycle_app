@@ -7,10 +7,18 @@ import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/utils/profile_constants.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
+import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
 class RepresentativeProfileInfoCard extends StatefulWidget {
-  const RepresentativeProfileInfoCard({super.key});
+  final int currentPage;
+  final Function(int) onPageChanged;
+
+  const RepresentativeProfileInfoCard({
+    super.key,
+    required this.currentPage,
+    required this.onPageChanged,
+  });
 
   @override
   State<RepresentativeProfileInfoCard> createState() =>
@@ -19,9 +27,26 @@ class RepresentativeProfileInfoCard extends StatefulWidget {
 
 class _RepresentativeProfileInfoCardState
     extends State<RepresentativeProfileInfoCard> {
-  @override
-  void initState() {
-    super.initState();
+  List<ShipmentModel> shipments = [];
+  bool hasMoreData = true;
+  bool isLoadingMore = false;
+
+  void _loadNextPage() {
+    if (!isLoadingMore && hasMoreData) {
+      setState(() {
+        isLoadingMore = true;
+      });
+      widget.onPageChanged(widget.currentPage + 1);
+    }
+  }
+
+  void _loadPreviousPage() {
+    if (widget.currentPage > 1 && !isLoadingMore) {
+      setState(() {
+        isLoadingMore = true;
+      });
+      widget.onPageChanged(widget.currentPage - 1);
+    }
   }
 
   @override
@@ -52,36 +77,133 @@ class _RepresentativeProfileInfoCardState
           ),
           child: BlocConsumer<ShipmentsCalendarCubit, ShipmentsCalendarState>(
             listener: (context, state) {
-              // TODO: implement listener
+              if (state is GetAllShipmentsSuccess) {
+                setState(() {
+                  shipments = state.shipments;
+                  isLoadingMore = false;
+                  // لو الشحنات أقل من 10، معناها مفيش صفحات تانية
+                  hasMoreData = state.shipments.length >= 10;
+                });
+              }
               if (state is GetAllShipmentsFailure) {
+                setState(() {
+                  isLoadingMore = false;
+                });
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
               }
             },
             builder: (context, state) {
-              if (state is GetAllShipmentsLoading) {
-                return Center(child: CustomLoadingIndicator());
-              }
-              if (state is GetAllShipmentsSuccess &&
-                  state.shipments.isNotEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: state.shipments.length,
-                    itemBuilder: (context, index) {
-                      final transaction = state.shipments[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: ShipmentsCalendarCard(shipment: transaction),
-                      );
-                    },
+              if (state is GetAllShipmentsLoading && shipments.isEmpty) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: CustomLoadingIndicator(),
                   ),
                 );
               }
+
+              if (shipments.isNotEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: shipments.length,
+                        itemBuilder: (context, index) {
+                          final transaction = shipments[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: ShipmentsCalendarCard(shipment: transaction),
+                          );
+                        },
+                      ),
+
+                      // Pagination Controls
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Previous Button
+                            IconButton(
+                              onPressed:
+                                  widget.currentPage > 1 && !isLoadingMore
+                                  ? _loadPreviousPage
+                                  : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF10B981),
+                                foregroundColor: Colors.white,
+                                disabledBackgroundColor: Colors.grey.shade300,
+                                padding: const EdgeInsets.all(3),
+                                minimumSize: const Size(30, 30),
+                                maximumSize: const Size(30, 30),
+                              ),
+                              icon: Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                size: 20,
+                              ),
+                            ),
+
+                            const SizedBox(width: 16),
+
+                            // Page Number
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${widget.currentPage}',
+                                  style: AppStyles.styleSemiBold16(context),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(width: 16),
+
+                            // Next Button
+                            IconButton(
+                              onPressed: hasMoreData && !isLoadingMore
+                                  ? _loadNextPage
+                                  : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF10B981),
+                                foregroundColor: Colors.white,
+                                disabledBackgroundColor: Colors.grey.shade300,
+                                padding: const EdgeInsets.all(3),
+                                minimumSize: const Size(30, 30),
+                                maximumSize: const Size(30, 30),
+                              ),
+                              icon: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Loading Indicator when loading more
+                      if (isLoadingMore)
+                        const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CustomLoadingIndicator(),
+                        ),
+                    ],
+                  ),
+                );
+              }
+
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -95,7 +217,7 @@ class _RepresentativeProfileInfoCardState
                           BlendMode.srcIn,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
                         'لا يوجد معاملات',
                         style: AppStyles.styleSemiBold22(context),

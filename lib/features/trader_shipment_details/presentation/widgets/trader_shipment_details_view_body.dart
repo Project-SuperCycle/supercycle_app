@@ -81,7 +81,7 @@ class _TraderShipmentDetailsViewBodyState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (widget.shipment.status == 'قيد المراجعة')
+                        (widget.shipment.status == 'pending')
                             ? Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: TraderShipmentDetailsSettingsIcon(
@@ -113,7 +113,9 @@ class _TraderShipmentDetailsViewBodyState
                             isExpanded: isClientDataExpanded,
                             maxHeight: 320,
                             onTap: _toggleClientData,
-                            content: const ClientDataContent(),
+                            content: ClientDataContent(
+                              trader: widget.shipment.trader!,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -202,6 +204,7 @@ class _TraderShipmentDetailsViewBodyState
       case 'approved':
         return 2;
       case 'pending_admin_review':
+      case 'delivery_in_transit':
         return 3;
       case 'routed':
         return 4;
