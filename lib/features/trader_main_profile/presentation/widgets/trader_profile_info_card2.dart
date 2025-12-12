@@ -32,7 +32,7 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
   void _fetchShipments(int page) {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
-    ).getAllTraderDoneShipments(page: page);
+    ).getShipmentsHistory(page: page);
   }
 
   void _loadNextPage() {

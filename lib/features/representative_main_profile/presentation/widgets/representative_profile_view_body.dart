@@ -28,7 +28,7 @@ class _RepresentativeProfileViewBodyState
   void _fetchShipments(int page) {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
-    ).getAllRepDoneShipments(page: page);
+    ).getShipmentsHistory(page: page);
   }
 
   @override

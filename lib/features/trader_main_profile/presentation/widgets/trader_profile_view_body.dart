@@ -25,7 +25,7 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
     super.initState();
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
-    ).getAllTraderDoneShipments(page: 1);
+    ).getShipmentsHistory(page: 1);
   }
 
   Widget _getCurrentPageContent() {

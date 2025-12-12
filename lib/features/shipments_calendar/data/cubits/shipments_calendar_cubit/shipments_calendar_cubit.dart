@@ -26,32 +26,10 @@ class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
     }
   }
 
-  Future<void> getAllTraderDoneShipments({required int page}) async {
+  Future<void> getShipmentsHistory({required int page}) async {
     emit(GetAllShipmentsLoading());
     try {
-      var result = await shipmentsCalendarRepo.getAllTraderDoneShipments(
-        page: page,
-      );
-      result.fold(
-        (failure) {
-          emit(GetAllShipmentsFailure(errorMessage: failure.errMessage));
-        },
-        (shipments) {
-          emit(GetAllShipmentsSuccess(shipments: shipments));
-          // Store user globally
-        },
-      );
-    } catch (error) {
-      emit(GetAllShipmentsFailure(errorMessage: error.toString()));
-    }
-  }
-
-  Future<void> getAllRepDoneShipments({required int page}) async {
-    emit(GetAllShipmentsLoading());
-    try {
-      var result = await shipmentsCalendarRepo.getAllRepDoneShipments(
-        page: page,
-      );
+      var result = await shipmentsCalendarRepo.getShipmentsHistory(page: page);
       result.fold(
         (failure) {
           emit(GetAllShipmentsFailure(errorMessage: failure.errMessage));

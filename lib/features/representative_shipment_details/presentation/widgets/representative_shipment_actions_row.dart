@@ -32,7 +32,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
       actionType: ShipmentActionType.confirm,
       shipment: shipment,
       onSubmit: (List<File> images, String notes, double rating) {
-        Logger().i('✅ Confirm Shipment');
         AcceptShipmentModel acceptShipmentModel = AcceptShipmentModel(
           shipmentID: shipment.id,
           notes: notes,
@@ -46,7 +45,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           context,
         ).acceptShipment(acceptModel: acceptShipmentModel);
 
-        // Mark action as taken
         onActionTaken();
 
         ScaffoldMessenger.of(context).showSnackBar(

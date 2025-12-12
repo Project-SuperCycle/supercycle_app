@@ -136,6 +136,29 @@ class _TraderShipmentDetailsViewBodyState
                           ),
                         ),
                         const SizedBox(height: 20),
+                        widget.shipment.inspectedItems.isNotEmpty
+                            ? Column(
+                                children: [
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: ExpandableSection(
+                                      title: 'الشحنة بعد المعاينة',
+                                      iconPath: AppAssets.boxPerspective,
+                                      isExpanded: isShipmentDetailsExpanded,
+                                      maxHeight: 320,
+                                      onTap: _toggleShipmentDetails,
+                                      content: TraderShipmentDetailsContent(
+                                        items: widget.shipment.inspectedItems,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              )
+                            : SizedBox.shrink(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [

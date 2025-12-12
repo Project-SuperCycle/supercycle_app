@@ -17,6 +17,7 @@ class SingleShipmentModel {
   final List<String> uploadedImages;
   final List<File> images;
   final List<DoshItemModel> items;
+  final List<DoshItemModel> inspectedItems;
   final String userNotes;
   final num totalQuantityKg;
   final RepresentitiveModel? representitive;
@@ -34,6 +35,7 @@ class SingleShipmentModel {
     required this.statusDisplay,
     required this.uploadedImages,
     required this.items,
+    required this.inspectedItems,
     required this.userNotes,
     required this.totalQuantityKg,
     required this.mainNotes,
@@ -76,6 +78,12 @@ class SingleShipmentModel {
               json['items'].map((x) => DoshItemModel.fromJson(x)),
             )
           : [],
+
+      inspectedItems: json['inspectedItems'] != null
+          ? List<DoshItemModel>.from(
+              json['inspectedItems'].map((x) => DoshItemModel.fromJson(x)),
+            )
+          : [],
       userNotes: json['userNotes'] ?? '',
       totalQuantityKg: json['totalQuantityKg'] as num? ?? 0,
       representitive: json['representativeId'] != null
@@ -107,6 +115,7 @@ class SingleShipmentModel {
       'statusDisplay': statusDisplay,
       'uploadedImages': uploadedImages,
       'items': items.map((item) => item.toJson()).toList(),
+      'inspectedItems': inspectedItems.map((item) => item.toJson()).toList(),
       'userNotes': userNotes,
       'totalQuantityKg': totalQuantityKg,
       'representitive': representitive?.toJson(),
@@ -121,6 +130,9 @@ class SingleShipmentModel {
       'customPickupAddress': customPickupAddress,
       'requestedPickupAt': requestedPickupAt,
       'items': ShipmentManager.createDoshItemsMap(items: items),
+      'inspectedItems': ShipmentManager.createDoshItemsMap(
+        items: inspectedItems,
+      ),
       'userNotes': userNotes,
     };
   }
@@ -140,6 +152,7 @@ class SingleShipmentModel {
     List<String>? uploadedImages,
     List<File>? images,
     List<DoshItemModel>? items,
+    List<DoshItemModel>? inspectedItems,
     String? userNotes,
     num? totalQuantityKg,
     RepresentitiveModel? representitive,
@@ -158,6 +171,7 @@ class SingleShipmentModel {
       uploadedImages: uploadedImages ?? this.uploadedImages,
       images: images ?? this.images,
       items: items ?? this.items,
+      inspectedItems: inspectedItems ?? this.inspectedItems,
       userNotes: userNotes ?? this.userNotes,
       totalQuantityKg: totalQuantityKg ?? this.totalQuantityKg,
       representitive: representitive ?? this.representitive,

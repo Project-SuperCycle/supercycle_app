@@ -269,6 +269,8 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
       case 'جار الاستلام':
         return Color(0xffE04133);
       case 'تم الاستلام':
+      case 'تم التسليم':
+      case 'تسليم جزئي':
         return Color(0xff3BC567);
       default:
         return Color(0xff1624A2);
