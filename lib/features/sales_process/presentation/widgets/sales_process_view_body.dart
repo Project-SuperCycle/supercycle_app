@@ -17,6 +17,7 @@ import 'package:supercycle/features/sales_process/data/models/dosh_item_model.da
 import 'package:supercycle/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
 import 'package:supercycle/features/sales_process/presentation/widgets/sales_process_shipment_header.dart';
+import 'package:supercycle/features/sales_process/presentation/widgets/shipment_review_dialog.dart';
 import 'package:supercycle/generated/l10n.dart';
 import 'dart:io';
 
@@ -231,59 +232,95 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         userNotes: notes.isEmpty ? "" : notes.first,
       );
 
-      // التحقق من صحة البيانات قبل الحفظ
-      if (!_validateShipmentData(shipment)) {
-        String error = "";
-        if (shipment.requestedPickupAt == null || selectedDateTime == null) {
-          error = "التاريخ مطلوب";
-        } else if (shipment.customPickupAddress.isEmpty) {
-          error = "العنوان مطلوب";
-        } else if (shipment.items.isEmpty) {
-          error = "المنتجات مطلوبة";
-        } else if (shipment.images.isEmpty) {
-          error = "الصور مطلوبة";
-        }
-        // إظهار رسالة خطأ
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error)));
+      // التحقق من صحة البيانات قبل عرض الـ Dialog
+      String? validationError = _getValidationError(shipment);
+
+      if (validationError != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(validationError),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
         return;
       }
 
-      // إظهار loading indicator
+      // عرض الـ Dialog للمراجعة والتعديل
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
+        builder: (context) => ShipmentReviewDialog(
+          shipment: shipment,
+          onConfirm: () {
+            // يمكن إضافة كود هنا عند التأكيد النهائي
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('تم تأكيد الشحنة بنجاح'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          },
+          onUpdate: (updatedShipment) {
+            // تحديث البيانات في الصفحة الرئيسية
+            setState(() {
+              selectedDateTime = updatedShipment.requestedPickupAt;
+              addressController.text = updatedShipment.customPickupAddress;
+              products = updatedShipment.items;
+              selectedImages = updatedShipment.images;
+              notes = [updatedShipment.userNotes];
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('تم حفظ التعديلات بنجاح'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          },
+        ),
       );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('حدث خطأ: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
-      // إخفاء الـ loading indicator
-      if (context.mounted) {
-        Navigator.of(context).pop();
-      }
+  // دالة للتحقق من صحة البيانات وإرجاع رسالة الخطأ
+  String? _getValidationError(CreateShipmentModel shipment) {
+    if (shipment.requestedPickupAt == null || selectedDateTime == null) {
+      return "يرجى تحديد تاريخ الاستلام";
+    }
 
-      // التنقل فقط إذا تم الحفظ بنجاح
-      if (context.mounted) {
-        GoRouter.of(
-          context,
-        ).push(EndPoints.traderShipmentPreviewView, extra: shipment);
-      } else {
-        // إظهار رسالة خطأ في حالة فشل الحفظ
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('حدث خطأ أثناء حفظ البيانات')),
-          );
+    if (shipment.customPickupAddress.isEmpty) {
+      return "يرجى إدخال عنوان الاستلام";
+    }
+
+    if (shipment.items.isEmpty) {
+      return "يرجى إضافة منتجات للشحنة";
+    }
+
+    // التحقق من أن جميع المنتجات لها كمية
+    if (shipment.items.isNotEmpty) {
+      for (int i = 0; i < shipment.items.length; i++) {
+        var item = shipment.items[i];
+
+        // التحقق من وجود quantity أو أنها أكبر من صفر
+        if (item.quantity <= 0) {
+          return "يرجى إدخال الكمية للمنتج رقم ${i + 1}";
         }
       }
-    } catch (e) {
-      // إخفاء الـ loading indicator في حالة حدوث خطأ
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('حدث خطأ: ${e.toString()}')));
-      }
     }
+
+    if (shipment.images.isEmpty) {
+      return "يرجى إضافة صور للشحنة";
+    }
+
+    return null; // لا توجد أخطاء
   }
 
   // دالة للتحقق من صحة البيانات
@@ -307,5 +344,11 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     return (addressController.text.isNotEmpty)
         ? addressController.text
         : userAddress;
+  }
+
+  @override
+  void dispose() {
+    addressController.dispose();
+    super.dispose();
   }
 }
