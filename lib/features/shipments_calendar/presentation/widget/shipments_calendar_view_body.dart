@@ -253,7 +253,6 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                     imageUrl: _imageUrl,
                   ),
                 const SizedBox(height: 20),
-                _buildPaginationInfo(),
                 if (isLoadingMore)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
@@ -284,44 +283,6 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPaginationInfo() {
-    if (shipments.isEmpty) return const SizedBox.shrink();
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF10B981).withAlpha(25),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF10B981).withAlpha(100)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.inventory_2, color: const Color(0xFF10B981), size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'إجمالي الشحنات: ${shipments.length}',
-                style: AppStyles.styleSemiBold14(context),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Icon(Icons.pages, color: const Color(0xFF10B981), size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'صفحة $currentPage',
-                style: AppStyles.styleSemiBold14(context),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
