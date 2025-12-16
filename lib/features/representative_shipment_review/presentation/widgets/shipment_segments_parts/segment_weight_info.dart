@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
@@ -22,7 +23,7 @@ class SegmentWeightInfo extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(50),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -41,8 +42,8 @@ class SegmentWeightInfo extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                imagePath,
+              child: Image.network(
+                segment.weightReport!.images.first,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Center(
@@ -68,13 +69,33 @@ class SegmentWeightInfo extends StatelessWidget {
               ),
             ),
           ),
-          if (segment.items.isNotEmpty)
-            ...segment.items.map((item) {
-              return SegmentProductsDetails(
-                quantity: item.quantity ?? 0,
-                productType: item.name ?? "",
-              );
-            }),
+          Container(
+            margin: const EdgeInsets.only(top: 6),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE0E0E0).withAlpha(100),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'الوزن الفعلي',
+                  style: AppStyles.styleMedium14(
+                    context,
+                  ).copyWith(color: AppColors.subTextColor),
+                ),
+                const SizedBox(height: 8),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    "${segment.weightReport!.actualWeightKg.toString()} كجم ",
+                    style: AppStyles.styleSemiBold16(context),
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
-import 'package:supercycle/core/utils/profile_constants.dart';
 import 'package:supercycle/core/widgets/drawer/custom_drawer.dart';
 import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_section.dart';
 import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_info_card.dart';
@@ -18,12 +17,18 @@ class RepresentativeProfileViewBody extends StatefulWidget {
 
 class _RepresentativeProfileViewBodyState
     extends State<RepresentativeProfileViewBody> {
+  int currentPage = 1;
+
   @override
   void initState() {
     super.initState();
+    _fetchShipments(currentPage);
+  }
+
+  void _fetchShipments(int page) {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
-    ).getAllRepShipments(query: {"status": "delivered"});
+    ).getShipmentsHistory(page: page);
   }
 
   @override
@@ -42,9 +47,17 @@ class _RepresentativeProfileViewBodyState
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
-                children: const [
-                  RepresentativeProfileInfoCard(),
-                  SizedBox(height: 40),
+                children: [
+                  RepresentativeProfileInfoCard(
+                    currentPage: currentPage,
+                    onPageChanged: (newPage) {
+                      setState(() {
+                        currentPage = newPage;
+                      });
+                      _fetchShipments(newPage);
+                    },
+                  ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

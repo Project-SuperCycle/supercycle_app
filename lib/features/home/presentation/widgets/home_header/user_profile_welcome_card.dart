@@ -19,6 +19,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   String userName = '';
   String userRole = '';
   LoginedUserModel? user;
+  bool _isNavigating = false; // لمنع الضغط المتكرر
 
   @override
   void initState() {
@@ -51,6 +52,46 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
         }
       });
     }
+  }
+
+  void _handleProfileTap() {
+    // لو بالفعل في عملية navigation، متعملش حاجة
+    if (_isNavigating) return;
+
+    // اضبط الـ flag
+    setState(() {
+      _isNavigating = true;
+    });
+
+    // نفذ الـ navigation
+    if (user != null) {
+      navigateToProfile(context);
+    } else {
+      context.push(EndPoints.signInView);
+    }
+
+    // إعادة تعيين الـ flag بعد فترة قصيرة (احتياطي)
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          _isNavigating = false;
+        });
+      }
+    });
+  }
+
+  Widget _buildProfileImage() {
+    return GestureDetector(
+      onTap: _handleProfileTap,
+      child: ClipOval(
+        child: Image.asset(
+          AppAssets.defaultAvatar,
+          height: 64,
+          width: 64,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 
   @override
@@ -98,19 +139,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             child: CircleAvatar(
               backgroundColor: Colors.white,
               radius: 32,
-              child: GestureDetector(
-                onTap: () => (user != null)
-                    ? navigateToProfile(context)
-                    : context.push(EndPoints.signInView),
-                child: ClipOval(
-                  child: Image.asset(
-                    AppAssets.defaultAvatar,
-                    height: 64,
-                    width: 64,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              child: _buildProfileImage(),
             ),
           ),
         ],
@@ -158,19 +187,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
           child: CircleAvatar(
             backgroundColor: Colors.white,
             radius: 32,
-            child: GestureDetector(
-              onTap: () => (user != null)
-                  ? navigateToProfile(context)
-                  : context.push(EndPoints.signInView),
-              child: ClipOval(
-                child: Image.asset(
-                  AppAssets.defaultAvatar,
-                  height: 64,
-                  width: 64,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            child: _buildProfileImage(),
           ),
         ),
       ],

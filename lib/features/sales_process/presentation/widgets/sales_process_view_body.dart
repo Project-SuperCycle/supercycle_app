@@ -233,12 +233,20 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
 
       // التحقق من صحة البيانات قبل الحفظ
       if (!_validateShipmentData(shipment)) {
+        String error = "";
+        if (shipment.requestedPickupAt == null || selectedDateTime == null) {
+          error = "التاريخ مطلوب";
+        } else if (shipment.customPickupAddress.isEmpty) {
+          error = "العنوان مطلوب";
+        } else if (shipment.items.isEmpty) {
+          error = "المنتجات مطلوبة";
+        } else if (shipment.images.isEmpty) {
+          error = "الصور مطلوبة";
+        }
         // إظهار رسالة خطأ
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('برجاء التأكد من إدخال جميع البيانات المطلوبة'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
         return;
       }
 
@@ -280,10 +288,16 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
 
   // دالة للتحقق من صحة البيانات
   bool _validateShipmentData(CreateShipmentModel shipment) {
+    if (shipment.requestedPickupAt == null || selectedDateTime == null) {
+      return false;
+    }
     if (shipment.customPickupAddress.isEmpty) {
       return false;
     }
     if (shipment.items.isEmpty) {
+      return false;
+    }
+    if (shipment.images.isEmpty) {
       return false;
     }
     return true;

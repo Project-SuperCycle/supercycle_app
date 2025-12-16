@@ -198,9 +198,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                           Text(
                             widget.shipment.status.toUpperCase(),
                             style: AppStyles.styleMedium14(context).copyWith(
-                              color: (widget.shipment.status == 'Delivered')
-                                  ? Colors.green[700]
-                                  : Colors.red[700],
+                              color: _getStatusColor(),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -258,5 +256,24 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
     int displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
     String period = hour < 12 ? "صباحا" : "مساءا";
     return "$displayHour $period";
+  }
+
+  Color _getStatusColor() {
+    switch (widget.shipment.status) {
+      case 'قيد المراجعة':
+        return Color(0xff1624A2);
+      case 'تمت الموافقة':
+        return Color(0xff3BC567);
+      case 'تمت المعاينة':
+      case 'في طريق التسليم':
+      case 'جار الاستلام':
+        return Color(0xffE04133);
+      case 'تم الاستلام':
+      case 'تم التسليم':
+      case 'تسليم جزئي':
+        return Color(0xff3BC567);
+      default:
+        return Color(0xff1624A2);
+    }
   }
 }

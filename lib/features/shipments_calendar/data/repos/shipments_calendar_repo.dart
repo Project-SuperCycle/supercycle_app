@@ -8,6 +8,10 @@ abstract class ShipmentsCalendarRepo {
     required Map<String, dynamic> query,
   });
 
+  Future<Either<Failure, List<ShipmentModel>>> getShipmentsHistory({
+    required int page,
+  });
+
   Future<Either<Failure, List<ShipmentModel>>> getAllRepShipments({
     required Map<String, dynamic> query,
   });

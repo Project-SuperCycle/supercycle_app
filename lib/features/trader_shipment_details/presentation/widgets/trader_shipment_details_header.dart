@@ -164,15 +164,15 @@ class TraderShipmentDetailsHeader extends StatelessWidget {
 
   Color _getStatusColor() {
     switch (shipment.status) {
-      case 'قيد المراجعة':
+      case 'pending':
         return Color(0xff1624A2);
-      case 'تمت الموافقة':
+      case 'approved':
         return Color(0xff3BC567);
-      case 'تمت المعاينة':
+      case 'pending_admin_review':
+      case 'routed':
         return Color(0xffE04133);
-      case 'جارِ الاستلام':
-        return Color(0xffE04133);
-      case 'تم الاستلام':
+      case 'delivered':
+      case 'complete_weighted':
         return Color(0xff3BC567);
       default:
         return Color(0xff1624A2);

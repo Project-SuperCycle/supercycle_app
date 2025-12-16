@@ -5,6 +5,7 @@ import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/custom_button.dart';
 import 'package:supercycle/core/widgets/custom_text_field.dart';
 import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
@@ -37,7 +38,8 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isClientDataExpanded = false;
   bool isNotesDataExpanded = false;
   bool hasActionBeenTaken = false;
-
+  bool showInspectionActions =
+      false; // للتحكم في ظهور الأكشنز بعد الضغط على زر المعاينة
   int _page = 3;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -79,6 +81,25 @@ class _RepresentativeShipmentDetailsViewBodyState
     });
   }
 
+  /// التحقق من أن اليوم الحالي هو نفس requestedPickupAt
+  bool _isPickupDateToday() {
+    if (widget.shipment.requestedPickupAt == null) return false;
+
+    final pickupDate = widget.shipment.requestedPickupAt!;
+    final now = DateTime.now();
+
+    return pickupDate.year == now.year &&
+        pickupDate.month == now.month &&
+        pickupDate.day == now.day;
+  }
+
+  /// عند الضغط على زر "بدأ المعاينة"
+  void _startInspection() {
+    setState(() {
+      showInspectionActions = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +117,6 @@ class _RepresentativeShipmentDetailsViewBodyState
                   child: const ShipmentLogo(),
                 ),
               ),
-
               // White Container Content (Scrollable)
               SliverFillRemaining(
                 child: Container(
@@ -138,6 +158,31 @@ class _RepresentativeShipmentDetailsViewBodyState
                           ),
                         ),
                         const SizedBox(height: 20),
+                        widget.shipment.inspectedItems.isNotEmpty
+                            ? Column(
+                                children: [
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: ExpandableSection(
+                                      title: 'الشحنة بعد المعاينة',
+                                      iconPath: AppAssets.boxPerspective,
+                                      isExpanded: isShipmentDetailsExpanded,
+                                      maxHeight: 320,
+                                      onTap: _toggleShipmentDetails,
+                                      content:
+                                          RepresentativeShipmentDetailsContent(
+                                            items:
+                                                widget.shipment.inspectedItems,
+                                          ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              )
+                            : SizedBox.shrink(),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -149,7 +194,9 @@ class _RepresentativeShipmentDetailsViewBodyState
                             isExpanded: isClientDataExpanded,
                             maxHeight: 320,
                             onTap: _toggleClientData,
-                            content: const ClientDataContent(),
+                            content: ClientDataContent(
+                              trader: widget.shipment.trader,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -201,7 +248,17 @@ class _RepresentativeShipmentDetailsViewBodyState
                           shipment: widget.shipment,
                         ),
                         const SizedBox(height: 25),
-                        _buildShipmentActions(),
+
+                        // إظهار زر "بدأ المعاينة" فقط إذا كان اليوم هو requestedPickupAt ولم يتم الضغط عليه بعد
+                        if (_isPickupDateToday() && !showInspectionActions)
+                          CustomButton(
+                            onPress: _startInspection,
+                            title: 'بدأ المعاينة',
+                          ),
+
+                        // إظهار الأكشنز بعد الضغط على زر المعاينة
+                        if (showInspectionActions) _buildShipmentActions(),
+
                         const SizedBox(height: 30),
                       ],
                     ),

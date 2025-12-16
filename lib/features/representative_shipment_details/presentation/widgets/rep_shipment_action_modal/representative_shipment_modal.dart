@@ -380,11 +380,6 @@ class _ModalContentState extends State<_ModalContent>
         EndPoints.representativeShipmentDetailsView,
         extra: updatedShipment,
       );
-    } else {
-      GoRouter.of(context).push(
-        EndPoints.representativeShipmentReviewView,
-        extra: widget.shipment,
-      );
     }
   }
 

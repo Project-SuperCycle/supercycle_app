@@ -81,7 +81,7 @@ class _TraderShipmentDetailsViewBodyState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (widget.shipment.status == 'قيد المراجعة')
+                        (widget.shipment.status == 'pending')
                             ? Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: TraderShipmentDetailsSettingsIcon(
@@ -113,7 +113,9 @@ class _TraderShipmentDetailsViewBodyState
                             isExpanded: isClientDataExpanded,
                             maxHeight: 320,
                             onTap: _toggleClientData,
-                            content: const ClientDataContent(),
+                            content: ClientDataContent(
+                              trader: widget.shipment.trader!,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -134,6 +136,29 @@ class _TraderShipmentDetailsViewBodyState
                           ),
                         ),
                         const SizedBox(height: 20),
+                        widget.shipment.inspectedItems.isNotEmpty
+                            ? Column(
+                                children: [
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: ExpandableSection(
+                                      title: 'الشحنة بعد المعاينة',
+                                      iconPath: AppAssets.boxPerspective,
+                                      isExpanded: isShipmentDetailsExpanded,
+                                      maxHeight: 320,
+                                      onTap: _toggleShipmentDetails,
+                                      content: TraderShipmentDetailsContent(
+                                        items: widget.shipment.inspectedItems,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              )
+                            : SizedBox.shrink(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -202,6 +227,7 @@ class _TraderShipmentDetailsViewBodyState
       case 'approved':
         return 2;
       case 'pending_admin_review':
+      case 'delivery_in_transit':
         return 3;
       case 'routed':
         return 4;
