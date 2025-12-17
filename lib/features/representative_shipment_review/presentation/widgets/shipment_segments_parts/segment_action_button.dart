@@ -24,9 +24,12 @@ class SegmentActionButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 2,
       ),
-      child: Text(
-        title,
-        style: AppStyles.styleBold16(context).copyWith(color: Colors.white),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          title,
+          style: AppStyles.styleBold16(context).copyWith(color: Colors.white),
+        ),
       ),
     );
   }

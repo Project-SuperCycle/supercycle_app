@@ -232,21 +232,17 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       );
 
       // التحقق من صحة البيانات قبل الحفظ
-      if (!_validateShipmentData(shipment)) {
-        String error = "";
-        if (shipment.requestedPickupAt == null || selectedDateTime == null) {
-          error = "التاريخ مطلوب";
-        } else if (shipment.customPickupAddress.isEmpty) {
-          error = "العنوان مطلوب";
-        } else if (shipment.items.isEmpty) {
-          error = "المنتجات مطلوبة";
-        } else if (shipment.images.isEmpty) {
-          error = "الصور مطلوبة";
-        }
+      String? validationError = _getValidationError(shipment);
+
+      if (validationError != null) {
         // إظهار رسالة خطأ
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(validationError),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
         return;
       }
 
@@ -267,23 +263,52 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         GoRouter.of(
           context,
         ).push(EndPoints.traderShipmentPreviewView, extra: shipment);
-      } else {
-        // إظهار رسالة خطأ في حالة فشل الحفظ
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('حدث خطأ أثناء حفظ البيانات')),
-          );
-        }
       }
     } catch (e) {
       // إخفاء الـ loading indicator في حالة حدوث خطأ
       if (context.mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('حدث خطأ: ${e.toString()}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('حدث خطأ: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
+  }
+
+  // دالة للتحقق من صحة البيانات وإرجاع رسالة الخطأ
+  String? _getValidationError(CreateShipmentModel shipment) {
+    if (shipment.requestedPickupAt == null || selectedDateTime == null) {
+      return "يرجى تحديد تاريخ الاستلام";
+    }
+
+    if (shipment.customPickupAddress.isEmpty) {
+      return "يرجى إدخال عنوان الاستلام";
+    }
+
+    if (shipment.items.isEmpty) {
+      return "يرجى إضافة منتجات للشحنة";
+    }
+
+    // التحقق من أن جميع المنتجات لها كمية
+    if (shipment.items.isNotEmpty) {
+      for (int i = 0; i < shipment.items.length; i++) {
+        var item = shipment.items[i];
+
+        // التحقق من وجود quantity أو أنها أكبر من صفر
+        if (item.quantity <= 0) {
+          return "يرجى إدخال الكمية للمنتج رقم ${i + 1}";
+        }
+      }
+    }
+
+    if (shipment.images.isEmpty) {
+      return "يرجى إضافة صور للشحنة";
+    }
+
+    return null; // لا توجد أخطاء
   }
 
   // دالة للتحقق من صحة البيانات

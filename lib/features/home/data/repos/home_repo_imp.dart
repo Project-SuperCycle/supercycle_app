@@ -149,6 +149,7 @@ class HomeRepoImp implements HomeRepo {
     try {
       final response = await apiServices.get(
         endPoint: ApiEndpoints.getAllShipments,
+        query: {"status": "approved"},
       );
 
       var data = response['data'];
