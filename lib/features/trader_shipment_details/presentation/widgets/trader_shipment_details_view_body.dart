@@ -83,11 +83,11 @@ class _TraderShipmentDetailsViewBodyState
                       children: [
                         (widget.shipment.status == 'pending')
                             ? Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: TraderShipmentDetailsSettingsIcon(
-                                  shipment: widget.shipment,
-                                ),
-                              )
+                          padding: const EdgeInsets.all(16.0),
+                          child: TraderShipmentDetailsSettingsIcon(
+                            shipment: widget.shipment,
+                          ),
+                        )
                             : const SizedBox.shrink(),
                         TraderShipmentDetailsHeader(shipment: widget.shipment),
                         const SizedBox(height: 16),
@@ -97,8 +97,8 @@ class _TraderShipmentDetailsViewBodyState
                         // Representative Card
                         (widget.shipment.representitive != null)
                             ? TraderShipmentRepresentativeCard(
-                                representitive: widget.shipment.representitive!,
-                              )
+                          representitive: widget.shipment.representitive!,
+                        )
                             : SizedBox.shrink(),
 
                         const SizedBox(height: 20),
@@ -138,26 +138,26 @@ class _TraderShipmentDetailsViewBodyState
                         const SizedBox(height: 20),
                         widget.shipment.inspectedItems.isNotEmpty
                             ? Column(
-                                children: [
-                                  Container(
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: ExpandableSection(
-                                      title: 'الشحنة بعد المعاينة',
-                                      iconPath: AppAssets.boxPerspective,
-                                      isExpanded: isShipmentDetailsExpanded,
-                                      maxHeight: 320,
-                                      onTap: _toggleShipmentDetails,
-                                      content: TraderShipmentDetailsContent(
-                                        items: widget.shipment.inspectedItems,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                ],
-                              )
+                          children: [
+                            Container(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ExpandableSection(
+                                title: 'الشحنة بعد المعاينة',
+                                iconPath: AppAssets.boxPerspective,
+                                isExpanded: isShipmentDetailsExpanded,
+                                maxHeight: 320,
+                                onTap: _toggleShipmentDetails,
+                                content: TraderShipmentDetailsContent(
+                                  items: widget.shipment.inspectedItems,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        )
                             : SizedBox.shrink(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
