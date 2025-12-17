@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/functions/navigate_to_profile.dart';
 import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
+import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle/generated/l10n.dart' show S;
+import 'package:supercycle/generated/l10n.dart';
 
 class UserProfileWelcomeCard extends StatefulWidget {
   const UserProfileWelcomeCard({super.key});
@@ -19,33 +20,42 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   String userName = '';
   String userRole = '';
   LoginedUserModel? user;
-  bool _isNavigating = false; // لمنع الضغط المتكرر
+  bool _isNavigating = false;
+  final AuthManager _authManager = AuthManager();
 
   @override
   void initState() {
     super.initState();
-    getUserData();
+    _loadUserData();
+
+    // الاستماع لتغييرات حالة المصادقة
+    _authManager.authStateChangeNotifier.addListener(_onAuthStateChanged);
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // إعادة تحميل بيانات المستخدم عند الرجوع للصفحة
-    getUserData();
+  void dispose() {
+    _authManager.authStateChangeNotifier.removeListener(_onAuthStateChanged);
+    super.dispose();
   }
 
-  void getUserData() async {
-    user = await StorageServices.getUserData();
+  /// يتم استدعاؤها عند تغيير حالة المصادقة
+  void _onAuthStateChanged() {
+    if (mounted) {
+      _loadUserData();
+    }
+  }
+
+  /// تحميل بيانات المستخدم
+  Future<void> _loadUserData() async {
+    final userData = await StorageServices.getUserData();
+
     if (mounted) {
       setState(() {
-        if (user != null) {
-          if (user!.doshMangerName != null) {
-            userName = user!.doshMangerName!;
-            userRole = user!.role!;
-          } else {
-            userName = user!.displayName!;
-            userRole = user!.role!;
-          }
+        user = userData;
+
+        if (userData != null) {
+          userName = userData.doshMangerName ?? userData.displayName ?? '';
+          userRole = userData.role ?? '';
         } else {
           userName = '';
           userRole = '';
@@ -55,22 +65,18 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
   }
 
   void _handleProfileTap() {
-    // لو بالفعل في عملية navigation، متعملش حاجة
     if (_isNavigating) return;
 
-    // اضبط الـ flag
     setState(() {
       _isNavigating = true;
     });
 
-    // نفذ الـ navigation
     if (user != null) {
       navigateToProfile(context);
     } else {
       context.push(EndPoints.signInView);
     }
 
-    // إعادة تعيين الـ flag بعد فترة قصيرة (احتياطي)
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         setState(() {
@@ -96,56 +102,6 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
 
   @override
   Widget build(BuildContext context) {
-    // لو مفيش user، ارجع widget فاضي
-    if (user == null || userName.isEmpty) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        textDirection: TextDirection.ltr,
-        children: [
-          Column(
-            textDirection: TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                S.of(context).welcome,
-                style: AppStyles.styleMedium14(
-                  context,
-                ).copyWith(color: const Color(0xFFD1FAE5)),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                "",
-                textDirection: TextDirection.ltr,
-                style: AppStyles.styleBold18(
-                  context,
-                ).copyWith(color: Colors.white),
-              ),
-            ],
-          ),
-          const SizedBox(width: 12),
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withAlpha(150), width: 2),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(25),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 32,
-              child: _buildProfileImage(),
-            ),
-          ),
-        ],
-      );
-    }
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       textDirection: TextDirection.ltr,
@@ -163,7 +119,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
             ),
             const SizedBox(height: 4),
             Text(
-              userName,
+              userName.isEmpty ? 'ضيف' : userName,
               textDirection: TextDirection.ltr,
               style: AppStyles.styleBold18(
                 context,

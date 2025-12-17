@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/features/home/presentation/widgets/home_header/home_header_logo.dart';
 import 'package:supercycle/features/home/presentation/widgets/home_header/home_header_nav_actions.dart';
 import 'package:supercycle/features/home/presentation/widgets/home_header/user_profile_welcome_card.dart';
 
