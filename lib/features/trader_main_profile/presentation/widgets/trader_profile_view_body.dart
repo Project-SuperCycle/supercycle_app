@@ -19,26 +19,29 @@ class TraderProfileViewBody extends StatefulWidget {
 
 class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
   int currentPage = 0;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: 0);
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentsHistory(page: 1);
   }
 
-  Widget _getCurrentPageContent() {
-    switch (currentPage) {
-      case 0:
-        return TraderProfileInfoCard1(userProfile: widget.userProfile);
-      case 1:
-        return TraderProfileInfoCard2();
-      case 2:
-        return TraderProfileInfoCard3(user: widget.userProfile);
-      default:
-        return TraderProfileInfoCard1(userProfile: widget.userProfile);
-    }
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  List<Widget> _getPages() {
+    return [
+      TraderProfileInfoCard1(userProfile: widget.userProfile),
+      TraderProfileInfoCard2(),
+      TraderProfileInfoCard3(user: widget.userProfile),
+    ];
   }
 
   @override
@@ -59,9 +62,11 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
                 TraderProfilePageIndicator(
                   currentPage: currentPage,
                   onPageChanged: (index) {
-                    setState(() {
-                      currentPage = index;
-                    });
+                    _pageController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   },
                 ),
                 const SizedBox(height: 20),
@@ -69,9 +74,24 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
             ),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _getCurrentPageContent(),
+            child: SizedBox(
+              height:
+                  MediaQuery.of(context).size.height *
+                  0.6, // ارتفاع مناسب للمحتوى
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    currentPage = index;
+                  });
+                },
+                children: _getPages().map((page) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: page,
+                  );
+                }).toList(),
+              ),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 40)),

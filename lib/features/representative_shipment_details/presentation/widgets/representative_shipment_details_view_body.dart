@@ -25,6 +25,7 @@ class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
     super.key,
     required this.shipment,
   });
+
   final SingleShipmentModel shipment;
 
   @override
@@ -38,13 +39,12 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isClientDataExpanded = false;
   bool isNotesDataExpanded = false;
   bool hasActionBeenTaken = false;
-  bool showInspectionActions =
-      false; // للتحكم في ظهور الأكشنز بعد الضغط على زر المعاينة
+  bool showInspectionActions = false;
+
   int _page = 3;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Key for SharedPreferences
   String get _actionTakenKey => 'shipment_${widget.shipment.id}_action_taken';
 
   @override
@@ -53,7 +53,6 @@ class _RepresentativeShipmentDetailsViewBodyState
     _loadActionState();
   }
 
-  /// Load action state from SharedPreferences
   Future<void> _loadActionState() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -61,16 +60,15 @@ class _RepresentativeShipmentDetailsViewBodyState
     });
   }
 
-  /// Save action state to SharedPreferences
   Future<void> _saveActionState(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_actionTakenKey, value);
   }
 
-  /// Mark action as taken
   void _markActionAsTaken() {
     setState(() {
       hasActionBeenTaken = true;
+      showInspectionActions = false; // إخفاء الأكشنز بعد اتخاذ الإجراء
     });
     _saveActionState(true);
   }
@@ -81,19 +79,14 @@ class _RepresentativeShipmentDetailsViewBodyState
     });
   }
 
-  /// التحقق من أن اليوم الحالي هو نفس requestedPickupAt
   bool _isPickupDateToday() {
-    if (widget.shipment.requestedPickupAt == null) return false;
-
-    final pickupDate = widget.shipment.requestedPickupAt!;
+    final pickupDate = widget.shipment.requestedPickupAt;
     final now = DateTime.now();
-
     return pickupDate.year == now.year &&
         pickupDate.month == now.month &&
         pickupDate.day == now.day;
   }
 
-  /// عند الضغط على زر "بدأ المعاينة"
   void _startInspection() {
     setState(() {
       showInspectionActions = true;
@@ -110,14 +103,12 @@ class _RepresentativeShipmentDetailsViewBodyState
         child: SafeArea(
           child: CustomScrollView(
             slivers: [
-              // Header Section (Fixed)
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: const ShipmentLogo(),
                 ),
               ),
-              // White Container Content (Scrollable)
               SliverFillRemaining(
                 child: Container(
                   margin: const EdgeInsets.only(top: 20),
@@ -248,17 +239,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                           shipment: widget.shipment,
                         ),
                         const SizedBox(height: 25),
-
-                        // إظهار زر "بدأ المعاينة" فقط إذا كان اليوم هو requestedPickupAt ولم يتم الضغط عليه بعد
-                        if (_isPickupDateToday() && !showInspectionActions)
-                          CustomButton(
-                            onPress: _startInspection,
-                            title: 'بدأ المعاينة',
-                          ),
-
-                        // إظهار الأكشنز بعد الضغط على زر المعاينة
-                        if (showInspectionActions) _buildShipmentActions(),
-
+                        _buildShipmentButtons(),
                         const SizedBox(height: 30),
                       ],
                     ),
@@ -295,43 +276,30 @@ class _RepresentativeShipmentDetailsViewBodyState
     }
   }
 
-  Widget _buildShipmentActions() {
+  /// بناء الأزرار حسب الحالة
+  Widget _buildShipmentButtons() {
     final status = widget.shipment.status;
 
-    // إذا تم اتخاذ إجراء من قبل، لا تعرض الأزرار
-    if (hasActionBeenTaken && status == 'approved') {
-      return Center(
-        child: Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.green.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.green.shade300),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.check_circle, color: Colors.green.shade700),
-              SizedBox(width: 8),
-              Text(
-                'تم اتخاذ إجراء على هذه الشحنة',
-                style: AppStyles.styleSemiBold14(
-                  context,
-                ).copyWith(color: Colors.green.shade700),
-              ),
-            ],
-          ),
-        ),
-      );
+    // إذا الحالة 'approved' وتم اتخاذ إجراء، اعرض زر "مراجعة الشحنة"
+    if (status == 'approved' && hasActionBeenTaken) {
+      return RepresentativeShipmentReviewButton(shipment: widget.shipment);
     }
 
-    if (status == 'approved') {
+    // إذا الحالة 'approved' ولم يتم اتخاذ إجراء واليوم هو تاريخ الاستلام
+    if (status == 'approved' && !hasActionBeenTaken && _isPickupDateToday()) {
+      // إذا لم يتم الضغط على زر "بدأ المعاينة"، اعرض الزر
+      if (!showInspectionActions) {
+        return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');
+      }
+
+      // إذا تم الضغط على زر "بدأ المعاينة"، اعرض أزرار الإجراءات
       return RepresentativeShipmentActionsRow(
         shipment: widget.shipment,
         onActionTaken: _markActionAsTaken,
       );
     }
 
+    // في الحالات الأخرى (routed, delivery_in_transit, delivered, إلخ)، اعرض زر "مراجعة الشحنة"
     const reviewStatuses = [
       'routed',
       'delivery_in_transit',
