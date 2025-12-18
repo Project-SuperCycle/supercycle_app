@@ -31,7 +31,6 @@ import 'package:supercycle/features/splash/views/splash_view.dart';
 import 'package:supercycle/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 import 'package:supercycle/features/trader_main_profile/presentation/view/trader_profile_view.dart';
 import 'package:supercycle/features/trader_shipment_details/presentation/views/trader_shipment_details_view.dart';
-import 'package:supercycle/features/trader_shipment_preview/presentation/views/trader_shipment_review_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(

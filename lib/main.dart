@@ -27,6 +27,7 @@ import 'package:supercycle/features/representative_shipment_review/data/cubits/f
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
 import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
+import 'package:supercycle/features/sales_process/data/repos/sales_process_repo_imp.dart';
 import 'package:supercycle/features/trader_shipment_details/data/cubits/shipment_cubit/shipment_cubit.dart';
 import 'package:supercycle/features/trader_shipment_details/data/repos/shipment_details_repo_imp.dart';
 import 'package:supercycle/features/trader_shipment_details/data/repos/shipment_notes_repo_imp.dart';
@@ -40,9 +41,8 @@ import 'package:supercycle/features/sign_up/data/managers/sign_up_cubit/sign_up_
     show SignUpCubit;
 import 'package:supercycle/features/sign_up/data/repos/signup_repo_imp.dart'
     show SignUpRepoImp;
-import 'package:supercycle/features/trader_shipment_preview/data/cubits/create_shipment_cubit/create_shipment_cubit.dart';
-import 'package:supercycle/features/trader_shipment_preview/data/repos/trader_shipment_preview_repo_imp.dart';
 import 'package:supercycle/firebase_options.dart' show DefaultFirebaseOptions;
+import 'features/sales_process/data/cubit/create_shipment_cubit/create_shipment_cubit.dart';
 import 'generated/l10n.dart';
 
 void main() async {
@@ -70,7 +70,7 @@ void main() async {
         ),
         BlocProvider(
           create: (context) => CreateShipmentCubit(
-            shipmentReviewRepo: getIt.get<TraderShipmentPreviewRepoImp>(),
+            shipmentReviewRepo: getIt.get<SalesProcessRepoImp>(),
           ),
         ),
         BlocProvider(

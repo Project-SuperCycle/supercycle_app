@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart' show GoRouter;
-import 'package:logger/logger.dart' show Logger;
+import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle/core/models/social_auth_request_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
@@ -12,30 +12,97 @@ class SocialAuthRow extends StatelessWidget {
   const SocialAuthRow({super.key});
 
   void signInWithGoogle({required BuildContext context}) async {
-    final accessToken = await SocialAuthService.signInWithGoogle();
-    final SocialAuthRequestModel credentials = SocialAuthRequestModel(
-      provider: "google",
-      accessToken: accessToken,
-    );
-    Logger().i("GOOGLE SIGN IN -> ${credentials.toJson()}");
-    BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
+    try {
+      // إظهار مؤشر التحميل
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      final accessToken = await SocialAuthService.signInWithGoogle();
+
+      // إغلاق مؤشر التحميل
+      if (context.mounted) Navigator.of(context).pop();
+
+      if (accessToken == null) {
+        return; // المستخدم ألغى العملية
+      }
+
+      final SocialAuthRequestModel credentials = SocialAuthRequestModel(
+        provider: "google",
+        accessToken: accessToken,
+      );
+
+      Logger().i("GOOGLE SIGN IN -> ${credentials.toJson()}");
+
+      if (context.mounted) {
+        BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('فشل تسجيل الدخول: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      Logger().e("خطأ في Google Sign In: $e");
+    }
   }
 
   void signInWithFacebook({required BuildContext context}) async {
-    final accessToken = await SocialAuthService.signInWithFacebook();
-    final SocialAuthRequestModel credentials = SocialAuthRequestModel(
-      provider: "facebook",
-      accessToken: accessToken,
-    );
-    Logger().i("FACEBOOK SIGN IN -> ${credentials.toJson()}");
-    BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
+    try {
+      // إظهار مؤشر التحميل
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      final accessToken = await SocialAuthService.signInWithFacebook();
+
+      // إغلاق مؤشر التحميل
+      if (context.mounted) Navigator.of(context).pop();
+
+      if (accessToken == null) {
+        return; // المستخدم ألغى العملية
+      }
+
+      final SocialAuthRequestModel credentials = SocialAuthRequestModel(
+        provider: "facebook",
+        accessToken: accessToken,
+      );
+
+      Logger().i("FACEBOOK SIGN IN -> ${credentials.toJson()}");
+
+      if (context.mounted) {
+        BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('فشل تسجيل الدخول: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      Logger().e("خطأ في Facebook Sign In: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialAuthCubit, SocialAuthState>(
       listener: (context, state) {
-        // TODO: implement listener
         if (state is SocialAuthSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.socialAuth.message ?? "NO MESSAGE")),
@@ -47,9 +114,9 @@ class SocialAuthRow extends StatelessWidget {
           }
         }
         if (state is SocialAuthFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
           Logger().w(state.message);
         }
       },
@@ -62,12 +129,12 @@ class SocialAuthRow extends StatelessWidget {
               onPressed: () => signInWithGoogle(context: context),
               icon: Image.asset(AppAssets.googleIcon, scale: 3.2),
             ),
-            // SizedBox(width: 30),
-            // IconButton(
-            //   style: IconButton.styleFrom(padding: EdgeInsets.all(2.0)),
-            //   onPressed: () => signInWithFacebook(context: context),
-            //   icon: Image.asset(AppAssets.facebookIcon, scale: 3.5),
-            // ),
+            SizedBox(width: 30),
+            IconButton(
+              style: IconButton.styleFrom(padding: EdgeInsets.all(2.0)),
+              onPressed: () => signInWithFacebook(context: context),
+              icon: Image.asset(AppAssets.facebookIcon, scale: 3.5),
+            ),
           ],
         );
       },
