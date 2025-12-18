@@ -38,19 +38,19 @@ class AppRouter {
     initialLocation: EndPoints.splashView,
     routes: [
       // ============================================================
-      // Splash & Onboarding - Fade Through
+      // Splash & Onboarding - Quick Fade
       // ============================================================
       GoRoute(
         path: EndPoints.splashView,
         name: 'splash',
         pageBuilder: (context, state) =>
-            AppTransitions.fadeThrough(state.pageKey, const SplashView()),
+            AppTransitions.quickFade(state.pageKey, const SplashView()),
       ),
 
       GoRoute(
         path: EndPoints.firstOnboardingView,
         name: 'FirstOnboarding',
-        pageBuilder: (context, state) => AppTransitions.fadeThrough(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const FirstOnboardingView(),
         ),
@@ -59,7 +59,7 @@ class AppRouter {
       GoRoute(
         path: EndPoints.secondOnboardingView,
         name: 'SecondOnboarding',
-        pageBuilder: (context, state) => AppTransitions.fadeThrough(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const SecondOnboardingView(),
         ),
@@ -68,7 +68,7 @@ class AppRouter {
       GoRoute(
         path: EndPoints.thirdOnboardingView,
         name: 'ThirdOnboarding',
-        pageBuilder: (context, state) => AppTransitions.fadeThrough(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const ThirdOnboardingView(),
         ),
@@ -77,62 +77,58 @@ class AppRouter {
       GoRoute(
         path: EndPoints.fourthOnboardingView,
         name: 'FourthOnboarding',
-        pageBuilder: (context, state) => AppTransitions.fadeThrough(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const FourthOnboardingView(),
         ),
       ),
 
       // ============================================================
-      // Main Navigation - Fade Through
+      // Main Navigation - Smooth Fade
       // ============================================================
       GoRoute(
         path: EndPoints.homeView,
         name: 'Home',
         pageBuilder: (context, state) =>
-            AppTransitions.fadeThrough(state.pageKey, const HomeView()),
+            AppTransitions.fadeForMain(state.pageKey, const HomeView()),
       ),
 
       GoRoute(
         path: EndPoints.calculatorView,
         name: 'Calculator',
         pageBuilder: (context, state) =>
-            AppTransitions.fadeThrough(state.pageKey, CalculatorView()),
+            AppTransitions.fadeForMain(state.pageKey, CalculatorView()),
       ),
 
       GoRoute(
         path: EndPoints.contactUsView,
         name: 'Contact Us',
         pageBuilder: (context, state) =>
-            AppTransitions.fadeThrough(state.pageKey, ContactUsView()),
+            AppTransitions.fadeForMain(state.pageKey, ContactUsView()),
       ),
 
       GoRoute(
         path: EndPoints.shipmentsCalendarView,
         name: 'Shipments Calendar',
         pageBuilder: (context, state) =>
-            AppTransitions.fadeThrough(state.pageKey, ShipmentsCalendarView()),
+            AppTransitions.fadeForMain(state.pageKey, ShipmentsCalendarView()),
       ),
 
       // ============================================================
-      // Authentication - Shared Axis Horizontal
+      // Authentication - Smooth Auth Transition
       // ============================================================
       GoRoute(
         path: EndPoints.signInView,
         name: 'SignIn',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisHorizontal(
-          state.pageKey,
-          const SignInView(),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForAuth(state.pageKey, const SignInView()),
       ),
 
       GoRoute(
         path: EndPoints.signUpView,
         name: 'SignUp',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisHorizontal(
-          state.pageKey,
-          const SignUpView(),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForAuth(state.pageKey, const SignUpView()),
       ),
 
       GoRoute(
@@ -140,7 +136,7 @@ class AppRouter {
         name: 'SignUpVerify',
         pageBuilder: (context, state) {
           final credential = state.extra as String;
-          return AppTransitions.sharedAxisVertical(
+          return AppTransitions.smoothFadeWithScale(
             state.pageKey,
             SignUpVerifyView(credential: credential),
           );
@@ -150,7 +146,7 @@ class AppRouter {
       GoRoute(
         path: EndPoints.signUpDetailsView,
         name: 'SignUpDetails',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisVertical(
+        pageBuilder: (context, state) => AppTransitions.smoothFadeWithScale(
           state.pageKey,
           const SignUpDetailsView(),
         ),
@@ -159,16 +155,14 @@ class AppRouter {
       GoRoute(
         path: EndPoints.forgetPasswordView,
         name: 'Forget Password',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisHorizontal(
-          state.pageKey,
-          ForgetPasswordView(),
-        ),
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForAuth(state.pageKey, ForgetPasswordView()),
       ),
 
       GoRoute(
         path: EndPoints.verifyResetOtpView,
         name: 'Verify Reset OTP',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisVertical(
+        pageBuilder: (context, state) => AppTransitions.smoothFadeWithScale(
           state.pageKey,
           VerifyResetOtpView(email: state.extra as String),
         ),
@@ -177,19 +171,19 @@ class AppRouter {
       GoRoute(
         path: EndPoints.resetPasswordView,
         name: 'Reset Password',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisVertical(
+        pageBuilder: (context, state) => AppTransitions.smoothFadeWithScale(
           state.pageKey,
           ResetPasswordView(token: state.extra as String),
         ),
       ),
 
       // ============================================================
-      // Sales Process - Shared Axis Horizontal
+      // Sales Process - Smooth Transition
       // ============================================================
       GoRoute(
         path: EndPoints.salesProcessView,
         name: 'SalesProcess',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisHorizontal(
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           const SalesProcessView(),
         ),
@@ -198,7 +192,7 @@ class AppRouter {
       GoRoute(
         path: EndPoints.traderShipmentPreviewView,
         name: 'TraderShipmentReview',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisVertical(
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           TraderShipmentReviewView(
             shipment: state.extra as CreateShipmentModel,
@@ -207,12 +201,12 @@ class AppRouter {
       ),
 
       // ============================================================
-      // Shipment Details - Shared Axis Scaled (Zoom effect)
+      // Shipment Details - Fade with Scale
       // ============================================================
       GoRoute(
         path: EndPoints.traderShipmentDetailsView,
         name: 'TraderShipmentDetails',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisScaled(
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           TraderShipmentDetailsView(
             shipment: state.extra as SingleShipmentModel,
@@ -223,7 +217,7 @@ class AppRouter {
       GoRoute(
         path: EndPoints.representativeShipmentDetailsView,
         name: 'Representative Shipment Details',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisScaled(
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           RepresentativeShipmentDetailsView(
             shipment: state.extra as SingleShipmentModel,
@@ -232,12 +226,12 @@ class AppRouter {
       ),
 
       // ============================================================
-      // Edit Screens - Shared Axis Vertical
+      // Edit Screens - Modal Style
       // ============================================================
       GoRoute(
         path: EndPoints.shipmentEditView,
         name: 'ShipmentEdit',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisVertical(
+        pageBuilder: (context, state) => AppTransitions.fadeForModal(
           state.pageKey,
           ShipmentEditView(shipment: state.extra as SingleShipmentModel),
         ),
@@ -247,20 +241,20 @@ class AppRouter {
         path: EndPoints.editProfileView,
         name: 'Edit Profile',
         pageBuilder: (context, state) =>
-            AppTransitions.sharedAxisVertical(state.pageKey, EditProfileView()),
+            AppTransitions.fadeForModal(state.pageKey, EditProfileView()),
       ),
 
       GoRoute(
         path: EndPoints.editTraderProfileView,
         name: 'Trader Edit Profile',
         pageBuilder: (context, state) =>
-            AppTransitions.sharedAxisVertical(state.pageKey, EditProfileView()),
+            AppTransitions.fadeForModal(state.pageKey, EditProfileView()),
       ),
 
       GoRoute(
         path: EndPoints.representativeShipmentEditView,
         name: 'Representative Shipment Edit',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisVertical(
+        pageBuilder: (context, state) => AppTransitions.fadeForModal(
           state.pageKey,
           RepresentativeShipmentEditView(
             shipment: state.extra as SingleShipmentModel,
@@ -269,12 +263,12 @@ class AppRouter {
       ),
 
       // ============================================================
-      // Profile Views - Fade Through
+      // Profile Views - Smooth Fade
       // ============================================================
       GoRoute(
         path: EndPoints.representativeProfileView,
         name: 'Representative Profile',
-        pageBuilder: (context, state) => AppTransitions.fadeThrough(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           RepresentativeProfileView(
             userProfile: state.extra as UserProfileModel,
@@ -285,19 +279,19 @@ class AppRouter {
       GoRoute(
         path: EndPoints.traderProfileView,
         name: 'Trader Profile',
-        pageBuilder: (context, state) => AppTransitions.fadeThrough(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           TraderProfileView(userProfile: state.extra as UserProfileModel),
         ),
       ),
 
       // ============================================================
-      // Review Screens - Shared Axis Horizontal
+      // Review Screens - Details Transition
       // ============================================================
       GoRoute(
         path: EndPoints.representativeShipmentReviewView,
         name: 'Representative Shipment Review',
-        pageBuilder: (context, state) => AppTransitions.sharedAxisHorizontal(
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           RepresentativeShipmentReviewView(
             shipment: state.extra as SingleShipmentModel,
@@ -306,19 +300,19 @@ class AppRouter {
       ),
 
       // ============================================================
-      // Environmental Impact - Fade Through
+      // Environmental Impact - Main Style
       // ============================================================
       GoRoute(
         path: EndPoints.environmentalImpactView,
         name: 'Environmental Impact',
-        pageBuilder: (context, state) => AppTransitions.fadeThrough(
+        pageBuilder: (context, state) => AppTransitions.fadeForMain(
           state.pageKey,
           EnvironmentalImpactView(),
         ),
       ),
     ],
 
-    // Custom error page with Fade Through
+    // Custom error page with smooth fade
     errorBuilder: (context, state) => Scaffold(
       body: Center(
         child: Column(
