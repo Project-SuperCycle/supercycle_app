@@ -20,7 +20,6 @@ import 'package:supercycle/features/representative_main_profile/presentation/vie
 import 'package:supercycle/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
-import 'package:supercycle/features/sales_process/data/models/create_shipment_model.dart';
 import 'package:supercycle/features/sales_process/presentation/views/sales_process_view.dart';
 import 'package:supercycle/features/shipment_edit/presentation/views/shipment_edit_view.dart';
 import 'package:supercycle/features/sign_in/presentation/views/sign_in_view.dart';
@@ -185,17 +184,6 @@ class AppRouter {
         pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           const SalesProcessView(),
-        ),
-      ),
-
-      GoRoute(
-        path: EndPoints.traderShipmentPreviewView,
-        name: 'TraderShipmentReview',
-        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
-          state.pageKey,
-          TraderShipmentReviewView(
-            shipment: state.extra as CreateShipmentModel,
-          ),
         ),
       ),
 

@@ -232,14 +232,10 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         userNotes: notes.isEmpty ? "" : notes.first,
       );
 
+      // التحقق من صحة البيانات قبل عرض الـ Dialog
       String? validationError = _getValidationError(shipment);
 
       if (validationError != null) {
-      // التحقق من صحة البيانات قبل الحفظ
-      String? validationError = _getValidationError(shipment);
-
-      if (validationError != null) {
-        // إظهار رسالة خطأ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(validationError),
@@ -291,50 +287,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
           backgroundColor: Colors.red,
         ),
       );
-    }
-  }
-
-  // دالة للتحقق من صحة البيانات وإرجاع رسالة الخطأ
-  String? _getValidationError(CreateShipmentModel shipment) {
-    if (shipment.requestedPickupAt == null || selectedDateTime == null) {
-      return "يرجى تحديد تاريخ الاستلام";
-    }
-
-    if (shipment.customPickupAddress.isEmpty) {
-      return "يرجى إدخال عنوان الاستلام";
-    }
-
-    if (shipment.items.isEmpty) {
-      return "يرجى إضافة منتجات للشحنة";
-    }
-
-    // التحقق من أن جميع المنتجات لها كمية
-    if (shipment.items.isNotEmpty) {
-      for (int i = 0; i < shipment.items.length; i++) {
-        var item = shipment.items[i];
-
-        // التحقق من وجود quantity أو أنها أكبر من صفر
-        if (item.quantity <= 0) {
-          return "يرجى إدخال الكمية للمنتج رقم ${i + 1}";
-        }
-      }
-      // التنقل فقط إذا تم الحفظ بنجاح
-      if (context.mounted) {
-        GoRouter.of(
-          context,
-        ).push(EndPoints.traderShipmentPreviewView, extra: shipment);
-      }
-    } catch (e) {
-      // إخفاء الـ loading indicator في حالة حدوث خطأ
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
     }
   }
 
