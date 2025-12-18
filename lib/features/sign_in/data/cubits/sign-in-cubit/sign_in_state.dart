@@ -1,33 +1,24 @@
-import 'package:equatable/equatable.dart' show Equatable;
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
-sealed class SignInState extends Equatable {
-  const SignInState();
-}
+abstract class SignInState {}
 
-final class SignInInitial extends SignInState {
-  @override
-  List<Object> get props => [];
-}
+/// الحالة الأولية
+class SignInInitial extends SignInState {}
 
-final class SignInLoading extends SignInState {
-  @override
-  List<Object> get props => [];
-}
+/// حالة التحميل (جاري تسجيل الدخول)
+class SignInLoading extends SignInState {}
 
-final class SignInSuccess extends SignInState {
+/// حالة النجاح
+class SignInSuccess extends SignInState {
   final LoginedUserModel user;
 
-  const SignInSuccess({required this.user});
-  @override
-  List<Object> get props => [];
+  SignInSuccess({required this.user});
 }
 
-final class SignInFailure extends SignInState {
+/// حالة الفشل
+class SignInFailure extends SignInState {
   final String message;
   final int statusCode;
 
-  const SignInFailure({required this.message, required this.statusCode});
-  @override
-  List<Object> get props => [];
+  SignInFailure({required this.message, required this.statusCode});
 }

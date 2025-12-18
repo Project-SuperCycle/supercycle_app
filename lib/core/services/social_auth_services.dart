@@ -2,91 +2,74 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 
-class SocialAuthService {
-  static final Logger _logger = Logger();
-
-  /// تسجيل الدخول باستخدام Google
-  static Future<String?> signInWithGoogle() async {
+/// خدمة المصادقة عبر وسائل التواصل الاجتماعي
+abstract class SocialAuthService {
+  /// تسجيل الدخول عبر Google
+  static Future<String> signInWithGoogle() async {
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: ['email', 'profile'],
-      );
+      // 1. بدء عملية المصادقة
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      await googleSignIn.signOut();
-
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
+      // 2. التحقق من إلغاء المستخدم للعملية
       if (googleUser == null) {
-        _logger.w('تم إلغاء تسجيل الدخول بواسطة المستخدم');
-        return null;
+        Logger().w('⚠️ User cancelled Google Sign In');
+        throw Exception('Google Sign In cancelled by user');
       }
 
-      final GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
+      // 3. الحصول على تفاصيل المصادقة
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser.authentication;
 
-      _logger.i('Google Sign In Success: ${googleUser.email}');
-      return googleAuth.accessToken;
+      if (googleAuth == null || googleAuth.accessToken == null) {
+        Logger().e('❌ Failed to get Google authentication details');
+        throw Exception('Google Sign In failed');
+      }
+
+      final String accessToken = googleAuth.accessToken!;
+
+      Logger().i('✅ Google Sign In successful');
+
+      return accessToken;
     } catch (e) {
-      _logger.e('خطأ في تسجيل الدخول بـ Google: $e');
-      throw Exception('فشل تسجيل الدخول بـ Google: $e');
+      Logger().e('❌ Google Sign In error: $e');
+      rethrow;
     }
   }
 
-  /// تسجيل الدخول باستخدام Facebook
-  static Future<String?> signInWithFacebook() async {
+  /// تسجيل الدخول عبر Facebook
+  static Future<String> signInWithFacebook() async {
     try {
-      await FacebookAuth.instance.logOut();
-
-      final LoginResult result = await FacebookAuth.instance.login(
+      // 1. بدء عملية تسجيل الدخول
+      final LoginResult loginResult = await FacebookAuth.instance.login(
         permissions: ['email', 'public_profile'],
-        loginBehavior: LoginBehavior.dialogOnly,
       );
 
-      switch (result.status) {
-        case LoginStatus.success:
-          final AccessToken? accessToken = result.accessToken;
+      // 2. التحقق من حالة تسجيل الدخول
+      if (loginResult.status != LoginStatus.success) {
+        Logger().w('⚠️ Facebook login status: ${loginResult.status}');
 
-          if (accessToken == null || accessToken.tokenString.isEmpty) {
-            _logger.e('Access Token is null or empty');
-            throw Exception('فشل الحصول على Access Token');
-          }
-
-          _logger.i('✅ Facebook Sign In Success');
-          _logger.i('Token Type: ${accessToken.type}');
-
-          // الحصول على بيانات المستخدم
-          try {
-            final userData = await FacebookAuth.instance.getUserData(
-              fields: "name,email,picture.width(200)",
-            );
-
-            _logger.i('User Name: ${userData['name'] ?? 'No Name'}');
-            _logger.i('User Email: ${userData['email'] ?? 'No Email'}');
-            _logger.i('User ID: ${userData['id'] ?? 'No ID'}');
-          } catch (e) {
-            _logger.w('تحذير في الحصول على بيانات المستخدم: $e');
-          }
-
-          return accessToken.tokenString;
-
-        case LoginStatus.cancelled:
-          _logger.w('تم إلغاء تسجيل الدخول بواسطة المستخدم');
-          return null;
-
-        case LoginStatus.failed:
-          _logger.e('فشل تسجيل الدخول: ${result.message}');
-          throw Exception('فشل تسجيل الدخول بـ Facebook: ${result.message}');
-
-        case LoginStatus.operationInProgress:
-          _logger.w('عملية تسجيل الدخول قيد التنفيذ');
-          throw Exception('عملية تسجيل الدخول قيد التنفيذ بالفعل');
-
-        default:
-          _logger.e('حالة غير معروفة في تسجيل الدخول');
-          throw Exception('حالة غير معروفة في تسجيل الدخول');
+        if (loginResult.status == LoginStatus.cancelled) {
+          throw Exception('Facebook Sign In cancelled by user');
+        } else if (loginResult.status == LoginStatus.failed) {
+          throw Exception('Facebook Sign In failed: ${loginResult.message}');
+        } else {
+          throw Exception('Facebook Sign In failed with unknown status');
+        }
       }
+
+      // 3. الحصول على access token
+      final AccessToken? accessToken = loginResult.accessToken;
+
+      if (accessToken == null) {
+        Logger().e('❌ Failed to get Facebook access token');
+        throw Exception('Facebook Sign In failed');
+      }
+
+      Logger().i('✅ Facebook Sign In successful');
+
+      return accessToken.tokenString;
     } catch (e) {
-      _logger.e('خطأ في تسجيل الدخول بـ Facebook: $e');
+      Logger().e('❌ Facebook Sign In error: $e');
       rethrow;
     }
   }
@@ -94,11 +77,10 @@ class SocialAuthService {
   /// تسجيل الخروج من Google
   static Future<void> signOutGoogle() async {
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      await googleSignIn.signOut();
-      _logger.i('تم تسجيل الخروج من Google بنجاح');
+      await GoogleSignIn().signOut();
+      Logger().i('✅ Google Sign Out successful');
     } catch (e) {
-      _logger.e('خطأ في تسجيل الخروج من Google: $e');
+      Logger().e('❌ Google Sign Out error: $e');
     }
   }
 
@@ -106,80 +88,9 @@ class SocialAuthService {
   static Future<void> signOutFacebook() async {
     try {
       await FacebookAuth.instance.logOut();
-      _logger.i('تم تسجيل الخروج من Facebook بنجاح');
+      Logger().i('✅ Facebook Sign Out successful');
     } catch (e) {
-      _logger.e('خطأ في تسجيل الخروج من Facebook: $e');
-    }
-  }
-
-  /// تسجيل الخروج من جميع المنصات
-  static Future<void> signOutAll() async {
-    await Future.wait([
-      signOutGoogle(),
-      signOutFacebook(),
-    ]);
-    _logger.i('تم تسجيل الخروج من جميع المنصات');
-  }
-
-  /// التحقق من حالة تسجيل الدخول في Facebook
-  static Future<bool> isFacebookLoggedIn() async {
-    try {
-      final accessToken = await FacebookAuth.instance.accessToken;
-      return accessToken != null;
-    } catch (e) {
-      _logger.e('خطأ في التحقق من حالة Facebook: $e');
-      return false;
-    }
-  }
-
-  /// التحقق من حالة تسجيل الدخول في Google
-  static Future<bool> isGoogleLoggedIn() async {
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final currentUser = await googleSignIn.signInSilently();
-      return currentUser != null;
-    } catch (e) {
-      _logger.e('خطأ في التحقق من حالة Google: $e');
-      return false;
-    }
-  }
-
-  /// الحصول على بيانات المستخدم من Facebook
-  static Future<Map<String, dynamic>?> getFacebookUserData() async {
-    try {
-      final isLoggedIn = await isFacebookLoggedIn();
-
-      if (!isLoggedIn) {
-        _logger.w('المستخدم غير مسجل الدخول في Facebook');
-        return null;
-      }
-
-      final userData = await FacebookAuth.instance.getUserData(
-        fields: "id,name,email,picture.width(400)",
-      );
-
-      _logger.i('تم الحصول على بيانات المستخدم من Facebook');
-      return userData;
-    } catch (e) {
-      _logger.e('خطأ في الحصول على بيانات المستخدم من Facebook: $e');
-      return null;
-    }
-  }
-
-  /// الحصول على Access Token الحالي من Facebook
-  static Future<String?> getCurrentFacebookToken() async {
-    try {
-      final accessToken = await FacebookAuth.instance.accessToken;
-
-      if (accessToken == null) {
-        _logger.w('لا يوجد Facebook Token');
-        return null;
-      }
-
-      return accessToken.tokenString;
-    } catch (e) {
-      _logger.e('خطأ في الحصول على Facebook Token: $e');
-      return null;
+      Logger().e('❌ Facebook Sign Out error: $e');
     }
   }
 }

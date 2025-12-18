@@ -36,6 +36,7 @@ class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
 class _RepresentativeShipmentDetailsViewBodyState
     extends State<RepresentativeShipmentDetailsViewBody> {
   bool isShipmentDetailsExpanded = false;
+  bool isInspectedItemsExpanded = false;
   bool isClientDataExpanded = false;
   bool isNotesDataExpanded = false;
   bool hasActionBeenTaken = false;
@@ -160,9 +161,9 @@ class _RepresentativeShipmentDetailsViewBodyState
                                     child: ExpandableSection(
                                       title: 'الشحنة بعد المعاينة',
                                       iconPath: AppAssets.boxPerspective,
-                                      isExpanded: isShipmentDetailsExpanded,
+                                      isExpanded: isInspectedItemsExpanded,
                                       maxHeight: 320,
-                                      onTap: _toggleShipmentDetails,
+                                      onTap: _toggleInspectedItems,
                                       content:
                                           RepresentativeShipmentDetailsContent(
                                             items:
@@ -318,6 +319,12 @@ class _RepresentativeShipmentDetailsViewBodyState
   void _toggleShipmentDetails() {
     setState(() {
       isShipmentDetailsExpanded = !isShipmentDetailsExpanded;
+    });
+  }
+
+  void _toggleInspectedItems() {
+    setState(() {
+      isInspectedItemsExpanded = !isInspectedItemsExpanded;
     });
   }
 

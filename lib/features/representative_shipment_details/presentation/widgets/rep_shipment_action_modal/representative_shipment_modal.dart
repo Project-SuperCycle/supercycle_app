@@ -530,9 +530,9 @@ class _ModalContentState extends State<_ModalContent>
             direction: Axis.horizontal,
             allowHalfRating: false,
             itemCount: 5,
-            itemSize: 40,
+            itemSize: 35,
             unratedColor: Colors.grey[200],
-            itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
+            itemPadding: const EdgeInsets.symmetric(horizontal: 5.0),
             itemBuilder: (context, _) =>
                 const Icon(Icons.star_rounded, color: Color(0xFFFFA726)),
             onRatingUpdate: (rating) {

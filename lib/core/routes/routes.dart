@@ -36,114 +36,176 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: EndPoints.splashView,
     routes: [
-      // Splash Screen Route
+      // ============================================================
+      // Splash & Onboarding - Quick Fade
+      // ============================================================
       GoRoute(
         path: EndPoints.splashView,
         name: 'splash',
         pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, const SplashView()),
+            AppTransitions.quickFade(state.pageKey, const SplashView()),
       ),
 
-      // First Onboarding Route
       GoRoute(
         path: EndPoints.firstOnboardingView,
         name: 'FirstOnboarding',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const FirstOnboardingView(),
         ),
       ),
 
-      // Second Onboarding Route
       GoRoute(
         path: EndPoints.secondOnboardingView,
         name: 'SecondOnboarding',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const SecondOnboardingView(),
         ),
       ),
 
-      // Third Onboarding Route
       GoRoute(
         path: EndPoints.thirdOnboardingView,
         name: 'ThirdOnboarding',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const ThirdOnboardingView(),
         ),
       ),
 
-      // Fourth Onboarding Route
       GoRoute(
         path: EndPoints.fourthOnboardingView,
         name: 'FourthOnboarding',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
           const FourthOnboardingView(),
         ),
       ),
 
-      // Home View Route
+      // ============================================================
+      // Main Navigation - Smooth Fade
+      // ============================================================
       GoRoute(
         path: EndPoints.homeView,
         name: 'Home',
         pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, const HomeView()),
+            AppTransitions.fadeForMain(state.pageKey, const HomeView()),
       ),
 
-      // SignIn View Route
+      GoRoute(
+        path: EndPoints.calculatorView,
+        name: 'Calculator',
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForMain(state.pageKey, CalculatorView()),
+      ),
+
+      GoRoute(
+        path: EndPoints.contactUsView,
+        name: 'Contact Us',
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForMain(state.pageKey, ContactUsView()),
+      ),
+
+      GoRoute(
+        path: EndPoints.shipmentsCalendarView,
+        name: 'Shipments Calendar',
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForMain(state.pageKey, ShipmentsCalendarView()),
+      ),
+
+      // ============================================================
+      // Authentication - Smooth Auth Transition
+      // ============================================================
       GoRoute(
         path: EndPoints.signInView,
         name: 'SignIn',
         pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, const SignInView()),
+            AppTransitions.fadeForAuth(state.pageKey, const SignInView()),
       ),
 
-      // SignUp View Route
       GoRoute(
         path: EndPoints.signUpView,
         name: 'SignUp',
         pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, const SignUpView()),
+            AppTransitions.fadeForAuth(state.pageKey, const SignUpView()),
       ),
 
-      // SignUpVerify View Route
       GoRoute(
         path: EndPoints.signUpVerifyView,
         name: 'SignUpVerify',
         pageBuilder: (context, state) {
           final credential = state.extra as String;
-          return AppTransitions.ultraSmooth(
+          return AppTransitions.smoothFadeWithScale(
             state.pageKey,
             SignUpVerifyView(credential: credential),
           );
         },
       ),
 
-      // SignUpDetails View Route
       GoRoute(
         path: EndPoints.signUpDetailsView,
         name: 'SignUpDetails',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.smoothFadeWithScale(
           state.pageKey,
           const SignUpDetailsView(),
         ),
       ),
 
-      // Sales Process View Route
+      GoRoute(
+        path: EndPoints.forgetPasswordView,
+        name: 'Forget Password',
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForAuth(state.pageKey, ForgetPasswordView()),
+      ),
+
+      GoRoute(
+        path: EndPoints.verifyResetOtpView,
+        name: 'Verify Reset OTP',
+        pageBuilder: (context, state) => AppTransitions.smoothFadeWithScale(
+          state.pageKey,
+          VerifyResetOtpView(email: state.extra as String),
+        ),
+      ),
+
+      GoRoute(
+        path: EndPoints.resetPasswordView,
+        name: 'Reset Password',
+        pageBuilder: (context, state) => AppTransitions.smoothFadeWithScale(
+          state.pageKey,
+          ResetPasswordView(token: state.extra as String),
+        ),
+      ),
+
+      // ============================================================
+      // Sales Process - Smooth Transition
+      // ============================================================
       GoRoute(
         path: EndPoints.salesProcessView,
         name: 'SalesProcess',
-        pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, const SalesProcessView()),
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
+          state.pageKey,
+          const SalesProcessView(),
+        ),
       ),
 
-      // Trader Shipment Details View Route
+      GoRoute(
+        path: EndPoints.traderShipmentPreviewView,
+        name: 'TraderShipmentReview',
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
+          state.pageKey,
+          TraderShipmentReviewView(
+            shipment: state.extra as CreateShipmentModel,
+          ),
+        ),
+      ),
+
+      // ============================================================
+      // Shipment Details - Fade with Scale
+      // ============================================================
       GoRoute(
         path: EndPoints.traderShipmentDetailsView,
         name: 'TraderShipmentDetails',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           TraderShipmentDetailsView(
             shipment: state.extra as SingleShipmentModel,
@@ -151,93 +213,10 @@ class AppRouter {
         ),
       ),
 
-      // Shipment Edit View Route
-      GoRoute(
-        path: EndPoints.shipmentEditView,
-        name: 'ShipmentEdit',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
-          state.pageKey,
-          ShipmentEditView(shipment: state.extra as SingleShipmentModel),
-        ),
-      ),
-
-      // Representative Profile View Route
-      GoRoute(
-        path: EndPoints.representativeProfileView,
-        name: 'Representative Profile',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
-          state.pageKey,
-          RepresentativeProfileView(
-            userProfile: state.extra as UserProfileModel,
-          ),
-        ),
-      ),
-
-      // Edit Profile View Route
-      GoRoute(
-        path: EndPoints.editProfileView,
-        name: 'Edit Profile',
-        pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, EditProfileView()),
-      ),
-
-      // Shipments Calendar View Route
-      GoRoute(
-        path: EndPoints.shipmentsCalendarView,
-        name: 'Shipments Calendar',
-        pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, ShipmentsCalendarView()),
-      ),
-
-      // Contact Us View Route
-      GoRoute(
-        path: EndPoints.contactUsView,
-        name: 'Contact Us',
-        pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, ContactUsView()),
-      ),
-
-      // Trader Profile View Route
-      GoRoute(
-        path: EndPoints.traderProfileView,
-        name: 'Trader Profile',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
-          state.pageKey,
-          TraderProfileView(userProfile: state.extra as UserProfileModel),
-        ),
-      ),
-
-      // Trader Edit Profile View Route
-      GoRoute(
-        path: EndPoints.editTraderProfileView,
-        name: 'Trader Edit Profile',
-        pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, EditProfileView()),
-      ),
-
-      // Environmental Impact View Route
-      GoRoute(
-        path: EndPoints.environmentalImpactView,
-        name: 'Environmental Impact',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
-          state.pageKey,
-          EnvironmentalImpactView(),
-        ),
-      ),
-
-      // Calculator View Route
-      GoRoute(
-        path: EndPoints.calculatorView,
-        name: 'Calculator',
-        pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, CalculatorView()),
-      ),
-
-      // Representative Shipment Details View Route
       GoRoute(
         path: EndPoints.representativeShipmentDetailsView,
         name: 'Representative Shipment Details',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
           state.pageKey,
           RepresentativeShipmentDetailsView(
             shipment: state.extra as SingleShipmentModel,
@@ -245,23 +224,36 @@ class AppRouter {
         ),
       ),
 
-      // Representative Shipment Review View Route
+      // ============================================================
+      // Edit Screens - Modal Style
+      // ============================================================
       GoRoute(
-        path: EndPoints.representativeShipmentReviewView,
-        name: 'Representative Shipment Review',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        path: EndPoints.shipmentEditView,
+        name: 'ShipmentEdit',
+        pageBuilder: (context, state) => AppTransitions.fadeForModal(
           state.pageKey,
-          RepresentativeShipmentReviewView(
-            shipment: state.extra as SingleShipmentModel,
-          ),
+          ShipmentEditView(shipment: state.extra as SingleShipmentModel),
         ),
       ),
 
-      // Representative Shipment Edit View Route
+      GoRoute(
+        path: EndPoints.editProfileView,
+        name: 'Edit Profile',
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForModal(state.pageKey, EditProfileView()),
+      ),
+
+      GoRoute(
+        path: EndPoints.editTraderProfileView,
+        name: 'Trader Edit Profile',
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForModal(state.pageKey, EditProfileView()),
+      ),
+
       GoRoute(
         path: EndPoints.representativeShipmentEditView,
         name: 'Representative Shipment Edit',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        pageBuilder: (context, state) => AppTransitions.fadeForModal(
           state.pageKey,
           RepresentativeShipmentEditView(
             shipment: state.extra as SingleShipmentModel,
@@ -269,36 +261,57 @@ class AppRouter {
         ),
       ),
 
-      // Forget Password View Route
+      // ============================================================
+      // Profile Views - Smooth Fade
+      // ============================================================
       GoRoute(
-        path: EndPoints.forgetPasswordView,
-        name: 'Forget Password',
-        pageBuilder: (context, state) =>
-            AppTransitions.ultraSmooth(state.pageKey, ForgetPasswordView()),
-      ),
-
-      // Verify Reset OTP View Route
-      GoRoute(
-        path: EndPoints.verifyResetOtpView,
-        name: 'Verify Reset OTP',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        path: EndPoints.representativeProfileView,
+        name: 'Representative Profile',
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
-          VerifyResetOtpView(email: state.extra as String),
+          RepresentativeProfileView(
+            userProfile: state.extra as UserProfileModel,
+          ),
         ),
       ),
 
-      // Reset Password View Route
       GoRoute(
-        path: EndPoints.resetPasswordView,
-        name: 'Reset Password',
-        pageBuilder: (context, state) => AppTransitions.ultraSmooth(
+        path: EndPoints.traderProfileView,
+        name: 'Trader Profile',
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
           state.pageKey,
-          ResetPasswordView(token: state.extra as String),
+          TraderProfileView(userProfile: state.extra as UserProfileModel),
+        ),
+      ),
+
+      // ============================================================
+      // Review Screens - Details Transition
+      // ============================================================
+      GoRoute(
+        path: EndPoints.representativeShipmentReviewView,
+        name: 'Representative Shipment Review',
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
+          state.pageKey,
+          RepresentativeShipmentReviewView(
+            shipment: state.extra as SingleShipmentModel,
+          ),
+        ),
+      ),
+
+      // ============================================================
+      // Environmental Impact - Main Style
+      // ============================================================
+      GoRoute(
+        path: EndPoints.environmentalImpactView,
+        name: 'Environmental Impact',
+        pageBuilder: (context, state) => AppTransitions.fadeForMain(
+          state.pageKey,
+          EnvironmentalImpactView(),
         ),
       ),
     ],
 
-    // Custom error page
+    // Custom error page with smooth fade
     errorBuilder: (context, state) => Scaffold(
       body: Center(
         child: Column(
@@ -309,10 +322,11 @@ class AppRouter {
             Text(
               'Page not found: ${state.uri.toString()}',
               style: const TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => context.go(EndPoints.splashView),
+              onPressed: () => context.go(EndPoints.homeView),
               child: const Text('Go Home'),
             ),
           ],
