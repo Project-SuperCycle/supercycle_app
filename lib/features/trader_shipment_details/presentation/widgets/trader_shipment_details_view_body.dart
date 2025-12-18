@@ -12,6 +12,7 @@ import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_details_notes.dart';
+import 'package:supercycle/features/trader_shipment_details/presentation/widgets/shipment_weight_reports_section.dart';
 import 'package:supercycle/features/trader_shipment_details/presentation/widgets/trader_shipment_details_content.dart';
 import 'package:supercycle/features/trader_shipment_details/presentation/widgets/trader_shipment_details_header.dart';
 import 'package:supercycle/features/trader_shipment_details/presentation/widgets/trader_shipment_details_settings_icon.dart';
@@ -29,7 +30,9 @@ class TraderShipmentDetailsViewBody extends StatefulWidget {
 class _TraderShipmentDetailsViewBodyState
     extends State<TraderShipmentDetailsViewBody> {
   bool isShipmentDetailsExpanded = false;
+  bool isInspectedItemsExpanded = false;
   bool isClientDataExpanded = false;
+  bool isWeightReportsExpanded = false;
 
   int _page = 3;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
@@ -102,40 +105,49 @@ class _TraderShipmentDetailsViewBodyState
                             : SizedBox.shrink(),
 
                         const SizedBox(height: 20),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'بياناتي',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isClientDataExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleClientData,
-                            content: ClientDataContent(
-                              trader: widget.shipment.trader!,
+
+                        // Column(
+                        //   children: [
+                        //     Container(
+                        //       clipBehavior: Clip.antiAliasWithSaveLayer,
+                        //       decoration: BoxDecoration(
+                        //         borderRadius: BorderRadius.circular(8),
+                        //       ),
+                        //       child: ExpandableSection(
+                        //         title: 'بياناتي',
+                        //         iconPath: AppAssets.entityCard,
+                        //         isExpanded: isClientDataExpanded,
+                        //         maxHeight: 320,
+                        //         onTap: _toggleClientData,
+                        //         content: ClientDataContent(
+                        //           trader: widget.shipment.trader!,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(height: 20),
+                        //   ],
+                        // ),
+                        Column(
+                          children: [
+                            Container(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ExpandableSection(
+                                title: 'تفاصيل الشحنة',
+                                iconPath: AppAssets.boxPerspective,
+                                isExpanded: isShipmentDetailsExpanded,
+                                maxHeight: 320,
+                                onTap: _toggleShipmentDetails,
+                                content: TraderShipmentDetailsContent(
+                                  items: widget.shipment.items,
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 20),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'تفاصيل الشحنة',
-                            iconPath: AppAssets.boxPerspective,
-                            isExpanded: isShipmentDetailsExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleShipmentDetails,
-                            content: TraderShipmentDetailsContent(
-                              items: widget.shipment.items,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
                         widget.shipment.inspectedItems.isNotEmpty
                             ? Column(
                                 children: [
@@ -147,15 +159,39 @@ class _TraderShipmentDetailsViewBodyState
                                     child: ExpandableSection(
                                       title: 'الشحنة بعد المعاينة',
                                       iconPath: AppAssets.boxPerspective,
-                                      isExpanded: isShipmentDetailsExpanded,
+                                      isExpanded: isInspectedItemsExpanded,
                                       maxHeight: 320,
-                                      onTap: _toggleShipmentDetails,
+                                      onTap: _toggleInspectedItems,
                                       content: TraderShipmentDetailsContent(
                                         items: widget.shipment.inspectedItems,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 20),
+                                ],
+                              )
+                            : SizedBox.shrink(),
+                        (widget.shipment.status == "delivered" ||
+                                widget.shipment.status == "complete_weighted")
+                            ? Column(
+                                children: [
+                                  Container(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: ExpandableSection(
+                                      title: 'تقارير الوزنة',
+                                      iconPath: AppAssets.boxPerspective,
+                                      isExpanded: isWeightReportsExpanded,
+                                      maxHeight: 320,
+                                      onTap: _toggleWeightReports,
+                                      content: ShipmentWeightReportsSection(
+                                        segments: widget.shipment.segments,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
                                 ],
                               )
                             : SizedBox.shrink(),
@@ -214,9 +250,21 @@ class _TraderShipmentDetailsViewBodyState
     });
   }
 
+  void _toggleInspectedItems() {
+    setState(() {
+      isInspectedItemsExpanded = !isInspectedItemsExpanded;
+    });
+  }
+
   void _toggleClientData() {
     setState(() {
       isClientDataExpanded = !isClientDataExpanded;
+    });
+  }
+
+  void _toggleWeightReports() {
+    setState(() {
+      isWeightReportsExpanded = !isWeightReportsExpanded;
     });
   }
 
