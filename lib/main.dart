@@ -138,8 +138,6 @@ void main() async {
             final cubit = TodayShipmentsCubit(
               homeRepo: getIt.get<HomeRepoImp>(),
             );
-            // Call methods once when app starts
-            cubit.fetchTodayShipments();
             return cubit;
           },
         ),
