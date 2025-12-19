@@ -19,21 +19,13 @@ class TraderProfileViewBody extends StatefulWidget {
 
 class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
   int currentPage = 0;
-  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentsHistory(page: 1);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   List<Widget> _getPages() {
@@ -44,58 +36,78 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
     ];
   }
 
+  void _onPageChanged(int index) {
+    setState(() {
+      currentPage = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       drawer: CustomDrawer(isInProfilePage: true),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: TraderProfileHeaderSection(userProfile: widget.userProfile),
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                // Page Indicators
-                TraderProfilePageIndicator(
-                  currentPage: currentPage,
-                  onPageChanged: (index) {
-                    _pageController.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
-              ],
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            // Header Section
+            TraderProfileHeaderSection(userProfile: widget.userProfile),
+
+            const SizedBox(height: 20),
+
+            // Page Indicators
+            TraderProfilePageIndicator(
+              currentPage: currentPage,
+              onPageChanged: _onPageChanged,
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height:
-                  MediaQuery.of(context).size.height *
-                  0.6, // ارتفاع مناسب للمحتوى
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-                children: _getPages().map((page) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: page,
-                  );
-                }).toList(),
+
+            const SizedBox(height: 20),
+
+            // Content with swipe gesture (RTL direction)
+            GestureDetector(
+              onHorizontalDragEnd: (details) {
+                // Swipe right (next page in Arabic/RTL)
+                if (details.primaryVelocity! > 0) {
+                  if (currentPage < _getPages().length - 1) {
+                    _onPageChanged(currentPage + 1);
+                  }
+                }
+                // Swipe left (previous page in Arabic/RTL)
+                else if (details.primaryVelocity! < 0) {
+                  if (currentPage > 0) {
+                    _onPageChanged(currentPage - 1);
+                  }
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(-0.1, 0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: child,
+                          ),
+                        );
+                      },
+                  child: KeyedSubtree(
+                    key: ValueKey<int>(currentPage),
+                    child: _getPages()[currentPage],
+                  ),
+                ),
               ),
             ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 40)),
-        ],
+
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }

@@ -554,7 +554,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                               const SizedBox(width: 8),
                               Text(
                                 'الكمية',
-                                style: AppStyles.styleSemiBold16(
+                                style: AppStyles.styleSemiBold14(
                                   context,
                                 ).copyWith(color: Colors.grey.shade700),
                               ),
@@ -568,16 +568,14 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                                 : 140,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withAlpha(150),
                                 width: 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.primaryColor.withOpacity(
-                                    0.1,
-                                  ),
+                                  color: AppColors.primaryColor.withAlpha(50),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -594,7 +592,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                                 isDense: true,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 12,
-                                  vertical: 14,
+                                  vertical: 8,
                                 ),
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
@@ -637,8 +635,8 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'متوسط السعر',
-                                style: AppStyles.styleSemiBold16(
+                                'السعر',
+                                style: AppStyles.styleSemiBold14(
                                   context,
                                 ).copyWith(color: Colors.grey.shade700),
                               ),
@@ -652,11 +650,11 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                                 : 140,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,
-                              vertical: 14,
+                              vertical: 8,
                             ),
                             decoration: BoxDecoration(
                               color: Colors.green.shade50,
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: Colors.green.shade200,
                                 width: 1.5,
@@ -665,7 +663,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                             child: Center(
                               child: Text(
                                 averagePrice,
-                                style: AppStyles.styleBold16(
+                                style: AppStyles.styleBold14(
                                   context,
                                 ).copyWith(color: Colors.green.shade700),
                               ),

@@ -43,7 +43,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
     super.initState();
     _initializeController();
     _setInitialTypeName();
-
     // Defer the initial price calculation to avoid calling callbacks during build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -65,7 +64,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
   void _setInitialTypeName() {
     // Get available type options
     final typeOptions = _getTypeOptions();
-
     // Set initial type name if product has a name and it exists in options
     if (widget.product.name.isNotEmpty &&
         typeOptions.contains(widget.product.name)) {
@@ -97,11 +95,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _onTypeChanged(String? value) {
     if (value == null || !mounted || _isUpdating) return;
-
     setState(() {
       selectedTypeName = value;
     });
-
     _calculateAndUpdateAveragePrice();
     _safeUpdateProduct(widget.product.copyWith(name: value));
   }
@@ -111,9 +107,18 @@ class _EditableProductCardState extends State<EditableProductCard> {
     _safeUpdateProduct(widget.product.copyWith(unit: value));
   }
 
+  void _clearQuantity() {
+    quantityController.clear();
+    if (mounted) {
+      setState(() {
+        averagePrice = '0.00';
+      });
+    }
+    _safeUpdateProduct(widget.product.copyWith(quantity: 0));
+  }
+
   void _calculateAndUpdateAveragePrice() {
     if (!mounted || _isUpdating) return;
-
     final quantityText = quantityController.text;
     if (quantityText.isEmpty || selectedTypeName == null) {
       if (mounted) {
@@ -142,7 +147,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _safeUpdateProduct(DoshItemModel updatedProduct) {
     if (_isUpdating || _isInitializing || !mounted) return;
-
     _isUpdating = true;
     // Use Future.microtask to defer the callback
     Future.microtask(() {
@@ -155,7 +159,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _safeDeleteProduct() {
     if (_isUpdating || !mounted) return;
-
     _isUpdating = true;
     // Use Future.microtask to defer the callback
     Future.microtask(() {
@@ -173,7 +176,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
           .where((name) => name.isNotEmpty) // Filter out empty names
           .toSet() // Remove duplicates
           .toList();
-
       // Sort the list for consistency
       typesList.sort();
       return typesList;
@@ -203,24 +205,20 @@ class _EditableProductCardState extends State<EditableProductCard> {
   String? _getValidTypeInitialValue() {
     final options = _getTypeOptions();
     if (options.isEmpty) return null;
-
     // Return selectedTypeName only if it exists in options
     if (selectedTypeName != null && options.contains(selectedTypeName)) {
       return selectedTypeName;
     }
-
     return null;
   }
 
   // Helper method to get valid initial value for unit dropdown
   String _getValidUnitInitialValue() {
     final options = _getUnitOptions();
-
     // Return widget.product.unit only if it exists in options
     if (options.contains(widget.product.unit)) {
       return widget.product.unit ?? "";
     }
-
     // Default to first unit if current unit is invalid
     return options.first;
   }
@@ -237,7 +235,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
           children: [
             _buildTypeSelection(context),
             const SizedBox(height: 16),
-            _buildQuantityAndUnitRow(context),
+            _buildQuantitySection(context),
             const SizedBox(height: 16),
             _buildAveragePriceRow(context),
             const SizedBox(height: 10),
@@ -268,13 +266,46 @@ class _EditableProductCardState extends State<EditableProductCard> {
     );
   }
 
-  Widget _buildQuantityAndUnitRow(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(flex: 2, child: _buildQuantityField(context)),
-        const SizedBox(width: 12),
-        Expanded(flex: 2, child: _buildUnitDropdown(context)),
-      ],
+  Widget _buildQuantitySection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.primaryColor.withOpacity(0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.inventory_2_outlined,
+                size: 20,
+                color: AppColors.primaryColor,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "أدخل الكمية",
+                style: AppStyles.styleSemiBold14(
+                  context,
+                ).copyWith(color: AppColors.primaryColor),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(flex: 3, child: _buildQuantityField(context)),
+              const SizedBox(width: 12),
+              Expanded(flex: 2, child: _buildUnitDropdown(context)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -286,6 +317,13 @@ class _EditableProductCardState extends State<EditableProductCard> {
       ),
       labelText: "الكمية",
       controller: quantityController,
+      suffixIcon: quantityController.text.isNotEmpty
+          ? IconButton(
+              icon: Icon(Icons.clear, color: Colors.grey[600], size: 20),
+              onPressed: _clearQuantity,
+              tooltip: "مسح الكمية",
+            )
+          : null,
     );
   }
 
@@ -299,25 +337,35 @@ class _EditableProductCardState extends State<EditableProductCard> {
   }
 
   Widget _buildAveragePriceRow(BuildContext context) {
-    return Row(
-      children: [
-        Text("متوسط السعر:", style: AppStyles.styleMedium14(context)),
-        const SizedBox(width: 12),
-        Text(
-          averagePrice,
-          style: AppStyles.styleMedium14(context).copyWith(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("متوسط السعر:", style: AppStyles.styleMedium14(context)),
+          Row(
+            children: [
+              Text(
+                averagePrice,
+                style: AppStyles.styleSemiBold16(
+                  context,
+                ).copyWith(color: AppColors.primaryColor),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                "جنيه",
+                style: AppStyles.styleMedium12(
+                  context,
+                ).copyWith(color: Colors.grey[600]),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          "جنيه",
-          style: AppStyles.styleMedium12(
-            context,
-          ).copyWith(color: Colors.grey[600]),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
