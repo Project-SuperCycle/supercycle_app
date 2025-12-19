@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/functions/navigate_to_profile.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/services/user_profile_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
@@ -64,7 +64,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
     }
   }
 
-  void _handleProfileTap() {
+  void _handleProfileTap() async {
     if (_isNavigating) return;
 
     setState(() {
@@ -72,7 +72,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
     });
 
     if (user != null) {
-      navigateToProfile(context);
+      await UserProfileService.navigateToProfileCached(context);
     } else {
       context.push(EndPoints.signInView);
     }

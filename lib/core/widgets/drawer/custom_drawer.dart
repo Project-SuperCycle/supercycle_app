@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/core/functions/navigate_to_profile.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/services/user_profile_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/drawer/user_info_list_tile.dart';
@@ -142,23 +144,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     },
                   ),
 
-                  _buildDrawerItem(
-                    icon: Icons.person_rounded,
-                    title: 'الملف الشخصي',
-                    isActive:
-                        currentLocation ==
-                            EndPoints.representativeProfileView ||
-                        currentLocation == EndPoints.editProfileView,
-                    onTap: () async {
-                      Navigator.pop(context);
-                      if (user == null) {
-                        context.push(EndPoints.signInView);
-                      } else {
-                        navigateToProfile(context);
-                      }
-                    },
-                  ),
-
+                  // _buildDrawerItem(
+                  //   icon: Icons.person_rounded,
+                  //   title: 'الملف الشخصي',
+                  //   isActive:
+                  //       currentLocation ==
+                  //           EndPoints.representativeProfileView ||
+                  //       currentLocation == EndPoints.editProfileView,
+                  //   onTap: () async {
+                  //     Navigator.pop(context);
+                  //     if (user == null) {
+                  //       context.push(EndPoints.signInView);
+                  //     } else {
+                  //       await UserProfileService.navigateToProfileCached(
+                  //         context,
+                  //       );
+                  //     }
+                  //   },
+                  // ),
                   _buildDrawerItem(
                     icon: Icons.calendar_today_rounded,
                     title: 'جدول الشحنات',
@@ -204,28 +207,27 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ),
                     ),
 
-                  _buildDrawerItem(
-                    icon: Icons.notifications_rounded,
-                    title: 'الإشعارات',
-                    isActive: false,
-                    onTap: () {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text(
-                            'صفحة الإشعارات قريباً',
-                            textAlign: TextAlign.center,
-                          ),
-                          backgroundColor: const Color(0xFF10B981),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-
+                  // _buildDrawerItem(
+                  //   icon: Icons.notifications_rounded,
+                  //   title: 'الإشعارات',
+                  //   isActive: false,
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       SnackBar(
+                  //         content: const Text(
+                  //           'صفحة الإشعارات قريباً',
+                  //           textAlign: TextAlign.center,
+                  //         ),
+                  //         backgroundColor: const Color(0xFF10B981),
+                  //         behavior: SnackBarBehavior.floating,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                   _buildDrawerItem(
                     icon: Icons.support_agent_rounded,
                     title: 'الدعم والمساعدة',

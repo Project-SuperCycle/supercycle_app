@@ -8,6 +8,7 @@ import 'package:supercycle/core/services/api_services.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/social_auth_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/services/user_profile_services.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 import 'package:supercycle/features/sign_in/data/models/signin_credentials_model.dart';
 import 'package:supercycle/features/sign_in/data/repos/signin_repo.dart';
@@ -161,7 +162,7 @@ class SignInRepoImp implements SignInRepo {
     // 1. حفظ في Storage
     await StorageServices.storeData('user', user.toJson());
     await StorageServices.storeData('token', token);
-
+    await UserProfileService.fetchAndStoreUserProfile();
     // 2. تحديث حالة المصادقة في AuthManager
     await _authManager.onLoginSuccess();
   }
