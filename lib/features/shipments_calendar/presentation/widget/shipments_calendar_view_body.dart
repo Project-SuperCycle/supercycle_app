@@ -27,40 +27,15 @@ class ShipmentsCalendarViewBody extends StatefulWidget {
 
 class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   DateTime _currentDate = DateTime.now();
   DateTime? _selectedDate;
-
   List<ShipmentModel> shipments = [];
-  List<ShipmentModel> allShipments = [];
-  int currentPage = 1;
-  bool hasMoreData = true;
-  bool isLoadingMore = false;
   String? userRole;
-
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     loadUserCalender();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      if (!isLoadingMore && hasMoreData) {
-        _loadMoreShipments();
-      }
-    }
   }
 
   void loadUserCalender() async {
@@ -70,41 +45,40 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
       setState(() {
         userRole = user.role;
       });
-      _fetchShipments(currentPage);
+      _fetchShipmentsForMonth(_currentDate);
     }
   }
 
-  void _fetchShipments(int page) {
+  void _fetchShipmentsForMonth(DateTime date) {
+    // حساب أول يوم في الشهر
+    final firstDayOfMonth = DateTime(date.year, date.month, 1);
+
+    // حساب آخر يوم في الشهر
+    final lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+
+    // تنسيق التواريخ بصيغة مناسبة (مثلاً: yyyy-MM-dd)
+    final fromDate =
+        "${firstDayOfMonth.year}-${firstDayOfMonth.month.toString().padLeft(2, '0')}-${firstDayOfMonth.day.toString().padLeft(2, '0')}";
+    final toDate =
+        "${lastDayOfMonth.year}-${lastDayOfMonth.month.toString().padLeft(2, '0')}-${lastDayOfMonth.day.toString().padLeft(2, '0')}";
+
+    final query = {"from": fromDate, "to": toDate};
+
+    Logger().d("Fetching shipments for month: $fromDate to $toDate");
+
     if (userRole == "representative") {
       BlocProvider.of<ShipmentsCalendarCubit>(
         context,
-      ).getAllRepShipments(query: {"page": page.toString()});
+      ).getAllRepShipments(query: query);
     } else {
       BlocProvider.of<ShipmentsCalendarCubit>(
         context,
-      ).getAllShipments(query: {"page": page.toString()});
-    }
-  }
-
-  void _loadMoreShipments() {
-    if (!isLoadingMore && hasMoreData) {
-      setState(() {
-        isLoadingMore = true;
-        currentPage++;
-      });
-      _fetchShipments(currentPage);
+      ).getAllShipments(query: query);
     }
   }
 
   void _refreshShipments() {
-    setState(() {
-      currentPage = 1;
-      allShipments = [];
-      shipments = [];
-      hasMoreData = true;
-      isLoadingMore = false;
-    });
-    _fetchShipments(currentPage);
+    _fetchShipmentsForMonth(_currentDate);
   }
 
   static const String _imageUrl =
@@ -133,62 +107,24 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                       listener: (context, state) {
                         if (state is GetAllShipmentsSuccess) {
                           setState(() {
-                            if (currentPage == 1) {
-                              allShipments = state.shipments;
-                            } else {
-                              allShipments.addAll(state.shipments);
-                            }
-                            shipments = allShipments;
-                            isLoadingMore = false;
-                            hasMoreData = state.shipments.length >= 10;
+                            shipments = state.shipments;
                           });
                         }
                         if (state is GetAllShipmentsFailure) {
                           setState(() {
-                            isLoadingMore = false;
-                            if (currentPage == 1) {
-                              shipments = [];
-                              allShipments = [];
-                            }
+                            shipments = [];
                           });
                           Logger().e(state.errorMessage);
                         }
                       },
                       builder: (context, state) {
-                        if (state is GetAllShipmentsLoading &&
-                            shipments.isEmpty) {
-                          return const Center(
-                            child: CustomLoadingIndicator(color: Colors.white),
-                          );
-                        }
-                        if (state is GetAllShipmentsFailure &&
-                            shipments.isEmpty) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  state.errorMessage,
-                                  style: AppStyles.styleMedium18(
-                                    context,
-                                  ).copyWith(color: Colors.red),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 16),
-                                ElevatedButton.icon(
-                                  onPressed: _refreshShipments,
-                                  icon: const Icon(Icons.refresh),
-                                  label: const Text('إعادة المحاولة'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: const Color(0xFF10B981),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                        return _buildMainContent(shipments: shipments);
+                        return _buildMainContent(
+                          shipments: shipments,
+                          isLoading: state is GetAllShipmentsLoading,
+                          errorMessage: state is GetAllShipmentsFailure
+                              ? state.errorMessage
+                              : null,
+                        );
                       },
                       buildWhen: (previous, current) =>
                           current is GetAllShipmentsSuccess ||
@@ -203,7 +139,11 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
     );
   }
 
-  Widget _buildMainContent({required List<ShipmentModel> shipments}) {
+  Widget _buildMainContent({
+    required List<ShipmentModel> shipments,
+    required bool isLoading,
+    String? errorMessage,
+  }) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       decoration: const BoxDecoration(
@@ -223,61 +163,73 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
             _refreshShipments();
           },
           child: SingleChildScrollView(
-            controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(32),
             child: Column(
               children: [
                 ShipmentsCalenderTitle(),
                 const SizedBox(height: 20),
-                ShipmentsCalendarHeader(
-                  currentDate: _currentDate,
-                  onPreviousMonth: _navigateToPreviousMonth,
-                  onNextMonth: _navigateToNextMonth,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  height: 320,
-                  child: ShipmentsCalendarGrid(
-                    shipments: shipments,
-                    currentDate: _currentDate,
-                    selectedDate: _selectedDate,
-                    onDateSelected: _onDateSelected,
-                  ),
-                ),
-                if (_selectedDate != null)
-                  ShipmentsCalendarDetails(
-                    shipments: shipments,
-                    selectedDate: _selectedDate!,
-                    imageUrl: _imageUrl,
-                  ),
-                const SizedBox(height: 20),
-                if (isLoadingMore)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: CustomLoadingIndicator(),
-                  ),
-                if (!hasMoreData && shipments.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: Colors.green[600],
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'تم تحميل جميع الشحنات',
-                          style: AppStyles.styleMedium14(
-                            context,
-                          ).copyWith(color: Colors.green[600]),
-                        ),
-                      ],
+
+                // Show loading or error or content
+                if (isLoading)
+                  const SizedBox(
+                    height: 400,
+                    child: Center(child: CustomLoadingIndicator()),
+                  )
+                else if (errorMessage != null)
+                  SizedBox(
+                    height: 400,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            errorMessage,
+                            style: AppStyles.styleMedium18(
+                              context,
+                            ).copyWith(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            onPressed: _refreshShipments,
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('إعادة المحاولة'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF10B981),
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  )
+                else
+                  Column(
+                    children: [
+                      ShipmentsCalendarHeader(
+                        currentDate: _currentDate,
+                        onPreviousMonth: _navigateToPreviousMonth,
+                        onNextMonth: _navigateToNextMonth,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        height: 320,
+                        child: ShipmentsCalendarGrid(
+                          shipments: shipments,
+                          currentDate: _currentDate,
+                          selectedDate: _selectedDate,
+                          onDateSelected: _onDateSelected,
+                        ),
+                      ),
+                      if (_selectedDate != null)
+                        ShipmentsCalendarDetails(
+                          shipments: shipments,
+                          selectedDate: _selectedDate!,
+                          imageUrl: _imageUrl,
+                        ),
+                    ],
                   ),
               ],
             ),
@@ -292,6 +244,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
       _currentDate = CalendarUtils.getPreviousMonth(_currentDate);
       _selectedDate = null;
     });
+    _fetchShipmentsForMonth(_currentDate);
   }
 
   void _navigateToNextMonth() {
@@ -299,6 +252,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
       _currentDate = CalendarUtils.getNextMonth(_currentDate);
       _selectedDate = null;
     });
+    _fetchShipmentsForMonth(_currentDate);
   }
 
   void _onDateSelected(DateTime date) {

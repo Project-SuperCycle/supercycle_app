@@ -45,6 +45,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   void initState() {
     super.initState();
     _loadSavedStates();
+    Logger().d("SEGMENT ${widget.segment}");
   }
 
   /// Load saved states from SharedPreferences
@@ -149,8 +150,8 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         child: Column(
           children: [
             SegmentCardHeader(
-              driverName: widget.segment.driverName!,
-              phoneNumber: widget.segment.driverPhone!,
+              driverName: widget.segment.driverName ?? "",
+              phoneNumber: widget.segment.driverPhone ?? "",
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
