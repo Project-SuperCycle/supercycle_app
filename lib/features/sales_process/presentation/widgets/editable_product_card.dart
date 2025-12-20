@@ -32,18 +32,12 @@ class _EditableProductCardState extends State<EditableProductCard> {
   bool _isInitializing = true;
   bool _isUpdating = false;
 
-  static const EdgeInsets _cardPadding = EdgeInsets.symmetric(
-    horizontal: 12.0,
-    vertical: 8.0,
-  );
-  static const EdgeInsets _cardMargin = EdgeInsets.only(bottom: 12);
-
   @override
   void initState() {
     super.initState();
     _initializeController();
     _setInitialTypeName();
-    // Defer the initial price calculation to avoid calling callbacks during build
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _calculateAndUpdateAveragePrice();
@@ -62,16 +56,14 @@ class _EditableProductCardState extends State<EditableProductCard> {
   }
 
   void _setInitialTypeName() {
-    // Get available type options
     final typeOptions = _getTypeOptions();
-    // Set initial type name if product has a name and it exists in options
+
     if (widget.product.name.isNotEmpty &&
         typeOptions.contains(widget.product.name)) {
       selectedTypeName = widget.product.name;
     } else if (typeOptions.isNotEmpty && widget.product.name.isNotEmpty) {
-      // If the product name doesn't exist in options, try to find a similar one
       final similarType = typeOptions.firstWhere(
-        (type) =>
+            (type) =>
             type.toLowerCase().contains(widget.product.name.toLowerCase()),
         orElse: () => typeOptions.first,
       );
@@ -139,7 +131,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
       });
     }
 
-    // Only update if not initializing and quantity actually changed
     if (!_isInitializing && quantity != widget.product.quantity) {
       _safeUpdateProduct(widget.product.copyWith(quantity: quantity));
     }
@@ -148,7 +139,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
   void _safeUpdateProduct(DoshItemModel updatedProduct) {
     if (_isUpdating || _isInitializing || !mounted) return;
     _isUpdating = true;
-    // Use Future.microtask to defer the callback
     Future.microtask(() {
       if (mounted) {
         widget.onProductUpdated(updatedProduct);
@@ -160,7 +150,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
   void _safeDeleteProduct() {
     if (_isUpdating || !mounted) return;
     _isUpdating = true;
-    // Use Future.microtask to defer the callback
     Future.microtask(() {
       if (mounted) {
         widget.onProductDeleted();
@@ -173,10 +162,10 @@ class _EditableProductCardState extends State<EditableProductCard> {
     try {
       var typesList = getIt<DoshTypesManager>().typesList
           .map((type) => type.name)
-          .where((name) => name.isNotEmpty) // Filter out empty names
-          .toSet() // Remove duplicates
+          .where((name) => name.isNotEmpty)
+          .toSet()
           .toList();
-      // Sort the list for consistency
+
       typesList.sort();
       return typesList;
     } catch (e) {
@@ -201,223 +190,356 @@ class _EditableProductCardState extends State<EditableProductCard> {
     return [Unit.kg.abbreviation, Unit.ton.abbreviation];
   }
 
-  // Helper method to get valid initial value for type dropdown
   String? _getValidTypeInitialValue() {
     final options = _getTypeOptions();
     if (options.isEmpty) return null;
-    // Return selectedTypeName only if it exists in options
+
     if (selectedTypeName != null && options.contains(selectedTypeName)) {
       return selectedTypeName;
     }
     return null;
   }
 
-  // Helper method to get valid initial value for unit dropdown
   String _getValidUnitInitialValue() {
     final options = _getUnitOptions();
-    // Return widget.product.unit only if it exists in options
+
     if (options.contains(widget.product.unit)) {
       return widget.product.unit ?? "";
     }
-    // Default to first unit if current unit is invalid
+
     return options.first;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: _cardMargin,
-      color: Colors.transparent,
-      elevation: 0,
-      child: Padding(
-        padding: _cardPadding,
-        child: Column(
-          children: [
-            _buildTypeSelection(context),
-            const SizedBox(height: 16),
-            _buildQuantitySection(context),
-            const SizedBox(height: 16),
-            _buildAveragePriceRow(context),
-            const SizedBox(height: 10),
-            _buildDivider(),
-            _buildDeleteButton(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTypeSelection(BuildContext context) {
-    return Row(
-      children: [
-        Text("نوع المنتج:", style: AppStyles.styleMedium14(context)),
-        const SizedBox(width: 20),
-        Expanded(
-          child: CustomDropdown(
-            showBorder: false,
-            options: _getTypeOptions(),
-            onChanged: _onTypeChanged,
-            hintText: S.of(context).select_type,
-            initialValue:
-                _getValidTypeInitialValue(), // Use validated initial value
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuantitySection(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.primaryColor.withOpacity(0.2),
-          width: 1.5,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.inventory_2_outlined,
-                size: 20,
-                color: AppColors.primaryColor,
+          // Header with delete button
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.05),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
-              const SizedBox(width: 8),
-              Text(
-                "أدخل الكمية",
-                style: AppStyles.styleSemiBold14(
-                  context,
-                ).copyWith(color: AppColors.primaryColor),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(flex: 3, child: _buildQuantityField(context)),
-              const SizedBox(width: 12),
-              Expanded(flex: 2, child: _buildUnitDropdown(context)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuantityField(BuildContext context) {
-    return CustomTextFormField(
-      keyboardType: const TextInputType.numberWithOptions(
-        signed: false,
-        decimal: true,
-      ),
-      labelText: "الكمية",
-      controller: quantityController,
-      suffixIcon: quantityController.text.isNotEmpty
-          ? IconButton(
-              icon: Icon(Icons.clear, color: Colors.grey[600], size: 20),
-              onPressed: _clearQuantity,
-              tooltip: "مسح الكمية",
-            )
-          : null,
-    );
-  }
-
-  Widget _buildUnitDropdown(BuildContext context) {
-    return CustomDropdown(
-      showBorder: false,
-      initialValue: _getValidUnitInitialValue(), // Use validated initial value
-      options: _getUnitOptions(),
-      onChanged: _onUnitChanged,
-    );
-  }
-
-  Widget _buildAveragePriceRow(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("متوسط السعر:", style: AppStyles.styleMedium14(context)),
-          Row(
-            children: [
-              Text(
-                averagePrice,
-                style: AppStyles.styleSemiBold16(
-                  context,
-                ).copyWith(color: AppColors.primaryColor),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                "جنيه",
-                style: AppStyles.styleMedium12(
-                  context,
-                ).copyWith(color: Colors.grey[600]),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Divider(
-      indent: 5,
-      endIndent: 5,
-      thickness: 2,
-      color: Colors.grey.withOpacity(0.3),
-    );
-  }
-
-  Widget _buildDeleteButton(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        InkWell(
-          onTap: _safeDeleteProduct,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
             ),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildDeleteIcon(),
-                const SizedBox(width: 5),
-                Text(
-                  S.of(context).close,
-                  style: AppStyles.styleMedium12(
-                    context,
-                  ).copyWith(color: Colors.grey[700]),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.inventory_2_outlined,
+                        color: AppColors.primaryColor,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      "تفاصيل المنتج",
+                      style: AppStyles.styleMedium14(context).copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  onPressed: _safeDeleteProduct,
+                  icon: const Icon(Icons.delete_outline),
+                  color: Colors.red,
+                  iconSize: 22,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
               ],
             ),
           ),
+
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // Type Selection
+                _buildModernTypeSelection(context),
+                const SizedBox(height: 16),
+
+                // Quantity and Unit
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: _buildQuantityField(context),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: _buildUnitDropdown(context),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // Price Display
+                _buildModernPriceDisplay(context),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernTypeSelection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8, right: 4),
+          child: Text(
+            "نوع المنتج",
+            style: AppStyles.styleMedium12(context).copyWith(
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        CustomDropdown(
+          showBorder: true,
+          options: _getTypeOptions(),
+          onChanged: _onTypeChanged,
+          hintText: S.of(context).select_type,
+          initialValue: _getValidTypeInitialValue(),
         ),
       ],
     );
   }
 
-  Widget _buildDeleteIcon() {
-    return Container(
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        color: Colors.red.withAlpha(50),
-        borderRadius: BorderRadius.circular(50),
-        border: Border.all(color: Colors.red.withAlpha(150), width: 1),
+  Widget _buildQuantityField(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8, right: 4),
+          child: Text(
+            "الكمية",
+            style: AppStyles.styleMedium12(context).copyWith(
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.grey[300]!,
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            children: [
+              // Decrease button
+              _buildQuantityButton(
+                icon: Icons.remove,
+                onTap: () {
+                  final currentValue = double.tryParse(quantityController.text) ?? 0;
+                  if (currentValue > 0) {
+                    final newValue = currentValue - 1;
+                    quantityController.text = newValue == 0 ? '' : newValue.toString();
+                  }
+                },
+                color: Colors.red,
+              ),
+
+              // Text field
+              Expanded(
+                child: TextField(
+                  controller: quantityController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    signed: false,
+                    decimal: true,
+                  ),
+                  textAlign: TextAlign.center,
+                  style: AppStyles.styleMedium14(context).copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: '0',
+                    hintStyle: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Increase button
+              _buildQuantityButton(
+                icon: Icons.add,
+                onTap: () {
+                  final currentValue = double.tryParse(quantityController.text) ?? 0;
+                  final newValue = currentValue + 1;
+                  quantityController.text = newValue.toString();
+                },
+                color: Colors.green,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuantityButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    required Color color,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+        ),
       ),
-      child: const Icon(Icons.close_rounded, size: 16, color: Colors.red),
+    );
+  }
+
+  Widget _buildUnitDropdown(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8, right: 4),
+          child: Text(
+            "الوحدة",
+            style: AppStyles.styleMedium12(context).copyWith(
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        CustomDropdown(
+          showBorder: true,
+          initialValue: _getValidUnitInitialValue(),
+          options: _getUnitOptions(),
+          onChanged: _onUnitChanged,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildModernPriceDisplay(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryColor.withOpacity(0.1),
+            AppColors.primaryColor.withOpacity(0.05),
+          ],
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.primaryColor.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.payments_outlined,
+                  color: AppColors.primaryColor,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "إجمالي السعر",
+                style: AppStyles.styleMedium14(context).copyWith(
+                  color: Colors.grey[700],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                averagePrice,
+                style: AppStyles.styleMedium14(context).copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                "جنيه",
+                style: AppStyles.styleMedium12(context).copyWith(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
