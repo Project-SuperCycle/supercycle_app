@@ -40,6 +40,8 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
   late List<File> images;
   DateTime? selectedDateTime;
 
+  OverlayEntry? _overlayEntry;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +60,8 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
 
   @override
   void dispose() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     addressController.dispose();
     notesController.dispose();
     for (final c in _qtyControllers.values) {
@@ -158,15 +162,71 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    // إزالة أي رسالة سابقة
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+
+    // إنشاء رسالة جديدة
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).padding.top + 20,
+        left: 16,
+        right: 16,
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.error_outline,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    msg,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
+
+    // إضافة الرسالة للـ Overlay
+    Overlay.of(context).insert(_overlayEntry!);
+
+    // إزالة الرسالة بعد 3 ثواني
+    Future.delayed(const Duration(seconds: 3), () {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    });
   }
 
   @override
@@ -595,17 +655,13 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
     return BlocConsumer<CreateShipmentCubit, CreateShipmentState>(
       listener: (context, state) {
         if (state is CreateShipmentSuccess) {
-          // إغلاق Loading Dialog
           Navigator.pop(context);
-          // إغلاق Review Dialog
           Navigator.pop(context);
-          // الانتقال لصفحة التقويم
           GoRouter.of(context).pushReplacement(
             EndPoints.shipmentsCalendarView,
           );
         }
         if (state is CreateShipmentFailure) {
-          // إغلاق Loading Dialog
           Navigator.pop(context);
           _showError(state.errorMessage);
         }

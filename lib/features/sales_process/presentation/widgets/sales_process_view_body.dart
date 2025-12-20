@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -87,117 +85,105 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(gradient: kGradientBackground),
         child: SafeArea(
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              // Header Section (Fixed)
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [const ShipmentLogo(), const SizedBox(height: 20)],
-                ),
-              ),
-              // White Container Content (Scrollable)
-              SliverFillRemaining(
+          child: Column(
+            children: [
+              // Header Section - ثابت في الأعلى
+              _buildHeader(),
+
+              // المحتوى القابل للتمرير
+              Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(35),
+                      topRight: Radius.circular(35),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 20,
+                        offset: const Offset(0, -5),
+                      ),
+                    ],
                   ),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // تمرير قائمة الصور ودالة التحديث للـ Header
-                        SalesProcessShipmentHeader(
-                          selectedImages: selectedImages,
-                          onImagesChanged: _onImagesChanged,
-                          onDateTimeChanged: _onDateTimeChanged,
-                        ),
-                        const SizedBox(height: 20),
-                        const ProgressBar(completedSteps: 0),
-                        const SizedBox(height: 30),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(35),
+                      topRight: Radius.circular(35),
+                    ),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          // Progress Bar
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
+                            child: const ProgressBar(completedSteps: 0),
                           ),
-                          child: ExpandableSection(
-                            title: 'بياناتي',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isClientDataExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleClientData,
-                            content: const ClientDataContent(),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'تفاصيل الشحنة',
-                            iconPath: AppAssets.boxPerspective,
-                            isExpanded: isShipmentDetailsExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleShipmentDetails,
-                            content: EntryShipmentDetailsContent(
-                              products: products,
-                              onProductsChanged: _onProductsChanged,
+
+                          // المحتوى الرئيسي
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 10),
+
+                                // قسم الصور والتاريخ
+                                _buildImageAndDateSection(),
+
+                                const SizedBox(height: 20),
+
+                                // بياناتي
+                                _buildExpandableCard(
+                                  title: 'بياناتي',
+                                  icon: AppAssets.entityCard,
+                                  isExpanded: isClientDataExpanded,
+                                  onTap: _toggleClientData,
+                                  content: const ClientDataContent(),
+                                  maxHeight: 320,
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                // تفاصيل الشحنة
+                                _buildExpandableCard(
+                                  title: 'تفاصيل الشحنة',
+                                  icon: AppAssets.boxPerspective,
+                                  isExpanded: isShipmentDetailsExpanded,
+                                  onTap: _toggleShipmentDetails,
+                                  content: EntryShipmentDetailsContent(
+                                    products: products,
+                                    onProductsChanged: _onProductsChanged,
+                                  ),
+                                  maxHeight: 320,
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                // عنوان الاستلام
+                                _buildAddressSection(),
+
+                                const SizedBox(height: 20),
+
+                                // الملاحظات
+                                _buildNotesCard(),
+
+                                const SizedBox(height: 25),
+
+                                // زر المراجعة
+                                CustomButton(
+                                  onPress: _handleSubmit,
+                                  title: S.of(context).shipment_review,
+                                ),
+
+                                const SizedBox(height: 30),
+                              ],
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 25),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            CustomTextField(
-                              label: "العنوان",
-                              hint: "عنوان الاستلام",
-                              controller: addressController,
-                              keyboardType: TextInputType.text,
-                              icon: Icons.location_on_rounded,
-                              isArabic: true,
-                              enabled: true,
-                              borderColor: Colors.green.shade300,
-                            ),
-                            const SizedBox(height: 6),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0,
-                              ),
-                              child: Text(
-                                "سيتم استلام الشحنة منه",
-                                style: AppStyles.styleSemiBold12(
-                                  context,
-                                ).copyWith(color: AppColors.subTextColor),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 25),
-                        NotesContent(
-                          notes: notes,
-                          shipmentID: "",
-                          onNotesChanged: _onNotesChanged,
-                        ),
-                        const SizedBox(height: 30),
-                        CustomButton(
-                          onPress: () {
-                            _handleSubmit();
-                          },
-                          title: S.of(context).shipment_review,
-                        ),
-                        // مساحة إضافية في النهاية
-                        const SizedBox(height: 40),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -205,6 +191,148 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.only(top: 10, bottom: 20),
+      child: const ShipmentLogo(),
+    );
+  }
+
+  Widget _buildImageAndDateSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey.shade200,
+          width: 1,
+        ),
+      ),
+      child: SalesProcessShipmentHeader(
+        selectedImages: selectedImages,
+        onImagesChanged: _onImagesChanged,
+        onDateTimeChanged: _onDateTimeChanged,
+      ),
+    );
+  }
+
+  Widget _buildExpandableCard({
+    required String title,
+    required String icon,
+    required bool isExpanded,
+    required VoidCallback onTap,
+    required Widget content,
+    required double maxHeight,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isExpanded ? Colors.green.shade200 : Colors.grey.shade200,
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isExpanded
+                ? Colors.green.withOpacity(0.08)
+                : Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ExpandableSection(
+        title: title,
+        iconPath: icon,
+        isExpanded: isExpanded,
+        maxHeight: maxHeight,
+        onTap: onTap,
+        content: content,
+      ),
+    );
+  }
+
+  Widget _buildAddressSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.green.shade200,
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  label: "العنوان",
+                  hint: "عنوان الاستلام",
+                  controller: addressController,
+                  keyboardType: TextInputType.text,
+                  icon: Icons.location_on_rounded,
+                  isArabic: true,
+                  enabled: true,
+                  borderColor: Colors.green.shade300,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: 16,
+                color: AppColors.subTextColor,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                "سيتم استلام الشحنة من هذا العنوان",
+                style: AppStyles.styleSemiBold12(context).copyWith(
+                  color: AppColors.subTextColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotesCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey.shade200,
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: NotesContent(
+        notes: notes,
+        shipmentID: "",
+        onNotesChanged: _onNotesChanged,
       ),
     );
   }
@@ -223,7 +351,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
 
   Future<void> _handleSubmit() async {
     try {
-      // إنشاء الـ shipment object
       CreateShipmentModel shipment = CreateShipmentModel(
         customPickupAddress: _handleAddress(),
         requestedPickupAt: selectedDateTime,
@@ -232,7 +359,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         userNotes: notes.isEmpty ? "" : notes.first,
       );
 
-      // التحقق من صحة البيانات قبل عرض الـ Dialog
       String? validationError = _getValidationError(shipment);
 
       if (validationError != null) {
@@ -240,29 +366,34 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
           SnackBar(
             content: Text(validationError),
             backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             duration: const Duration(seconds: 3),
           ),
         );
         return;
       }
 
-      // عرض الـ Dialog للمراجعة والتعديل
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => ShipmentReviewDialog(
           shipment: shipment,
           onConfirm: () {
-            // يمكن إضافة كود هنا عند التأكيد النهائي
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم تأكيد الشحنة بنجاح'),
+              SnackBar(
+                content: const Text('تم تأكيد الشحنة بنجاح'),
                 backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             );
           },
           onUpdate: (updatedShipment) {
-            // تحديث البيانات في الصفحة الرئيسية
             setState(() {
               selectedDateTime = updatedShipment.requestedPickupAt;
               addressController.text = updatedShipment.customPickupAddress;
@@ -272,9 +403,13 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
             });
 
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم حفظ التعديلات بنجاح'),
+              SnackBar(
+                content: const Text('تم حفظ التعديلات بنجاح'),
                 backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             );
           },
@@ -285,12 +420,15 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         SnackBar(
           content: Text('حدث خطأ: ${e.toString()}'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     }
   }
 
-  // دالة للتحقق من صحة البيانات وإرجاع رسالة الخطأ
   String? _getValidationError(CreateShipmentModel shipment) {
     if (shipment.requestedPickupAt == null || selectedDateTime == null) {
       return "يرجى تحديد تاريخ الاستلام";
@@ -304,12 +442,9 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       return "يرجى إضافة منتجات للشحنة";
     }
 
-    // التحقق من أن جميع المنتجات لها كمية
     if (shipment.items.isNotEmpty) {
       for (int i = 0; i < shipment.items.length; i++) {
         var item = shipment.items[i];
-
-        // التحقق من وجود quantity أو أنها أكبر من صفر
         if (item.quantity <= 0) {
           return "يرجى إدخال الكمية للمنتج رقم ${i + 1}";
         }
@@ -320,10 +455,9 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       return "يرجى إضافة صور للشحنة";
     }
 
-    return null; // لا توجد أخطاء
+    return null;
   }
 
-  // دالة للتحقق من صحة البيانات
   bool _validateShipmentData(CreateShipmentModel shipment) {
     if (shipment.requestedPickupAt == null || selectedDateTime == null) {
       return false;
