@@ -166,7 +166,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     icon: Icons.calendar_today_rounded,
                     title: 'جدول الشحنات',
                     isActive:
-                        currentLocation == EndPoints.shipmentsCalendarView,
+                    currentLocation == EndPoints.shipmentsCalendarView,
                     onTap: () {
                       Navigator.pop(context);
                       if (isUserLoggedIn) {
@@ -187,22 +187,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     },
                   ),
 
-                  BlocListener<EcoCubit, EcoState>(
-                    listener: (context, state) {
-                      if (state is GetEcoDataSuccess) {
-                        context.push(EndPoints.environmentalImpactView);
-                      }
-                    },
-                    child:_buildDrawerItem(
-                      icon: Icons.eco_rounded,
-                      title: 'الأثر البيئي',
-                      isActive: currentLocation == EndPoints.environmentalImpactView,
-                      onTap: () {
-                        Navigator.pop(context);
-                        context.push(EndPoints.environmentalImpactView);
+                  if (user != null && user!.isEcoParticipant == true)
+                    BlocListener<EcoCubit, EcoState>(
+                      listener: (context, state) {
+                        if (state is GetEcoDataSuccess) {
+                          context.push(EndPoints.environmentalImpactView);
+                        }
                       },
+                      child: _buildDrawerItem(
+                        icon: Icons.eco_rounded,
+                        title: 'الأثر البيئي',
+                        isActive:
+                        currentLocation ==
+                            EndPoints.environmentalImpactView,
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.read<EcoCubit>().getTraderEcoInfo();
+                        },
+                      ),
                     ),
-                  ),
+
                   // _buildDrawerItem(
                   //   icon: Icons.notifications_rounded,
                   //   title: 'الإشعارات',
@@ -330,11 +334,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title,
                     style: isActive
                         ? AppStyles.styleBold16(
-                            context,
-                          ).copyWith(color: const Color(0xFF10B981))
+                      context,
+                    ).copyWith(color: const Color(0xFF10B981))
                         : AppStyles.styleMedium16(
-                            context,
-                          ).copyWith(color: Colors.grey[700]),
+                      context,
+                    ).copyWith(color: Colors.grey[700]),
                   ),
                 ),
                 if (isActive)
