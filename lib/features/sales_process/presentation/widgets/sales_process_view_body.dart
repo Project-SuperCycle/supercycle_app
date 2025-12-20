@@ -208,10 +208,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey.shade200, width: 1),
       ),
       child: SalesProcessShipmentHeader(
         selectedImages: selectedImages,
@@ -264,10 +261,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       decoration: BoxDecoration(
         color: Colors.green.shade50.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.green.shade200,
-          width: 1.5,
-        ),
+        border: Border.all(color: Colors.green.shade200, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -292,17 +286,13 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(
-                Icons.info_outline,
-                size: 16,
-                color: AppColors.subTextColor,
-              ),
+              Icon(Icons.info_outline, size: 16, color: AppColors.subTextColor),
               const SizedBox(width: 4),
               Text(
                 "سيتم استلام الشحنة من هذا العنوان",
-                style: AppStyles.styleSemiBold12(context).copyWith(
-                  color: AppColors.subTextColor,
-                ),
+                style: AppStyles.styleSemiBold12(
+                  context,
+                ).copyWith(color: AppColors.subTextColor),
               ),
             ],
           ),
@@ -313,14 +303,11 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
 
   Widget _buildNotesCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1.5,
-        ),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),

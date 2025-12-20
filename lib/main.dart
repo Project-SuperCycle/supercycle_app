@@ -16,6 +16,7 @@ import 'package:supercycle/features/environment/data/repos/environment_repo_imp.
 import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
 import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:supercycle/features/home/data/managers/profile_cubit/profile_cubit.dart';
 import 'package:supercycle/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
 import 'package:supercycle/features/home/data/repos/home_repo_imp.dart';
 import 'package:supercycle/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
@@ -150,6 +151,8 @@ void main() async {
             forgetPasswordRepoImp: getIt.get<ForgetPasswordRepoImp>(),
           ),
         ),
+
+        BlocProvider(create: (context) => ProfileCubit()),
       ],
       child: const MyApp(),
     ),

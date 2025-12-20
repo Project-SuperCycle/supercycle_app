@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
-import 'package:supercycle/core/services/user_profile_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/home/data/managers/profile_cubit/profile_cubit.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 import 'package:supercycle/generated/l10n.dart';
 
@@ -72,7 +74,7 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
     });
 
     if (user != null) {
-      await UserProfileService.navigateToProfileCached(context);
+      BlocProvider.of<ProfileCubit>(context).fetchUserProfile(context: context);
     } else {
       context.push(EndPoints.signInView);
     }
@@ -128,23 +130,39 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
           ],
         ),
         const SizedBox(width: 12),
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withAlpha(150), width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(25),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+        BlocConsumer<ProfileCubit, ProfileState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            return Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withAlpha(150),
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 32,
-            child: _buildProfileImage(),
-          ),
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 32,
+                child: (state is ProfileLoading)
+                    ? SizedBox(
+                        width: 35,
+                        height: 35,
+                        child: CustomLoadingIndicator(),
+                      )
+                    : _buildProfileImage(),
+              ),
+            );
+          },
         ),
       ],
     );
