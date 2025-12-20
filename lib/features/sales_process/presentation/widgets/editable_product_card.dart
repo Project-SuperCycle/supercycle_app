@@ -87,11 +87,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _onTypeChanged(String? value) {
     if (value == null || !mounted || _isUpdating) return;
-
     setState(() {
       selectedTypeName = value;
     });
-
     _calculateAndUpdateAveragePrice();
     _safeUpdateProduct(widget.product.copyWith(name: value));
   }
@@ -101,9 +99,18 @@ class _EditableProductCardState extends State<EditableProductCard> {
     _safeUpdateProduct(widget.product.copyWith(unit: value));
   }
 
+  void _clearQuantity() {
+    quantityController.clear();
+    if (mounted) {
+      setState(() {
+        averagePrice = '0.00';
+      });
+    }
+    _safeUpdateProduct(widget.product.copyWith(quantity: 0));
+  }
+
   void _calculateAndUpdateAveragePrice() {
     if (!mounted || _isUpdating) return;
-
     final quantityText = quantityController.text;
     if (quantityText.isEmpty || selectedTypeName == null) {
       if (mounted) {
@@ -131,7 +138,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _safeUpdateProduct(DoshItemModel updatedProduct) {
     if (_isUpdating || _isInitializing || !mounted) return;
-
     _isUpdating = true;
     Future.microtask(() {
       if (mounted) {
@@ -143,7 +149,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _safeDeleteProduct() {
     if (_isUpdating || !mounted) return;
-
     _isUpdating = true;
     Future.microtask(() {
       if (mounted) {
@@ -192,7 +197,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
     if (selectedTypeName != null && options.contains(selectedTypeName)) {
       return selectedTypeName;
     }
-
     return null;
   }
 

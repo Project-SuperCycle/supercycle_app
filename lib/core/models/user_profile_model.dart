@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:supercycle/core/models/trader_main_branch_model.dart';
 
 class UserProfileModel {
@@ -93,6 +94,92 @@ class UserProfileModel {
           : null,
       repName: (json['representative'] != null)
           ? json['representative']['displayName']
+          : null,
+    );
+  }
+
+  // Convert instance to Map for storage (JSON-safe)
+  Map<String, dynamic> toMap() {
+    return {
+      'email': email,
+      'role': role,
+      'businessName': businessName,
+      'rawBusinessType': rawBusinessType,
+      'businessAddress': businessAddress,
+      'doshManagerName': doshManagerName,
+      'doshManagerPhone': doshManagerPhone,
+      'totalShipmentsCount': totalShipmentsCount,
+      'fullyDeliveredCount': fullyDeliveredCount,
+      'partiallyDeliveredCount': partiallyDeliveredCount,
+      'totalShipments': totalShipments,
+      'delivered': delivered,
+      'failed': failed,
+      'repPhone': repPhone,
+      'repEmail': repEmail,
+      'repName': repName,
+      'branch': branch != null ? _branchToJsonSafe(branch!) : null,
+    };
+  }
+
+  // Helper method to safely convert branch to JSON-compatible map
+  Map<String, dynamic>? _branchToJsonSafe(TraderMainBranchModel branch) {
+    try {
+      final branchMap = branch.toMap();
+      // Convert any DateTime objects to ISO8601 strings
+      return _convertDateTimesToStrings(branchMap);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Recursively convert DateTime objects to strings in a map
+  Map<String, dynamic> _convertDateTimesToStrings(Map<String, dynamic> map) {
+    final result = <String, dynamic>{};
+    map.forEach((key, value) {
+      if (value is DateTime) {
+        result[key] = value.toIso8601String();
+      } else if (value is Map<String, dynamic>) {
+        result[key] = _convertDateTimesToStrings(value);
+      } else if (value is List) {
+        result[key] = value.map((item) {
+          if (item is DateTime) {
+            return item.toIso8601String();
+          } else if (item is Map<String, dynamic>) {
+            return _convertDateTimesToStrings(item);
+          }
+          return item;
+        }).toList();
+      } else {
+        result[key] = value;
+      }
+    });
+    return result;
+  }
+
+  // Convert instance to JSON string
+  String toJson() => json.encode(toMap());
+
+  // Factory constructor to create instance from Map
+  factory UserProfileModel.fromMap(Map<String, dynamic> map) {
+    return UserProfileModel(
+      email: map['email'] ?? '',
+      role: map['role'] ?? '',
+      businessName: map['businessName'],
+      rawBusinessType: map['rawBusinessType'],
+      businessAddress: map['businessAddress'],
+      doshManagerName: map['doshManagerName'],
+      doshManagerPhone: map['doshManagerPhone'],
+      totalShipmentsCount: map['totalShipmentsCount'],
+      fullyDeliveredCount: map['fullyDeliveredCount'],
+      partiallyDeliveredCount: map['partiallyDeliveredCount'],
+      totalShipments: map['totalShipments'],
+      delivered: map['delivered'],
+      failed: map['failed'],
+      repPhone: map['repPhone'],
+      repEmail: map['repEmail'],
+      repName: map['repName'],
+      branch: map['branch'] != null
+          ? TraderMainBranchModel.fromJson(map['branch'])
           : null,
     );
   }

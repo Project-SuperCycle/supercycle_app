@@ -28,17 +28,18 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
     ).getShipmentsHistory(page: 1);
   }
 
-  Widget _getCurrentPageContent() {
-    switch (currentPage) {
-      case 0:
-        return TraderProfileInfoCard1(userProfile: widget.userProfile);
-      case 1:
-        return TraderProfileInfoCard2();
-      case 2:
-        return TraderProfileInfoCard3(user: widget.userProfile);
-      default:
-        return TraderProfileInfoCard1(userProfile: widget.userProfile);
-    }
+  List<Widget> _getPages() {
+    return [
+      TraderProfileInfoCard1(userProfile: widget.userProfile),
+      TraderProfileInfoCard2(),
+      TraderProfileInfoCard3(user: widget.userProfile),
+    ];
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      currentPage = index;
+    });
   }
 
   @override
@@ -46,36 +47,67 @@ class _TraderProfileViewBodyState extends State<TraderProfileViewBody> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       drawer: CustomDrawer(isInProfilePage: true),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: TraderProfileHeaderSection(userProfile: widget.userProfile),
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                // Page Indicators
-                TraderProfilePageIndicator(
-                  currentPage: currentPage,
-                  onPageChanged: (index) {
-                    setState(() {
-                      currentPage = index;
-                    });
-                  },
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            // Header Section
+            TraderProfileHeaderSection(userProfile: widget.userProfile),
+
+            const SizedBox(height: 20),
+
+            // Page Indicators
+            TraderProfilePageIndicator(
+              currentPage: currentPage,
+              onPageChanged: _onPageChanged,
+            ),
+
+            const SizedBox(height: 20),
+
+            // Content with swipe gesture (RTL direction)
+            GestureDetector(
+              onHorizontalDragEnd: (details) {
+                // Swipe right (next page in Arabic/RTL)
+                if (details.primaryVelocity! > 0) {
+                  if (currentPage < _getPages().length - 1) {
+                    _onPageChanged(currentPage + 1);
+                  }
+                }
+                // Swipe left (previous page in Arabic/RTL)
+                else if (details.primaryVelocity! < 0) {
+                  if (currentPage > 0) {
+                    _onPageChanged(currentPage - 1);
+                  }
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(-0.1, 0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: child,
+                          ),
+                        );
+                      },
+                  child: KeyedSubtree(
+                    key: ValueKey<int>(currentPage),
+                    child: _getPages()[currentPage],
+                  ),
                 ),
-                const SizedBox(height: 20),
-              ],
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _getCurrentPageContent(),
-            ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 40)),
-        ],
+
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }

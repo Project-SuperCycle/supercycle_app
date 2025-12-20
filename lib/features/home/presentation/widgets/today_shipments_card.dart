@@ -22,10 +22,23 @@ class TodayShipmentsCard extends StatefulWidget {
 
 class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
   late LoginedUserModel user;
+
   @override
   void initState() {
     super.initState();
     getUserData();
+
+    // عند فتح الـ widget، اعرض الداتا المخزنة لو موجودة
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<TodayShipmentsCubit>();
+      if (cubit.cachedTodayShipments != null &&
+          cubit.cachedTodayShipments!.isNotEmpty) {
+        // عمل emit للداتا المخزنة عشان الـ UI يعرضها
+        cubit.emit(
+          TodayShipmentsSuccess(shipments: cubit.cachedTodayShipments!),
+        );
+      }
+    });
   }
 
   void getUserData() {
@@ -34,6 +47,22 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
         user = value!;
       });
     });
+  }
+
+  void _fetchTodayShipments() {
+    // الحصول على تاريخ اليوم
+    final today = DateTime.now();
+
+    // تنسيق التاريخ بصيغة yyyy-MM-dd
+    final todayDate =
+        "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
+
+    final query = {"from": todayDate, "to": todayDate};
+
+    // استدعاء الـ cubit مع الـ query
+    BlocProvider.of<TodayShipmentsCubit>(
+      context,
+    ).fetchTodayShipments(query: query);
   }
 
   void _showShipmentDetails(BuildContext context, String shipmentID) {
@@ -67,6 +96,14 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
           // TODO: implement listener
         },
         builder: (context, state) {
+          // لو في cache، اعرضه حتى لو الـ state لسه Initial
+          final cubit = context.read<TodayShipmentsCubit>();
+          if (state is TodayShipmentsInitial &&
+              cubit.cachedTodayShipments != null &&
+              cubit.cachedTodayShipments!.isNotEmpty) {
+            return _buildShipmentsContent(cubit.cachedTodayShipments!);
+          }
+
           if (state is TodayShipmentsLoading) {
             return const Center(
               child: Padding(
@@ -77,141 +114,138 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
           }
 
           if (state is TodayShipmentsSuccess && state.shipments.isNotEmpty) {
-            return Stack(
-              children: [
-                // Decorative circles
-                Positioned(
-                  top: -30,
-                  right: -30,
-                  child: Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withAlpha(25),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -20,
-                  left: -20,
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withAlpha(25),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withAlpha(100),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.local_shipping,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  state.shipments.length == 1
-                                      ? 'شحنة اليوم'
-                                      : 'شحنات اليوم',
-                                  style: AppStyles.styleBold16(
-                                    context,
-                                  ).copyWith(color: Colors.white),
-                                ),
-                                Text(
-                                  '${state.shipments.length} ${state.shipments.length == 1 ? 'شحنة' : 'شحنات'} مجدولة',
-                                  style: AppStyles.styleMedium12(context)
-                                      .copyWith(
-                                        color: Colors.white.withAlpha(500),
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'اليوم',
-                              style: AppStyles.styleBold12(
-                                context,
-                              ).copyWith(color: Colors.orange.shade700),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Shipments List
-                      ...state.shipments.map(
-                        (shipment) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child:
-                              BlocListener<
-                                ShipmentsCalendarCubit,
-                                ShipmentsCalendarState
-                              >(
-                                listener: (context, state) {
-                                  // TODO: implement listener
-                                  if (state is GetShipmentSuccess) {
-                                    (user.role == "representative")
-                                        ? GoRouter.of(context).push(
-                                            EndPoints
-                                                .representativeShipmentDetailsView,
-                                            extra: state.shipment,
-                                          )
-                                        : GoRouter.of(context).push(
-                                            EndPoints.traderShipmentDetailsView,
-                                            extra: state.shipment,
-                                          );
-                                  }
-                                },
-                                child: _ShipmentItem(
-                                  shipment: shipment,
-                                  onTap: () => _showShipmentDetails(
-                                    context,
-                                    shipment.id,
-                                  ),
-                                ),
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
+            return _buildShipmentsContent(state.shipments);
           }
 
           return EmptyShipmentsCard();
         },
       ),
+    );
+  }
+
+  Widget _buildShipmentsContent(List<ShipmentModel> shipments) {
+    return Stack(
+      children: [
+        // Decorative circles
+        Positioned(
+          top: -30,
+          right: -30,
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withAlpha(25),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -20,
+          left: -20,
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withAlpha(25),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(100),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.local_shipping,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          shipments.length == 1 ? 'شحنة اليوم' : 'شحنات اليوم',
+                          style: AppStyles.styleBold16(
+                            context,
+                          ).copyWith(color: Colors.white),
+                        ),
+                        Text(
+                          '${shipments.length} ${shipments.length == 1 ? 'شحنة' : 'شحنات'} مجدولة',
+                          style: AppStyles.styleMedium12(
+                            context,
+                          ).copyWith(color: Colors.white.withAlpha(500)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'اليوم',
+                      style: AppStyles.styleBold12(
+                        context,
+                      ).copyWith(color: Colors.orange.shade700),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Shipments List
+              ...shipments.map(
+                (shipment) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child:
+                      BlocListener<
+                        ShipmentsCalendarCubit,
+                        ShipmentsCalendarState
+                      >(
+                        listener: (context, state) {
+                          if (state is GetShipmentSuccess) {
+                            (user.role == "representative")
+                                ? GoRouter.of(context).push(
+                                    EndPoints.representativeShipmentDetailsView,
+                                    extra: state.shipment,
+                                  )
+                                : GoRouter.of(context).push(
+                                    EndPoints.traderShipmentDetailsView,
+                                    extra: state.shipment,
+                                  );
+                          }
+                        },
+                        child: _ShipmentItem(
+                          shipment: shipment,
+                          onTap: () =>
+                              _showShipmentDetails(context, shipment.id),
+                        ),
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

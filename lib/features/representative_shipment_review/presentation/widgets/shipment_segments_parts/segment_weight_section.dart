@@ -621,12 +621,15 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Text(
-                              'رفع الوزنة',
-                              style: AppStyles.styleBold14(context).copyWith(
-                                color: _isButtonEnabled
-                                    ? Colors.white
-                                    : AppColors.mainTextColor,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                'رفع الوزنة',
+                                style: AppStyles.styleBold14(context).copyWith(
+                                  color: _isButtonEnabled
+                                      ? Colors.white
+                                      : AppColors.mainTextColor,
+                                ),
                               ),
                             ),
                           ),

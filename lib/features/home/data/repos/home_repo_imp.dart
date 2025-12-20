@@ -144,11 +144,14 @@ class HomeRepoImp implements HomeRepo {
   }
 
   @override
-  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipmets() async {
+  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipmets({
+    required Map<String, dynamic> query,
+  }) async {
     // TODO: implement fetchTodayShipmets
     try {
       final response = await apiServices.get(
         endPoint: ApiEndpoints.getAllShipments,
+        query: query,
       );
 
       var data = response['data'];

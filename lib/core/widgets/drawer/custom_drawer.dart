@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/core/functions/navigate_to_profile.dart';
 import 'package:supercycle/core/routes/end_points.dart';
+import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/services/user_profile_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/drawer/user_info_list_tile.dart';
@@ -24,40 +25,76 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   bool isUserLoggedIn = false;
   LoginedUserModel? user;
+  final AuthManager _authManager = AuthManager();
 
   @override
   void initState() {
     super.initState();
-    getUserData();
+    _loadUserData();
+
+    // الاستماع لتغييرات حالة المصادقة
+    _authManager.authStateChangeNotifier.addListener(_onAuthStateChanged);
   }
 
-  void getUserData() async {
-    user = await StorageServices.getUserData();
+  @override
+  void dispose() {
+    _authManager.authStateChangeNotifier.removeListener(_onAuthStateChanged);
+    super.dispose();
+  }
+
+  /// يتم استدعاؤها عند تغيير حالة المصادقة
+  void _onAuthStateChanged() {
+    if (mounted) {
+      _loadUserData();
+    }
+  }
+
+  /// تحميل بيانات المستخدم
+  Future<void> _loadUserData() async {
+    final userData = await StorageServices.getUserData();
     if (mounted) {
       setState(() {
-        isUserLoggedIn = (user != null);
+        user = userData;
+        isUserLoggedIn = (userData != null);
       });
     }
   }
 
-  void logout(BuildContext context) async {
-    // حذف كل البيانات
-    await StorageServices.clearAll();
+  /// تسجيل الخروج بشكل محسّن
+  Future<void> _performLogout(BuildContext context) async {
+    // إغلاق الـ dialog
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
 
-    // تسجيل الخروج من Google و Facebook
-    await GoogleSignIn().signOut();
-    await FacebookAuth.instance.logOut();
+    // إغلاق الـ drawer
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
 
-    if (!context.mounted) return;
+    // تنفيذ عملية تسجيل الخروج
+    final success = await _authManager.logout();
 
-    // قفل الـ dialog
-    Navigator.pop(context);
+    if (success && context.mounted) {
+      // التنقل إلى الصفحة الرئيسية وإعادة بناء كل شيء
+      context.go(EndPoints.homeView);
 
-    // قفل الـ drawer
-    Navigator.pop(context);
-
-    // استخدم go مع إعادة بناء الصفحة بالكامل
-    context.go(EndPoints.homeView);
+      // إظهار رسالة نجاح
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'تم تسجيل الخروج بنجاح',
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: const Color(0xFF10B981),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -79,16 +116,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
         child: CustomScrollView(
           slivers: [
-            // ======= المسافة العلوية =======
             SliverToBoxAdapter(
               child: SizedBox(height: MediaQuery.of(context).padding.top + 10),
             ),
 
-            // ======= معلومات المستخدم =======
             const SliverToBoxAdapter(child: UserInfoListTile()),
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-            // ======= خط فاصل =======
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -97,7 +131,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
-            // ======= القائمة الرئيسية =======
             SliverToBoxAdapter(
               child: Column(
                 children: [
@@ -106,54 +139,41 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'الرئيسية',
                     isActive: currentLocation == EndPoints.homeView,
                     onTap: () {
-                      GoRouter.of(context).pushReplacement(EndPoints.homeView);
                       Navigator.pop(context);
+                      context.pushReplacement(EndPoints.homeView);
                     },
                   ),
 
-                  _buildDrawerItem(
-                    icon: Icons.person_rounded,
-                    title: 'الملف الشخصي',
-                    isActive:
-                        currentLocation ==
-                            EndPoints.representativeProfileView ||
-                        currentLocation == EndPoints.editProfileView,
-                    onTap: () async {
-                      if (user == null) {
-                        if (context.mounted) {
-                          GoRouter.of(context).push(EndPoints.signInView);
-                        }
-                      } else {
-                        if (context.mounted) {
-                          navigateToProfile(context);
-                        }
-                      }
-                    },
-                  ),
-
-                  // if (widget.isInProfilePage)
-                  //   _buildChildDrawerItem(
-                  //     icon: Icons.edit_rounded,
-                  //     title: 'تعديل الملف الشخصي',
-                  //     onTap: () {
-                  //       Navigator.pop(context);
-                  //       GoRouter.of(context).go(EndPoints.editProfileView);
-                  //     },
-                  //   ),
+                  // _buildDrawerItem(
+                  //   icon: Icons.person_rounded,
+                  //   title: 'الملف الشخصي',
+                  //   isActive:
+                  //       currentLocation ==
+                  //           EndPoints.representativeProfileView ||
+                  //       currentLocation == EndPoints.editProfileView,
+                  //   onTap: () async {
+                  //     Navigator.pop(context);
+                  //     if (user == null) {
+                  //       context.push(EndPoints.signInView);
+                  //     } else {
+                  //       await UserProfileService.navigateToProfileCached(
+                  //         context,
+                  //       );
+                  //     }
+                  //   },
+                  // ),
                   _buildDrawerItem(
                     icon: Icons.calendar_today_rounded,
                     title: 'جدول الشحنات',
                     isActive:
                         currentLocation == EndPoints.shipmentsCalendarView,
                     onTap: () {
-                      if (isUserLoggedIn) {
-                        GoRouter.of(
-                          context,
-                        ).push(EndPoints.shipmentsCalendarView);
-                      } else {
-                        GoRouter.of(context).push(EndPoints.signInView);
-                      }
                       Navigator.pop(context);
+                      if (isUserLoggedIn) {
+                        context.push(EndPoints.shipmentsCalendarView);
+                      } else {
+                        context.push(EndPoints.signInView);
+                      }
                     },
                   ),
 
@@ -162,79 +182,71 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'حاسبة الشحنات',
                     isActive: currentLocation == EndPoints.calculatorView,
                     onTap: () {
-                      GoRouter.of(context).push(EndPoints.calculatorView);
                       Navigator.pop(context);
+                      context.push(EndPoints.calculatorView);
                     },
                   ),
 
-                  (user == null)
-                      ? SizedBox.shrink()
-                      : (user!.isEcoParticipant == false)
-                      ? SizedBox.shrink()
-                      : BlocListener<EcoCubit, EcoState>(
-                          listener: (context, state) {
-                            if (state is GetEcoDataSuccess) {
-                              GoRouter.of(
-                                context,
-                              ).push(EndPoints.environmentalImpactView);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: _buildDrawerItem(
-                            icon: Icons.eco_rounded,
-                            title: 'الأثر البيئي',
-                            isActive:
-                                currentLocation ==
-                                EndPoints.environmentalImpactView,
-                            onTap: () {
-                              context.read<EcoCubit>().getTraderEcoInfo();
-                            },
-                          ),
-                        ),
+                  if (user != null && user!.isEcoParticipant == true)
+                    BlocListener<EcoCubit, EcoState>(
+                      listener: (context, state) {
+                        if (state is GetEcoDataSuccess) {
+                          context.push(EndPoints.environmentalImpactView);
+                        }
+                      },
+                      child: _buildDrawerItem(
+                        icon: Icons.eco_rounded,
+                        title: 'الأثر البيئي',
+                        isActive:
+                            currentLocation ==
+                            EndPoints.environmentalImpactView,
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.read<EcoCubit>().getTraderEcoInfo();
+                        },
+                      ),
+                    ),
 
-                  _buildDrawerItem(
-                    icon: Icons.notifications_rounded,
-                    title: 'الإشعارات',
-                    isActive: false,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text(
-                            'صفحة الإشعارات قريباً',
-                            textAlign: TextAlign.center,
-                          ),
-                          backgroundColor: const Color(0xFF10B981),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                      Navigator.pop(context);
-                    },
-                  ),
-
+                  // _buildDrawerItem(
+                  //   icon: Icons.notifications_rounded,
+                  //   title: 'الإشعارات',
+                  //   isActive: false,
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       SnackBar(
+                  //         content: const Text(
+                  //           'صفحة الإشعارات قريباً',
+                  //           textAlign: TextAlign.center,
+                  //         ),
+                  //         backgroundColor: const Color(0xFF10B981),
+                  //         behavior: SnackBarBehavior.floating,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                   _buildDrawerItem(
                     icon: Icons.support_agent_rounded,
                     title: 'الدعم والمساعدة',
                     isActive: currentLocation == EndPoints.contactUsView,
                     onTap: () {
-                      GoRouter.of(context).push(EndPoints.contactUsView);
                       Navigator.pop(context);
+                      context.push(EndPoints.contactUsView);
                     },
                   ),
                 ],
               ),
             ),
 
-            // ======= الأسفل (الإعدادات + تسجيل الخروج) =======
             SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
                 children: [
                   const Spacer(),
 
-                  // خط فاصل
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Divider(color: Colors.grey[300], thickness: 1),
@@ -245,6 +257,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     asset: AppAssets.settingsIcon,
                     title: 'الإعدادات',
                     onTap: () {
+                      Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: const Text(
@@ -258,30 +271,27 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                         ),
                       );
-                      Navigator.pop(context);
                     },
                   ),
 
-                  isUserLoggedIn
-                      ? _buildBottomItem(
-                          icon: Icons.logout_rounded,
-                          asset: AppAssets.logoutIcon,
-                          title: 'تسجيل الخروج',
-                          isLogout: true,
-                          onTap: () {
-                            Navigator.pop(context);
-                            _showLogoutDialog(context);
-                          },
-                        )
-                      : _buildBottomItem(
-                          icon: Icons.login_rounded,
-                          asset: AppAssets.loginIcon,
-                          title: 'تسجيل الدخول',
-                          onTap: () {
-                            GoRouter.of(context).push(EndPoints.signInView);
-                            Navigator.pop(context);
-                          },
-                        ),
+                  if (isUserLoggedIn)
+                    _buildBottomItem(
+                      icon: Icons.logout_rounded,
+                      asset: AppAssets.logoutIcon,
+                      title: 'تسجيل الخروج',
+                      isLogout: true,
+                      onTap: () => _showLogoutDialog(context),
+                    )
+                  else
+                    _buildBottomItem(
+                      icon: Icons.login_rounded,
+                      asset: AppAssets.loginIcon,
+                      title: 'تسجيل الدخول',
+                      onTap: () {
+                        Navigator.pop(context);
+                        context.push(EndPoints.signInView);
+                      },
+                    ),
 
                   const SizedBox(height: 30),
                 ],
@@ -293,7 +303,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  // ======= عنصر القائمة =======
   Widget _buildDrawerItem({
     required IconData icon,
     required String title,
@@ -349,43 +358,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  // ======= عنصر فرعي =======
-  Widget _buildChildDrawerItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 40, top: 4, bottom: 4, left: 12),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Icon(icon, color: const Color(0xFF10B981), size: 20),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: AppStyles.styleMedium14(
-                      context,
-                    ).copyWith(color: Colors.grey[700]),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ======= عنصر الأسفل =======
   Widget _buildBottomItem({
     required IconData icon,
     required String asset,
@@ -428,11 +400,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  // ======= نافذة تأكيد تسجيل الخروج =======
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      barrierDismissible: false,
+      builder: (dialogContext) {
         return Directionality(
           textDirection: TextDirection.rtl,
           child: AlertDialog(
@@ -443,7 +415,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ======= الأيقونة =======
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -459,7 +430,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
                 const SizedBox(height: 20),
 
-                // ======= العنوان =======
                 Text(
                   'تسجيل الخروج',
                   style: AppStyles.styleBold20(context),
@@ -468,7 +438,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
                 const SizedBox(height: 12),
 
-                // ======= الرسالة =======
                 Text(
                   'هل أنت متأكد من تسجيل الخروج من حسابك؟',
                   style: AppStyles.styleMedium14(
@@ -479,16 +448,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
                 const SizedBox(height: 24),
 
-                // ======= الأزرار =======
                 Row(
                   children: [
-                    // زر الإلغاء
                     Expanded(
                       flex: 1,
                       child: SizedBox(
                         height: 50,
                         child: TextButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => Navigator.pop(dialogContext),
                           style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -507,15 +474,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
                     const SizedBox(width: 12),
 
-                    // زر تسجيل الخروج
                     Expanded(
                       flex: 2,
                       child: SizedBox(
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {
-                            logout(context);
-                          },
+                          onPressed: () => _performLogout(dialogContext),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                             shape: RoundedRectangleBorder(
