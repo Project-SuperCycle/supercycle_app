@@ -53,8 +53,8 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
           : MainAxisAlignment.end,
       children: [
         _buildDrawerButton(),
-        SizedBox(width: 10),
-        if (isUserLoggedIn) _buildNotificationButton(),
+        // SizedBox(width: 10),
+        // if (isUserLoggedIn) _buildNotificationButton(),
       ],
     );
   }

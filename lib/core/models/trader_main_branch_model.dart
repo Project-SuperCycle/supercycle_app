@@ -25,6 +25,16 @@ class TraderMainBranchModel {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'branchName': branchName,
+      'address': address,
+      'contactName': contactName,
+      'contactPhone': contactPhone,
+      'startDate': DateTime.parse(startDate.toString()),
+    };
+  }
+
   // CopyWith method for creating a new instance with updated values
   TraderMainBranchModel copyWith({
     String? branchName,

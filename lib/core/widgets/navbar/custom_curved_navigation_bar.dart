@@ -35,11 +35,58 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.currentIndex;
+    _currentIndex = _getIndexFromCurrentRoute();
     _loadUserData();
-
     // الاستماع لتغييرات حالة المصادقة
     _authManager.authStateChangeNotifier.addListener(_onAuthStateChanged);
+  }
+
+  /// الحصول على الـ index من الـ route الحالي
+  int _getIndexFromCurrentRoute() {
+    final currentRoute = _getCurrentRoute();
+
+    if (currentRoute.contains(EndPoints.calculatorView)) {
+      return 0;
+    } else if (currentRoute.contains(EndPoints.salesProcessView)) {
+      return 1;
+    } else if (currentRoute.contains(EndPoints.homeView) ||
+        currentRoute == '/') {
+      return 2;
+    } else if (currentRoute.contains(EndPoints.shipmentsCalendarView)) {
+      return 3;
+    } else if (currentRoute.contains(EndPoints.contactUsView)) {
+      return 4;
+    }
+
+    return widget.currentIndex; // default fallback
+  }
+
+  @override
+  void didUpdateWidget(CustomCurvedNavigationBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // تحديث الـ index بناءً على الـ route الحالي
+    final newIndex = _getIndexFromCurrentRoute();
+    if (_currentIndex != newIndex) {
+      setState(() {
+        _currentIndex = newIndex;
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // تحديث الـ index كل ما الـ route يتغير
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final newIndex = _getIndexFromCurrentRoute();
+        if (_currentIndex != newIndex) {
+          setState(() {
+            _currentIndex = newIndex;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -59,7 +106,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   Future<void> _loadUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
     Logger().d("Navigation Bar - User: ${user?.displayName ?? 'Guest'}");
-
     if (mounted) {
       setState(() {
         isUserLoggedIn = (user != null);
@@ -69,10 +115,15 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
 
   /// الحصول على الـ route الحالي
   String _getCurrentRoute() {
-    final router = GoRouter.of(context);
-    final location =
-        router.routerDelegate.currentConfiguration.last.matchedLocation;
-    return location;
+    try {
+      final router = GoRouter.of(context);
+      final location =
+          router.routerDelegate.currentConfiguration.last.matchedLocation;
+      return location;
+    } catch (e) {
+      Logger().e('Error getting current route: $e');
+      return '/';
+    }
   }
 
   /// تحديد الـ route المطلوب بناءً على الـ index
@@ -168,7 +219,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       }
     } catch (e) {
       Logger().e('❌ Navigation error: $e');
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -204,6 +254,18 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    // تحديث الـ index كل ما الـ widget يعمل rebuild
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final newIndex = _getIndexFromCurrentRoute();
+        if (_currentIndex != newIndex) {
+          setState(() {
+            _currentIndex = newIndex;
+          });
+        }
+      }
+    });
+
     return CurvedNavigationBar(
       index: _currentIndex,
       key: widget.navigationKey,
