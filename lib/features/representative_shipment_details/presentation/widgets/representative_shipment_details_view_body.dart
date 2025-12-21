@@ -133,7 +133,10 @@ class _RepresentativeShipmentDetailsViewBodyState
                           shipment: widget.shipment,
                         ),
                         const SizedBox(height: 12),
-                        ProgressBar(completedSteps: _getProgressSteps()),
+                        ProgressBar(
+                          completedSteps: _getProgressSteps(),
+                          totalSteps: 6,
+                        ),
                         const SizedBox(height: 20),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -271,9 +274,10 @@ class _RepresentativeShipmentDetailsViewBodyState
         return 3;
       case 'delivery_in_transit':
         return 4;
-      case 'delivered':
       case 'complete_weighted':
         return 5;
+      case 'delivered':
+        return 6;
       default:
         return 0;
     }
@@ -290,7 +294,6 @@ class _RepresentativeShipmentDetailsViewBodyState
 
     // إذا الحالة 'approved' ولم يتم اتخاذ إجراء واليوم هو تاريخ الاستلام
     if (status == 'approved' && !hasActionBeenTaken && _isPickupDateToday()) {
-      Logger().i("TESST");
       // إذا لم يتم الضغط على زر "بدأ المعاينة"، اعرض الزر
       if (!showInspectionActions) {
         return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');
