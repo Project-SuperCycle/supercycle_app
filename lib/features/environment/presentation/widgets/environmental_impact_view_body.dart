@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
+import 'package:supercycle/features/environment/data/cubits/requests_cubit/requests_cubit.dart';
 import 'package:supercycle/features/environment/presentation/widgets/achievements_tab/environmental_achievements_tab.dart';
 import 'package:supercycle/features/environment/presentation/widgets/environmental_impact_header.dart';
 import 'package:supercycle/features/environment/presentation/widgets/environmental_impact_tab_bar.dart';
@@ -26,10 +27,8 @@ class _EnvironmentalImpactViewBodyState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: 5,
-      vsync: this,
-    ); // Changed from 3 to 5
+    _tabController = TabController(length: 5, vsync: this);
+    BlocProvider.of<RequestsCubit>(context).getTraderEcoRequests();
   }
 
   @override
@@ -105,9 +104,7 @@ class _EnvironmentalImpactViewBodyState
                                 ),
                           // New Requests Tab
                           (state is GetEcoDataSuccess)
-                              ? EnvironmentalRequestsTab(
-                                  ecoInfoModel: state.ecoInfoModel,
-                                )
+                              ? EnvironmentalRequestsTab()
                               : Center(
                                   child: SizedBox(
                                     height: 200,

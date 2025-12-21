@@ -18,6 +18,8 @@ abstract class ApiEndpoints {
   static const String getProfileInfo = '/trader/me';
   static const String contactUs = '/contact';
   static const String getTraderEcoInfo = '/trader/eco/dashboard';
+  static const String getTraderEcoRequests = '/trader/eco/redeem';
+  static const String createTraderEcoRequest = '/trader/eco/redeem';
   static const String forgetPassword = '/auth/forgot-password';
   static const String verifyResetOtp = '/auth/verify-reset-otp';
   static const String resetPassword = '/auth/reset-password';
