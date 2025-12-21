@@ -7,6 +7,8 @@ import 'package:supercycle/features/environment/presentation/widgets/environment
 import 'package:supercycle/features/environment/presentation/widgets/environmental_impact_tab_bar.dart';
 import 'package:supercycle/features/environment/presentation/widgets/impact_tab/environmental_impact_tab.dart';
 import 'package:supercycle/features/environment/presentation/widgets/trees_tab/environmental_trees_tab.dart';
+import 'package:supercycle/features/environment/presentation/widgets/transactions_tab/environmental_transactions_tab.dart';
+import 'package:supercycle/features/environment/presentation/widgets/requests_tab/environmental_requests_tab.dart';
 
 class EnvironmentalImpactViewBody extends StatefulWidget {
   const EnvironmentalImpactViewBody({super.key});
@@ -24,7 +26,10 @@ class _EnvironmentalImpactViewBodyState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+      length: 5,
+      vsync: this,
+    ); // Changed from 3 to 5
   }
 
   @override
@@ -38,8 +43,6 @@ class _EnvironmentalImpactViewBodyState
     return Scaffold(
       body: BlocConsumer<EcoCubit, EcoState>(
         listener: (context, state) {
-          // TODO: implement listener
-
           if (state is GetEcoDataFailure) {
             ScaffoldMessenger.of(
               context,
@@ -73,24 +76,42 @@ class _EnvironmentalImpactViewBodyState
                               ? EnvironmentalTreesTab(
                                   ecoInfoModel: state.ecoInfoModel,
                                 )
-                              : SliverToBoxAdapter(
-                                  child: Center(
-                                    child: SizedBox(
-                                      height: 200,
-                                      child: CustomLoadingIndicator(),
-                                    ),
+                              : Center(
+                                  child: SizedBox(
+                                    height: 200,
+                                    child: CustomLoadingIndicator(),
                                   ),
                                 ),
                           (state is GetEcoDataSuccess)
                               ? EnvironmentalAchievementsTab(
                                   ecoInfoModel: state.ecoInfoModel,
                                 )
-                              : SliverToBoxAdapter(
-                                  child: Center(
-                                    child: SizedBox(
-                                      height: 200,
-                                      child: CustomLoadingIndicator(),
-                                    ),
+                              : Center(
+                                  child: SizedBox(
+                                    height: 200,
+                                    child: CustomLoadingIndicator(),
+                                  ),
+                                ),
+                          // New Transactions Tab
+                          (state is GetEcoDataSuccess)
+                              ? EnvironmentalTransactionsTab(
+                                  ecoInfoModel: state.ecoInfoModel,
+                                )
+                              : Center(
+                                  child: SizedBox(
+                                    height: 200,
+                                    child: CustomLoadingIndicator(),
+                                  ),
+                                ),
+                          // New Requests Tab
+                          (state is GetEcoDataSuccess)
+                              ? EnvironmentalRequestsTab(
+                                  ecoInfoModel: state.ecoInfoModel,
+                                )
+                              : Center(
+                                  child: SizedBox(
+                                    height: 200,
+                                    child: CustomLoadingIndicator(),
                                   ),
                                 ),
                         ],

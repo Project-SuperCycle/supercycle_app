@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/functions/navigate_to_profile.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
@@ -10,7 +9,6 @@ import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/drawer/user_info_list_tile.dart';
 import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
-import 'package:supercycle/features/home/data/managers/profile_cubit/profile_cubit.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -143,44 +141,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       context.pushReplacement(EndPoints.homeView);
                     },
                   ),
-
-                  // BlocConsumer<ProfileCubit, ProfileState>(
-                  //   listener: (context, state) {
-                  //     if (state is ProfileSuccess) {
-                  //       context.push(EndPoints.environmentalImpactView);
-                  //     }
-                  //   },
-                  //   builder: (context, state) {
-                  //     return (state is ProfileLoading)
-                  //         ? SizedBox(
-                  //             width: 40,
-                  //             height: 40,
-                  //             child: const CustomLoadingIndicator(),
-                  //           )
-                  //         : _buildDrawerItem(
-                  //             icon: Icons.person_rounded,
-                  //             title: 'الملف الشخصي',
-                  //             isActive:
-                  //                 currentLocation ==
-                  //                     EndPoints.representativeProfileView ||
-                  //                 currentLocation == EndPoints.editProfileView,
-                  //             onTap: () async {
-                  //               Navigator.pop(context);
-                  //               if (user == null) {
-                  //                 context.push(EndPoints.signInView);
-                  //               } else {
-                  //                 BlocProvider.of<ProfileCubit>(
-                  //                   context,
-                  //                 ).fetchUserProfile(context: context);
-                  //               }
-                  //             },
-                  //           );
-                  //   },
-                  //   buildWhen: (previous, current) =>
-                  //       current is ProfileSuccess ||
-                  //       current is ProfileFailure ||
-                  //       current is ProfileLoading,
-                  // ),
                   _buildDrawerItem(
                     icon: Icons.calendar_today_rounded,
                     title: 'جدول الشحنات',
