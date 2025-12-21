@@ -17,59 +17,38 @@ class EnvironmentalRequestsTab extends StatefulWidget {
 class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
   // Pagination settings
   int _currentPage = 1;
-  final int _itemsPerPage = 5;
-  bool _isLoadingPage = false;
+  List<EnvironmentalRedeemModel> _requests = [];
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
 
   @override
   void initState() {
     super.initState();
     // Fetch requests when tab is opened
-    context.read<RequestsCubit>().getTraderEcoRequests();
+    _fetchRequests(_currentPage);
   }
 
-  int _getTotalPages(int totalItems) {
-    return (totalItems / _itemsPerPage).ceil();
+  void _fetchRequests(int page) {
+    context.read<RequestsCubit>().getTraderEcoRequests(page: page);
   }
 
-  int get _startIndex => (_currentPage - 1) * _itemsPerPage;
-
-  int _getEndIndex(int totalItems) {
-    final end = _startIndex + _itemsPerPage;
-    return end > totalItems ? totalItems : end;
-  }
-
-  List<EnvironmentalRedeemModel> _getCurrentPageRequests(
-    List<EnvironmentalRedeemModel> allRequests,
-  ) {
-    if (allRequests.isEmpty) return [];
-    final endIndex = _getEndIndex(allRequests.length);
-    return allRequests.sublist(_startIndex, endIndex);
-  }
-
-  Future<void> _goToPage(int page, int totalPages) async {
-    if (page < 1 || page > totalPages || page == _currentPage) return;
-
-    setState(() {
-      _isLoadingPage = true;
-    });
-
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    setState(() {
-      _currentPage = page;
-      _isLoadingPage = false;
-    });
-  }
-
-  Future<void> _nextPage(int totalPages) async {
-    if (_currentPage < totalPages) {
-      await _goToPage(_currentPage + 1, totalPages);
+  void _loadNextPage() {
+    if (!_isLoadingMore && _hasMoreData) {
+      setState(() {
+        _isLoadingMore = true;
+        _currentPage++;
+      });
+      _fetchRequests(_currentPage);
     }
   }
 
-  Future<void> _previousPage(int totalPages) async {
-    if (_currentPage > 1) {
-      await _goToPage(_currentPage - 1, totalPages);
+  void _loadPreviousPage() {
+    if (_currentPage > 1 && !_isLoadingMore) {
+      setState(() {
+        _isLoadingMore = true;
+        _currentPage--;
+      });
+      _fetchRequests(_currentPage);
     }
   }
 
@@ -77,14 +56,25 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
     setState(() {
       _currentPage = 1;
     });
-    await context.read<RequestsCubit>().getTraderEcoRequests();
+    _fetchRequests(_currentPage);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RequestsCubit, RequestsState>(
       listener: (context, state) {
+        if (state is RequestsSuccess) {
+          setState(() {
+            _requests = state.requests;
+            _isLoadingMore = false;
+            // لو الطلبات أقل من 10، معناها مفيش صفحات تانية
+            _hasMoreData = state.requests.length >= 10;
+          });
+        }
         if (state is RequestsFailure) {
+          setState(() {
+            _isLoadingMore = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errMessage),
@@ -94,26 +84,13 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
         }
       },
       builder: (context, state) {
-        // Loading state
-        if (state is RequestsLoading) {
+        // Loading state - only for initial load
+        if (state is RequestsLoading && _requests.isEmpty) {
           return Center(child: CustomLoadingIndicator());
         }
 
-        // Failure state
-        if (state is RequestsFailure) {
-          return _buildErrorState(state.errMessage);
-        }
-
-        // Success state
-        if (state is RequestsSuccess) {
-          if (state.requests.isEmpty) {
-            return _buildEmptyState();
-          }
-
-          final totalPages = _getTotalPages(state.requests.length);
-          final endIndex = _getEndIndex(state.requests.length);
-          final currentPageRequests = _getCurrentPageRequests(state.requests);
-
+        // Success state or has cached data
+        if (_requests.isNotEmpty) {
           return RefreshIndicator(
             onRefresh: _onRefresh,
             color: const Color(0xFF10B981),
@@ -144,7 +121,7 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                'إجمالي: ${state.requests.length}',
+                                'صفحة $_currentPage',
                                 style: AppStyles.styleSemiBold12(
                                   context,
                                 ).copyWith(color: const Color(0xFF10B981)),
@@ -161,53 +138,43 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
                 // Requests List
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  sliver: _isLoadingPage
-                      ? SliverToBoxAdapter(
-                          child: SizedBox(
-                            height: 400,
-                            child: Center(child: CustomLoadingIndicator()),
-                          ),
-                        )
-                      : SliverList.builder(
-                          itemBuilder: (context, index) {
-                            return EcoRequestCard(
-                              request: currentPageRequests[index],
-                            );
-                          },
-                          itemCount: currentPageRequests.length,
-                        ),
-                ),
-
-                // Pagination Controls
-                SliverToBoxAdapter(
-                  child: _buildPaginationControls(
-                    totalPages,
-                    state.requests.length,
-                    endIndex,
+                  sliver: SliverList.builder(
+                    itemBuilder: (context, index) {
+                      return EcoRequestCard(request: _requests[index]);
+                    },
+                    itemCount: _requests.length,
                   ),
                 ),
 
+                // Pagination Controls
+                SliverToBoxAdapter(child: _buildPaginationControls()),
+
+                // Loading indicator when loading more
+                if (_isLoadingMore)
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(child: CustomLoadingIndicator()),
+                    ),
+                  ),
+
                 // Bottom Spacing
-                const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                const SliverToBoxAdapter(child: SizedBox(height: 50)),
               ],
             ),
           );
         }
 
-        // Initial state
-        return Center(child: CustomLoadingIndicator());
+        // Empty state
+        return _buildEmptyState();
       },
     );
   }
 
-  Widget _buildPaginationControls(
-    int totalPages,
-    int totalItems,
-    int endIndex,
-  ) {
+  Widget _buildPaginationControls() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
@@ -225,31 +192,55 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
             children: [
               // Previous button
               _buildNavigationButton(
-                icon: Icons.arrow_back_ios,
-                onPressed: _currentPage > 1
-                    ? () => _previousPage(totalPages)
+                icon: Icons.arrow_back_ios_new_rounded,
+                onPressed: _currentPage > 1 && !_isLoadingMore
+                    ? _loadPreviousPage
                     : null,
                 tooltip: 'الصفحة السابقة',
               ),
 
               const SizedBox(width: 16),
 
-              // Page indicator
-              _buildPageIndicator(totalPages),
+              // Page Number
+              _buildPageIndicator(),
 
               const SizedBox(width: 16),
 
               // Next button
               _buildNavigationButton(
-                icon: Icons.arrow_forward_ios,
-                onPressed: _currentPage < totalPages
-                    ? () => _nextPage(totalPages)
+                icon: Icons.arrow_forward_ios_rounded,
+                onPressed: _hasMoreData && !_isLoadingMore
+                    ? _loadNextPage
                     : null,
                 tooltip: 'الصفحة التالية',
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPageIndicator() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF10B981).withAlpha(25),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFF10B981).withAlpha(150),
+          width: 1.5,
+        ),
+      ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          '$_currentPage',
+          style: AppStyles.styleSemiBold16(context).copyWith(
+            color: const Color(0xFF10B981),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
@@ -273,54 +264,14 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-            child: Icon(
-              icon,
-              color: isEnabled ? Colors.white : Colors.grey[500],
-              size: 18,
+            child: Center(
+              child: Icon(
+                icon,
+                color: isEnabled ? Colors.white : Colors.grey[500],
+                size: 18,
+              ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPageIndicator(int totalPages) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFF10B981).withAlpha(50),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF10B981).withAlpha(150),
-          width: 1.5,
-        ),
-      ),
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '$_currentPage',
-              style: AppStyles.styleSemiBold16(context).copyWith(
-                color: const Color(0xFF10B981),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              ' من ',
-              style: AppStyles.styleSemiBold12(
-                context,
-              ).copyWith(color: Colors.grey[600]),
-            ),
-            Text(
-              '$totalPages',
-              style: AppStyles.styleSemiBold16(context).copyWith(
-                color: const Color(0xFF10B981),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -345,51 +296,6 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
             style: AppStyles.styleSemiBold12(
               context,
             ).copyWith(color: Colors.grey[400]),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorState(String errorMessage) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
-          const SizedBox(height: 16),
-          Text(
-            'حدث خطأ',
-            style: AppStyles.styleSemiBold16(
-              context,
-            ).copyWith(color: Colors.red),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              errorMessage,
-              textAlign: TextAlign.center,
-              style: AppStyles.styleSemiBold12(
-                context,
-              ).copyWith(color: Colors.grey[600]),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {
-              context.read<RequestsCubit>().getTraderEcoRequests();
-            },
-            icon: const Icon(Icons.refresh),
-            label: const Text('إعادة المحاولة'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF10B981),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
           ),
         ],
       ),

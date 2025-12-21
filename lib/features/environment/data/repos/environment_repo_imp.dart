@@ -96,12 +96,14 @@ class EnvironmentRepoImp implements EnvironmentRepo {
   }
 
   @override
-  Future<Either<Failure, List<EnvironmentalRedeemModel>>>
-  getTraderEcoRequests() async {
+  Future<Either<Failure, List<EnvironmentalRedeemModel>>> getTraderEcoRequests({
+    required int page,
+  }) async {
     // TODO: implement getTraderEcoRequests
     try {
       final response = await apiServices.get(
         endPoint: ApiEndpoints.getTraderEcoRequests,
+        query: {"page": page},
       );
       var data = response["data"];
       List<EnvironmentalRedeemModel> requests = [];

@@ -6,8 +6,9 @@ import 'package:supercycle/features/trader_main_profile/data/models/environmenta
 abstract class EnvironmentRepo {
   Future<Either<Failure, TraderEcoInfoModel>> getTraderEcoInfo();
 
-  Future<Either<Failure, List<EnvironmentalRedeemModel>>>
-  getTraderEcoRequests();
+  Future<Either<Failure, List<EnvironmentalRedeemModel>>> getTraderEcoRequests({
+    required int page,
+  });
 
   Future<Either<Failure, String>> createTraderEcoRequest({
     required int quantity,

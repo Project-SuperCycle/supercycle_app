@@ -7,19 +7,19 @@ part 'requests_state.dart';
 
 class RequestsCubit extends Cubit<RequestsState> {
   final EnvironmentRepoImp environmentRepoImp;
+
   RequestsCubit({required this.environmentRepoImp}) : super(RequestsInitial());
 
-  Future<void> getTraderEcoRequests() async {
+  Future<void> getTraderEcoRequests({int page = 1}) async {
     emit(RequestsLoading());
     try {
-      var result = await environmentRepoImp.getTraderEcoRequests();
+      var result = await environmentRepoImp.getTraderEcoRequests(page: page);
       result.fold(
         (failure) {
           emit(RequestsFailure(errMessage: failure.errMessage));
         },
         (requests) {
           emit(RequestsSuccess(requests: requests));
-          // Store user globally
         },
       );
     } catch (error) {

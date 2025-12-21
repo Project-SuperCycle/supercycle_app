@@ -243,30 +243,12 @@ class _EnvironmentalTransactionsTabState
       ),
       child: FittedBox(
         fit: BoxFit.scaleDown,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '$_currentPage',
-              style: AppStyles.styleSemiBold16(context).copyWith(
-                color: const Color(0xFF10B981),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              ' من ',
-              style: AppStyles.styleSemiBold12(
-                context,
-              ).copyWith(color: Colors.grey[600]),
-            ),
-            Text(
-              '$_totalPages',
-              style: AppStyles.styleSemiBold16(context).copyWith(
-                color: const Color(0xFF10B981),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        child: Text(
+          '$_currentPage',
+          style: AppStyles.styleSemiBold16(context).copyWith(
+            color: const Color(0xFF10B981),
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
