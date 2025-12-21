@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/core/helpers/shipments_calender_helper.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
@@ -18,14 +19,32 @@ class ShipmentsCalendarDetails extends StatelessWidget {
     required this.shipments,
   });
 
+  bool _areAllShipmentsDeliveredWithTime(List<ShipmentModel> shipments) {
+    return shipments.isNotEmpty &&
+        shipments.every((s) {
+          Logger().d("STATUS: ${s.status}");
+
+          return s.status == "تم التسليم";
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final dateKey = CalendarUtils.formatDateKey(selectedDate);
     final shipmentsHelper = ShipmentsCalendarHelper(shipments: shipments);
     final shipmentsList = shipmentsHelper.getShipmentsForDate(dateKey);
-    final isDelivered = shipmentsHelper.areAllShipmentsDeliveredWithTime(
-      dateKey,
-    );
+    final isDelivered = _areAllShipmentsDeliveredWithTime(shipmentsList);
+    Logger().i("DELIVERED: $isDelivered");
+
+    // Determine border color based on conditions
+    Color borderColor;
+    if (shipmentsList.isEmpty || isDelivered) {
+      // Green if no shipments or all delivered
+      borderColor = Colors.green[300]!;
+    } else {
+      // Red if there are shipments that are not all delivered
+      borderColor = Colors.red[300]!;
+    }
 
     return Container(
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -33,10 +52,7 @@ class ShipmentsCalendarDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDelivered ? Colors.green[300]! : Colors.red[300]!,
-          width: 1.5,
-        ),
+        border: Border.all(color: borderColor, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,7 +74,6 @@ class ShipmentsCalendarDetails extends StatelessWidget {
               ).copyWith(color: AppColors.subTextColor),
             ),
           ),
-
           const SizedBox(height: 16),
           if (shipmentsList.isEmpty)
             Center(
