@@ -11,11 +11,14 @@ import 'package:supercycle/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle/core/routes/routes.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/features/environment/data/cubits/create_request_cubit/create_request_cubit.dart';
 import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
+import 'package:supercycle/features/environment/data/cubits/requests_cubit/requests_cubit.dart';
 import 'package:supercycle/features/environment/data/repos/environment_repo_imp.dart';
 import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
 import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:supercycle/features/home/data/managers/profile_cubit/profile_cubit.dart';
 import 'package:supercycle/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
 import 'package:supercycle/features/home/data/repos/home_repo_imp.dart';
 import 'package:supercycle/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
@@ -150,6 +153,20 @@ void main() async {
             forgetPasswordRepoImp: getIt.get<ForgetPasswordRepoImp>(),
           ),
         ),
+
+        BlocProvider(
+          create: (context) => RequestsCubit(
+            environmentRepoImp: getIt.get<EnvironmentRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) => CreateRequestCubit(
+            environmentRepoImp: getIt.get<EnvironmentRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(create: (context) => ProfileCubit()),
       ],
       child: const MyApp(),
     ),

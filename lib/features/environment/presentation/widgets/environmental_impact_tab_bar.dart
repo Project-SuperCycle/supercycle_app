@@ -23,6 +23,9 @@ class EnvironmentalImpactTabBar extends StatelessWidget {
           context,
         ).copyWith(fontWeight: FontWeight.bold),
         indicatorSize: TabBarIndicatorSize.tab,
+        isScrollable: true, // Added for better UI with 5 tabs
+        tabAlignment:
+            TabAlignment.start, // Better alignment for scrollable tabs
         tabs: [
           Tab(
             height: 36,
@@ -44,6 +47,18 @@ class EnvironmentalImpactTabBar extends StatelessWidget {
             height: 36,
             child: Center(
               child: FittedBox(fit: BoxFit.scaleDown, child: Text('الإنجازات')),
+            ),
+          ),
+          Tab(
+            height: 36,
+            child: Center(
+              child: FittedBox(fit: BoxFit.scaleDown, child: Text('المعاملات')),
+            ),
+          ),
+          Tab(
+            height: 36,
+            child: Center(
+              child: FittedBox(fit: BoxFit.scaleDown, child: Text('الطلبات')),
             ),
           ),
         ],

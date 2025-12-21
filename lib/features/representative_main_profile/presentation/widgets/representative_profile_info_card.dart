@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/utils/profile_constants.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
@@ -64,9 +63,7 @@ class _RepresentativeProfileInfoCardState
           decoration: BoxDecoration(
             color: const Color(0xFF10B981).withAlpha(25),
             border: Border.all(color: const Color(0xFF10B981)),
-            borderRadius: BorderRadius.circular(
-              ProfileConstants.cardBorderRadius,
-            ),
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withAlpha(25),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/profile_constants.dart';
 
 class RepresentativProfileImage extends StatelessWidget {
   const RepresentativProfileImage({super.key, required this.logoPath});
@@ -9,8 +8,8 @@ class RepresentativProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: ProfileConstants.profileImageSize,
-      height: ProfileConstants.profileImageSize,
+      width: 100,
+      height: 100,
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,

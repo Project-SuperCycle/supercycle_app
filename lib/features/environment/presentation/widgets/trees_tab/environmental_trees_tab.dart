@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/features/environment/data/models/trader_eco_info_model.dart';
 import 'package:supercycle/features/environment/presentation/widgets/trees_tab/earn_points_card.dart';
-import 'package:supercycle/features/environment/presentation/widgets/trees_tab/eco_transaction_card.dart';
 import 'package:supercycle/features/environment/presentation/widgets/trees_tab/green_points_card.dart';
 import 'package:supercycle/features/environment/presentation/widgets/trees_tab/tree_initiative_card.dart';
 
@@ -25,15 +24,6 @@ class EnvironmentalTreesTab extends StatelessWidget {
               ],
             ),
           ),
-          SliverList.builder(
-            itemBuilder: (context, index) {
-              return EcoTransactionCard(
-                transaction: ecoInfoModel.transactions[index],
-              );
-            },
-            itemCount: ecoInfoModel.transactions.length,
-          ),
-
           SliverToBoxAdapter(
             child: Column(
               children: [

@@ -59,8 +59,11 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
 
       return right(shipments);
     } on DioException catch (dioError) {
+      Logger().e("DIOERROR ${dioError.response?.data}");
+      Logger().e("DIOERROR ${dioError.response?.statusCode}");
       return left(ServerFailure.fromDioError(dioError));
     } on FormatException catch (formatError) {
+      Logger().e("DIOFORMAT ${formatError.toString()}");
       return left(ServerFailure(formatError.toString(), 422));
     } on TypeError catch (typeError, stackTrace) {
       Logger().w("typeError ${typeError.toString()}");

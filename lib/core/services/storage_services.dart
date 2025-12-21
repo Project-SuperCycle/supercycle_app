@@ -119,6 +119,7 @@ abstract class StorageServices {
       role: data['role'],
       displayName: data['displayName'],
       phone: data['phone'],
+      isEcoParticipant: data['isEcoParticipant'],
     );
     return user;
   }

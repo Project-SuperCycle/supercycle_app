@@ -283,6 +283,7 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
         _buildNavigationItem(
           asset: AppAssets.boxIcon,
           isSvg: true,
+          height: 30,
           label: 'عملية بيع',
         ),
         _buildNavigationItem(

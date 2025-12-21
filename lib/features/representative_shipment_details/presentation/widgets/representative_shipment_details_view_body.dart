@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
@@ -25,7 +26,6 @@ class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
     super.key,
     required this.shipment,
   });
-
   final SingleShipmentModel shipment;
 
   @override
@@ -41,7 +41,6 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isNotesDataExpanded = false;
   bool hasActionBeenTaken = false;
   bool showInspectionActions = false;
-
   int _page = 3;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -52,6 +51,7 @@ class _RepresentativeShipmentDetailsViewBodyState
   void initState() {
     super.initState();
     _loadActionState();
+    Logger().i("STATUS ${widget.shipment.status}");
   }
 
   Future<void> _loadActionState() async {
@@ -69,7 +69,7 @@ class _RepresentativeShipmentDetailsViewBodyState
   void _markActionAsTaken() {
     setState(() {
       hasActionBeenTaken = true;
-      showInspectionActions = false; // إخفاء الأكشنز بعد اتخاذ الإجراء
+      showInspectionActions = false;
     });
     _saveActionState(true);
   }
@@ -100,149 +100,132 @@ class _RepresentativeShipmentDetailsViewBodyState
       key: _scaffoldKey,
       body: Container(
         width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(gradient: kGradientBackground),
         child: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: const ShipmentLogo(),
-                ),
-              ),
-              SliverFillRemaining(
+          child: Column(
+            children: [
+              // Header Section - ثابت في الأعلى
+              _buildHeader(),
+              // المحتوى القابل للتمرير
+              Expanded(
                 child: Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(35),
+                      topRight: Radius.circular(35),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(50),
+                        blurRadius: 20,
+                        offset: const Offset(0, -5),
+                      ),
+                    ],
                   ),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RepresentativeShipmentDetailsHeader(
-                          shipment: widget.shipment,
-                        ),
-                        const SizedBox(height: 12),
-                        ProgressBar(completedSteps: _getProgressSteps()),
-                        const SizedBox(height: 20),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'تفاصيل الشحنة',
-                            iconPath: AppAssets.boxPerspective,
-                            isExpanded: isShipmentDetailsExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleShipmentDetails,
-                            content: RepresentativeShipmentDetailsContent(
-                              items: widget.shipment.items,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(35),
+                      topRight: Radius.circular(35),
+                    ),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          // Header & Progress Bar
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
+                            child: Column(
+                              children: [
+                                ProgressBar(
+                                  completedSteps: _getProgressSteps(),
+                                  totalSteps: 6,
+                                ),
+                                const SizedBox(height: 12),
+                                RepresentativeShipmentDetailsHeader(
+                                  shipment: widget.shipment,
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        widget.shipment.inspectedItems.isNotEmpty
-                            ? Column(
-                                children: [
-                                  Container(
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: ExpandableSection(
-                                      title: 'الشحنة بعد المعاينة',
-                                      iconPath: AppAssets.boxPerspective,
-                                      isExpanded: isInspectedItemsExpanded,
-                                      maxHeight: 320,
-                                      onTap: _toggleInspectedItems,
-                                      content:
-                                          RepresentativeShipmentDetailsContent(
-                                            items:
-                                                widget.shipment.inspectedItems,
-                                          ),
-                                    ),
+                          // المحتوى الرئيسي
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 10),
+                                // تفاصيل الشحنة
+                                _buildExpandableCard(
+                                  title: 'تفاصيل الشحنة',
+                                  icon: AppAssets.boxPerspective,
+                                  isExpanded: isShipmentDetailsExpanded,
+                                  onTap: _toggleShipmentDetails,
+                                  content: RepresentativeShipmentDetailsContent(
+                                    items: widget.shipment.items,
                                   ),
-                                  const SizedBox(height: 20),
-                                ],
-                              )
-                            : SizedBox.shrink(),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'بيانات جهة التعامل',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isClientDataExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleClientData,
-                            content: ClientDataContent(
-                              trader: widget.shipment.trader,
+                                  maxHeight: 320,
+                                ),
+                                const SizedBox(height: 16),
+                                // الشحنة بعد المعاينة
+                                if (widget.shipment.inspectedItems.isNotEmpty)
+                                  Column(
+                                    children: [
+                                      _buildExpandableCard(
+                                        title: 'الشحنة بعد المعاينة',
+                                        icon: AppAssets.boxPerspective,
+                                        isExpanded: isInspectedItemsExpanded,
+                                        onTap: _toggleInspectedItems,
+                                        content:
+                                            RepresentativeShipmentDetailsContent(
+                                              items: widget
+                                                  .shipment
+                                                  .inspectedItems,
+                                            ),
+                                        maxHeight: 320,
+                                      ),
+                                      const SizedBox(height: 16),
+                                    ],
+                                  ),
+                                // بيانات جهة التعامل
+                                _buildExpandableCard(
+                                  title: 'بيانات جهة التعامل',
+                                  icon: AppAssets.entityCard,
+                                  isExpanded: isClientDataExpanded,
+                                  onTap: _toggleClientData,
+                                  content: ClientDataContent(
+                                    trader: widget.shipment.trader,
+                                  ),
+                                  maxHeight: 320,
+                                ),
+                                const SizedBox(height: 20),
+                                // عنوان الاستلام
+                                _buildAddressSection(),
+                                const SizedBox(height: 20),
+                                // ملاحظات من التاجر / الاداره
+                                _buildExpandableCard(
+                                  title: 'ملاحظات من التاجر / الاداره',
+                                  icon: AppAssets.entityCard,
+                                  isExpanded: isNotesDataExpanded,
+                                  onTap: _toggleNotesData,
+                                  content: RepresentativeShipmentNotesContent(
+                                    notes: widget.shipment.mainNotes,
+                                  ),
+                                  maxHeight: 200,
+                                ),
+                                const SizedBox(height: 20),
+                                // ملاحظات المندوب
+                                _buildNotesCard(),
+                                const SizedBox(height: 25),
+                                // الأزرار
+                                _buildShipmentButtons(),
+                                const SizedBox(height: 30),
+                              ],
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            CustomTextField(
-                              label: "العنوان",
-                              hint: widget.shipment.customPickupAddress,
-                              keyboardType: TextInputType.text,
-                              icon: Icons.location_on_rounded,
-                              isArabic: true,
-                              enabled: false,
-                              borderColor: Colors.green.shade300,
-                            ),
-                            const SizedBox(height: 6),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0,
-                              ),
-                              child: Text(
-                                "سيتم استلام الشحنة منه",
-                                style: AppStyles.styleSemiBold12(
-                                  context,
-                                ).copyWith(color: AppColors.subTextColor),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 25),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'ملاحظات من التاجر / الاداره',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isNotesDataExpanded,
-                            maxHeight: 200,
-                            onTap: _toggleNotesData,
-                            content: RepresentativeShipmentNotesContent(
-                              notes: widget.shipment.mainNotes,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        RepresentativeShipmentDetailsNotes(
-                          shipment: widget.shipment,
-                        ),
-                        const SizedBox(height: 25),
-                        _buildShipmentButtons(),
-                        const SizedBox(height: 30),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -259,6 +242,114 @@ class _RepresentativeShipmentDetailsViewBodyState
     );
   }
 
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.only(top: 10, bottom: 20),
+      child: const ShipmentLogo(),
+    );
+  }
+
+  Widget _buildExpandableCard({
+    required String title,
+    required String icon,
+    required bool isExpanded,
+    required VoidCallback onTap,
+    required Widget content,
+    required double maxHeight,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isExpanded ? Colors.green.shade200 : Colors.grey.shade200,
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isExpanded
+                ? Colors.green.withAlpha(50)
+                : Colors.black.withAlpha(25),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ExpandableSection(
+        title: title,
+        iconPath: icon,
+        isExpanded: isExpanded,
+        maxHeight: maxHeight,
+        onTap: onTap,
+        content: content,
+      ),
+    );
+  }
+
+  Widget _buildAddressSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50.withAlpha(150),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.green.shade200, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  label: "العنوان",
+                  hint: widget.shipment.customPickupAddress,
+                  keyboardType: TextInputType.text,
+                  icon: Icons.location_on_rounded,
+                  isArabic: true,
+                  enabled: false,
+                  borderColor: Colors.green.shade300,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(Icons.info_outline, size: 16, color: AppColors.subTextColor),
+              const SizedBox(width: 4),
+              Text(
+                "سيتم استلام الشحنة من هذا العنوان",
+                style: AppStyles.styleSemiBold12(
+                  context,
+                ).copyWith(color: AppColors.subTextColor),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotesCard() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(25),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: RepresentativeShipmentDetailsNotes(shipment: widget.shipment),
+    );
+  }
+
   int _getProgressSteps() {
     switch (widget.shipment.status) {
       case 'approved':
@@ -269,9 +360,10 @@ class _RepresentativeShipmentDetailsViewBodyState
         return 3;
       case 'delivery_in_transit':
         return 4;
-      case 'delivered':
       case 'complete_weighted':
         return 5;
+      case 'delivered':
+        return 6;
       default:
         return 0;
     }
@@ -292,7 +384,6 @@ class _RepresentativeShipmentDetailsViewBodyState
       if (!showInspectionActions) {
         return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');
       }
-
       // إذا تم الضغط على زر "بدأ المعاينة"، اعرض أزرار الإجراءات
       return RepresentativeShipmentActionsRow(
         shipment: widget.shipment,
@@ -308,7 +399,6 @@ class _RepresentativeShipmentDetailsViewBodyState
       'partially_delivered',
       'complete_weighted',
     ];
-
     if (reviewStatuses.contains(status)) {
       return RepresentativeShipmentReviewButton(shipment: widget.shipment);
     }
