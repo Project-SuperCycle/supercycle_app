@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/environment/presentation/widgets/impact_tab/environmental_impact_saving_item.dart';
 
 class EnvironmentalImpactSavingCard extends StatelessWidget {
-  const EnvironmentalImpactSavingCard({super.key});
+  final num fullWeight;
+  const EnvironmentalImpactSavingCard({super.key, required this.fullWeight});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class EnvironmentalImpactSavingCard extends StatelessWidget {
           EnvironmentalImpactSavingItem(
             icon: Icons.water_drop,
             iconColor: const Color(0xFF3B82F6),
-            value: '12,450 لتر ماء',
+            value: ' ${_calcWaterValue()}  لتر ماء ',
             description: 'وفرت من خلال إعادة التدوير بدلاً من الإنتاج الجديد',
             progress: 0.78,
             progressColor: const Color(0xFF3B82F6),
@@ -47,7 +50,7 @@ class EnvironmentalImpactSavingCard extends StatelessWidget {
           EnvironmentalImpactSavingItem(
             icon: Icons.cloud,
             iconColor: const Color(0xFF6B7280),
-            value: '2.4 طن CO₂',
+            value: ' ${_calcCarbonValue()} طن CO₂ ',
             description: 'انبعاثات كربونية تم تجنبها لحماية الغلاف الجوي',
             progress: 0.65,
             progressColor: const Color(0xFF6B7280),
@@ -56,7 +59,7 @@ class EnvironmentalImpactSavingCard extends StatelessWidget {
           EnvironmentalImpactSavingItem(
             icon: Icons.bolt,
             iconColor: const Color(0xFFF59E0B),
-            value: '1,850 كيلووات طاقة',
+            value: ' ${_calcEnergyValue()} كيلووات طاقة ',
             description: 'طاقة كهربائية تم توفيرها من عملية التدوير',
             progress: 0.82,
             progressColor: const Color(0xFFF59E0B),
@@ -64,5 +67,50 @@ class EnvironmentalImpactSavingCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _calcWaterValue() {
+    final double value = (26.5 * fullWeight);
+
+    // Create number formatter with thousand separators
+    final formatter = NumberFormat('#,##0.00', 'en_US');
+    String formattedValue = formatter.format(value);
+
+    // Add leading zero if value < 10
+    if (value < 10) {
+      return '0$formattedValue';
+    }
+
+    return formattedValue;
+  }
+
+  String _calcCarbonValue() {
+    final double value = (1.0 * fullWeight);
+
+    // Create number formatter with thousand separators
+    final formatter = NumberFormat('#,##0.00', 'en_US');
+    String formattedValue = formatter.format(value);
+
+    // Add leading zero if value < 10
+    if (value < 10) {
+      return '0$formattedValue';
+    }
+
+    return formattedValue;
+  }
+
+  String _calcEnergyValue() {
+    final double value = (4.0 * fullWeight);
+
+    // Create number formatter with thousand separators
+    final formatter = NumberFormat('#,##0.00', 'en_US');
+    String formattedValue = formatter.format(value);
+
+    // Add leading zero if value < 10
+    if (value < 10) {
+      return '0$formattedValue';
+    }
+
+    return formattedValue;
   }
 }

@@ -37,13 +37,19 @@ class EnvironmentalImpactSavingItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(value, style: AppStyles.styleSemiBold14(context)),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(value, style: AppStyles.styleSemiBold14(context)),
+              ),
               const SizedBox(height: 8),
-              Text(
-                description,
-                style: AppStyles.styleMedium12(
-                  context,
-                ).copyWith(color: Colors.grey[600]),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  description,
+                  style: AppStyles.styleMedium12(
+                    context,
+                  ).copyWith(color: Colors.grey[600]),
+                ),
               ),
               const SizedBox(height: 8),
               LinearProgressIndicator(

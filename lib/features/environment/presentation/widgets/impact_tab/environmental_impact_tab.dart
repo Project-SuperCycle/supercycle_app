@@ -3,7 +3,8 @@ import 'package:supercycle/features/environment/presentation/widgets/impact_tab/
 import 'package:supercycle/features/environment/presentation/widgets/impact_tab/environmental_impact_saving_card.dart';
 
 class EnvironmentalImpactTab extends StatelessWidget {
-  const EnvironmentalImpactTab({super.key});
+  final num fullWeight;
+  const EnvironmentalImpactTab({super.key, required this.fullWeight});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class EnvironmentalImpactTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          EnvironmentalImpactSavingCard(),
+          EnvironmentalImpactSavingCard(fullWeight: fullWeight),
           const SizedBox(height: 16),
           EnvironmentalImpactInfoCard(),
         ],

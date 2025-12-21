@@ -23,11 +23,15 @@ class _EnvironmentalImpactViewBodyState
     extends State<EnvironmentalImpactViewBody>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  num fullWeight = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+
+    // Fetch eco data first
+    BlocProvider.of<EcoCubit>(context).getTraderEcoInfo();
     BlocProvider.of<RequestsCubit>(context).getTraderEcoRequests();
   }
 
@@ -37,11 +41,22 @@ class _EnvironmentalImpactViewBodyState
     super.dispose();
   }
 
+  void _updateFullWeight(num weight) {
+    if (fullWeight != weight) {
+      setState(() {
+        fullWeight = weight;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<EcoCubit, EcoState>(
         listener: (context, state) {
+          if (state is GetEcoDataSuccess) {
+            _updateFullWeight(state.ecoInfoModel.stats.totalRecycledKg);
+          }
           if (state is GetEcoDataFailure) {
             ScaffoldMessenger.of(
               context,
@@ -49,6 +64,16 @@ class _EnvironmentalImpactViewBodyState
           }
         },
         builder: (context, state) {
+          // Show loading while fetching initial data
+          if (state is EcoInitial || state is GetEcoDataLoading) {
+            return Center(child: CustomLoadingIndicator());
+          }
+
+          // Update fullWeight immediately when data is available
+          if (state is GetEcoDataSuccess && fullWeight == 0) {
+            fullWeight = state.ecoInfoModel.stats.totalRecycledKg;
+          }
+
           return CustomScrollView(
             slivers: [
               (state is GetEcoDataSuccess)
@@ -67,52 +92,24 @@ class _EnvironmentalImpactViewBodyState
                     EnvironmentalImpactTabBar(tabController: _tabController),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.7,
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          EnvironmentalImpactTab(),
-                          (state is GetEcoDataSuccess)
-                              ? EnvironmentalTreesTab(
+                      child: (state is GetEcoDataSuccess)
+                          ? TabBarView(
+                              controller: _tabController,
+                              children: [
+                                EnvironmentalImpactTab(fullWeight: fullWeight),
+                                EnvironmentalTreesTab(
                                   ecoInfoModel: state.ecoInfoModel,
-                                )
-                              : Center(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: CustomLoadingIndicator(),
-                                  ),
                                 ),
-                          (state is GetEcoDataSuccess)
-                              ? EnvironmentalAchievementsTab(
+                                EnvironmentalAchievementsTab(
                                   ecoInfoModel: state.ecoInfoModel,
-                                )
-                              : Center(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: CustomLoadingIndicator(),
-                                  ),
                                 ),
-                          // New Transactions Tab
-                          (state is GetEcoDataSuccess)
-                              ? EnvironmentalTransactionsTab(
+                                EnvironmentalTransactionsTab(
                                   ecoInfoModel: state.ecoInfoModel,
-                                )
-                              : Center(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: CustomLoadingIndicator(),
-                                  ),
                                 ),
-                          // New Requests Tab
-                          (state is GetEcoDataSuccess)
-                              ? EnvironmentalRequestsTab()
-                              : Center(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: CustomLoadingIndicator(),
-                                  ),
-                                ),
-                        ],
-                      ),
+                                const EnvironmentalRequestsTab(),
+                              ],
+                            )
+                          : Center(child: CustomLoadingIndicator()),
                     ),
                   ],
                 ),
