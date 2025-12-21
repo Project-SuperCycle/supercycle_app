@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:supercycle/core/models/trader_branch_model.dart';
+import 'package:supercycle/core/models/trader_contract_model.dart';
 import 'package:supercycle/core/models/trader_main_branch_model.dart';
 
 class UserProfileModel {
@@ -6,8 +8,10 @@ class UserProfileModel {
   final String email;
   final String role;
 
-  // Main Branch
-  final TraderMainBranchModel? branch;
+  // Branchs
+  final TraderMainBranchModel? mainBranch;
+  final List<TraderBranchModel> branchs;
+  final TraderContractModel? contract;
 
   // Profile
   final String? businessName;
@@ -46,7 +50,9 @@ class UserProfileModel {
     required this.repPhone,
     required this.repEmail,
     required this.repName,
-    required this.branch,
+    required this.mainBranch,
+    required this.branchs,
+    required this.contract,
   });
 
   // Factory constructor for creating a new instance from a map (JSON)
@@ -69,11 +75,19 @@ class UserProfileModel {
       doshManagerPhone: (json['profile'] != null)
           ? json['profile']['doshMangerPhone']
           : null,
-      branch: (json['mainBranch'] != null)
+      mainBranch: (json['mainBranch'] != null)
           ? TraderMainBranchModel.fromJson(json['mainBranch'])
           : null,
+      branchs: json['branches'] != null
+          ? List<TraderBranchModel>.from(
+              json['branches'].map(
+                (brnach) => TraderBranchModel.fromJson(brnach),
+              ),
+            )
+          : [],
       totalShipmentsCount: (json['stats'] != null)
-          ? json['stats']['totalShipmentsCount']
+          ? json['stats']['totalShipmentsCount'] ??
+                json['stats']['totalScheduled']
           : null,
       fullyDeliveredCount: (json['stats'] != null)
           ? json['stats']['fullyDeliveredCount']
@@ -82,7 +96,7 @@ class UserProfileModel {
           ? json['stats']['partiallyOrFullyDeliveredCount']
           : null,
       totalShipments: (json['stats'] != null)
-          ? json['stats']['totalShipments']
+          ? json['stats']['totalShipments'] ?? json['stats']['totalScheduled']
           : null,
       delivered: (json['stats'] != null) ? json['stats']['delivered'] : null,
       failed: (json['stats'] != null) ? json['stats']['failed'] : null,
@@ -94,6 +108,9 @@ class UserProfileModel {
           : null,
       repName: (json['representative'] != null)
           ? json['representative']['displayName']
+          : null,
+      contract: (json['contract'] != null)
+          ? TraderContractModel.fromJson(json['contract'])
           : null,
     );
   }
@@ -117,7 +134,9 @@ class UserProfileModel {
       'repPhone': repPhone,
       'repEmail': repEmail,
       'repName': repName,
-      'branch': branch != null ? _branchToJsonSafe(branch!) : null,
+      'branch': mainBranch != null ? _branchToJsonSafe(mainBranch!) : null,
+      'branches': branchs.map((branch) => branch.toJson()).toList(),
+      'contract': contract != null ? _contractToJsonSafe(contract!) : null,
     };
   }
 
@@ -127,6 +146,16 @@ class UserProfileModel {
       final branchMap = branch.toMap();
       // Convert any DateTime objects to ISO8601 strings
       return _convertDateTimesToStrings(branchMap);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Map<String, dynamic>? _contractToJsonSafe(TraderContractModel contract) {
+    try {
+      final contractMap = contract.toJson();
+      // Convert any DateTime objects to ISO8601 strings
+      return _convertDateTimesToStrings(contractMap);
     } catch (e) {
       return null;
     }
@@ -169,7 +198,7 @@ class UserProfileModel {
       businessAddress: map['businessAddress'],
       doshManagerName: map['doshManagerName'],
       doshManagerPhone: map['doshManagerPhone'],
-      totalShipmentsCount: map['totalShipmentsCount'],
+      totalShipmentsCount: map['totalShipmentsCount'] ?? map['totalScheduled'],
       fullyDeliveredCount: map['fullyDeliveredCount'],
       partiallyDeliveredCount: map['partiallyDeliveredCount'],
       totalShipments: map['totalShipments'],
@@ -178,8 +207,18 @@ class UserProfileModel {
       repPhone: map['repPhone'],
       repEmail: map['repEmail'],
       repName: map['repName'],
-      branch: map['branch'] != null
+      mainBranch: map['branch'] != null
           ? TraderMainBranchModel.fromJson(map['branch'])
+          : null,
+      branchs: map['branches'] != null
+          ? List<TraderBranchModel>.from(
+              map['branches'].map(
+                (branch) => TraderBranchModel.fromJson(branch),
+              ),
+            )
+          : [],
+      contract: map['contract'] != null
+          ? TraderContractModel.fromJson(map['contract'])
           : null,
     );
   }
@@ -193,7 +232,8 @@ class UserProfileModel {
     String? businessAddress,
     String? doshManagerName,
     String? doshManagerPhone,
-    TraderMainBranchModel? branch,
+    TraderMainBranchModel? mainBranch,
+    List<TraderBranchModel>? branchs,
     num? totalShipmentsCount,
     num? fullyDeliveredCount,
     num? partiallyDeliveredCount,
@@ -203,6 +243,7 @@ class UserProfileModel {
     String? repPhone,
     String? repEmail,
     String? repName,
+    TraderContractModel? contract,
   }) {
     return UserProfileModel(
       email: email ?? this.email,
@@ -212,7 +253,8 @@ class UserProfileModel {
       businessAddress: businessAddress ?? this.businessAddress,
       doshManagerName: doshManagerName ?? this.doshManagerName,
       doshManagerPhone: doshManagerPhone ?? this.doshManagerPhone,
-      branch: branch ?? this.branch,
+      mainBranch: mainBranch ?? this.mainBranch,
+      branchs: branchs ?? this.branchs,
       totalShipmentsCount: totalShipmentsCount ?? this.totalShipmentsCount,
       fullyDeliveredCount: fullyDeliveredCount ?? this.fullyDeliveredCount,
       partiallyDeliveredCount:
@@ -223,6 +265,7 @@ class UserProfileModel {
       repPhone: repPhone ?? this.repPhone,
       repEmail: repEmail ?? this.repEmail,
       repName: repName ?? this.repName,
+      contract: contract ?? this.contract,
     );
   }
 }

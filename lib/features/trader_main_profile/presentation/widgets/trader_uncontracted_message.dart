@@ -138,11 +138,14 @@ class TraderUncontractedMessage extends StatelessWidget {
                           size: 20,
                           color: Colors.white,
                         ),
-                        label: Text(
-                          'واتساب',
-                          style: AppStyles.styleBold14(
-                            context,
-                          ).copyWith(color: Colors.white),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'واتساب',
+                            style: AppStyles.styleBold14(
+                              context,
+                            ).copyWith(color: Colors.white),
+                          ),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor,
@@ -170,11 +173,14 @@ class TraderUncontractedMessage extends StatelessWidget {
                           size: 20,
                           color: AppColors.primaryColor,
                         ),
-                        label: Text(
-                          'اتصل بنا',
-                          style: AppStyles.styleBold14(
-                            context,
-                          ).copyWith(color: AppColors.primaryColor),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'اتصل بنا',
+                            style: AppStyles.styleBold14(
+                              context,
+                            ).copyWith(color: AppColors.primaryColor),
+                          ),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -206,11 +212,14 @@ class TraderUncontractedMessage extends StatelessWidget {
         children: [
           Icon(icon, color: Colors.white, size: 28),
           const SizedBox(height: 6),
-          Text(
-            text,
-            style: AppStyles.styleSemiBold12(
-              context,
-            ).copyWith(color: Colors.white),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              text,
+              style: AppStyles.styleSemiBold12(
+                context,
+              ).copyWith(color: Colors.white),
+            ),
           ),
         ],
       ),

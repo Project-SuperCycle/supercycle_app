@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/trader_main_profile/data/models/trader_profile_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class TraderBranchesSection extends StatefulWidget {
-  const TraderBranchesSection({
-    super.key,
-    required this.branches,
-    required this.types,
-  });
+  const TraderBranchesSection({super.key, required this.branches});
 
-  final List<BranchModel> branches;
-  final List<String> types;
+  final List<TraderBranchModel> branches;
 
   @override
   State<TraderBranchesSection> createState() => _TraderBranchesSectionState();
@@ -25,13 +20,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildHeader(),
-        const SizedBox(height: 12),
-        _buildBranchesList(),
-        const SizedBox(height: 30),
-        _buildTypeUsed(),
-      ],
+      children: [_buildHeader(), _buildBranchesList()],
     );
   }
 
@@ -109,12 +98,12 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     ),
   );
 
-  Widget _buildBranchInfo(BranchModel branch) {
+  Widget _buildBranchInfo(TraderBranchModel branch) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          branch.name,
+          branch.branchName,
           style: AppStyles.styleSemiBold16(
             context,
           ).copyWith(color: AppColors.primaryColor),
@@ -164,12 +153,13 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
                 reservedSize: 60,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
-                  if (index < 0 || index >= branches.length)
+                  if (index < 0 || index >= branches.length) {
                     return const SizedBox();
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      branches[index].name,
+                      branches[index].branchName,
                       style: AppStyles.styleSemiBold12(context),
                       textAlign: TextAlign.center,
                       maxLines: 2,
@@ -203,7 +193,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final branch = branches[group.x.toInt()];
                 return BarTooltipItem(
-                  "${branch.name}\n${branch.deliveryVolume} كجم",
+                  "${branch.branchName}\n${branch.deliveryVolume} كجم",
                   const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -271,7 +261,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     );
   }
 
-  void _showBranchDetails(BranchModel branch) {
+  void _showBranchDetails(TraderBranchModel branch) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -279,43 +269,12 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
       builder: (context) => _BranchDetailsSheet(branch: branch),
     );
   }
-
-  Widget _buildTypeUsed() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "الأنواع المتعامل بيها:",
-          style: AppStyles.styleSemiBold18(context),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: widget.types.map((type) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: _decorBox().copyWith(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                type,
-                style: AppStyles.styleSemiBold12(
-                  context,
-                ).copyWith(color: AppColors.primaryColor),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
 }
 
 class _BranchDetailsSheet extends StatelessWidget {
   const _BranchDetailsSheet({required this.branch});
 
-  final BranchModel branch;
+  final TraderBranchModel branch;
 
   @override
   Widget build(BuildContext context) {
@@ -346,10 +305,10 @@ class _BranchDetailsSheet extends StatelessWidget {
             const SizedBox(height: 24),
             Text("تفاصيل الفرع", style: AppStyles.styleSemiBold18(context)),
             const SizedBox(height: 24),
-            _DetailRow(Icons.store, "اسم الفرع", branch.name),
+            _DetailRow(Icons.store, "اسم الفرع", branch.branchName),
             _DetailRow(Icons.location_on, "عنوان الفرع", branch.address),
-            _DetailRow(Icons.person, "اسم المسؤول", branch.managerName),
-            _DetailRow(Icons.phone, "رقم تواصل المسؤول", branch.managerPhone),
+            _DetailRow(Icons.person, "اسم المسؤول", branch.contactName),
+            _DetailRow(Icons.phone, "رقم تواصل المسؤول", branch.contactPhone),
             _DetailRow(
               Icons.inventory_2,
               "حجم التوريدات",

@@ -163,6 +163,10 @@ class _UserProfileWelcomeCardState extends State<UserProfileWelcomeCard> {
               ),
             );
           },
+          buildWhen: (previous, current) =>
+              current is ProfileSuccess ||
+              current is ProfileFailure ||
+              current is ProfileLoading,
         ),
       ],
     );

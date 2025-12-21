@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
-import 'package:supercycle/core/utils/profile_constants.dart'
-    show ProfileConstants;
 import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_branches_section.dart';
 import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_main_branch_section.dart';
 import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_profile_info_row.dart';
@@ -34,11 +32,8 @@ class TraderProfileInfoCard1 extends StatelessWidget {
             ..._buildProfileInfoRows(),
             const SizedBox(height: 30),
             (userProfile.role == "trader_uncontracted")
-                ? TraderMainBranchSection(branch: userProfile.branch!)
-                : TraderBranchesSection(
-                    branches: ProfileConstants.sampleProfileData.branches,
-                    types: ProfileConstants.sampleProfileData.recyclableTypes,
-                  ),
+                ? TraderMainBranchSection(branch: userProfile.mainBranch!)
+                : TraderBranchesSection(branches: userProfile.branchs),
           ],
         ),
       ),
@@ -77,7 +72,7 @@ class TraderProfileInfoCard1 extends StatelessWidget {
     return profileInfo
         .map(
           (item) => Padding(
-            padding: const EdgeInsets.only(bottom: ProfileConstants.spacing),
+            padding: const EdgeInsets.only(bottom: 20),
             child: TraderProfileInfoRow(
               label: item.label,
               value: item.value,

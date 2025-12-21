@@ -10,6 +10,7 @@ import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/drawer/user_info_list_tile.dart';
 import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
+import 'package:supercycle/features/home/data/managers/profile_cubit/profile_cubit.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -143,23 +144,43 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     },
                   ),
 
-                  _buildDrawerItem(
-                    icon: Icons.person_rounded,
-                    title: 'الملف الشخصي',
-                    isActive:
-                        currentLocation ==
-                            EndPoints.representativeProfileView ||
-                        currentLocation == EndPoints.editProfileView,
-                    onTap: () async {
-                      Navigator.pop(context);
-                      if (user == null) {
-                        context.push(EndPoints.signInView);
-                      } else {
-                        navigateToProfile(context);
-                      }
-                    },
-                  ),
-
+                  // BlocConsumer<ProfileCubit, ProfileState>(
+                  //   listener: (context, state) {
+                  //     if (state is ProfileSuccess) {
+                  //       context.push(EndPoints.environmentalImpactView);
+                  //     }
+                  //   },
+                  //   builder: (context, state) {
+                  //     return (state is ProfileLoading)
+                  //         ? SizedBox(
+                  //             width: 40,
+                  //             height: 40,
+                  //             child: const CustomLoadingIndicator(),
+                  //           )
+                  //         : _buildDrawerItem(
+                  //             icon: Icons.person_rounded,
+                  //             title: 'الملف الشخصي',
+                  //             isActive:
+                  //                 currentLocation ==
+                  //                     EndPoints.representativeProfileView ||
+                  //                 currentLocation == EndPoints.editProfileView,
+                  //             onTap: () async {
+                  //               Navigator.pop(context);
+                  //               if (user == null) {
+                  //                 context.push(EndPoints.signInView);
+                  //               } else {
+                  //                 BlocProvider.of<ProfileCubit>(
+                  //                   context,
+                  //                 ).fetchUserProfile(context: context);
+                  //               }
+                  //             },
+                  //           );
+                  //   },
+                  //   buildWhen: (previous, current) =>
+                  //       current is ProfileSuccess ||
+                  //       current is ProfileFailure ||
+                  //       current is ProfileLoading,
+                  // ),
                   _buildDrawerItem(
                     icon: Icons.calendar_today_rounded,
                     title: 'جدول الشحنات',
@@ -424,7 +445,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Colors.red.withAlpha(50),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(

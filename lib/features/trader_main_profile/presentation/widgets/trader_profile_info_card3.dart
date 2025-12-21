@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle/core/models/trader_contract_model.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
@@ -6,6 +7,7 @@ import 'package:supercycle/features/trader_main_profile/presentation/widgets/tra
 
 class TraderProfileInfoCard3 extends StatelessWidget {
   final UserProfileModel user;
+
   const TraderProfileInfoCard3({super.key, required this.user});
 
   @override
@@ -26,6 +28,17 @@ class TraderProfileInfoCard3 extends StatelessWidget {
   }
 
   Widget _buildContractInfo(BuildContext context) {
+    TraderContractModel contact = user.contract!;
+
+    // Format start date in Arabic
+    String formattedStartDate = _formatArabicDate(contact.startDate);
+
+    // Calculate contract duration in Arabic
+    String contractDuration = _calculateContractDuration(
+      contact.startDate,
+      contact.endDate,
+    );
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -47,46 +60,23 @@ class TraderProfileInfoCard3 extends StatelessWidget {
               icon: Icons.calendar_today,
               title: 'مدة التعاقد',
               content: [
-                'تاريخ بدء التعاقد: 7 يوليو 2025',
-                'مدة التعاقد: 3 شهور',
+                'تاريخ بدء التعاقد: $formattedStartDate',
+                'مدة التعاقد: $contractDuration',
               ],
-              context: context,
-            ),
-            _divider(),
-            _buildContractSection(
-              icon: Icons.article_outlined,
-              title: 'الشروط العامة',
-              content: [
-                'الأنواع: كرتون بنى - ورق ابيض',
-                'الكمية الكلية: 70 (30 في الأسبوع الأول - 40 في التالي)',
-                'التسليم: 50 من الأول - 15 من التالي',
-                'بدء الشراء من الأسبوع الثالث',
-              ],
-              context: context,
-            ),
-            _divider(),
-            _buildContractSection(
-              icon: Icons.attach_money,
-              title: 'السعر الكلي',
-              content: ['السعر الكلي: 2 مليون جنيه مصري'],
-              highlight: true,
               context: context,
             ),
             _divider(),
             _buildContractSection(
               icon: Icons.payment,
               title: 'طريقة الدفع',
-              content: [
-                'الدفعة الأولى: 700 ألف',
-                'دفعتين إضافيتين حتى الدفعة الثالثة',
-              ],
+              content: ['المتفق عليها: ${contact.paymentMethod}'],
               context: context,
             ),
             _divider(),
             _buildContractSection(
               icon: Icons.local_shipping_outlined,
-              title: 'شروط التسليم',
-              content: ['المكان: فرع المعادي', 'الموعد: يوم 7 من كل شهر'],
+              title: 'الكمية المصدرة',
+              content: ['الاجمالي: ${contact.fullQuantity} كجم '],
               context: context,
             ),
             _divider(),
@@ -99,11 +89,147 @@ class TraderProfileInfoCard3 extends StatelessWidget {
               ],
               context: context,
             ),
+            _divider(),
+            _buildTypeUsed(context, contact.types),
           ],
         ),
       ),
     );
   }
+
+  // Format date in Arabic (e.g., "7 يوليو 2025")
+  String _formatArabicDate(DateTime date) {
+    final arabicMonths = {
+      1: 'يناير',
+      2: 'فبراير',
+      3: 'مارس',
+      4: 'أبريل',
+      5: 'مايو',
+      6: 'يونيو',
+      7: 'يوليو',
+      8: 'أغسطس',
+      9: 'سبتمبر',
+      10: 'أكتوبر',
+      11: 'نوفمبر',
+      12: 'ديسمبر',
+    };
+
+    return '${date.day} ${arabicMonths[date.month]} ${date.year}';
+  }
+
+  // Calculate contract duration in Arabic
+  String _calculateContractDuration(DateTime startDate, DateTime endDate) {
+    final difference = endDate.difference(startDate);
+
+    // Calculate years, months, and days
+    int years = (difference.inDays / 365).floor();
+    int remainingDays = difference.inDays % 365;
+    int months = (remainingDays / 30).floor();
+    int days = remainingDays % 30;
+
+    List<String> parts = [];
+
+    if (years > 0) {
+      if (years == 1) {
+        parts.add('سنة');
+      } else if (years == 2) {
+        parts.add('سنتان');
+      } else if (years >= 3 && years <= 10) {
+        parts.add('$years سنوات');
+      } else {
+        parts.add('$years سنة');
+      }
+    }
+
+    if (months > 0) {
+      if (months == 1) {
+        parts.add('شهر');
+      } else if (months == 2) {
+        parts.add('شهران');
+      } else if (months >= 3 && months <= 10) {
+        parts.add('$months شهور');
+      } else {
+        parts.add('$months شهر');
+      }
+    }
+
+    if (days > 0) {
+      if (days == 1) {
+        parts.add('يوم');
+      } else if (days == 2) {
+        parts.add('يومان');
+      } else if (days >= 3 && days <= 10) {
+        parts.add('$days أيام');
+      } else {
+        parts.add('$days يوم');
+      }
+    }
+
+    if (parts.isEmpty) {
+      return 'يوم واحد';
+    }
+
+    return parts.join(' و ');
+  }
+
+  Widget _buildTypeUsed(BuildContext context, List<String> types) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981).withAlpha(25),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.integration_instructions_outlined,
+                color: const Color(0xFF10B981),
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              "الأنواع المتعامل بيها",
+              style: AppStyles.styleBold16(context),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: types.map((type) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: _decorBox().copyWith(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                type,
+                style: AppStyles.styleSemiBold12(
+                  context,
+                ).copyWith(color: AppColors.primaryColor),
+              ),
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  BoxDecoration _decorBox() => BoxDecoration(
+    color: AppColors.primaryColor.withAlpha(25),
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(
+      color: AppColors.primaryColor.withAlpha(100),
+      width: 1.5,
+    ),
+  );
 
   Widget _divider() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -123,14 +249,14 @@ class TraderProfileInfoCard3 extends StatelessWidget {
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: const Color(0xFF10B981).withAlpha(25),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: const Color(0xFF10B981), size: 20),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             Text(title, style: AppStyles.styleBold16(context)),
           ],
         ),

@@ -6,7 +6,6 @@ import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/utils/profile_constants.dart';
 
 class TraderProfileHeaderSection extends StatelessWidget {
   final UserProfileModel userProfile;
@@ -102,8 +101,8 @@ class TraderProfileHeaderSection extends StatelessWidget {
 
                   // Profile Image
                   Container(
-                    width: ProfileConstants.profileImageSize,
-                    height: ProfileConstants.profileImageSize,
+                    width: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
