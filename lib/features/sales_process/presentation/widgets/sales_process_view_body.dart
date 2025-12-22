@@ -427,6 +427,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     });
   }
 
+  // في الـ _handleSubmit method
   Future<void> _handleSubmit() async {
     try {
       CreateShipmentModel shipment = CreateShipmentModel(
@@ -435,6 +436,8 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         images: selectedImages,
         items: products,
         userNotes: notes.isEmpty ? "" : notes.first,
+        selectedBranchId: selectedBranchId,
+        selectedBranchName: selectedBranchName, // إضافة البيانات هنا
       );
 
       String? validationError = _getValidationError(shipment);
@@ -478,6 +481,9 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
               products = updatedShipment.items;
               selectedImages = updatedShipment.images;
               notes = [updatedShipment.userNotes];
+              // تحديث بيانات الفرع المختار
+              selectedBranchId = selectedBranchId;
+              selectedBranchName = selectedBranchName;
             });
 
             ScaffoldMessenger.of(context).showSnackBar(
@@ -507,6 +513,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     }
   }
 
+  // تعديل الـ validation
   String? _getValidationError(CreateShipmentModel shipment) {
     if (shipment.requestedPickupAt == null || selectedDateTime == null) {
       return "يرجى تحديد تاريخ الاستلام";
@@ -516,8 +523,12 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       return "يرجى إدخال عنوان الاستلام";
     }
 
-    if (selectedBranchId == null || selectedBranchName == null) {
-      return "يرجى اختيار الفرع";
+    // التحقق من الفرع فقط للـ trader_contracted
+    if (userRole == "trader_contracted") {
+      if (shipment.selectedBranchId == null ||
+          shipment.selectedBranchId == null) {
+        return "يرجى اختيار الفرع";
+      }
     }
 
     if (shipment.items.isEmpty) {

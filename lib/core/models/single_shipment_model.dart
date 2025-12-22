@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:supercycle/core/functions/shipment_manager.dart';
 import 'package:supercycle/core/models/shipment_trader_model.dart';
 import 'package:supercycle/features/representative_shipment_details/data/models/rep_note_model.dart';
@@ -25,6 +24,7 @@ class SingleShipmentModel {
   final List<ShipmentNoteModel> mainNotes;
   final List<ShipmentNoteModel> repNotes;
   final List<ShipmentSegmentModel> segments;
+  final ShipmentBranchModel? branch;
 
   SingleShipmentModel({
     required this.id,
@@ -41,6 +41,7 @@ class SingleShipmentModel {
     required this.mainNotes,
     required this.repNotes,
     required this.segments,
+    this.branch,
     this.representitive,
     this.trader,
     this.images = const [],
@@ -89,6 +90,9 @@ class SingleShipmentModel {
       representitive: json['representativeId'] != null
           ? RepresentitiveModel.fromJson(json['representativeId'])
           : null,
+      branch: json['sourceLocationId'] != null
+          ? ShipmentBranchModel.fromJson(json['sourceLocationId'])
+          : null,
       trader: json['traderId'] != null
           ? ShipmentTraderModel.fromJson(json['traderId'])
           : null,
@@ -117,6 +121,7 @@ class SingleShipmentModel {
       'items': items.map((item) => item.toJson()).toList(),
       'inspectedItems': inspectedItems.map((item) => item.toJson()).toList(),
       'userNotes': userNotes,
+      'sourceLocationId': branch?.toJson(),
       'totalQuantityKg': totalQuantityKg,
       'representitive': representitive?.toJson(),
       'trader': trader?.toJson(),
@@ -134,6 +139,7 @@ class SingleShipmentModel {
         items: inspectedItems,
       ),
       'userNotes': userNotes,
+      'sourceLocationId': branch?.toJson(),
     };
   }
 
@@ -160,6 +166,7 @@ class SingleShipmentModel {
     List<ShipmentNoteModel>? mainNotes,
     List<ShipmentNoteModel>? repNotes,
     List<ShipmentSegmentModel>? segments,
+    ShipmentBranchModel? branch,
   }) {
     return SingleShipmentModel(
       id: id ?? this.id,
@@ -179,6 +186,37 @@ class SingleShipmentModel {
       mainNotes: mainNotes ?? this.mainNotes,
       repNotes: repNotes ?? this.repNotes,
       segments: segments ?? this.segments,
+      branch: branch ?? this.branch,
+    );
+  }
+}
+
+class ShipmentBranchModel {
+  final String branchName;
+  final String address;
+
+  const ShipmentBranchModel({required this.branchName, required this.address});
+
+  factory ShipmentBranchModel.fromJson(Map<String, dynamic> json) {
+    return ShipmentBranchModel(
+      branchName: json['branchName'] ?? '',
+      address: json['address'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'branchName': branchName, 'address': address};
+  }
+
+  @override
+  String toString() {
+    return 'TraderBranchModel(branchName: $branchName, address: $address)';
+  }
+
+  ShipmentBranchModel copyWith({String? branchName, String? address}) {
+    return ShipmentBranchModel(
+      branchName: branchName ?? this.branchName,
+      address: address ?? this.address,
     );
   }
 }

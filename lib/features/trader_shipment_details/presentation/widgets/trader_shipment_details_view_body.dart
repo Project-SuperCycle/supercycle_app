@@ -190,8 +190,11 @@ class _TraderShipmentDetailsViewBodyState
                                     ],
                                   ),
                                 const SizedBox(height: 4),
+
                                 // عنوان الاستلام
-                                _buildAddressSection(),
+                                (widget.shipment.customPickupAddress != null)
+                                    ? _buildAddressSection()
+                                    : _buildBranchSection(),
                                 const SizedBox(height: 20),
                                 // الملاحظات
                                 _buildNotesCard(),
@@ -300,6 +303,92 @@ class _TraderShipmentDetailsViewBodyState
                 ).copyWith(color: AppColors.subTextColor),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBranchSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50.withAlpha(150),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.green.shade200, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.store_rounded,
+                  color: Colors.green.shade500,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'الفرع',
+                style: AppStyles.styleSemiBold16(
+                  context,
+                ).copyWith(color: AppColors.mainTextColor),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.green.shade200, width: 1),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade50,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    color: Colors.green.shade500,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.shipment.branch?.branchName ?? '',
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(color: Colors.grey.shade800),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        widget.shipment.branch?.address ?? '',
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(color: Colors.grey.shade400),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
