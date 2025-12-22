@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/helpers/custom_dropdown.dart';
+import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -34,12 +36,26 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
   List<File> selectedImages = [];
   DateTime? selectedDateTime;
   String userAddress = "";
+  String userRole = "";
   TextEditingController addressController = TextEditingController();
+  List<TraderBranchModel> branchs = [];
+
+  // Variables للـ branch المختار
+  String? selectedBranchId;
+  String? selectedBranchName;
 
   @override
   void initState() {
     super.initState();
     _getUserAddress();
+    _getUserBranchs();
+  }
+
+  void _getUserBranchs() async {
+    final storedBranchs = await StorageServices.getUserBranchs();
+    setState(() {
+      branchs = storedBranchs;
+    });
   }
 
   void _getUserAddress() async {
@@ -49,6 +65,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     }
     setState(() {
       userAddress = user.bussinessAdress ?? "";
+      userRole = user.role ?? "";
       addressController.text = userAddress;
     });
   }
@@ -77,6 +94,22 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     });
   }
 
+  // Function لما يختار branch
+  void _onBranchChanged(String? branchName) {
+    if (branchName == null) return;
+
+    // البحث عن الـ branch المختار في الـ list
+    final selectedBranch = branchs.firstWhere(
+      (branch) => branch.branchName == branchName,
+      orElse: () => branchs.first,
+    );
+
+    setState(() {
+      selectedBranchName = selectedBranch.branchName;
+      selectedBranchId = selectedBranch.branchId;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +134,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withAlpha(50),
                         blurRadius: 20,
                         offset: const Offset(0, -5),
                       ),
@@ -163,7 +196,9 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
                                 const SizedBox(height: 20),
 
                                 // عنوان الاستلام
-                                _buildAddressSection(),
+                                (userRole == "trader_contracted")
+                                    ? _buildBranchSection()
+                                    : _buildAddressSection(),
 
                                 const SizedBox(height: 20),
 
@@ -237,8 +272,8 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         boxShadow: [
           BoxShadow(
             color: isExpanded
-                ? Colors.green.withOpacity(0.08)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.green.withAlpha(50)
+                : Colors.black.withAlpha(25),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -259,7 +294,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.shade50.withOpacity(0.3),
+        color: Colors.green.shade50.withAlpha(150),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.green.shade200, width: 1.5),
       ),
@@ -301,6 +336,62 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     );
   }
 
+  // Widget جديد لقسم اختيار الفرع
+  Widget _buildBranchSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50.withAlpha(150),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue.shade200, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.store_rounded,
+                color: AppColors.primaryColor,
+                size: 24,
+              ),
+              const SizedBox(width: 10),
+              Text("اختر الفرع", style: AppStyles.styleSemiBold16(context)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          CustomDropdown(
+            options: branchs.map((branch) => branch.branchName).toList(),
+            initialValue: selectedBranchName,
+            hintText: "اختر الفرع",
+            onChanged: _onBranchChanged,
+            width: MediaQuery.of(context).size.width,
+            maxHeight: 250,
+            isSearchable: branchs.length > 5, // لو الأفرع أكتر من 5 يفعل البحث
+            showBorder: true,
+          ),
+          if (selectedBranchName != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(Icons.check_circle, size: 16, color: Colors.green),
+                const SizedBox(width: 4),
+                Text(
+                  "تم اختيار: $selectedBranchName",
+                  style: AppStyles.styleSemiBold12(
+                    context,
+                  ).copyWith(color: Colors.green.shade700),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildNotesCard() {
     return Container(
       padding: const EdgeInsets.all(4),
@@ -310,7 +401,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         border: Border.all(color: Colors.grey.shade200, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withAlpha(25),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -425,6 +516,10 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       return "يرجى إدخال عنوان الاستلام";
     }
 
+    if (selectedBranchId == null || selectedBranchName == null) {
+      return "يرجى اختيار الفرع";
+    }
+
     if (shipment.items.isEmpty) {
       return "يرجى إضافة منتجات للشحنة";
     }
@@ -443,22 +538,6 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
     }
 
     return null;
-  }
-
-  bool _validateShipmentData(CreateShipmentModel shipment) {
-    if (shipment.requestedPickupAt == null || selectedDateTime == null) {
-      return false;
-    }
-    if (shipment.customPickupAddress.isEmpty) {
-      return false;
-    }
-    if (shipment.items.isEmpty) {
-      return false;
-    }
-    if (shipment.images.isEmpty) {
-      return false;
-    }
-    return true;
   }
 
   String _handleAddress() {

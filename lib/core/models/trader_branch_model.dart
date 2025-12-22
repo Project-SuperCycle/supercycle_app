@@ -1,4 +1,5 @@
 class TraderBranchModel {
+  final String branchId;
   final String branchName;
   final String address;
   final String contactName;
@@ -8,6 +9,7 @@ class TraderBranchModel {
   final String deliverySchedule;
 
   const TraderBranchModel({
+    required this.branchId,
     required this.branchName,
     required this.address,
     required this.contactName,
@@ -19,6 +21,7 @@ class TraderBranchModel {
 
   factory TraderBranchModel.fromJson(Map<String, dynamic> json) {
     return TraderBranchModel(
+      branchId: json['_id'] ?? '',
       branchName: json['branchName'] ?? '',
       address: json['address'] ?? '',
       contactName: json['contactName'] ?? '',
@@ -35,6 +38,7 @@ class TraderBranchModel {
 
   Map<String, dynamic> toJson() {
     return {
+      '_id': branchId,
       'branchName': branchName,
       'address': address,
       'contactName': contactName,
@@ -45,7 +49,13 @@ class TraderBranchModel {
     };
   }
 
+  @override
+  String toString() {
+    return 'TraderBranchModel(branchId: $branchId, branchName: $branchName, address: $address, contactName: $contactName, contactPhone: $contactPhone, deliveryVolume: $deliveryVolume, recyclableTypes: $recyclableTypes, deliverySchedule: $deliverySchedule)';
+  }
+
   TraderBranchModel copyWith({
+    String? branchId,
     String? branchName,
     String? address,
     String? contactName,
@@ -55,6 +65,7 @@ class TraderBranchModel {
     String? deliverySchedule,
   }) {
     return TraderBranchModel(
+      branchId: branchId ?? this.branchId,
       branchName: branchName ?? this.branchName,
       address: address ?? this.address,
       contactName: contactName ?? this.contactName,

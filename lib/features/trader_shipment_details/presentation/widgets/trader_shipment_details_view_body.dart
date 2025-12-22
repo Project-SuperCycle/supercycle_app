@@ -106,8 +106,19 @@ class _TraderShipmentDetailsViewBodyState
                                   completedSteps: _getProgressSteps(),
                                 ),
                                 const SizedBox(height: 16),
-                                TraderShipmentDetailsHeader(
-                                  shipment: widget.shipment,
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade50,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.grey.shade200,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: TraderShipmentDetailsHeader(
+                                    shipment: widget.shipment,
+                                  ),
                                 ),
                               ],
                             ),

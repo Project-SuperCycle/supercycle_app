@@ -31,7 +31,6 @@ class _EnvironmentalImpactViewBodyState
     _tabController = TabController(length: 5, vsync: this);
 
     // Fetch eco data first
-    BlocProvider.of<EcoCubit>(context).getTraderEcoInfo();
     BlocProvider.of<RequestsCubit>(context).getTraderEcoRequests();
   }
 
