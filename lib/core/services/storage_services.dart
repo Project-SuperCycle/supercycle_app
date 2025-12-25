@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 abstract class StorageServices {
@@ -122,6 +123,35 @@ abstract class StorageServices {
       isEcoParticipant: data['isEcoParticipant'],
     );
     return user;
+  }
+
+  /// GET USER BRANCHS
+  static Future<List<TraderBranchModel>> getUserBranchs() async {
+    try {
+      // readData هترجع الـ data مباشرة (List أو Map)
+      final data = await StorageServices.readData("user_branchs");
+
+      if (data == null) return [];
+
+      List<dynamic> branchsMap;
+
+      // التعامل مع الحالتين: لو جاية Map فيها data أو List مباشرة
+      if (data is Map && data.containsKey('data')) {
+        branchsMap = data['data'] as List<dynamic>;
+      } else if (data is List) {
+        branchsMap = data;
+      } else {
+        return [];
+      }
+
+      return branchsMap
+          .map(
+            (json) => TraderBranchModel.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to retrieve user branchs: ${e.toString()}');
+    }
   }
 
   /// GET USER TOKEN

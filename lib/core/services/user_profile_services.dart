@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
@@ -9,6 +10,7 @@ import 'package:supercycle/core/services/storage_services.dart';
 class UserProfileService {
   // Storage key for user profile
   static const String _profileKey = 'user_profile';
+  static const String _branchsKey = 'user_branchs';
 
   /// Fetch user profile from API and store it in storage
   static Future<UserProfileModel?> fetchAndStoreUserProfile() async {
@@ -32,8 +34,20 @@ class UserProfileService {
     try {
       final userMap = user.toMap();
       await StorageServices.storeData(_profileKey, userMap);
+      if (user.branchs.isNotEmpty) {
+        await _storeUserBranchs(user.branchs);
+      }
     } catch (e) {
       throw Exception('Failed to store user profile: ${e.toString()}');
+    }
+  }
+
+  static Future<void> _storeUserBranchs(List<TraderBranchModel> branchs) async {
+    try {
+      final branchsMap = branchs.map((branch) => branch.toJson()).toList();
+      await StorageServices.storeData(_branchsKey, branchsMap);
+    } catch (e) {
+      throw Exception('Failed to store user branchs: ${e.toString()}');
     }
   }
 

@@ -4,7 +4,8 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:logger/logger.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/functions/shipment_manager.dart';
@@ -35,6 +36,7 @@ class ShipmentReviewDialog extends StatefulWidget {
 class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
   late TextEditingController addressController;
   late TextEditingController notesController;
+  bool isContacted = false;
 
   final Map<int, TextEditingController> _qtyControllers = {};
 
@@ -42,11 +44,16 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
   late List<File> images;
   DateTime? selectedDateTime;
 
+  // إضافة متغيرات الفرع
+  String? selectedBranchId;
+  String? selectedBranchName;
+
   OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
     super.initState();
+    _setIsContacted();
 
     addressController = TextEditingController(
       text: widget.shipment.customPickupAddress,
@@ -57,10 +64,27 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
     images = List.from(widget.shipment.images);
     selectedDateTime = widget.shipment.requestedPickupAt;
 
+    // تهيئة بيانات الفرع من الشحنة الممررة
+    selectedBranchId = widget.shipment.selectedBranchId;
+    selectedBranchName = widget.shipment.selectedBranchName;
+
     for (int i = 0; i < items.length; i++) {
       _qtyControllers[i] = TextEditingController(
         text: items[i].quantity.toString(),
       );
+    }
+  }
+
+  void _setIsContacted() async {
+    final user = await StorageServices.getUserData();
+    if (user!.role == "trader_contracted") {
+      setState(() {
+        isContacted = true;
+      });
+    } else {
+      setState(() {
+        isContacted = false;
+      });
     }
   }
 
@@ -137,6 +161,8 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
       images: images,
       items: items,
       userNotes: notesController.text.trim(),
+      selectedBranchId: selectedBranchId, // تمرير الفرع
+      selectedBranchName: selectedBranchName, // تمرير الفرع
     );
 
     widget.onUpdate?.call(updated);
@@ -167,18 +193,17 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         await ShipmentManager.createMultipartImages(images: images);
 
     final formData = FormData.fromMap({
-      ...shipment.toMap(),
+      ...shipment.toMap(includeCustomPickupAddress: !isContacted),
       'uploadedImages': imagesFiles,
     });
+
     return formData;
   }
 
   void _showError(String msg) {
-    // إزالة أي رسالة سابقة
     _overlayEntry?.remove();
     _overlayEntry = null;
 
-    // إنشاء رسالة جديدة
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: MediaQuery.of(context).padding.top + 20,
@@ -231,10 +256,8 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
       ),
     );
 
-    // إضافة الرسالة للـ Overlay
     Overlay.of(context).insert(_overlayEntry!);
 
-    // إزالة الرسالة بعد 3 ثواني
     Future.delayed(const Duration(seconds: 3), () {
       _overlayEntry?.remove();
       _overlayEntry = null;
@@ -364,24 +387,420 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // ميعاد التسليم
-        Container(
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.green.shade50, Colors.green.shade100],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.green.shade300, width: 1.5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.green.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+        _buildDeliveryTimeSection(),
+
+        // منتجات الشحنة
+        _buildProductsHeader(),
+
+        // قائمة المنتجات
+        ...items.asMap().entries.map((e) {
+          final index = e.key;
+          final item = e.value;
+          return _buildProductCard(index, item, isSmall, isMedium);
+        }),
+
+        const SizedBox(height: 8),
+
+        // عنوان الاستلام
+        if (!isContacted) _buildAddressSection(),
+
+        // عرض الفرع المختار (إن وُجد)
+        if (selectedBranchName != null && selectedBranchId != null) ...[
+          const SizedBox(height: 16),
+          _buildBranchSection(),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildDeliveryTimeSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.green.shade50, Colors.green.shade100],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.green.shade300, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.green.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-          child: Row(
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.green.withOpacity(0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.access_time_rounded,
+              color: Colors.green.shade700,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'ميعاد التسليم',
+                  style: AppStyles.styleMedium14(
+                    context,
+                  ).copyWith(color: Colors.green.shade800),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  selectedDateTime == null
+                      ? 'لم يتم التحديد'
+                      : DateFormat(
+                          'yyyy-MM-dd | hh:mm a',
+                          'ar',
+                        ).format(selectedDateTime!),
+                  style: AppStyles.styleBold16(
+                    context,
+                  ).copyWith(color: Colors.green.shade900),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductsHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryColor.withOpacity(0.1),
+            AppColors.primaryColor.withOpacity(0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.primaryColor.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              Icons.inventory_2_rounded,
+              color: AppColors.primaryColor,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            'منتجات الشحنة',
+            style: AppStyles.styleSemiBold16(
+              context,
+            ).copyWith(color: AppColors.primaryColor),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '${items.length}',
+              style: AppStyles.styleSemiBold14(
+                context,
+              ).copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductCard(
+    int index,
+    DoshItemModel item,
+    bool isSmall,
+    bool isMedium,
+  ) {
+    final averagePrice = _getAveragePrice(item);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primaryColor,
+                        AppColors.primaryColor.withOpacity(0.8),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primaryColor.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${index + 1}',
+                      style: AppStyles.styleBold16(
+                        context,
+                      ).copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    item.name,
+                    textAlign: TextAlign.right,
+                    style: AppStyles.styleSemiBold16(
+                      context,
+                    ).copyWith(color: Colors.grey.shade800),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.red.shade100, width: 1),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.red.shade400,
+                      size: 22,
+                    ),
+                    onPressed: () => _removeItem(index),
+                    padding: const EdgeInsets.all(8),
+                    constraints: const BoxConstraints(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.format_list_numbered_rounded,
+                            color: Colors.blue.shade600,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'الكمية',
+                          style: AppStyles.styleSemiBold14(
+                            context,
+                          ).copyWith(color: Colors.grey.shade700),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: isSmall
+                          ? 100
+                          : isMedium
+                          ? 120
+                          : 140,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.primaryColor.withAlpha(150),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryColor.withAlpha(50),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        controller: _qtyControllers[index],
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        style: AppStyles.styleBold16(
+                          context,
+                        ).copyWith(color: AppColors.primaryColor),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintText: '0',
+                          hintStyle: TextStyle(color: Colors.grey.shade400),
+                        ),
+                        onChanged: (v) {
+                          final qty = int.tryParse(v);
+                          if (qty != null && qty > 0) {
+                            _updateQuantity(index, qty);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.attach_money,
+                            color: Colors.green.shade600,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'السعر',
+                          style: AppStyles.styleSemiBold14(
+                            context,
+                          ).copyWith(color: Colors.grey.shade700),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: isSmall
+                          ? 100
+                          : isMedium
+                          ? 120
+                          : 140,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.green.shade200,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          averagePrice,
+                          style: AppStyles.styleBold14(
+                            context,
+                          ).copyWith(color: Colors.green.shade700),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddressSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.orange.shade50, Colors.orange.shade100],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.orange.shade300, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
@@ -390,431 +809,145 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.green.withOpacity(0.2),
+                      color: Colors.orange.withOpacity(0.2),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
                 child: Icon(
-                  Icons.access_time_rounded,
-                  color: Colors.green.shade700,
+                  Icons.location_on_rounded,
+                  color: Colors.orange.shade700,
                   size: 24,
                 ),
               ),
               const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'ميعاد التسليم',
-                      style: AppStyles.styleMedium14(
-                        context,
-                      ).copyWith(color: Colors.green.shade800),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      selectedDateTime == null
-                          ? 'لم يتم التحديد'
-                          : DateFormat(
-                              'yyyy-MM-dd | hh:mm a',
-                              'ar',
-                            ).format(selectedDateTime!),
-                      style: AppStyles.styleBold16(
-                        context,
-                      ).copyWith(color: Colors.green.shade900),
-                    ),
-                  ],
-                ),
+              Text(
+                'عنوان الاستلام',
+                style: AppStyles.styleSemiBold16(
+                  context,
+                ).copyWith(color: Colors.orange.shade800),
               ),
             ],
           ),
-        ),
-
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.primaryColor.withOpacity(0.1),
-                AppColors.primaryColor.withOpacity(0.05),
-              ],
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.orange.shade200, width: 1),
             ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.primaryColor.withOpacity(0.2),
-              width: 1,
+            child: Text(
+              addressController.text.isEmpty
+                  ? 'لم يتم تحديد العنوان'
+                  : addressController.text,
+              style: AppStyles.styleMedium14(context).copyWith(
+                color: addressController.text.isEmpty
+                    ? Colors.grey.shade500
+                    : Colors.grey.shade800,
+                height: 1.5,
+              ),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBranchSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade50, Colors.blue.shade100],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue.shade300, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withOpacity(0.2),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Icon(
-                  Icons.inventory_2_rounded,
-                  color: AppColors.primaryColor,
-                  size: 20,
+                  Icons.store_rounded,
+                  color: Colors.blue.shade700,
+                  size: 24,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
-                'منتجات الشحنة',
+                'الفرع المختار',
                 style: AppStyles.styleSemiBold16(
                   context,
-                ).copyWith(color: AppColors.primaryColor),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '${items.length}',
-                  style: AppStyles.styleSemiBold14(
-                    context,
-                  ).copyWith(color: Colors.white),
-                ),
+                ).copyWith(color: Colors.blue.shade800),
               ),
             ],
           ),
-        ),
-
-        ...items.asMap().entries.map((e) {
-          final index = e.key;
-          final item = e.value;
-          final averagePrice = _getAveragePrice(item);
-
-          return Container(
-            margin: const EdgeInsets.only(bottom: 16),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.grey.shade200, width: 1.5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.blue.shade200, width: 1),
             ),
-            child: Column(
+            child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primaryColor,
-                              AppColors.primaryColor.withOpacity(0.8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primaryColor.withOpacity(0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${index + 1}',
-                            style: AppStyles.styleBold16(
-                              context,
-                            ).copyWith(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-
-                      Expanded(
-                        child: Text(
-                          item.name,
-                          textAlign: TextAlign.right,
-                          style: AppStyles.styleSemiBold16(
-                            context,
-                          ).copyWith(color: Colors.grey.shade800),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade50,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.red.shade100,
-                            width: 1,
-                          ),
-                        ),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.delete_outline_rounded,
-                            color: Colors.red.shade400,
-                            size: 22,
-                          ),
-                          onPressed: () => _removeItem(index),
-                          padding: const EdgeInsets.all(8),
-                          constraints: const BoxConstraints(),
-                        ),
-                      ),
-                    ],
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    color: Colors.blue.shade700,
+                    size: 20,
                   ),
                 ),
-
-                Container(
-                  padding: const EdgeInsets.all(16),
+                const SizedBox(width: 12),
+                Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // الكمية
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade50,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  Icons.format_list_numbered_rounded,
-                                  color: Colors.blue.shade600,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'الكمية',
-                                style: AppStyles.styleSemiBold14(
-                                  context,
-                                ).copyWith(color: Colors.grey.shade700),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: isSmall
-                                ? 100
-                                : isMedium
-                                ? 120
-                                : 140,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: AppColors.primaryColor.withAlpha(150),
-                                width: 1.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primaryColor.withAlpha(50),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: TextFormField(
-                              controller: _qtyControllers[index],
-                              keyboardType: TextInputType.number,
-                              textAlign: TextAlign.center,
-                              style: AppStyles.styleBold16(
-                                context,
-                              ).copyWith(color: AppColors.primaryColor),
-                              decoration: InputDecoration(
-                                isDense: true,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                hintText: '0',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey.shade400,
-                                ),
-                              ),
-                              onChanged: (v) {
-                                final qty = int.tryParse(v);
-                                if (qty != null && qty > 0) {
-                                  _updateQuantity(index, qty);
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // متوسط السعر
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.shade50,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  Icons.attach_money,
-                                  color: Colors.green.shade600,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'السعر',
-                                style: AppStyles.styleSemiBold14(
-                                  context,
-                                ).copyWith(color: Colors.grey.shade700),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: isSmall
-                                ? 100
-                                : isMedium
-                                ? 120
-                                : 140,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade50,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.green.shade200,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                averagePrice,
-                                style: AppStyles.styleBold14(
-                                  context,
-                                ).copyWith(color: Colors.green.shade700),
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        selectedBranchName ?? '',
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(color: Colors.grey.shade800),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-          );
-        }).toList(),
-
-        // عنوان التوصيل
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.orange.shade50, Colors.orange.shade100],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.orange.shade300, width: 1.5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.orange.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.orange.withOpacity(0.2),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.location_on_rounded,
-                      color: Colors.orange.shade700,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'عنوان الاستلام',
-                    style: AppStyles.styleSemiBold16(
-                      context,
-                    ).copyWith(color: Colors.orange.shade800),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.orange.shade200, width: 1),
-                ),
-                child: Text(
-                  addressController.text.isEmpty
-                      ? 'لم يتم تحديد العنوان'
-                      : addressController.text,
-                  style: AppStyles.styleMedium14(context).copyWith(
-                    color: addressController.text.isEmpty
-                        ? Colors.grey.shade500
-                        : Colors.grey.shade800,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -824,9 +957,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         if (state is CreateShipmentSuccess) {
           Navigator.pop(context);
           Navigator.pop(context);
-          GoRouter.of(context).pushReplacement(
-            EndPoints.shipmentsCalendarView,
-          );
+          GoRouter.of(context).pushReplacement(EndPoints.shipmentsCalendarView);
         }
         if (state is CreateShipmentFailure) {
           Navigator.pop(context);
