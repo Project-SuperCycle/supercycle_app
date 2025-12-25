@@ -4,7 +4,6 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
@@ -218,7 +217,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withAlpha(100),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -229,7 +228,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                 Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withAlpha(100),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
@@ -300,7 +299,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withAlpha(50),
                 blurRadius: 30,
                 offset: const Offset(0, 10),
               ),
@@ -334,7 +333,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         gradient: LinearGradient(
           colors: [
             AppColors.primaryColor,
-            AppColors.primaryColor.withOpacity(0.8),
+            AppColors.primaryColor.withAlpha(400),
           ],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
@@ -342,7 +341,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor.withOpacity(0.3),
+            color: AppColors.primaryColor.withAlpha(150),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -352,7 +351,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(100),
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -425,7 +424,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         border: Border.all(color: Colors.green.shade300, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.green.withOpacity(0.1),
+            color: Colors.green.withAlpha(50),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -440,7 +439,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.green.withOpacity(0.2),
+                  color: Colors.green.withAlpha(100),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -465,12 +464,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  selectedDateTime == null
-                      ? 'لم يتم التحديد'
-                      : DateFormat(
-                          'yyyy-MM-dd | hh:mm a',
-                          'ar',
-                        ).format(selectedDateTime!),
+                  _formateDate(),
                   style: AppStyles.styleBold16(
                     context,
                   ).copyWith(color: Colors.green.shade900),
@@ -483,6 +477,14 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
     );
   }
 
+  String _formateDate() {
+    if (selectedDateTime == null) {
+      return 'لم يتم التحديد';
+    }
+    final adjustedDate = selectedDateTime!.subtract(const Duration(hours: 2));
+    return DateFormat('yyyy-MM-dd | hh:mm a', 'ar').format(adjustedDate);
+  }
+
   Widget _buildProductsHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -490,13 +492,13 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primaryColor.withOpacity(0.1),
-            AppColors.primaryColor.withOpacity(0.05),
+            AppColors.primaryColor.withAlpha(50),
+            AppColors.primaryColor.withAlpha(25),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primaryColor.withOpacity(0.2),
+          color: AppColors.primaryColor.withAlpha(100),
           width: 1,
         ),
       ),
@@ -506,7 +508,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.1),
+              color: AppColors.primaryColor.withAlpha(50),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -557,7 +559,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         border: Border.all(color: Colors.grey.shade200, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withAlpha(25),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -582,13 +584,13 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                     gradient: LinearGradient(
                       colors: [
                         AppColors.primaryColor,
-                        AppColors.primaryColor.withOpacity(0.8),
+                        AppColors.primaryColor.withAlpha(400),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryColor.withOpacity(0.3),
+                        color: AppColors.primaryColor.withAlpha(150),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -791,7 +793,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         border: Border.all(color: Colors.orange.shade300, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withOpacity(0.1),
+            color: Colors.orange.withAlpha(50),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -809,7 +811,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.orange.withOpacity(0.2),
+                      color: Colors.orange.withAlpha(100),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -867,7 +869,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
         border: Border.all(color: Colors.blue.shade300, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withAlpha(50),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -885,7 +887,7 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.2),
+                      color: Colors.blue.withAlpha(100),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -986,13 +988,13 @@ class _ShipmentReviewDialogState extends State<ShipmentReviewDialog> {
                     gradient: LinearGradient(
                       colors: [
                         AppColors.primaryColor,
-                        AppColors.primaryColor.withOpacity(0.8),
+                        AppColors.primaryColor.withAlpha(400),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryColor.withOpacity(0.3),
+                        color: AppColors.primaryColor.withAlpha(150),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),

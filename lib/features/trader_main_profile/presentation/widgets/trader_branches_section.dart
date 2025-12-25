@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_branchs_section/trader_branchs_chart.dart';
 
 class TraderBranchesSection extends StatefulWidget {
   const TraderBranchesSection({super.key, required this.branches});
@@ -17,10 +19,20 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
   bool _isListView = true;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_buildHeader(), _buildBranchesList()],
+      children: [
+        _buildHeader(),
+        _isListView
+            ? _buildBranchesList()
+            : TraderBranchsChart(branches: widget.branches),
+      ],
     );
   }
 
@@ -32,7 +44,7 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
         Row(
           children: [
             _buildViewToggleButton(Icons.list, true),
-            // _buildViewToggleButton(Icons.bar_chart, false),
+            _buildViewToggleButton(Icons.bar_chart, false),
           ],
         ),
       ],
@@ -119,148 +131,6 @@ class _TraderBranchesSectionState extends State<TraderBranchesSection> {
     );
   }
 
-  Widget _buildBranchesChart() {
-    final branches = widget.branches;
-    if (branches.isEmpty) {
-      return const Center(child: Text("لا توجد بيانات للفروع"));
-    }
-
-    final maxVolume = branches
-        .map((b) => b.deliveryVolume)
-        .reduce((a, b) => a > b ? a : b);
-
-    return SizedBox(
-      height: 300,
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          maxY: maxVolume * 1.2,
-          borderData: FlBorderData(show: false),
-          gridData: const FlGridData(show: false),
-          titlesData: FlTitlesData(
-            leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: true, reservedSize: 50),
-            ),
-            rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 60,
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index < 0 || index >= branches.length) {
-                    return const SizedBox();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      branches[index].branchName,
-                      style: AppStyles.styleSemiBold12(context),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          barGroups: List.generate(branches.length, (index) {
-            final branch = branches[index];
-            return BarChartGroupData(
-              x: index,
-              barRods: [
-                BarChartRodData(
-                  toY: branch.deliveryVolume.toDouble(),
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(6),
-                  width: 22,
-                ),
-              ],
-              showingTooltipIndicators: [0],
-            );
-          }),
-          barTouchData: BarTouchData(
-            enabled: true,
-            touchTooltipData: BarTouchTooltipData(
-              tooltipRoundedRadius: 8,
-              getTooltipColor: (_) => AppColors.primaryColor.withOpacity(0.9),
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                final branch = branches[group.x.toInt()];
-                return BarTooltipItem(
-                  "${branch.branchName}\n${branch.deliveryVolume} كجم",
-                  const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTypesSection(List<String> types) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.category, color: AppColors.primaryColor, size: 24),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "الأنواع المتعامل بها",
-                  style: AppStyles.styleSemiBold12(
-                    context,
-                  ).copyWith(color: AppColors.subTextColor),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: types.map((type) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withAlpha(25),
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: AppColors.primaryColor.withAlpha(100),
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        type,
-                        style: AppStyles.styleSemiBold12(
-                          context,
-                        ).copyWith(color: AppColors.primaryColor),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showBranchDetails(TraderBranchModel branch) {
     showModalBottomSheet(
       context: context,
@@ -317,7 +187,7 @@ class _BranchDetailsSheet extends StatelessWidget {
             _DetailRow(
               Icons.schedule,
               "ميعاد التسليم",
-              branch.deliverySchedule,
+              _getDeliveryDaysText(branch.deliverySchedule),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
@@ -393,6 +263,26 @@ class _BranchDetailsSheet extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Helper method لتحويل shipmentDays لأسماء الأيام
+  String _getDeliveryDaysText(List<int> deliverySchedule) {
+    const Map<int, String> dayNames = {
+      0: 'السبت',
+      1: 'الأحد',
+      2: 'الإثنين',
+      3: 'الثلاثاء',
+      4: 'الأربعاء',
+      5: 'الخميس',
+      6: 'الجمعة',
+    };
+
+    if (deliverySchedule.isEmpty) return 'غير محدد';
+
+    return deliverySchedule
+        .map((day) => dayNames[day] ?? '')
+        .where((day) => day.isNotEmpty)
+        .join(', ');
   }
 }
 

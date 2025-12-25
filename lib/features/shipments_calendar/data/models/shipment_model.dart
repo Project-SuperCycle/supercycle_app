@@ -5,6 +5,8 @@ class ShipmentModel {
   final DateTime requestedPickupAt;
   final String status;
   final num totalQuantityKg;
+  final String type;
+  final bool isExtra;
 
   ShipmentModel({
     required this.id,
@@ -13,6 +15,8 @@ class ShipmentModel {
     required this.requestedPickupAt,
     required this.status,
     required this.totalQuantityKg,
+    required this.type,
+    required this.isExtra,
   });
 
   factory ShipmentModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,8 @@ class ShipmentModel {
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
       status: json['statusDisplay'] ?? "",
       totalQuantityKg: json['totalQuantityKg'] ?? json['actualQuantityKg'] ?? 0,
+      type: json['type'] ?? "",
+      isExtra: json['isExtra'] ?? false,
     );
   }
 
@@ -34,12 +40,14 @@ class ShipmentModel {
       'requestedPickupAt': requestedPickupAt.toIso8601String(),
       'status': status,
       'totalQuantityKg': totalQuantityKg,
+      'type': type,
+      'isExtra': isExtra,
     };
   }
 
   @override
   String toString() {
-    return 'ShipmentModel(id: $id, shipmentNumber: $shipmentNumber, customPickupAddress: $customPickupAddress, requestedPickupAt: $requestedPickupAt, status: $status, totalQuantityKg: $totalQuantityKg)';
+    return 'ShipmentModel(id: $id, shipmentNumber: $shipmentNumber, customPickupAddress: $customPickupAddress, requestedPickupAt: $requestedPickupAt, status: $status, totalQuantityKg: $totalQuantityKg, type: $type, isExtra: $isExtra)';
   }
 
   ShipmentModel copyWith({
@@ -49,6 +57,8 @@ class ShipmentModel {
     DateTime? requestedPickupAt,
     String? status,
     num? totalQuantityKg,
+    String? type,
+    bool? isExtra,
   }) {
     return ShipmentModel(
       id: id ?? this.id,
@@ -57,6 +67,8 @@ class ShipmentModel {
       requestedPickupAt: requestedPickupAt ?? this.requestedPickupAt,
       status: status ?? this.status,
       totalQuantityKg: totalQuantityKg ?? this.totalQuantityKg,
+      type: type ?? this.type,
+      isExtra: isExtra ?? this.isExtra,
     );
   }
 }

@@ -176,10 +176,12 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
   @override
   Future<Either<Failure, SingleShipmentModel>> getShipmentById({
     required String shipmentId,
+    required String type,
   }) async {
     try {
       final response = await apiServices.get(
         endPoint: ApiEndpoints.getShipmentById.replaceFirst('{id}', shipmentId),
+        query: {"type": type},
       );
       var data = response["data"];
       SingleShipmentModel shipment = SingleShipmentModel.fromJson(data);

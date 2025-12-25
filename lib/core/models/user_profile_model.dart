@@ -28,6 +28,13 @@ class UserProfileModel {
   final num? delivered;
   final num? failed;
 
+  // Shipments Summary
+  final num? scheduledCount;
+  final num? manualCount;
+  final num? deliveredTotal;
+  final num? deliveredInContract;
+  final num? deliveredOutContract;
+
   // Representative
   final String? repPhone;
   final String? repEmail;
@@ -47,6 +54,11 @@ class UserProfileModel {
     required this.totalShipments,
     required this.delivered,
     required this.failed,
+    required this.scheduledCount,
+    required this.manualCount,
+    required this.deliveredTotal,
+    required this.deliveredInContract,
+    required this.deliveredOutContract,
     required this.repPhone,
     required this.repEmail,
     required this.repName,
@@ -86,8 +98,7 @@ class UserProfileModel {
             )
           : [],
       totalShipmentsCount: (json['stats'] != null)
-          ? json['stats']['totalShipmentsCount'] ??
-                json['stats']['totalScheduled']
+          ? json['stats']['totalShipmentsCount']
           : null,
       fullyDeliveredCount: (json['stats'] != null)
           ? json['stats']['fullyDeliveredCount']
@@ -96,10 +107,26 @@ class UserProfileModel {
           ? json['stats']['partiallyOrFullyDeliveredCount']
           : null,
       totalShipments: (json['stats'] != null)
-          ? json['stats']['totalShipments'] ?? json['stats']['totalScheduled']
+          ? json['stats']['totalShipments']
           : null,
       delivered: (json['stats'] != null) ? json['stats']['delivered'] : null,
       failed: (json['stats'] != null) ? json['stats']['failed'] : null,
+      scheduledCount: (json['shipmentsSummary'] != null)
+          ? json['shipmentsSummary']['scheduledCount']
+          : null,
+      manualCount: (json['shipmentsSummary'] != null)
+          ? json['shipmentsSummary']['manualCount']
+          : null,
+      deliveredTotal: (json['shipmentsSummary'] != null)
+          ? json['shipmentsSummary']['delivered']['total']
+          : null,
+      deliveredInContract: (json['shipmentsSummary'] != null)
+          ? json['shipmentsSummary']['delivered']['inContract']
+          : null,
+      deliveredOutContract: (json['shipmentsSummary'] != null)
+          ? json['shipmentsSummary']['delivered']['outContract']
+          : null,
+
       repPhone: (json['representative'] != null)
           ? json['representative']['phone']
           : null,
@@ -131,10 +158,15 @@ class UserProfileModel {
       'totalShipments': totalShipments,
       'delivered': delivered,
       'failed': failed,
+      'scheduledCount': scheduledCount,
+      'manualCount': manualCount,
+      'deliveredTotal': deliveredTotal,
+      'deliveredInContract': deliveredInContract,
+      'deliveredOutContract': deliveredOutContract,
       'repPhone': repPhone,
       'repEmail': repEmail,
       'repName': repName,
-      'branch': mainBranch != null ? _branchToJsonSafe(mainBranch!) : null,
+      'mainBranch': mainBranch != null ? _branchToJsonSafe(mainBranch!) : null,
       'branches': branchs.map((branch) => branch.toJson()).toList(),
       'contract': contract != null ? _contractToJsonSafe(contract!) : null,
     };
@@ -204,6 +236,11 @@ class UserProfileModel {
       totalShipments: map['totalShipments'],
       delivered: map['delivered'],
       failed: map['failed'],
+      scheduledCount: map['scheduledCount'],
+      manualCount: map['manualCount'],
+      deliveredTotal: map['deliveredTotal'],
+      deliveredInContract: map['deliveredInContract'],
+      deliveredOutContract: map['deliveredOutContract'],
       repPhone: map['repPhone'],
       repEmail: map['repEmail'],
       repName: map['repName'],
@@ -213,7 +250,7 @@ class UserProfileModel {
       branchs: map['branches'] != null
           ? List<TraderBranchModel>.from(
               map['branches'].map(
-                (branch) => TraderBranchModel.fromJson(branch),
+                (branch) => TraderBranchModel.fromMap(branch),
               ),
             )
           : [],
@@ -240,6 +277,11 @@ class UserProfileModel {
     num? totalShipments,
     num? delivered,
     num? failed,
+    num? scheduledCount,
+    num? manualCount,
+    num? deliveredTotal,
+    num? deliveredInContract,
+    num? deliveredOutContract,
     String? repPhone,
     String? repEmail,
     String? repName,
@@ -262,10 +304,66 @@ class UserProfileModel {
       totalShipments: totalShipments ?? this.totalShipments,
       delivered: delivered ?? this.delivered,
       failed: failed ?? this.failed,
+      scheduledCount: scheduledCount ?? this.scheduledCount,
+      manualCount: manualCount ?? this.manualCount,
+      deliveredTotal: deliveredTotal ?? this.deliveredTotal,
+      deliveredInContract: deliveredInContract ?? this.deliveredInContract,
+      deliveredOutContract: deliveredOutContract ?? this.deliveredOutContract,
       repPhone: repPhone ?? this.repPhone,
       repEmail: repEmail ?? this.repEmail,
       repName: repName ?? this.repName,
       contract: contract ?? this.contract,
     );
+  }
+
+  @override
+  String toString() {
+    return '''
+═══════════════════════════════════════════════════════════
+                    USER PROFILE
+═══════════════════════════════════════════════════════════
+
+📧 BASIC INFO:
+   Email: $email
+   Role: $role
+
+🏢 BUSINESS INFO:
+   Business Name: ${businessName ?? 'N/A'}
+   Business Type: ${rawBusinessType ?? 'N/A'}
+   Business Address: ${businessAddress ?? 'N/A'}
+   Dosh Manager: ${doshManagerName ?? 'N/A'}
+   Manager Phone: ${doshManagerPhone ?? 'N/A'}
+
+📊 STATISTICS:
+   Total Shipments: ${totalShipmentsCount ?? 'N/A'}
+   Fully Delivered: ${fullyDeliveredCount ?? 'N/A'}
+   Partially Delivered: ${partiallyDeliveredCount ?? 'N/A'}
+   Total Shipments (Stats): ${totalShipments ?? 'N/A'}
+   Delivered: ${delivered ?? 'N/A'}
+   Failed: ${failed ?? 'N/A'}
+
+📦 SHIPMENTS SUMMARY:
+   Scheduled Count: ${scheduledCount ?? 'N/A'}
+   Manual Count: ${manualCount ?? 'N/A'}
+   Delivered Total: ${deliveredTotal ?? 'N/A'}
+   Delivered In Contract: ${deliveredInContract ?? 'N/A'}
+   Delivered Out Contract: ${deliveredOutContract ?? 'N/A'}
+
+👤 REPRESENTATIVE:
+   Name: ${repName ?? 'N/A'}
+   Phone: ${repPhone ?? 'N/A'}
+   Email: ${repEmail ?? 'N/A'}
+
+🏪 MAIN BRANCH:
+${mainBranch != null ? mainBranch.toString().split('\n').map((line) => '   $line').join('\n') : '   No main branch available'}
+
+📍 BRANCHES (${branchs.length}):
+${branchs.isEmpty ? '   No branches available' : branchs.asMap().entries.map((entry) => '\n   Branch ${entry.key + 1}:\n${entry.value.toString().split('\n').map((line) => '   $line').join('\n')}').join('\n')}
+
+📝 CONTRACT:
+${contract != null ? contract.toString().split('\n').map((line) => '   $line').join('\n') : '   No contract available'}
+
+═══════════════════════════════════════════════════════════
+''';
   }
 }

@@ -76,7 +76,11 @@ class TraderProfileInfoCard3 extends StatelessWidget {
             _buildContractSection(
               icon: Icons.local_shipping_outlined,
               title: 'الكمية المصدرة',
-              content: ['الاجمالي: ${contact.fullQuantity} كجم '],
+              content: [
+                'الاجمالي: ${contact.totalDeliveredKg} كجم ',
+                'شحنات متعاقد عليها: ${contact.shipmentsInContract.toString().padLeft(2, '0')} شحنة ',
+                'شحنات تمت من التعاقد: ${user.deliveredInContract.toString().padLeft(2, '0')} شحنة ',
+              ],
               context: context,
             ),
             _divider(),

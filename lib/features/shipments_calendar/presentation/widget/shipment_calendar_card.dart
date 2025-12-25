@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
+import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
@@ -44,9 +45,10 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
       _isNavigating = true;
     });
 
-    BlocProvider.of<ShipmentsCalendarCubit>(
-      context,
-    ).getShipmentById(shipmentId: widget.shipment.id);
+    BlocProvider.of<ShipmentsCalendarCubit>(context).getShipmentById(
+      shipmentId: widget.shipment.id,
+      type: widget.shipment.type,
+    );
   }
 
   @override
@@ -151,22 +153,35 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                       endIndent: 10,
                     ),
                     const SizedBox(height: 5),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        children: [
-                          Text(
-                            'الكمية: ',
-                            style: AppStyles.styleSemiBold14(context),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            children: [
+                              Text(
+                                'الكمية: ',
+                                style: AppStyles.styleSemiBold14(context),
+                              ),
+                              Text(
+                                widget.shipment.totalQuantityKg.toString(),
+                                style: AppStyles.styleMedium14(
+                                  context,
+                                ).copyWith(color: AppColors.subTextColor),
+                              ),
+                            ],
                           ),
-                          Text(
-                            widget.shipment.totalQuantityKg.toString(),
-                            style: AppStyles.styleMedium14(
-                              context,
-                            ).copyWith(color: AppColors.subTextColor),
-                          ),
-                        ],
-                      ),
+                        ),
+
+                        (widget.shipment.isExtra)
+                            ? Image.asset(
+                                AppAssets.extraBox,
+                                width: 25,
+                                height: 25,
+                              )
+                            : SizedBox.shrink(),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     FittedBox(

@@ -49,26 +49,14 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
     });
   }
 
-  void _fetchTodayShipments() {
-    // الحصول على تاريخ اليوم
-    final today = DateTime.now();
-
-    // تنسيق التاريخ بصيغة yyyy-MM-dd
-    final todayDate =
-        "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
-
-    final query = {"from": todayDate, "to": todayDate};
-
-    // استدعاء الـ cubit مع الـ query
-    BlocProvider.of<TodayShipmentsCubit>(
-      context,
-    ).fetchTodayShipments(query: query);
-  }
-
-  void _showShipmentDetails(BuildContext context, String shipmentID) {
+  void _showShipmentDetails(
+    BuildContext context,
+    String shipmentID,
+    String type,
+  ) {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
-    ).getShipmentById(shipmentId: shipmentID);
+    ).getShipmentById(shipmentId: shipmentID, type: type);
     BlocProvider.of<AllNotesCubit>(context).getAllNotes(shipmentId: shipmentID);
   }
 
@@ -236,8 +224,11 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
                         },
                         child: _ShipmentItem(
                           shipment: shipment,
-                          onTap: () =>
-                              _showShipmentDetails(context, shipment.id),
+                          onTap: () => _showShipmentDetails(
+                            context,
+                            shipment.id,
+                            shipment.type,
+                          ),
                         ),
                       ),
                 ),

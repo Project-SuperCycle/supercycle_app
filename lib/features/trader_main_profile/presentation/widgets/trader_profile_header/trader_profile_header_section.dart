@@ -144,7 +144,7 @@ class TraderProfileHeaderSection extends StatelessWidget {
                     ).copyWith(color: Colors.white, fontSize: 28),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
 
                   // Stats Row
                   Container(
@@ -154,24 +154,55 @@ class TraderProfileHeaderSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _StatCard(
-                          value: userProfile.totalShipmentsCount!
-                              .toString()
-                              .padLeft(2, '0'),
-                          label: 'عدد شحناتك\nمعانا',
+                        Expanded(
+                          child: _StatCard(
+                            value: (userProfile.totalShipmentsCount == null)
+                                ? userProfile.scheduledCount.toString().padLeft(
+                                    2,
+                                    '0',
+                                  )
+                                : userProfile.totalShipmentsCount
+                                      .toString()
+                                      .padLeft(2, '0'),
+                            label: 'عدد شحناتك\nالمتفق عليها',
+                          ),
                         ),
+                        if (userProfile.role == "trader_contracted") ...[
+                          Container(
+                            height: 50,
+                            width: 1,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            color: Colors.white.withAlpha(80),
+                          ),
+                          Expanded(
+                            child: _StatCard(
+                              value: userProfile.manualCount!
+                                  .toString()
+                                  .padLeft(2, '0'),
+                              label: 'عدد شحناتك\nالإضافية معانا',
+                            ),
+                          ),
+                        ],
                         Container(
                           height: 50,
                           width: 1,
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
                           color: Colors.white.withAlpha(80),
                         ),
-                        _StatCard(
-                          value: userProfile.fullyDeliveredCount!
-                              .toString()
-                              .padLeft(2, '0'),
-                          label: 'عدد شحنات\nتم تسليمها',
+                        Expanded(
+                          child: _StatCard(
+                            value: (userProfile.fullyDeliveredCount == null)
+                                ? userProfile.deliveredTotal.toString().padLeft(
+                                    2,
+                                    '0',
+                                  )
+                                : userProfile.fullyDeliveredCount
+                                      .toString()
+                                      .padLeft(2, '0'),
+                            label: 'عدد شحنات\nتم تسليمها',
+                          ),
                         ),
                       ],
                     ),
@@ -196,19 +227,24 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          value,
-          style: AppStyles.styleBold24(
-            context,
-          ).copyWith(color: Colors.white, fontSize: 32),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.center,
+          child: Text(
+            value,
+            style: AppStyles.styleBold24(
+              context,
+            ).copyWith(color: Colors.white, fontSize: 32),
+          ),
         ),
         const SizedBox(height: 8),
-        Text(
-          label,
-          style: AppStyles.styleSemiBold12(
-            context,
-          ).copyWith(color: const Color(0xFFD1FAE5)),
-          textAlign: TextAlign.center,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            style: AppStyles.styleBold12(context).copyWith(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     );

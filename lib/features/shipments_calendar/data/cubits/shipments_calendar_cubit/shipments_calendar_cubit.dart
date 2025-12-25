@@ -62,11 +62,15 @@ class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
     }
   }
 
-  Future<void> getShipmentById({required String shipmentId}) async {
+  Future<void> getShipmentById({
+    required String shipmentId,
+    required String type,
+  }) async {
     emit(GetShipmentLoading());
     try {
       var result = await shipmentsCalendarRepo.getShipmentById(
         shipmentId: shipmentId,
+        type: type,
       );
       result.fold(
         (failure) {

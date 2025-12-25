@@ -44,7 +44,7 @@ class UserProfileService {
 
   static Future<void> _storeUserBranchs(List<TraderBranchModel> branchs) async {
     try {
-      final branchsMap = branchs.map((branch) => branch.toJson()).toList();
+      final branchsMap = branchs.map((branch) => branch.toMap()).toList();
       await StorageServices.storeData(_branchsKey, branchsMap);
     } catch (e) {
       throw Exception('Failed to store user branchs: ${e.toString()}');
