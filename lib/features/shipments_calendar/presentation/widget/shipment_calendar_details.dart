@@ -22,9 +22,7 @@ class ShipmentsCalendarDetails extends StatelessWidget {
   bool _areAllShipmentsDeliveredWithTime(List<ShipmentModel> shipments) {
     return shipments.isNotEmpty &&
         shipments.every((s) {
-          Logger().d("STATUS: ${s.status}");
-
-          return s.status == "تم التسليم";
+          return s.status == "تم الاستلام";
         });
   }
 
@@ -34,7 +32,6 @@ class ShipmentsCalendarDetails extends StatelessWidget {
     final shipmentsHelper = ShipmentsCalendarHelper(shipments: shipments);
     final shipmentsList = shipmentsHelper.getShipmentsForDate(dateKey);
     final isDelivered = _areAllShipmentsDeliveredWithTime(shipmentsList);
-    Logger().i("DELIVERED: $isDelivered");
 
     // Determine border color based on conditions
     Color borderColor;

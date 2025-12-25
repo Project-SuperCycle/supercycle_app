@@ -18,5 +18,6 @@ abstract class ShipmentsCalendarRepo {
 
   Future<Either<Failure, SingleShipmentModel>> getShipmentById({
     required String shipmentId,
+    required String type,
   });
 }

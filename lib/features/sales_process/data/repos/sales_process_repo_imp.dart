@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:supercycle/core/errors/failures.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/core/services/user_profile_services.dart';
 import 'package:supercycle/features/sales_process/data/repos/sales_process_repo.dart';
 
 class SalesProcessRepoImp implements SalesProcessRepo {
@@ -21,7 +22,7 @@ class SalesProcessRepoImp implements SalesProcessRepo {
         data: shipment,
       );
       String message = response["message"];
-
+      await UserProfileService.fetchAndStoreUserProfile();
       return right(message);
     } on DioException catch (dioError) {
       Logger().i("DioException ${dioError.toString()}");

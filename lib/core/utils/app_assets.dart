@@ -15,6 +15,7 @@ abstract class AppAssets {
   static const String entityCard = 'assets/images/entityCard.png';
   static const String photoGallery = 'assets/images/photoGallery.png';
   static const String whatsappIcon = 'assets/images/whatsapp.png';
+  static const String extraBox = 'assets/images/ExtraBox.png';
 
   static const String onboarding1 = 'assets/images/onboard1.png';
   static const String onboarding2 = 'assets/images/onboard2.png';
