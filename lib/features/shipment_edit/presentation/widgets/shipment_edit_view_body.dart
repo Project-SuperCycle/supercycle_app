@@ -254,16 +254,13 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
 
     FormData updatedShipment = await _createFormData(shipment);
 
-    Logger().i("SHIPMENT: ${updatedShipment.fields}");
-
     BlocProvider.of<ShipmentEditCubit>(
       context,
     ).editShipment(shipment: updatedShipment, id: widget.shipment.id);
-    GoRouter.of(context).pushReplacement(EndPoints.homeView);
+    GoRouter.of(context).pushReplacement(EndPoints.shipmentsCalendarView);
   }
 
   Future<FormData> _createFormData(EditShipmentModel shipment) async {
-    Logger().i("EDIT-SHIPMENT: ${shipment.toMap()}");
     List<File> images = widget.shipment.images;
     List<MultipartFile> imagesFiles =
         await ShipmentManager.createMultipartImages(images: images);

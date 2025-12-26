@@ -16,6 +16,7 @@ class ShipmentEditRepoImp implements ShipmentEditRepo {
     required String id,
   }) async {
     // TODO: implement createShipment
+    Logger().w("EDIT-SHIPMENT REPO: ${shipment.fields}");
     try {
       final response = await apiServices.patchFormData(
         endPoint: ApiEndpoints.editShipment.replaceFirst('{id}', id),
@@ -24,7 +25,8 @@ class ShipmentEditRepoImp implements ShipmentEditRepo {
       String message = response["message"];
       return right(message);
     } on DioException catch (dioError) {
-      Logger().i("DioException ${dioError.toString()}");
+      Logger().e("DioException ${dioError.toString()}");
+      Logger().e("DioException ${dioError.response?.data}");
       return left(ServerFailure.fromDioError(dioError));
     } on FormatException catch (formatError) {
       return left(

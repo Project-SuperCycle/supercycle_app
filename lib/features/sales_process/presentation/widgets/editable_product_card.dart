@@ -63,7 +63,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
       selectedTypeName = widget.product.name;
     } else if (typeOptions.isNotEmpty && widget.product.name.isNotEmpty) {
       final similarType = typeOptions.firstWhere(
-            (type) =>
+        (type) =>
             type.toLowerCase().contains(widget.product.name.toLowerCase()),
         orElse: () => typeOptions.first,
       );
@@ -288,15 +288,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
                 // Quantity and Unit
                 Row(
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: _buildQuantityField(context),
-                    ),
+                    Expanded(flex: 3, child: _buildQuantityField(context)),
                     const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: _buildUnitDropdown(context),
-                    ),
+                    Expanded(flex: 2, child: _buildUnitDropdown(context)),
                   ],
                 ),
 
@@ -320,10 +314,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
           padding: const EdgeInsets.only(bottom: 8, right: 4),
           child: Text(
             "نوع المنتج",
-            style: AppStyles.styleMedium12(context).copyWith(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppStyles.styleMedium12(
+              context,
+            ).copyWith(color: Colors.grey[700], fontWeight: FontWeight.w500),
           ),
         ),
         CustomDropdown(
@@ -345,20 +338,16 @@ class _EditableProductCardState extends State<EditableProductCard> {
           padding: const EdgeInsets.only(bottom: 8, right: 4),
           child: Text(
             "الكمية",
-            style: AppStyles.styleMedium12(context).copyWith(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppStyles.styleMedium12(
+              context,
+            ).copyWith(color: Colors.grey[700], fontWeight: FontWeight.w500),
           ),
         ),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey[300]!,
-              width: 1.5,
-            ),
+            border: Border.all(color: Colors.grey[300]!, width: 1.5),
           ),
           child: Row(
             children: [
@@ -366,10 +355,13 @@ class _EditableProductCardState extends State<EditableProductCard> {
               _buildQuantityButton(
                 icon: Icons.remove,
                 onTap: () {
-                  final currentValue = double.tryParse(quantityController.text) ?? 0;
+                  final currentValue =
+                      double.tryParse(quantityController.text) ?? 0;
                   if (currentValue > 0) {
                     final newValue = currentValue - 1;
-                    quantityController.text = newValue == 0 ? '' : newValue.toString();
+                    quantityController.text = newValue == 0
+                        ? ''
+                        : newValue.toString();
                   }
                 },
                 color: Colors.red,
@@ -409,7 +401,8 @@ class _EditableProductCardState extends State<EditableProductCard> {
               _buildQuantityButton(
                 icon: Icons.add,
                 onTap: () {
-                  final currentValue = double.tryParse(quantityController.text) ?? 0;
+                  final currentValue =
+                      double.tryParse(quantityController.text) ?? 0;
                   final newValue = currentValue + 1;
                   quantityController.text = newValue.toString();
                 },
@@ -438,11 +431,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
             color: color.withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
+          child: Icon(icon, color: color, size: 20),
         ),
       ),
     );
@@ -456,10 +445,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
           padding: const EdgeInsets.only(bottom: 8, right: 4),
           child: Text(
             "الوحدة",
-            style: AppStyles.styleMedium12(context).copyWith(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppStyles.styleMedium12(
+              context,
+            ).copyWith(color: Colors.grey[700], fontWeight: FontWeight.w500),
           ),
         ),
         CustomDropdown(
@@ -474,7 +462,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   Widget _buildModernPriceDisplay(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -509,10 +497,10 @@ class _EditableProductCardState extends State<EditableProductCard> {
               ),
               const SizedBox(width: 12),
               Text(
-                "إجمالي السعر",
-                style: AppStyles.styleMedium14(context).copyWith(
-                  color: Colors.grey[700],
-                ),
+                "إجمالي",
+                style: AppStyles.styleMedium14(
+                  context,
+                ).copyWith(color: Colors.grey[700]),
               ),
             ],
           ),
@@ -520,12 +508,15 @@ class _EditableProductCardState extends State<EditableProductCard> {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                averagePrice,
-                style: AppStyles.styleMedium14(context).copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  averagePrice,
+                  style: AppStyles.styleMedium14(context).copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ),
               const SizedBox(width: 6),

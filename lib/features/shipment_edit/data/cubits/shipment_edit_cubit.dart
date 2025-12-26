@@ -28,7 +28,6 @@ class ShipmentEditCubit extends Cubit<ShipmentEditState> {
         },
         (message) {
           emit(EditShipmentSuccess(message: message));
-          // Store user globally
         },
       );
       Logger().i("EDIT CUBIT");
