@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
@@ -78,20 +79,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       context.go(EndPoints.homeView);
 
       // إظهار رسالة نجاح
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'تم تسجيل الخروج بنجاح',
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: const Color(0xFF10B981),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      CustomSnackBar.showSuccess(context, 'تم تسجيل الخروج بنجاح');
     }
   }
 

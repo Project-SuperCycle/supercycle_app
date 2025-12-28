@@ -53,8 +53,8 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
           : MainAxisAlignment.end,
       children: [
         _buildDrawerButton(),
-        // SizedBox(width: 10),
-        // if (isUserLoggedIn) _buildNotificationButton(),
+        SizedBox(width: 15),
+        if (isUserLoggedIn) _buildNotificationButton(),
       ],
     );
   }
@@ -65,7 +65,7 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withAlpha(50),
           borderRadius: BorderRadius.circular(10),
         ),
         child: SvgPicture.asset(
@@ -84,7 +84,7 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withAlpha(50),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(

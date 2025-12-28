@@ -1,7 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/helpers/custom_back_button.dart';
 import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';

@@ -27,6 +27,7 @@ class SingleShipmentModel {
   final ShipmentBranchModel? branch;
   final String? type;
   final bool isExtra;
+  final bool isFullyWeighted;
 
   SingleShipmentModel({
     required this.id,
@@ -44,6 +45,7 @@ class SingleShipmentModel {
     required this.repNotes,
     required this.segments,
     required this.isExtra,
+    required this.isFullyWeighted,
     required this.type,
     this.branch,
     this.representitive,
@@ -109,6 +111,7 @@ class SingleShipmentModel {
           : [],
       type: json['type'],
       isExtra: json['isExtra'] ?? false,
+      isFullyWeighted: json['isFullyWeighted'] ?? false,
     );
   }
 
@@ -135,6 +138,7 @@ class SingleShipmentModel {
       'segments': segments.map((segment) => segment.toJson()).toList(),
       'type': type,
       'isExtra': isExtra,
+      'isFullyWeighted': isFullyWeighted,
     };
   }
 
@@ -150,6 +154,7 @@ class SingleShipmentModel {
       'sourceLocationId': branch?.toJson(),
       'type': type,
       'isExtra': isExtra,
+      'isFullyWeighted': isFullyWeighted,
     };
   }
 
@@ -179,6 +184,7 @@ class SingleShipmentModel {
     ShipmentBranchModel? branch,
     String? type,
     bool? isExtra,
+    bool? isFullyWeighted,
   }) {
     return SingleShipmentModel(
       id: id ?? this.id,
@@ -201,6 +207,7 @@ class SingleShipmentModel {
       branch: branch ?? this.branch,
       type: type ?? this.type,
       isExtra: isExtra ?? this.isExtra,
+      isFullyWeighted: isFullyWeighted ?? this.isFullyWeighted,
     );
   }
 }

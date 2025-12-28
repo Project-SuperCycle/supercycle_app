@@ -172,9 +172,7 @@ class _TraderShipmentDetailsViewBodyState
                                     ],
                                   ),
                                 // تقارير الوزنة
-                                if (widget.shipment.status == "delivered" ||
-                                    widget.shipment.status ==
-                                        "complete_weighted")
+                                if (widget.shipment.isFullyWeighted)
                                   Column(
                                     children: [
                                       _buildExpandableCard(

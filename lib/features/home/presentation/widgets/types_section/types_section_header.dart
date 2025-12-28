@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
-import 'package:supercycle/core/utils/app_assets.dart' show AppAssets;
+
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
 import 'package:supercycle/features/home/presentation/widgets/types_section/types_filter_buttons_list.dart';
@@ -32,7 +31,7 @@ class _TypesSectionHeaderState extends State<TypesSectionHeader> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.1),
+                        color: AppColors.primaryColor.withAlpha(50),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(

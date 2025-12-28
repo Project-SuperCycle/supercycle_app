@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:supercycle/core/errors/failures.dart';
 import 'package:supercycle/core/models/create_notes_model.dart';
 

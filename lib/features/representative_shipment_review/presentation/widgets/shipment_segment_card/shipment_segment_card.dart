@@ -7,6 +7,7 @@ import 'package:supercycle/core/helpers/custom_confirm_dialog.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/start_segment_model.dart';
+import 'package:supercycle/features/representative_shipment_review/data/models/weigh_segment_model.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
@@ -35,6 +36,9 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   bool isWeighted = false;
   bool isDelivered = false;
   bool _isLoading = true;
+
+  // Store local weight report from Step2
+  WeighSegmentModel? _localWeightReport;
 
   // Keys for SharedPreferences
   String get _movedKey => 'segment_${widget.segment.id}_isMoved';
@@ -100,9 +104,10 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
     );
   }
 
-  void onWeightedPressed() {
+  void onWeightedPressed(WeighSegmentModel weighModel) {
     setState(() {
       isWeighted = true;
+      _localWeightReport = weighModel; // Store the weight report
     });
     _saveState(_weightedKey, true);
   }
@@ -112,7 +117,6 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
       isDelivered = true;
     });
     _saveState(_deliveredKey, true);
-    Logger().i("isDelivered: $isDelivered");
   }
 
   int get currentStep {
@@ -212,6 +216,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         onImagesSelected: (List<File>? image) {},
         shipmentID: widget.shipmentID,
         segmentID: widget.segment.id,
+        localWeightReport: _localWeightReport, // Pass local weight report
       );
     }
 
@@ -221,7 +226,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         shipmentID: widget.shipmentID,
         segment: widget.segment,
         isWeighted: isWeighted,
-        onWeightedPressed: onWeightedPressed,
+        onWeightedPressed: onWeightedPressed, // Updated signature
       );
     }
 

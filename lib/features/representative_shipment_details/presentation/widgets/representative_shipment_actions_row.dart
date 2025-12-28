@@ -39,13 +39,12 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           rank: rating,
         );
 
-        Logger().w("ACCEPT SHIPMENT MODEL: $acceptShipmentModel");
-
         BlocProvider.of<AcceptShipmentCubit>(
           context,
         ).acceptShipment(acceptModel: acceptShipmentModel);
 
         onActionTaken();
+        GoRouter.of(context).pop();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -70,8 +69,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
       actionType: ShipmentActionType.reject,
       shipment: shipment,
       onSubmit: (List<File> images, String reason, double rating) {
-        Logger().i('❌ Reject Shipment');
-
         RejectShipmentModel rejectShipmentModel = RejectShipmentModel(
           shipmentID: shipment.id,
           reason: reason,
@@ -79,7 +76,6 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
           rank: rating,
         );
 
-        Logger().w("REJECT SHIPMENT MODEL: $rejectShipmentModel");
         BlocProvider.of<RejectShipmentCubit>(
           context,
         ).rejectShipment(rejectModel: rejectShipmentModel);

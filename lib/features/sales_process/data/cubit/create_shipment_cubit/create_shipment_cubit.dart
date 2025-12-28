@@ -24,7 +24,6 @@ class CreateShipmentCubit extends Cubit<CreateShipmentState> {
           // Store user globally
         },
       );
-      Logger().i("CREATE CUBIT");
     } catch (error) {
       emit(CreateShipmentFailure(errorMessage: error.toString()));
     }

@@ -25,7 +25,6 @@ class RejectShipmentCubit extends Cubit<RejectShipmentState> {
           emit(RejectRepShipmentSuccess(message: message));
         },
       );
-      Logger().i("REJECT SHIPMENT CUBIT");
     } catch (error) {
       emit(RejectRepShipmentFailure(errorMessage: error.toString()));
     }

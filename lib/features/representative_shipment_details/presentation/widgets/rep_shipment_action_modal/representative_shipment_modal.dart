@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_styles.dart';

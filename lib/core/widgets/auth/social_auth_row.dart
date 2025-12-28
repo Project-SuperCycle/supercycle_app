@@ -17,19 +17,13 @@ class SocialAuthRow extends StatelessWidget {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
       final accessToken = await SocialAuthService.signInWithGoogle();
 
       // إغلاق مؤشر التحميل
       if (context.mounted) Navigator.of(context).pop();
-
-      if (accessToken == null) {
-        return; // المستخدم ألغى العملية
-      }
 
       final SocialAuthRequestModel credentials = SocialAuthRequestModel(
         provider: "google",
@@ -61,19 +55,13 @@ class SocialAuthRow extends StatelessWidget {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
       final accessToken = await SocialAuthService.signInWithFacebook();
 
       // إغلاق مؤشر التحميل
       if (context.mounted) Navigator.of(context).pop();
-
-      if (accessToken == null) {
-        return; // المستخدم ألغى العملية
-      }
 
       final SocialAuthRequestModel credentials = SocialAuthRequestModel(
         provider: "facebook",
@@ -114,9 +102,9 @@ class SocialAuthRow extends StatelessWidget {
           }
         }
         if (state is SocialAuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
           Logger().w(state.message);
         }
       },

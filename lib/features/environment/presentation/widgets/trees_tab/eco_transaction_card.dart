@@ -62,10 +62,6 @@ class EcoTransactionCard extends StatelessWidget {
     }
   }
 
-  String _getFormattedTime() {
-    return DateFormat('hh:mm a').format(transaction.updatedAt);
-  }
-
   bool get _isPositive {
     return transaction.type.toLowerCase() == 'earn' ||
         transaction.type.toLowerCase() == 'earned' ||

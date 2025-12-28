@@ -23,7 +23,6 @@ class UpdateShipmentCubit extends Cubit<UpdateShipmentState> {
           emit(UpdateRepShipmentSuccess(message: message));
         },
       );
-      Logger().i("UPDATE SHIPMENT CUBIT");
     } catch (error) {
       emit(UpdateRepShipmentFailure(errorMessage: error.toString()));
     }

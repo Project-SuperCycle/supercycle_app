@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/routes/end_points.dart';

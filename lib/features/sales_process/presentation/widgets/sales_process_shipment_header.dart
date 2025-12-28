@@ -207,6 +207,8 @@ class _SalesProcessShipmentHeaderState
                             style: IconButton.styleFrom(
                               padding: EdgeInsets.zero,
                               backgroundColor: Colors.grey.shade100,
+                              shadowColor: Colors.grey,
+                              elevation: 1,
                             ),
                             onPressed: _selectDate,
                             icon: const Icon(

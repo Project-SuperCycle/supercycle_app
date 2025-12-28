@@ -26,7 +26,7 @@ class TraderShipmentDetailsSummary extends StatelessWidget {
     num totalValue = 0;
 
     for (var product in items) {
-      num qty = product.quantity ?? 0;
+      num qty = product.quantity;
       num price = _getPrice(product.name);
 
       totalQuantity += qty;

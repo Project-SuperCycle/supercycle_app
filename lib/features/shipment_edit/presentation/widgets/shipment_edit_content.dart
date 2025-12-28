@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
-
 import 'package:supercycle/features/sales_process/data/models/unit.dart';
 import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle/features/sales_process/presentation/widgets/editable_product_card.dart';

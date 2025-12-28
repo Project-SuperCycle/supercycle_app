@@ -4,7 +4,6 @@ import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/environment/data/cubits/create_request_cubit/create_request_cubit.dart';
-import 'package:supercycle/features/sales_process/data/cubit/create_shipment_cubit/create_shipment_cubit.dart';
 
 class GreenPointsCard extends StatelessWidget {
   final num points;

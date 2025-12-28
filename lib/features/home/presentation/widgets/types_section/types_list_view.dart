@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/core/services/services_locator.dart';

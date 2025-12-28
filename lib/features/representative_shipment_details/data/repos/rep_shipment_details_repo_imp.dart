@@ -124,6 +124,8 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
       return right(message);
     } on DioException catch (dioError) {
       Logger().i("DioException ${dioError.toString()}");
+      Logger().i("DIO RESPONCE ${dioError.response!.data}");
+
       return left(ServerFailure.fromDioError(dioError));
     } on FormatException catch (formatError) {
       return left(
