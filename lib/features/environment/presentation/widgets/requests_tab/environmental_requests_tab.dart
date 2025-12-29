@@ -4,7 +4,7 @@ import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/environment/data/cubits/requests_cubit/requests_cubit.dart';
 import 'package:supercycle/features/environment/presentation/widgets/requests_tab/enviromental_request_card.dart';
-import 'package:supercycle/features/trader_main_profile/data/models/environmental_redeem_model.dart';
+import 'package:supercycle/features/environment/data/models/environmental_redeem_model.dart';
 
 class EnvironmentalRequestsTab extends StatefulWidget {
   const EnvironmentalRequestsTab({super.key});

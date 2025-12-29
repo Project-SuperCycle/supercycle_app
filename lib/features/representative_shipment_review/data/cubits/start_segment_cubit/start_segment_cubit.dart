@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_state.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/start_segment_model.dart';
 import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
@@ -23,7 +22,6 @@ class StartSegmentCubit extends Cubit<StartSegmentState> {
           emit(StartSegmentSuccess(message: message));
         },
       );
-      Logger().i("START SEGMENT CUBIT");
     } catch (error) {
       emit(StartSegmentFailure(errorMessage: error.toString()));
     }

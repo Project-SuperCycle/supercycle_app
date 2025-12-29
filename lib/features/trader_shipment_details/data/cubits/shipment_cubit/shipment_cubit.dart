@@ -24,7 +24,6 @@ class ShipmentCubit extends Cubit<ShipmentState> {
           // Store user globally
         },
       );
-      Logger().i("CANCEL SHIPMENT CUBIT");
     } catch (error) {
       emit(CancelShipmentFailure(errorMessage: error.toString()));
     }

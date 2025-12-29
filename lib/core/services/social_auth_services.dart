@@ -12,23 +12,19 @@ abstract class SocialAuthService {
 
       // 2. التحقق من إلغاء المستخدم للعملية
       if (googleUser == null) {
-        Logger().w('⚠️ User cancelled Google Sign In');
         throw Exception('Google Sign In cancelled by user');
       }
 
       // 3. الحصول على تفاصيل المصادقة
-      final GoogleSignInAuthentication? googleAuth =
+      final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      if (googleAuth == null || googleAuth.accessToken == null) {
+      if (googleAuth.accessToken == null) {
         Logger().e('❌ Failed to get Google authentication details');
         throw Exception('Google Sign In failed');
       }
 
       final String accessToken = googleAuth.accessToken!;
-
-      Logger().i('✅ Google Sign In successful');
-
       return accessToken;
     } catch (e) {
       Logger().e('❌ Google Sign In error: $e');
@@ -46,8 +42,6 @@ abstract class SocialAuthService {
 
       // 2. التحقق من حالة تسجيل الدخول
       if (loginResult.status != LoginStatus.success) {
-        Logger().w('⚠️ Facebook login status: ${loginResult.status}');
-
         if (loginResult.status == LoginStatus.cancelled) {
           throw Exception('Facebook Sign In cancelled by user');
         } else if (loginResult.status == LoginStatus.failed) {
@@ -65,8 +59,6 @@ abstract class SocialAuthService {
         throw Exception('Facebook Sign In failed');
       }
 
-      Logger().i('✅ Facebook Sign In successful');
-
       return accessToken.tokenString;
     } catch (e) {
       Logger().e('❌ Facebook Sign In error: $e');
@@ -78,7 +70,6 @@ abstract class SocialAuthService {
   static Future<void> signOutGoogle() async {
     try {
       await GoogleSignIn().signOut();
-      Logger().i('✅ Google Sign Out successful');
     } catch (e) {
       Logger().e('❌ Google Sign Out error: $e');
     }
@@ -88,7 +79,6 @@ abstract class SocialAuthService {
   static Future<void> signOutFacebook() async {
     try {
       await FacebookAuth.instance.logOut();
-      Logger().i('✅ Facebook Sign Out successful');
     } catch (e) {
       Logger().e('❌ Facebook Sign Out error: $e');
     }

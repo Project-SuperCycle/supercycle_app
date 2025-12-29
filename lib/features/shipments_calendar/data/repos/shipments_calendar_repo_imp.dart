@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/helpers/error_handler.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
@@ -10,197 +9,101 @@ import 'package:supercycle/features/shipments_calendar/data/repos/shipments_cale
 
 class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
   final ApiServices apiServices;
-
   ShipmentsCalendarRepoImp({required this.apiServices});
 
   @override
   Future<Either<Failure, List<ShipmentModel>>> getAllShipments({
     required Map<String, dynamic> query,
-  }) async {
-    try {
-      final response = await apiServices.get(
-        endPoint: ApiEndpoints.getAllShipments,
-        query: query,
-      );
-
-      // Log the response to debug
-      Logger().d("API Response: $response");
-
-      var data = response["data"];
-
-      // Check if data is a Map (pagination structure) or List (direct array)
-      List<dynamic> shipmentsData;
-
-      if (data is Map<String, dynamic>) {
-        // If it's a Map, look for common pagination keys
-        if (data.containsKey('data')) {
-          shipmentsData = data['data'] as List<dynamic>;
-        } else if (data.containsKey('items')) {
-          shipmentsData = data['items'] as List<dynamic>;
-        } else if (data.containsKey('shipments')) {
-          shipmentsData = data['shipments'] as List<dynamic>;
-        } else {
-          Logger().e("Unknown pagination structure: $data");
-          return left(ServerFailure('Unknown response structure', 422));
-        }
-      } else if (data is List) {
-        shipmentsData = data;
-      } else {
-        Logger().e("Unexpected data type: ${data.runtimeType}");
-        return left(
-          ServerFailure('Unexpected data type: ${data.runtimeType}', 422),
+  }) {
+    return ErrorHandler.handleApiCall<List<ShipmentModel>>(
+      apiCall: () async {
+        final response = await apiServices.get(
+          endPoint: ApiEndpoints.getAllShipments,
+          query: query,
         );
-      }
 
-      List<ShipmentModel> shipments = [];
-      for (var element in shipmentsData) {
-        shipments.add(ShipmentModel.fromJson(element));
-      }
+        final data = response['data'];
+        List<dynamic> shipmentsData = _extractShipmentsData(data);
 
-      return right(shipments);
-    } on DioException catch (dioError) {
-      Logger().e("DIOERROR ${dioError.response?.data}");
-      Logger().e("DIOERROR ${dioError.response?.statusCode}");
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      Logger().e("DIOFORMAT ${formatError.toString()}");
-      return left(ServerFailure(formatError.toString(), 422));
-    } on TypeError catch (typeError, stackTrace) {
-      Logger().w("typeError ${typeError.toString()}");
-      Logger().w("stackTrace ${stackTrace.toString()}");
-      return left(
-        ServerFailure('Data parsing error: ${typeError.toString()}', 422),
-      );
-    } catch (e) {
-      Logger().e("Unexpected error: ${e.toString()}");
-      return left(
-        ServerFailure('Unexpected error occurred: ${e.toString()}', 520),
-      );
-    }
+        return shipmentsData.map((e) => ShipmentModel.fromJson(e)).toList();
+      },
+      errorContext: 'get all shipments',
+    );
   }
 
   @override
   Future<Either<Failure, List<ShipmentModel>>> getShipmentsHistory({
     required int page,
-  }) async {
-    try {
-      final response = await apiServices.get(
-        endPoint: ApiEndpoints.getShipmentsHistory,
-        query: {"page": page},
-      );
-      var data = response["result"]["data"];
-      List<ShipmentModel> shipments = [];
+  }) {
+    return ErrorHandler.handleApiCall<List<ShipmentModel>>(
+      apiCall: () async {
+        final response = await apiServices.get(
+          endPoint: ApiEndpoints.getShipmentsHistory,
+          query: {"page": page},
+        );
 
-      for (var element in data) {
-        shipments.add(ShipmentModel.fromJson(element));
-      }
-
-      return right(shipments);
-    } on DioException catch (dioError) {
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(ServerFailure(formatError.toString(), 422));
-    } on TypeError catch (typeError, stackTrace) {
-      Logger().w("typeError ${typeError.toString()}");
-      Logger().w("stackTrace ${stackTrace.toString()}");
-      return left(
-        ServerFailure('Data parsing error: ${typeError.toString()}', 422),
-      );
-    } catch (e) {
-      return left(
-        ServerFailure('Unexpected error occurred: ${e.toString()}', 520),
-      );
-    }
+        final data = response['result']['data'] as List<dynamic>;
+        return data.map((e) => ShipmentModel.fromJson(e)).toList();
+      },
+      errorContext: 'get shipments history',
+    );
   }
 
   @override
   Future<Either<Failure, List<ShipmentModel>>> getAllRepShipments({
     required Map<String, dynamic> query,
-  }) async {
-    try {
-      final response = await apiServices.get(
-        endPoint: ApiEndpoints.getRepShipments,
-        query: query,
-      );
-
-      // Log the response to debug
-      Logger().d("API Response (Rep): $response");
-
-      var data = response["data"];
-
-      // Check if data is a Map (pagination structure) or List (direct array)
-      List<dynamic> shipmentsData;
-
-      if (data is Map<String, dynamic>) {
-        // If it's a Map, look for common pagination keys
-        if (data.containsKey('data')) {
-          shipmentsData = data['data'] as List<dynamic>;
-        } else if (data.containsKey('items')) {
-          shipmentsData = data['items'] as List<dynamic>;
-        } else if (data.containsKey('shipments')) {
-          shipmentsData = data['shipments'] as List<dynamic>;
-        } else {
-          Logger().e("Unknown pagination structure: $data");
-          return left(ServerFailure('Unknown response structure', 422));
-        }
-      } else if (data is List) {
-        shipmentsData = data;
-      } else {
-        Logger().e("Unexpected data type: ${data.runtimeType}");
-        return left(
-          ServerFailure('Unexpected data type: ${data.runtimeType}', 422),
+  }) {
+    return ErrorHandler.handleApiCall<List<ShipmentModel>>(
+      apiCall: () async {
+        final response = await apiServices.get(
+          endPoint: ApiEndpoints.getRepShipments,
+          query: query,
         );
-      }
 
-      List<ShipmentModel> shipments = [];
-      for (var element in shipmentsData) {
-        shipments.add(ShipmentModel.fromJson(element));
-      }
+        final data = response['data'];
+        List<dynamic> shipmentsData = _extractShipmentsData(data);
 
-      return right(shipments);
-    } on DioException catch (dioError) {
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(ServerFailure(formatError.toString(), 422));
-    } on TypeError catch (typeError) {
-      return left(
-        ServerFailure('Data parsing error: ${typeError.toString()}', 422),
-      );
-    } catch (e) {
-      return left(
-        ServerFailure('Unexpected error occurred: ${e.toString()}', 520),
-      );
-    }
+        return shipmentsData.map((e) => ShipmentModel.fromJson(e)).toList();
+      },
+      errorContext: 'get all rep shipments',
+    );
   }
 
   @override
   Future<Either<Failure, SingleShipmentModel>> getShipmentById({
     required String shipmentId,
     required String type,
-  }) async {
-    try {
-      final response = await apiServices.get(
-        endPoint: ApiEndpoints.getShipmentById.replaceFirst('{id}', shipmentId),
-        query: {"type": type},
-      );
-      var data = response["data"];
-      SingleShipmentModel shipment = SingleShipmentModel.fromJson(data);
+  }) {
+    return ErrorHandler.handleApiCall<SingleShipmentModel>(
+      apiCall: () async {
+        final response = await apiServices.get(
+          endPoint: ApiEndpoints.getShipmentById.replaceFirst(
+            '{id}',
+            shipmentId,
+          ),
+          query: {"type": type},
+        );
 
-      return right(shipment);
-    } on DioException catch (dioError) {
-      Logger().i("DioException ${dioError.toString()}");
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(ServerFailure(formatError.toString(), 422));
-    } on TypeError catch (typeError) {
-      Logger().e("ERROR REPO ${typeError.stackTrace}");
-      return left(
-        ServerFailure('Data parsing error: ${typeError.toString()}', 422),
-      );
-    } catch (e) {
-      return left(
-        ServerFailure('Unexpected error occurred: ${e.toString()}', 520),
-      );
+        final data = response['data'];
+        return SingleShipmentModel.fromJson(data);
+      },
+      errorContext: 'get shipment by id',
+    );
+  }
+
+  /// Extract shipments list from API response (handles pagination / different keys)
+  List<dynamic> _extractShipmentsData(dynamic data) {
+    if (data is Map<String, dynamic>) {
+      if (data.containsKey('data')) return data['data'] as List<dynamic>;
+      if (data.containsKey('items')) return data['items'] as List<dynamic>;
+      if (data.containsKey('shipments')) {
+        return data['shipments'] as List<dynamic>;
+      }
+      throw ServerFailure('Unknown response structure', 422);
+    } else if (data is List) {
+      return data;
+    } else {
+      throw ServerFailure('Unexpected data type: ${data.runtimeType}', 422);
     }
   }
 }

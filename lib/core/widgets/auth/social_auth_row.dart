@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle/core/models/social_auth_request_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
@@ -30,8 +29,6 @@ class SocialAuthRow extends StatelessWidget {
         accessToken: accessToken,
       );
 
-      Logger().i("GOOGLE SIGN IN -> ${credentials.toJson()}");
-
       if (context.mounted) {
         BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
       }
@@ -45,7 +42,6 @@ class SocialAuthRow extends StatelessWidget {
           ),
         );
       }
-      Logger().e("خطأ في Google Sign In: $e");
     }
   }
 
@@ -68,8 +64,6 @@ class SocialAuthRow extends StatelessWidget {
         accessToken: accessToken,
       );
 
-      Logger().i("FACEBOOK SIGN IN -> ${credentials.toJson()}");
-
       if (context.mounted) {
         BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
       }
@@ -83,7 +77,6 @@ class SocialAuthRow extends StatelessWidget {
           ),
         );
       }
-      Logger().e("خطأ في Facebook Sign In: $e");
     }
   }
 
@@ -105,7 +98,6 @@ class SocialAuthRow extends StatelessWidget {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
-          Logger().w(state.message);
         }
       },
       builder: (context, state) {

@@ -9,7 +9,6 @@ class TraderProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Logger().d(userProfile.toString());
     return TraderProfileViewBody(userProfile: userProfile);
   }
 }

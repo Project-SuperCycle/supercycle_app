@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/cubits/add_notes_cubit/add_notes_cubit.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/models/create_notes_model.dart';
@@ -31,8 +30,6 @@ class _RepresentativeShipmentAddNoteModelState
     BlocProvider.of<AddNotesCubit>(
       context,
     ).addNotes(notes: note, shipmentId: shipmentId);
-
-    BlocProvider.of<AllNotesCubit>(context).getAllNotes(shipmentId: shipmentId);
   }
 
   @override

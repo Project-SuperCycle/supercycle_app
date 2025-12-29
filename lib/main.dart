@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supercycle/core/cubits/add_notes_cubit/add_notes_cubit.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/cubits/local_cubit/local_cubit.dart';
 import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle/core/repos/social_auth_repo_imp.dart';
@@ -79,11 +78,6 @@ void main() async {
         BlocProvider(
           create: (context) => ShipmentCubit(
             shipmentDetailsRepo: getIt.get<ShipmentDetailsRepoImp>(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => AllNotesCubit(
-            shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>(),
           ),
         ),
         BlocProvider(

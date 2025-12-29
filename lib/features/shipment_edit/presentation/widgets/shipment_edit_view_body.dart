@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/functions/shipment_manager.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/helpers/custom_snack_bar.dart';
@@ -52,9 +51,6 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
       products = widget.shipment.items;
       selectedDateTime = widget.shipment.requestedPickupAt;
     });
-    BlocProvider.of<AllNotesCubit>(
-      context,
-    ).getAllNotes(shipmentId: widget.shipment.id);
   }
 
   void _getShipmentAddress() async {

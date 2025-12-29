@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercycle/core/helpers/custom_confirm_dialog.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
@@ -49,7 +48,6 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   void initState() {
     super.initState();
     _loadSavedStates();
-    Logger().d("SEGMENT ${widget.segment}");
   }
 
   /// Load saved states from SharedPreferences

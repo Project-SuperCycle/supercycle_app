@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'dart:io';
@@ -68,15 +67,12 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
       context,
       shipmentID: widget.shipmentID,
       onSubmit: (List<File> images, String reason) {
-        Logger().i('✅ Fail Shipment Segment');
         FailSegmentModel failModel = FailSegmentModel(
           shipmentID: widget.shipmentID,
           segmentID: widget.segmentID,
           reason: reason,
           images: images,
         );
-
-        Logger().w("FAIL SEGMENT MODEL: $failModel");
 
         // هنا أضف منطق إرسال البيانات للـ API
         BlocProvider.of<FailSegmentCubit>(

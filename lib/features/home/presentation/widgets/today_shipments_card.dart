@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
@@ -57,7 +56,6 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentById(shipmentId: shipmentID, type: type);
-    BlocProvider.of<AllNotesCubit>(context).getAllNotes(shipmentId: shipmentID);
   }
 
   @override

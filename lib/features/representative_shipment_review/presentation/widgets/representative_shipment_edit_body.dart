@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
@@ -55,9 +54,6 @@ class _RepresentativeShipmentEditBodyState
       products = widget.shipment.items;
       selectedDateTime = widget.shipment.requestedPickupAt;
     });
-    BlocProvider.of<AllNotesCubit>(
-      context,
-    ).getAllNotes(shipmentId: widget.shipment.id);
   }
 
   void _getShipmentAddress() async {

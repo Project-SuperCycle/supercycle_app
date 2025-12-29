@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/functions/lanuch_whatsApp.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
@@ -120,7 +119,6 @@ class _ContactUsViewBodyState extends State<ContactUsViewBody>
           subject: formData.subject,
           message: formData.message,
         );
-        Logger().w("CONTACT $contactModel");
         ApiServices().post(
           endPoint: ApiEndpoints.contactUs,
           data: contactModel.toJson(),

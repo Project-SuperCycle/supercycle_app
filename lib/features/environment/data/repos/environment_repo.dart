@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:supercycle/core/errors/failures.dart';
 import 'package:supercycle/features/environment/data/models/trader_eco_info_model.dart';
-import 'package:supercycle/features/trader_main_profile/data/models/environmental_redeem_model.dart';
+import 'package:supercycle/features/environment/data/models/environmental_redeem_model.dart';
 
 abstract class EnvironmentRepo {
   Future<Either<Failure, TraderEcoInfoModel>> getTraderEcoInfo();
