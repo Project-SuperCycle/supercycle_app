@@ -3,6 +3,7 @@ import 'package:supercycle/core/errors/failures.dart';
 import 'package:supercycle/core/helpers/error_handler.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/features/environment/data/models/trader_eco_info_model.dart';
 import 'package:supercycle/features/environment/data/repos/environment_repo.dart';
 import 'package:supercycle/features/environment/data/models/environmental_redeem_model.dart';
@@ -60,6 +61,8 @@ class EnvironmentRepoImp implements EnvironmentRepo {
       errorContext: 'get trader eco requests',
       responseParser: (response) {
         final List data = response['data'];
+        final int meta = response['meta']['totalPages'];
+        StorageServices.storeData("totalRequests", meta);
         return data.map((e) => EnvironmentalRedeemModel.fromJson(e)).toList();
       },
     );

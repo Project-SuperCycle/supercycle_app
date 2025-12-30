@@ -38,7 +38,7 @@ class _TraderBranchsChartState extends State<TraderBranchsChart> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withAlpha(25),
                       blurRadius: 20,
                     ),
                   ],
@@ -92,13 +92,13 @@ class _TraderBranchsChartState extends State<TraderBranchsChart> {
                     gradient: LinearGradient(
                       colors: [
                         AppColors.primaryColor,
-                        AppColors.primaryColor.withOpacity(0.7),
+                        AppColors.primaryColor.withAlpha(350),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryColor.withOpacity(0.3),
+                        color: AppColors.primaryColor.withAlpha(150),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -242,7 +242,7 @@ class _TraderBranchsChartState extends State<TraderBranchsChart> {
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
                         color: value == avgVolume
-                            ? AppColors.primaryColor.withOpacity(0.3)
+                            ? AppColors.primaryColor.withAlpha(150)
                             : Colors.grey.shade200,
                         strokeWidth: value == avgVolume ? 2 : 25,
                         dashArray: value == avgVolume ? [8, 4] : [6, 3],
@@ -332,18 +332,18 @@ class _TraderBranchsChartState extends State<TraderBranchsChart> {
                             colors: isHighest
                                 ? [
                                     AppColors.primaryColor,
-                                    AppColors.primaryColor.withOpacity(0.8),
-                                    AppColors.primaryColor.withOpacity(0.6),
+                                    AppColors.primaryColor.withAlpha(400),
+                                    AppColors.primaryColor.withAlpha(300),
                                   ]
                                 : [
-                                    AppColors.primaryColor.withOpacity(
-                                      0.75 + (normalizedValue * 0.25),
+                                    AppColors.primaryColor.withAlpha(
+                                      300 + (normalizedValue * 0.25).toInt(),
                                     ),
-                                    AppColors.primaryColor.withOpacity(
-                                      0.55 + (normalizedValue * 0.25),
+                                    AppColors.primaryColor..withAlpha(
+                                      250 + (normalizedValue * 0.25).toInt(),
                                     ),
-                                    AppColors.primaryColor.withOpacity(
-                                      0.35 + (normalizedValue * 0.25),
+                                    AppColors.primaryColor.withAlpha(
+                                      200 + (normalizedValue * 0.25).toInt(),
                                     ),
                                   ],
                             begin: Alignment.bottomCenter,
@@ -374,7 +374,7 @@ class _TraderBranchsChartState extends State<TraderBranchsChart> {
                     horizontalLines: [
                       HorizontalLine(
                         y: avgVolume,
-                        color: AppColors.primaryColor.withOpacity(0.4),
+                        color: AppColors.primaryColor.withAlpha(200),
                         strokeWidth: 2,
                         dashArray: [10, 5],
                         label: HorizontalLineLabel(
@@ -404,13 +404,13 @@ class _TraderBranchsChartState extends State<TraderBranchsChart> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.primaryColor.withOpacity(0.05),
+                    AppColors.primaryColor.withAlpha(25),
                     Colors.transparent,
                   ],
                 ),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: AppColors.primaryColor.withOpacity(0.15),
+                  color: AppColors.primaryColor.withAlpha(100),
                 ),
               ),
               child: Row(

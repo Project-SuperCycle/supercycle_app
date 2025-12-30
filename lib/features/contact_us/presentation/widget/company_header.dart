@@ -7,11 +7,11 @@ class CompanyHeader extends StatelessWidget {
   final String? companyName;
 
   const CompanyHeader({
-    Key? key,
+    super.key,
     required this.isArabic,
     this.logoUrl,
     this.companyName,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

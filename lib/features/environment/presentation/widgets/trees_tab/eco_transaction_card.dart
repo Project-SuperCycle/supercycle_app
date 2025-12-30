@@ -81,7 +81,7 @@ class EcoTransactionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withAlpha(25),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -103,7 +103,7 @@ class EcoTransactionCard extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: transactionColor.withOpacity(0.1),
+                    color: transactionColor.withAlpha(50),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -137,7 +137,7 @@ class EcoTransactionCard extends StatelessWidget {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: transactionColor.withOpacity(0.1),
+                              color: transactionColor.withAlpha(50),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(

@@ -437,14 +437,14 @@ class SalesLineChartState extends State<SalesLineChart> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withAlpha(25),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
             ],
           ),
           child: DropdownButtonFormField<String>(
-            value: currentValue,
+            initialValue: currentValue,
             isExpanded: true,
             items: options.map((String value) {
               return DropdownMenuItem<String>(

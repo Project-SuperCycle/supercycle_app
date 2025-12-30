@@ -20,7 +20,7 @@ class NotificationItem extends StatelessWidget {
           border: Border.all(
             color: notification.isRead
                 ? Colors.grey[200]!
-                : const Color(0xFF10B981).withOpacity(0.2),
+                : const Color(0xFF10B981).withAlpha(100),
             width: 1,
           ),
         ),
@@ -41,7 +41,7 @@ class NotificationItem extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: const Color(0xFF10B981).withOpacity(0.1),
+        color: const Color(0xFF10B981).withAlpha(50),
         shape: BoxShape.circle,
       ),
       child: const Icon(

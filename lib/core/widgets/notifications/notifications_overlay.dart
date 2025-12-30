@@ -128,7 +128,7 @@ class _NotificationsPanelState extends State<NotificationsPanel>
               opacity: _fadeAnimation,
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                child: Container(color: Colors.black.withOpacity(0.3)),
+                child: Container(color: Colors.black.withAlpha(150)),
               ),
             ),
           ),
@@ -153,7 +153,7 @@ class _NotificationsPanelState extends State<NotificationsPanel>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withAlpha(100),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -191,7 +191,7 @@ class _NotificationsPanelState extends State<NotificationsPanel>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withOpacity(0.1),
+              color: const Color(0xFF10B981).withAlpha(50),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(

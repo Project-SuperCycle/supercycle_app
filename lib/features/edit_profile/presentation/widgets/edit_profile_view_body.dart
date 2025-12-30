@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:supercycle/core/widgets/language_selection_widget.dart';
 
 class EditProfileViewBody extends StatefulWidget {
   const EditProfileViewBody({super.key});
@@ -12,10 +12,11 @@ class EditProfileViewBody extends StatefulWidget {
 }
 
 class _EditProfileViewBodyState extends State<EditProfileViewBody> {
-  // Sample user data - replace with your actual data source
   String userName = "Ahmed Ali";
   String userEmail = "ahmed@example.com";
   String userPhone = "+20 123 456 7890";
+
+  String _selectedLanguage = "ar";
 
   @override
   Widget build(BuildContext context) {
@@ -24,124 +25,12 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header Section with Gradient
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.35,
-              decoration: const BoxDecoration(
-                gradient: kGradientContainer,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50),
-                ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-
-                    // Back Button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          Text(
-                            "تعديل الملف الشخصي",
-                            style: AppStyles.styleSemiBold18(
-                              context,
-                            ).copyWith(color: Colors.white),
-                          ),
-                          const SizedBox(width: 40), // For symmetry
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Profile Picture with Edit Button
-                    Stack(
-                      children: [
-                        Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(75),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 15,
-                                spreadRadius: 3,
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(75),
-                            child: Image.asset(
-                              'assets/images/default_avatar.png',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.person,
-                                  size: 80,
-                                  color: Colors.grey,
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-
-                        Positioned(
-                          bottom: 5,
-                          right: 5,
-                          child: GestureDetector(
-                            onTap: () {
-                              _showImagePickerDialog();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    blurRadius: 8,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.camera_alt,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
+            _buildHeader(context),
             const SizedBox(height: 30),
-
-            // Profile Information Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  // Personal Information Card
                   _buildInfoCard(
                     title: "المعلومات الشخصية",
                     children: [
@@ -165,10 +54,7 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
-
-                  // Settings Card
                   _buildInfoCard(
                     title: "الإعدادات",
                     children: [
@@ -178,56 +64,20 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
                         subtitle: "تفعيل الإشعارات",
                         trailing: Switch(
                           value: true,
-                          activeColor: AppColors.primaryColor,
-                          onChanged: (value) {
-                            // Handle notification toggle
-                          },
+                          activeThumbColor: AppColors.primaryColor,
+                          onChanged: (_) {},
                         ),
                       ),
                       _buildInfoTile(
                         icon: Icons.language,
                         title: "اللغة",
-                        subtitle: "العربية",
-                        onTap: () => _showLanguageDialog(),
-                      ),
-                      _buildInfoTile(
-                        icon: Icons.security,
-                        title: "الأمان والخصوصية",
-                        subtitle: "إدارة كلمة المرور",
-                        onTap: () => _navigateToSecurity(),
+                        subtitle: _selectedLanguage == "ar"
+                            ? "العربية"
+                            : "English",
+                        onTap: _showLanguageDialog,
                       ),
                     ],
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // Account Actions Card
-                  _buildInfoCard(
-                    title: "إجراءات الحساب",
-                    children: [
-                      _buildInfoTile(
-                        icon: Icons.help,
-                        title: "المساعدة والدعم",
-                        subtitle: "احصل على المساعدة",
-                        onTap: () => _navigateToHelp(),
-                      ),
-                      _buildInfoTile(
-                        icon: Icons.info,
-                        title: "حول التطبيق",
-                        subtitle: "الإصدار 1.0.0",
-                        onTap: () => _showAboutDialog(),
-                      ),
-                      _buildInfoTile(
-                        icon: Icons.logout,
-                        title: "تسجيل الخروج",
-                        subtitle: "الخروج من الحساب",
-                        textColor: Colors.red,
-                        onTap: () => _showLogoutDialog(),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -237,7 +87,50 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
     );
   }
 
-  // Build Info Card Widget
+  // ==================== HEADER ====================
+
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.35,
+      decoration: const BoxDecoration(
+        gradient: kGradientContainer,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(50),
+          bottomRight: Radius.circular(50),
+        ),
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  Text(
+                    "تعديل الملف الشخصي",
+                    style: AppStyles.styleSemiBold18(
+                      context,
+                    ).copyWith(color: Colors.white),
+                  ),
+                  const SizedBox(width: 40),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ==================== INFO CARD ====================
+
   Widget _buildInfoCard({
     required String title,
     required List<Widget> children,
@@ -259,13 +152,11 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
     );
   }
 
-  // Build Info Tile Widget
   Widget _buildInfoTile({
     required IconData icon,
     required String title,
     required String subtitle,
     Widget? trailing,
-    Color? textColor,
     VoidCallback? onTap,
   }) {
     return ListTile(
@@ -273,256 +164,100 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: (textColor ?? AppColors.primaryColor).withOpacity(0.1),
+          color: AppColors.primaryColor.withAlpha(50),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(icon, color: textColor ?? AppColors.primaryColor, size: 24),
+        child: Icon(icon, color: AppColors.primaryColor),
       ),
-      title: Text(
-        title,
-        style: AppStyles.styleSemiBold14(
-          context,
-        ).copyWith(color: textColor ?? Colors.black87),
-      ),
+      title: Text(title, style: AppStyles.styleSemiBold14(context)),
       subtitle: Text(
         subtitle,
-        style: AppStyles.styleSemiBold12(context).copyWith(
-          color: textColor?.withOpacity(0.7) ?? AppColors.subTextColor,
-        ),
+        style: AppStyles.styleSemiBold12(
+          context,
+        ).copyWith(color: AppColors.subTextColor),
       ),
       trailing:
           trailing ??
           (onTap != null
-              ? Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: textColor ?? Colors.grey,
-                )
+              ? const Icon(Icons.arrow_forward_ios, size: 16)
               : null),
       onTap: onTap,
     );
   }
 
-  // Show Image Picker Dialog
-  void _showImagePickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          title: Text(
-            "تغيير الصورة الشخصية",
-            style: AppStyles.styleSemiBold18(context),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera, color: AppColors.primaryColor),
-                title: const Text("التقاط صورة"),
-                onTap: () {
-                  Navigator.pop(context);
-                  // Handle camera capture
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  color: AppColors.primaryColor,
-                ),
-                title: const Text("اختيار من المعرض"),
-                onTap: () {
-                  Navigator.pop(context);
-                  // Handle gallery selection
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // ==================== DIALOGS ====================
 
-  // Edit Field Dialog
   void _editField(String fieldName, String currentValue) {
-    TextEditingController controller = TextEditingController(
-      text: currentValue,
-    );
+    final controller = TextEditingController(text: currentValue);
 
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          title: Text(
-            "تعديل $fieldName",
-            style: AppStyles.styleSemiBold18(context),
-          ),
-          content: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              labelText: fieldName,
-              border: const OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primaryColor),
-              ),
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(
+          "تعديل $fieldName",
+          style: AppStyles.styleSemiBold18(context),
+        ),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: fieldName,
+            border: const OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.primaryColor),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("إلغاء"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("إلغاء"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryColor,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-              ),
-              onPressed: () {
-                // Update the field value
-                setState(() {
-                  if (fieldName == "الاسم") {
-                    userName = controller.text;
-                  } else if (fieldName == "البريد الإلكتروني") {
-                    userEmail = controller.text;
-                  } else if (fieldName == "رقم الهاتف") {
-                    userPhone = controller.text;
-                  }
-                });
-                Navigator.pop(context);
-              },
-              child: const Text("حفظ"),
-            ),
-          ],
-        );
-      },
+            onPressed: () {
+              setState(() {
+                if (fieldName == "الاسم") userName = controller.text;
+                if (fieldName == "البريد الإلكتروني") {
+                  userEmail = controller.text;
+                }
+                if (fieldName == "رقم الهاتف") {
+                  userPhone = controller.text;
+                }
+              });
+              Navigator.pop(context);
+            },
+            child: const Text("حفظ"),
+          ),
+        ],
+      ),
     );
   }
 
-  // Show Language Selection Dialog
   void _showLanguageDialog() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          title: Text("اختر اللغة", style: AppStyles.styleSemiBold18(context)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text("العربية"),
-                leading: Radio(
-                  value: "ar",
-                  groupValue: "ar",
-                  activeColor: AppColors.primaryColor,
-                  onChanged: (value) {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text("English"),
-                leading: Radio(
-                  value: "en",
-                  groupValue: "ar",
-                  activeColor: AppColors.primaryColor,
-                  onChanged: (value) {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // Show Logout Confirmation Dialog
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          title: Text(
-            "تسجيل الخروج",
-            style: AppStyles.styleSemiBold18(context),
-          ),
-          content: const Text("هل أنت متأكد من أنك تريد تسجيل الخروج؟"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("إلغاء"),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text("اختر اللغة", style: AppStyles.styleSemiBold18(context)),
+        content: StatefulBuilder(
+          builder: (context, setLocalState) {
+            return LanguageSelectionWidget(
+              value: _selectedLanguage,
+              onChanged: (lang) {
+                setLocalState(() {
+                  _selectedLanguage = lang;
+                });
                 Navigator.pop(context);
-                // Handle logout
               },
-              child: const Text("تسجيل الخروج"),
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 
-  // Show About Dialog
-  void _showAboutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          title: Text("حول التطبيق", style: AppStyles.styleSemiBold18(context)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("SuperCycle App", style: AppStyles.styleSemiBold14(context)),
-              Text("الإصدار: 1.0.0", style: AppStyles.styleSemiBold12(context)),
-              const SizedBox(height: 10),
-              Text(
-                "تطبيق إدارة إعادة التدوير",
-                style: AppStyles.styleSemiBold12(context),
-              ),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-              ),
-              onPressed: () => Navigator.pop(context),
-              child: const Text("حسناً"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Navigation Methods
-  void _navigateToSecurity() {
-    // Navigate to security settings
-    CustomSnackBar.showInfo(context, "سيتم فتح صفحة الأمان والخصوصية");
-  }
-
-  void _navigateToHelp() {
-    // Navigate to help page
-
-    CustomSnackBar.showInfo(context, "سيتم فتح صفحة المساعدة");
-  }
+  // ==================== NAV ====================
 }

@@ -153,7 +153,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha(350),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -255,7 +255,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black.withAlpha(300),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white, size: 16),

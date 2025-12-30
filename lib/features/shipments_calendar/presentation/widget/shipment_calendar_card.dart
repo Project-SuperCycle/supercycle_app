@@ -231,7 +231,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
                     color: _isNavigating
-                        ? AppColors.primaryColor.withOpacity(0.6)
+                        ? AppColors.primaryColor.withAlpha(300)
                         : AppColors.primaryColor,
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(12),

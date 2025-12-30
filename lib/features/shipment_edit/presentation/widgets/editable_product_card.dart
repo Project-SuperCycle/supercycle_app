@@ -273,7 +273,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
       indent: 5,
       endIndent: 5,
       thickness: 2,
-      color: Colors.grey.withOpacity(0.3),
+      color: Colors.grey.withAlpha(150),
     );
   }
 

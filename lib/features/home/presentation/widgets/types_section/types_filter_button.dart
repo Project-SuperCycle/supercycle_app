@@ -19,7 +19,7 @@ class TypesFilterButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withAlpha(150),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

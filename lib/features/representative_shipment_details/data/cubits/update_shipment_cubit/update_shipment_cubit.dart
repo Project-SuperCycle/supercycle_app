@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_state.dart';
 import 'package:supercycle/features/representative_shipment_details/data/models/update_shipment_model.dart';
 import 'package:supercycle/features/representative_shipment_details/data/repos/rep_shipment_details_repo_imp.dart';
