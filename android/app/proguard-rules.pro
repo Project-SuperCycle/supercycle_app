@@ -136,4 +136,3 @@
 # Keep Exceptions
 # ===================================
 -keep public class * extends java.lang.Exception
--keep public class * ext
