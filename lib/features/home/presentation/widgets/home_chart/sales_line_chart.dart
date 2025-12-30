@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -626,12 +627,6 @@ class SalesLineChartState extends State<SalesLineChart> {
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    CustomSnackBar.showError(context, message);
   }
 }

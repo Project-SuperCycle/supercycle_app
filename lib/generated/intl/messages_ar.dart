@@ -86,9 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "driver_name": MessageLookupByLibrary.simpleMessage("اسم السائق"),
     "driver_phone": MessageLookupByLibrary.simpleMessage("هاتف السائق"),
     "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
-    "email_phone": MessageLookupByLibrary.simpleMessage(
-      "البريد الإلكتروني/رقم الهاتف",
-    ),
+    "email_phone": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
     "entity_address": MessageLookupByLibrary.simpleMessage("عنوان الجهة"),
     "entity_data": MessageLookupByLibrary.simpleMessage("بيانات جهة التعامل"),
     "entity_email": MessageLookupByLibrary.simpleMessage(

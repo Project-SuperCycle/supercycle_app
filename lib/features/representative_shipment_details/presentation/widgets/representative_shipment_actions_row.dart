@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -46,19 +47,7 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
         onActionTaken();
         GoRouter.of(context).pop();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('تم تأكيد الشحنة بنجاح'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        CustomSnackBar.showSuccess(context, 'تم تأكيد الشحنة بنجاح');
       },
     );
   }
@@ -82,20 +71,7 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
 
         // Mark action as taken
         onActionTaken();
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.cancel, color: Colors.white),
-                SizedBox(width: 8),
-                Text('تم رفض الشحنة'),
-              ],
-            ),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        CustomSnackBar.showSuccess(context, 'تم رفض الشحنة بنجاح');
       },
     );
   }
@@ -123,17 +99,7 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             child: BlocConsumer<AcceptShipmentCubit, AcceptShipmentState>(
               listener: (context, state) {
                 if (state is AcceptRepShipmentFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        children: [
-                          Icon(Icons.cancel, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text(state.errorMessage),
-                        ],
-                      ),
-                    ),
-                  );
+                  CustomSnackBar.showError(context, state.errorMessage);
                 }
               },
               builder: (context, state) {
@@ -204,17 +170,7 @@ class RepresentativeShipmentActionsRow extends StatelessWidget {
             child: BlocConsumer<RejectShipmentCubit, RejectShipmentState>(
               listener: (context, state) {
                 if (state is RejectRepShipmentFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        children: [
-                          Icon(Icons.cancel, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text(state.errorMessage),
-                        ],
-                      ),
-                    ),
-                  );
+                  CustomSnackBar.showError(context, state.errorMessage);
                 }
               },
               builder: (context, state) {

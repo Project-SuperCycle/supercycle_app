@@ -4,6 +4,7 @@ import 'package:supercycle/core/helpers/error_handler.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:supercycle/features/shipments_calendar/data/repos/shipments_calendar_repo.dart';
 
@@ -23,7 +24,9 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
         );
 
         final data = response['data'];
+        final meta = response['meta']['totalPages'];
         List<dynamic> shipmentsData = _extractShipmentsData(data);
+        StorageServices.storeData("totalTraderShipmentsPages", meta);
 
         return shipmentsData.map((e) => ShipmentModel.fromJson(e)).toList();
       },
@@ -43,6 +46,9 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
         );
 
         final data = response['result']['data'] as List<dynamic>;
+        final meta = response['result']['totalPages'];
+        StorageServices.storeData("totalShipmentsHistoryPages", meta);
+
         return data.map((e) => ShipmentModel.fromJson(e)).toList();
       },
       errorContext: 'get shipments history',
@@ -61,7 +67,9 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
         );
 
         final data = response['data'];
+        final meta = response['meta']['totalPages'];
         List<dynamic> shipmentsData = _extractShipmentsData(data);
+        StorageServices.storeData("totalRepShipmentsPages", meta);
 
         return shipmentsData.map((e) => ShipmentModel.fromJson(e)).toList();
       },

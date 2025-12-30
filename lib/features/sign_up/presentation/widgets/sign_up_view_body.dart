@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocConsumer, BlocProvider;
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart' show EndPoints;
 import 'package:supercycle/core/widgets/auth/auth_main_header.dart';
 import 'package:supercycle/core/widgets/auth/auth_main_layout.dart';
@@ -144,9 +145,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
           );
         }
         if (state is InitialSignUpFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          CustomSnackBar.showError(context, state.message);
         }
       },
       builder: (context, state) {

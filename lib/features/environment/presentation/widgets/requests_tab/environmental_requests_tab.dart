@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/environment/data/cubits/requests_cubit/requests_cubit.dart';
 import 'package:supercycle/features/environment/presentation/widgets/requests_tab/enviromental_request_card.dart';
@@ -75,12 +76,8 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
           setState(() {
             _isLoadingMore = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errMessage),
-              backgroundColor: Colors.red,
-            ),
-          );
+
+          CustomSnackBar.showError(context, state.errMessage);
         }
       },
       builder: (context, state) {

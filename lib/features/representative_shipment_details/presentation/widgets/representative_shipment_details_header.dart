@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
@@ -151,12 +152,7 @@ class RepresentativeShipmentDetailsHeader extends StatelessWidget {
     required List<String> images,
   }) {
     if (images.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('لا توجد صور للعرض'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      CustomSnackBar.showWarning(context, 'لا توجد صور للعرض');
       return;
     }
 

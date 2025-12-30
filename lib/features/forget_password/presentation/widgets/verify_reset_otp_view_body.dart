@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/widgets/custom_button.dart';
@@ -83,16 +84,13 @@ class _VerifyResetOtpViewBodyState extends State<VerifyResetOtpViewBody> {
     return BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
       listener: (context, state) {
         if (state is VerifyResetOtpSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم التحقق من الرمز بنجاح')),
-          );
+          CustomSnackBar.showSuccess(context, 'تم التحقق من الرمز بنجاح');
+
           GoRouter.of(
             context,
           ).pushReplacement(EndPoints.resetPasswordView, extra: state.token);
         } else if (state is VerifyResetOtpFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('فشل التحقق من الرمز')));
+          CustomSnackBar.showError(context, 'فشل التحقق من الرمز');
         }
       },
       builder: (context, state) => Form(

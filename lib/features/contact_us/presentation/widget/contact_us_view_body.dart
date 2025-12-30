@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/functions/lanuch_whatsApp.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
 import 'package:supercycle/core/services/contact_service.dart';
@@ -140,21 +141,7 @@ class _ContactUsViewBodyState extends State<ContactUsViewBody>
   void _showErrorSnackBar(String message) {
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 8),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: Colors.red.shade600,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-    );
+    CustomSnackBar.showError(context, message);
   }
 
   Future<void> _showSuccessDialog() async {

@@ -9,7 +9,7 @@
   "signUp_button" : "تسجيل حساب",
   "email": "البريد الإلكتروني",
   "phone_number": "رقم الهاتف",
-  "email_phone": "البريد الإلكتروني/رقم الهاتف",
+  "email_phone": "البريد الإلكتروني",
   "password": "كلمة المرور",
   "confirm_password": "تأكيد كلمة المرور",
   "or_register_via": "أو التسجيل عبر",

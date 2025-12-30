@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocConsumer, BlocProvider;
 import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart' show EndPoints;
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/auth/auth_main_layout.dart';
@@ -36,12 +37,11 @@ class _SignUpDetailsViewBodyState extends State<SignUpDetailsViewBody> {
 
   void handleCompleteSignUp() {
     if (!isAgreed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(S.of(context).privacy_policy_required),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.showWarning(
+        context,
+        S.of(context).privacy_policy_required,
       );
+
       return;
     }
 
@@ -65,9 +65,7 @@ class _SignUpDetailsViewBodyState extends State<SignUpDetailsViewBody> {
           GoRouter.of(context).pushReplacement(EndPoints.signInView);
         }
         if (state is CompleteSignUpFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          CustomSnackBar.showError(context, state.message);
         }
       },
       builder: (context, state) {

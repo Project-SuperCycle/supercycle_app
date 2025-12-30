@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
@@ -74,19 +75,7 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
 
         widget.onDeliveredPressed();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('تم تأكيد الشحنة بنجاح'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        CustomSnackBar.showError(context, 'تم تأكيد الشحنة بنجاح');
       },
     );
   }
@@ -109,19 +98,7 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
 
         widget.onDeliveredPressed();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('تم تسجيل العطلة'),
-              ],
-            ),
-            backgroundColor: Colors.orange,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        CustomSnackBar.showWarning(context, 'تم تسجيل العطلة');
       },
     );
   }

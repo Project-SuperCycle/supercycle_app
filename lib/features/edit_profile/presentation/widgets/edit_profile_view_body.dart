@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 
@@ -516,21 +517,12 @@ class _EditProfileViewBodyState extends State<EditProfileViewBody> {
   // Navigation Methods
   void _navigateToSecurity() {
     // Navigate to security settings
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text("سيتم فتح صفحة الأمان والخصوصية"),
-        backgroundColor: AppColors.primaryColor,
-      ),
-    );
+    CustomSnackBar.showInfo(context, "سيتم فتح صفحة الأمان والخصوصية");
   }
 
   void _navigateToHelp() {
     // Navigate to help page
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text("سيتم فتح صفحة المساعدة"),
-        backgroundColor: AppColors.primaryColor,
-      ),
-    );
+
+    CustomSnackBar.showInfo(context, "سيتم فتح صفحة المساعدة");
   }
 }

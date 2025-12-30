@@ -187,18 +187,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     isActive: false,
                     onTap: () {
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text(
-                            'صفحة الإشعارات قريباً',
-                            textAlign: TextAlign.center,
-                          ),
-                          backgroundColor: const Color(0xFF10B981),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
+
+                      CustomSnackBar.showSuccess(
+                        context,
+                        'صفحة الإشعارات قريباً',
                       );
                     },
                   ),
@@ -233,18 +225,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     title: 'الإعدادات',
                     onTap: () {
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text(
-                            'صفحة الإعدادات قريباً',
-                            textAlign: TextAlign.center,
-                          ),
-                          backgroundColor: const Color(0xFF10B981),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
+                      CustomSnackBar.showSuccess(
+                        context,
+                        'صفحة الإعدادات قريباً',
                       );
                     },
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
@@ -329,17 +330,9 @@ class _ModalContentState extends State<_ModalContent>
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: const TextStyle(fontSize: 14)),
-        backgroundColor: isError
-            ? const Color(0xFFE53935)
-            : const Color(0xFFFF9800),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
+    isError
+        ? CustomSnackBar.showError(context, message)
+        : CustomSnackBar.showWarning(context, message);
   }
 
   Future<void> _onSubmitTap() async {

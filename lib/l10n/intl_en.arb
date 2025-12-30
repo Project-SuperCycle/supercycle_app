@@ -9,7 +9,7 @@
   "signUp_button" : "Sign Up",
   "email": "Email",
   "phone_number": "Phone Number",
-  "email_phone": " Email/Phone Number",
+  "email_phone": " Email",
   "password": "Password",
   "confirm_password": "Confirm Password",
   "or_register_via": "Or register via",

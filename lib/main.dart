@@ -39,11 +39,9 @@ import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_cal
 import 'package:supercycle/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 import 'package:supercycle/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
 import 'package:supercycle/features/sign_in/data/repos/signin_repo_imp.dart';
-import 'package:supercycle/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart'
-    show SignUpCubit;
-import 'package:supercycle/features/sign_up/data/repos/signup_repo_imp.dart'
-    show SignUpRepoImp;
-import 'package:supercycle/firebase_options.dart' show DefaultFirebaseOptions;
+import 'package:supercycle/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart';
+import 'package:supercycle/features/sign_up/data/repos/signup_repo_imp.dart';
+import 'package:supercycle/firebase_options.dart';
 import 'features/sales_process/data/cubit/create_shipment_cubit/create_shipment_cubit.dart';
 import 'generated/l10n.dart';
 

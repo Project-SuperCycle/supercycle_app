@@ -5,8 +5,8 @@ import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'dart:io';
-import 'image_picker_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:supercycle/features/sales_process/presentation/widgets/image_picker_widget.dart';
 
 class ShipmentEditHeader extends StatefulWidget {
   final List<File> selectedImages;

@@ -90,7 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "driver_name": MessageLookupByLibrary.simpleMessage("Driver\'s name"),
     "driver_phone": MessageLookupByLibrary.simpleMessage("Driver\'s Phone"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
-    "email_phone": MessageLookupByLibrary.simpleMessage(" Email/Phone Number"),
+    "email_phone": MessageLookupByLibrary.simpleMessage(" Email"),
     "entity_address": MessageLookupByLibrary.simpleMessage("Entity address"),
     "entity_data": MessageLookupByLibrary.simpleMessage("Entity data"),
     "entity_email": MessageLookupByLibrary.simpleMessage("Entity email"),

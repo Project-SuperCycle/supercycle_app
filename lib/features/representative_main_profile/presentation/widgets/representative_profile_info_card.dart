@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
@@ -29,9 +31,16 @@ class _RepresentativeProfileInfoCardState
   List<ShipmentModel> shipments = [];
   bool hasMoreData = true;
   bool isLoadingMore = false;
+  int totalPages = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _getTotalPages();
+  }
 
   void _loadNextPage() {
-    if (!isLoadingMore && hasMoreData) {
+    if (!isLoadingMore && widget.currentPage < totalPages) {
       setState(() {
         isLoadingMore = true;
       });
@@ -46,6 +55,13 @@ class _RepresentativeProfileInfoCardState
       });
       widget.onPageChanged(widget.currentPage - 1);
     }
+  }
+
+  void _getTotalPages() async {
+    final pages = await StorageServices.readData("totalShipmentsHistoryPages");
+    setState(() {
+      totalPages = pages ?? 1;
+    });
   }
 
   @override
@@ -78,17 +94,15 @@ class _RepresentativeProfileInfoCardState
                 setState(() {
                   shipments = state.shipments;
                   isLoadingMore = false;
-                  // لو الشحنات أقل من 10، معناها مفيش صفحات تانية
-                  hasMoreData = state.shipments.length >= 10;
+                  hasMoreData = widget.currentPage < totalPages;
                 });
               }
               if (state is GetAllShipmentsFailure) {
                 setState(() {
                   isLoadingMore = false;
                 });
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+
+                CustomSnackBar.showError(context, state.errorMessage);
               }
             },
             builder: (context, state) {
@@ -140,7 +154,7 @@ class _RepresentativeProfileInfoCardState
                                 minimumSize: const Size(30, 30),
                                 maximumSize: const Size(30, 30),
                               ),
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.arrow_back_ios_new_rounded,
                                 size: 20,
                               ),
@@ -148,7 +162,7 @@ class _RepresentativeProfileInfoCardState
 
                             const SizedBox(width: 16),
 
-                            // Page Number
+                            // Page Number with Total Pages
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 12,
@@ -160,7 +174,7 @@ class _RepresentativeProfileInfoCardState
                               ),
                               child: Center(
                                 child: Text(
-                                  '${widget.currentPage}',
+                                  '${widget.currentPage} / $totalPages',
                                   style: AppStyles.styleSemiBold16(context),
                                 ),
                               ),
@@ -170,7 +184,9 @@ class _RepresentativeProfileInfoCardState
 
                             // Next Button
                             IconButton(
-                              onPressed: hasMoreData && !isLoadingMore
+                              onPressed:
+                                  widget.currentPage < totalPages &&
+                                      !isLoadingMore
                                   ? _loadNextPage
                                   : null,
                               style: ElevatedButton.styleFrom(
@@ -181,7 +197,7 @@ class _RepresentativeProfileInfoCardState
                                 minimumSize: const Size(30, 30),
                                 maximumSize: const Size(30, 30),
                               ),
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 20,
                               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
@@ -98,8 +99,9 @@ class UserProfileService {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load profile: ${e.toString()}')),
+        CustomSnackBar.showError(
+          context,
+          'Failed to load profile: ${e.toString()}',
         );
       }
     }
@@ -137,14 +139,13 @@ class UserProfileService {
       if (route != null && context.mounted) {
         GoRouter.of(context).push(route, extra: fetchedUser);
       } else if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile type not supported')),
-        );
+        CustomSnackBar.showWarning(context, 'Profile type not supported');
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load profile: ${e.toString()}')),
+        CustomSnackBar.showError(
+          context,
+          'Failed to load profile: ${e.toString()}',
         );
       }
     }

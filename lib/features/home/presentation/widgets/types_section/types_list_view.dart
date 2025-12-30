@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
@@ -32,9 +33,7 @@ class _TypesListViewState extends State<TypesListView> {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is FetchDoshTypesFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          CustomSnackBar.showError(context, state.message);
         }
         if (state is FetchDoshTypesSuccess) {
           List<DoshItem> typesList = state.doshTypes

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/widgets/auth/custom_password_field.dart';
@@ -74,15 +75,15 @@ class ResetPasswordViewBody extends StatelessWidget {
     return BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
       listener: (context, state) {
         if (state is ResetPasswordSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('تم إعادة تعيين كلمة المرور بنجاح')),
+          CustomSnackBar.showSuccess(
+            context,
+            'تم إعادة تعيين كلمة المرور بنجاح',
           );
+
           GoRouter.of(context).pushReplacement(EndPoints.signInView);
         }
         if (state is ResetPasswordFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.errorMsg)));
+          CustomSnackBar.showError(context, state.errorMsg);
         }
       },
       builder: (context, state) {
