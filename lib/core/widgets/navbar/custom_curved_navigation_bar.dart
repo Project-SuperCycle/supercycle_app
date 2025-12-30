@@ -2,7 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';
@@ -105,7 +105,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   /// تحميل بيانات المستخدم
   Future<void> _loadUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
-    Logger().d("Navigation Bar - User: ${user?.displayName ?? 'Guest'}");
     if (mounted) {
       setState(() {
         isUserLoggedIn = (user != null);
@@ -121,7 +120,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           router.routerDelegate.currentConfiguration.last.matchedLocation;
       return location;
     } catch (e) {
-      Logger().e('Error getting current route: $e');
       return '/';
     }
   }
@@ -166,7 +164,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
 
     // لو على نفس الصفحة، لا تعمل navigation
     if (targetRoute != null && currentRoute == targetRoute) {
-      Logger().d("Already on the same route: $currentRoute");
       return;
     }
 
@@ -218,17 +215,10 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           break;
       }
     } catch (e) {
-      Logger().e('❌ Navigation error: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ أثناء التنقل: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+        CustomSnackBar.showWarning(
+          context,
+          'حدث خطأ أثناء التنقل: ${e.toString()}',
         );
       }
     }
@@ -237,18 +227,9 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   /// عرض رسالة تطلب تسجيل الدخول
   void _showLoginRequired(String featureName) {
     if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'يرجى تسجيل الدخول للوصول إلى $featureName',
-          textAlign: TextAlign.center,
-        ),
-        backgroundColor: const Color(0xFF10B981),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        duration: const Duration(seconds: 2),
-      ),
+    CustomSnackBar.showWarning(
+      context,
+      'يرجى تسجيل الدخول للوصول إلى $featureName',
     );
   }
 

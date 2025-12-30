@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
@@ -14,8 +15,8 @@ class SegmentDeliverModal {
   }) {
     final primaryColor = AppColors.primaryColor;
     final gradientColors = [
-      AppColors.primaryColor.withOpacity(0.70),
-      AppColors.primaryColor.withOpacity(0.85),
+      AppColors.primaryColor.withAlpha(350),
+      AppColors.primaryColor.withAlpha(400),
     ];
 
     WoltModalSheet.show<void>(
@@ -214,7 +215,7 @@ class _ModalContentState extends State<_ModalContent>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: widget.primaryColor.withOpacity(0.1),
+                  color: widget.primaryColor.withAlpha(50),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: widget.primaryColor, size: 28),
@@ -317,17 +318,9 @@ class _ModalContentState extends State<_ModalContent>
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: const TextStyle(fontSize: 14)),
-        backgroundColor: isError
-            ? const Color(0xFFE53935)
-            : const Color(0xFF4CAF50),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
+    isError
+        ? CustomSnackBar.showError(context, message)
+        : CustomSnackBar.showSuccess(context, message);
   }
 
   Future<void> _onSubmitTap() async {
@@ -453,13 +446,10 @@ class _ModalContentState extends State<_ModalContent>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: widget.primaryColor.withOpacity(0.3),
-          width: 2,
-        ),
+        border: Border.all(color: widget.primaryColor.withAlpha(150), width: 2),
         boxShadow: [
           BoxShadow(
-            color: widget.primaryColor.withOpacity(0.1),
+            color: widget.primaryColor.withAlpha(50),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -488,7 +478,7 @@ class _ModalContentState extends State<_ModalContent>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: widget.primaryColor.withOpacity(0.1),
+                  color: widget.primaryColor.withAlpha(50),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -535,10 +525,10 @@ class _ModalContentState extends State<_ModalContent>
         width: double.infinity,
         height: isLarge ? 180 : null,
         decoration: BoxDecoration(
-          color: widget.primaryColor.withOpacity(0.05),
+          color: widget.primaryColor.withAlpha(25),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: widget.primaryColor.withOpacity(0.3),
+            color: widget.primaryColor.withAlpha(150),
             width: 2,
             style: BorderStyle.solid,
           ),
@@ -549,7 +539,7 @@ class _ModalContentState extends State<_ModalContent>
             Container(
               padding: EdgeInsets.all(isLarge ? 20 : 12),
               decoration: BoxDecoration(
-                color: widget.primaryColor.withOpacity(0.1),
+                color: widget.primaryColor.withAlpha(50),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -593,7 +583,7 @@ class _ModalContentState extends State<_ModalContent>
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
+                  color: Colors.black.withAlpha(350),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -610,7 +600,7 @@ class _ModalContentState extends State<_ModalContent>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha(350),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -659,7 +649,7 @@ class _ModalContentState extends State<_ModalContent>
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withAlpha(25),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -707,7 +697,7 @@ class _ModalContentState extends State<_ModalContent>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: widget.primaryColor.withOpacity(0.4),
+            color: widget.primaryColor.withAlpha(200),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),

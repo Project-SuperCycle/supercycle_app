@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/features/sales_process/data/repos/sales_process_repo_imp.dart';
 
 part 'create_shipment_state.dart';
@@ -24,7 +23,6 @@ class CreateShipmentCubit extends Cubit<CreateShipmentState> {
           // Store user globally
         },
       );
-      Logger().i("CREATE CUBIT");
     } catch (error) {
       emit(CreateShipmentFailure(errorMessage: error.toString()));
     }

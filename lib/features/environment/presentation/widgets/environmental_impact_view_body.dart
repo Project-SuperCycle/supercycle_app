@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
 import 'package:supercycle/features/environment/data/cubits/requests_cubit/requests_cubit.dart';
 import 'package:supercycle/features/environment/presentation/widgets/achievements_tab/environmental_achievements_tab.dart';
@@ -57,9 +58,7 @@ class _EnvironmentalImpactViewBodyState
             _updateFullWeight(state.ecoInfoModel.stats.totalRecycledKg);
           }
           if (state is GetEcoDataFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.errMessage)));
+            CustomSnackBar.showError(context, state.errMessage);
           }
         },
         builder: (context, state) {

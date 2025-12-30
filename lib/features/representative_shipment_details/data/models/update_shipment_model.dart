@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:supercycle/core/functions/shipment_manager.dart';
 import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 
 class UpdateShipmentModel {
@@ -34,11 +35,9 @@ class UpdateShipmentModel {
   Map<String, dynamic> toJson() {
     return {
       'shipmentID': shipmentID,
-      'updatedItems': updatedItems.map((item) => item.toJson()).toList(),
+      'updatedItems': updatedItems,
       'notes': notes,
       'rank': rank,
-      // Note: images (File objects) are typically not included in JSON
-      // They would be uploaded separately via multipart/form-data
     };
   }
 
@@ -49,7 +48,11 @@ class UpdateShipmentModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {'notes': notes, 'rank': rank, 'updatedItems': updatedItems};
+    return {
+      'notes': notes,
+      'rank': rank,
+      'updatedItems': ShipmentManager.createDoshItemsMap(items: updatedItems),
+    };
   }
 
   // Optional: copyWith method for creating modified copies

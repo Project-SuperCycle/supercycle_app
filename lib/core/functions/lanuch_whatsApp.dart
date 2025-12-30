@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> openWhatsApp({required BuildContext context}) async {
@@ -13,9 +14,6 @@ Future<void> openWhatsApp({required BuildContext context}) async {
   } else if (await canLaunchUrl(fallbackUrl)) {
     await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
   } else {
-    debugPrint("WhatsApp is not installed");
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("من فضلك ثبّت واتساب على جهازك")));
+    CustomSnackBar.showWarning(context, "من فضلك ثبّت واتساب على جهازك");
   }
 }

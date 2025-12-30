@@ -8,17 +8,17 @@ class TopicDropdown extends StatelessWidget {
   final bool enabled;
 
   const TopicDropdown({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     required this.isArabic,
     required this.enabled,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: ContactStrings.get('messageTopic', isArabic),
         hintText: ContactStrings.get('Select a topic', isArabic),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'dart:io';
 import 'package:supercycle/core/utils/app_styles.dart';
@@ -68,7 +68,6 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
       context,
       shipmentID: widget.shipmentID,
       onSubmit: (List<File> images, String reason) {
-        Logger().i('✅ Fail Shipment Segment');
         FailSegmentModel failModel = FailSegmentModel(
           shipmentID: widget.shipmentID,
           segmentID: widget.segmentID,
@@ -76,38 +75,23 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
           images: images,
         );
 
-        Logger().w("FAIL SEGMENT MODEL: $failModel");
-
         // هنا أضف منطق إرسال البيانات للـ API
         BlocProvider.of<FailSegmentCubit>(
           context,
         ).failSegment(failModel: failModel);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('تم تأكيد الشحنة بنجاح'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        CustomSnackBar.showWarning(context, 'تم تسجيل العطلة');
       },
     );
   }
 
   Future<void> _pickImage() async {
     if (_selectedImages.length >= widget.maxImages) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('لا يمكن إضافة أكثر من ${widget.maxImages} صور'),
-          backgroundColor: Colors.orange,
-        ),
+      CustomSnackBar.showWarning(
+        context,
+        'لا يمكن إضافة أكثر من ${widget.maxImages} صور',
       );
+
       return;
     }
 
@@ -245,12 +229,7 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
         _updateButtonState();
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ أثناء اختيار الصورة: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      CustomSnackBar.showError(context, 'حدث خطأ أثناء اختيار الصورة: $e');
     }
   }
 
@@ -270,13 +249,9 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
         });
 
         if (pickedFiles.length > remainingSlots) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'تم إضافة $remainingSlots صور فقط. الحد الأقصى ${widget.maxImages} صور',
-              ),
-              backgroundColor: Colors.orange,
-            ),
+          CustomSnackBar.showError(
+            context,
+            'تم إضافة $remainingSlots صور فقط. الحد الأقصى ${widget.maxImages} صور',
           );
         }
 
@@ -284,12 +259,7 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
         _updateButtonState();
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ أثناء اختيار الصور: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      CustomSnackBar.showError(context, 'حدث خطأ أثناء اختيار الصور: $e');
     }
   }
 
@@ -573,14 +543,10 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
                 listener: (context, state) {
                   // TODO: implement listener
                   if (state is WeighSegmentSuccess) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                    CustomSnackBar.showSuccess(context, state.message);
                   }
                   if (state is WeighSegmentFailure) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+                    CustomSnackBar.showSuccess(context, state.errorMessage);
                   }
                 },
                 builder: (context, state) {

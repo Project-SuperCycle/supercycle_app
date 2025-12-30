@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/environment/data/cubits/create_request_cubit/create_request_cubit.dart';
-import 'package:supercycle/features/sales_process/data/cubit/create_shipment_cubit/create_shipment_cubit.dart';
 
 class GreenPointsCard extends StatelessWidget {
   final num points;
@@ -251,8 +251,9 @@ class GreenPointsCard extends StatelessWidget {
                               listener: (context, state) {
                                 // TODO: implement listener
                                 if (state is CreateRequestFailure) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(state.errMessage)),
+                                  CustomSnackBar.showError(
+                                    context,
+                                    state.errMessage,
                                   );
                                 }
                               },

@@ -124,14 +124,9 @@ class S {
     );
   }
 
-  /// ` Email/Phone Number`
+  /// ` Email`
   String get email_phone {
-    return Intl.message(
-      ' Email/Phone Number',
-      name: 'email_phone',
-      desc: '',
-      args: [],
-    );
+    return Intl.message(' Email', name: 'email_phone', desc: '', args: []);
   }
 
   /// `Password`

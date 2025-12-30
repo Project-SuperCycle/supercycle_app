@@ -4,7 +4,6 @@ import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/widgets/custom_text_form_field.dart';
 import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle/features/sales_process/data/models/unit.dart';
 import 'package:supercycle/generated/l10n.dart';
@@ -28,7 +27,8 @@ class EditableProductCard extends StatefulWidget {
 class _EditableProductCardState extends State<EditableProductCard> {
   late TextEditingController quantityController;
   String? selectedTypeName;
-  String averagePrice = '0.00';
+  String? selectedUnit;
+  String averagePrice = '0';
   bool _isInitializing = true;
   bool _isUpdating = false;
 
@@ -37,6 +37,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
     super.initState();
     _initializeController();
     _setInitialTypeName();
+    _setInitialUnit();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -63,13 +64,22 @@ class _EditableProductCardState extends State<EditableProductCard> {
       selectedTypeName = widget.product.name;
     } else if (typeOptions.isNotEmpty && widget.product.name.isNotEmpty) {
       final similarType = typeOptions.firstWhere(
-            (type) =>
+        (type) =>
             type.toLowerCase().contains(widget.product.name.toLowerCase()),
         orElse: () => typeOptions.first,
       );
       selectedTypeName = similarType;
     } else {
       selectedTypeName = null;
+    }
+  }
+
+  void _setInitialUnit() {
+    final options = _getUnitOptions();
+    if (options.contains(widget.product.unit)) {
+      selectedUnit = widget.product.unit;
+    } else {
+      selectedUnit = options.first;
     }
   }
 
@@ -96,26 +106,64 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _onUnitChanged(String? value) {
     if (value == null || !mounted || _isUpdating) return;
+    setState(() {
+      selectedUnit = value;
+    });
+    _calculateAndUpdateAveragePrice();
     _safeUpdateProduct(widget.product.copyWith(unit: value));
   }
 
-  void _clearQuantity() {
-    quantityController.clear();
-    if (mounted) {
-      setState(() {
-        averagePrice = '0.00';
-      });
+  String _formatPriceInThousands(double price) {
+    if (price == 0) return '0';
+
+    if (price >= 1000) {
+      double thousands = price / 1000;
+
+      // إذا كان الرقم صحيح (مثلاً 5000)
+      if (thousands == thousands.roundToDouble()) {
+        int thousandsInt = thousands.toInt();
+        if (thousandsInt == 1) {
+          return 'ألف';
+        } else if (thousandsInt == 2) {
+          return 'ألفان';
+        } else if (thousandsInt >= 3 && thousandsInt <= 10) {
+          return '$thousandsInt آلاف';
+        } else {
+          return '$thousandsInt ألف';
+        }
+      } else {
+        // إذا كان فيه كسور (مثلاً 5500 = 5.5 ألف)
+        String formattedThousands = thousands.toStringAsFixed(1);
+
+        // إزالة .0 إذا كان موجود
+        if (formattedThousands.endsWith('.0')) {
+          formattedThousands = formattedThousands.substring(
+            0,
+            formattedThousands.length - 2,
+          );
+        }
+
+        return '$formattedThousands ألف';
+      }
+    } else {
+      // أقل من ألف
+      if (price == price.roundToDouble()) {
+        return price.toInt().toString();
+      } else {
+        return price.toStringAsFixed(2);
+      }
     }
-    _safeUpdateProduct(widget.product.copyWith(quantity: 0));
   }
 
   void _calculateAndUpdateAveragePrice() {
     if (!mounted || _isUpdating) return;
     final quantityText = quantityController.text;
-    if (quantityText.isEmpty || selectedTypeName == null) {
+    if (quantityText.isEmpty ||
+        selectedTypeName == null ||
+        selectedUnit == null) {
       if (mounted) {
         setState(() {
-          averagePrice = '0.00';
+          averagePrice = '0';
         });
       }
       return;
@@ -123,11 +171,14 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
     final quantity = double.tryParse(quantityText) ?? 0.0;
     final unitPrice = _getPrice(selectedTypeName!);
-    final totalPrice = quantity * unitPrice;
+
+    // إذا كانت الوحدة "طن"، اضرب في 1000
+    final multiplier = selectedUnit == Unit.ton.abbreviation ? 1000 : 1;
+    final totalPrice = quantity * unitPrice * multiplier;
 
     if (mounted) {
       setState(() {
-        averagePrice = totalPrice.toStringAsFixed(2);
+        averagePrice = _formatPriceInThousands(totalPrice.toDouble());
       });
     }
 
@@ -169,7 +220,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
       typesList.sort();
       return typesList;
     } catch (e) {
-      print('Error getting type options: $e');
       return [];
     }
   }
@@ -181,7 +231,6 @@ class _EditableProductCardState extends State<EditableProductCard> {
           .price;
       return price;
     } catch (e) {
-      print('Error getting price for $name: $e');
       return 0;
     }
   }
@@ -219,7 +268,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(25),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -231,7 +280,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.05),
+              color: AppColors.primaryColor.withAlpha(25),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
@@ -245,7 +294,7 @@ class _EditableProductCardState extends State<EditableProductCard> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.1),
+                        color: AppColors.primaryColor.withAlpha(50),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -288,15 +337,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
                 // Quantity and Unit
                 Row(
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: _buildQuantityField(context),
-                    ),
+                    Expanded(flex: 3, child: _buildQuantityField(context)),
                     const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: _buildUnitDropdown(context),
-                    ),
+                    Expanded(flex: 2, child: _buildUnitDropdown(context)),
                   ],
                 ),
 
@@ -320,10 +363,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
           padding: const EdgeInsets.only(bottom: 8, right: 4),
           child: Text(
             "نوع المنتج",
-            style: AppStyles.styleMedium12(context).copyWith(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppStyles.styleMedium12(
+              context,
+            ).copyWith(color: Colors.grey[700], fontWeight: FontWeight.w500),
           ),
         ),
         CustomDropdown(
@@ -345,20 +387,16 @@ class _EditableProductCardState extends State<EditableProductCard> {
           padding: const EdgeInsets.only(bottom: 8, right: 4),
           child: Text(
             "الكمية",
-            style: AppStyles.styleMedium12(context).copyWith(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppStyles.styleMedium12(
+              context,
+            ).copyWith(color: Colors.grey[700], fontWeight: FontWeight.w500),
           ),
         ),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey[300]!,
-              width: 1.5,
-            ),
+            border: Border.all(color: Colors.grey[300]!, width: 1.5),
           ),
           child: Row(
             children: [
@@ -366,10 +404,13 @@ class _EditableProductCardState extends State<EditableProductCard> {
               _buildQuantityButton(
                 icon: Icons.remove,
                 onTap: () {
-                  final currentValue = double.tryParse(quantityController.text) ?? 0;
+                  final currentValue =
+                      double.tryParse(quantityController.text) ?? 0;
                   if (currentValue > 0) {
                     final newValue = currentValue - 1;
-                    quantityController.text = newValue == 0 ? '' : newValue.toString();
+                    quantityController.text = newValue == 0
+                        ? ''
+                        : newValue.toString();
                   }
                 },
                 color: Colors.red,
@@ -409,7 +450,8 @@ class _EditableProductCardState extends State<EditableProductCard> {
               _buildQuantityButton(
                 icon: Icons.add,
                 onTap: () {
-                  final currentValue = double.tryParse(quantityController.text) ?? 0;
+                  final currentValue =
+                      double.tryParse(quantityController.text) ?? 0;
                   final newValue = currentValue + 1;
                   quantityController.text = newValue.toString();
                 },
@@ -435,14 +477,10 @@ class _EditableProductCardState extends State<EditableProductCard> {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withAlpha(50),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
+          child: Icon(icon, color: color, size: 20),
         ),
       ),
     );
@@ -456,10 +494,9 @@ class _EditableProductCardState extends State<EditableProductCard> {
           padding: const EdgeInsets.only(bottom: 8, right: 4),
           child: Text(
             "الوحدة",
-            style: AppStyles.styleMedium12(context).copyWith(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppStyles.styleMedium12(
+              context,
+            ).copyWith(color: Colors.grey[700], fontWeight: FontWeight.w500),
           ),
         ),
         CustomDropdown(
@@ -476,67 +513,44 @@ class _EditableProductCardState extends State<EditableProductCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primaryColor.withOpacity(0.1),
-            AppColors.primaryColor.withOpacity(0.05),
-          ],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
+        color: AppColors.primaryColor.withAlpha(50),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.primaryColor.withOpacity(0.2),
-          width: 1,
-        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.payments_outlined,
-                  color: AppColors.primaryColor,
-                  size: 18,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                "إجمالي السعر",
-                style: AppStyles.styleMedium14(context).copyWith(
-                  color: Colors.grey[700],
-                ),
-              ),
-            ],
+          Text(
+            "الإجمالي",
+            style: AppStyles.styleMedium14(
+              context,
+            ).copyWith(color: Colors.grey[700], fontWeight: FontWeight.w500),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                averagePrice,
-                style: AppStyles.styleMedium14(context).copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
+          Flexible(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Flexible(
+                  child: Text(
+                    averagePrice,
+                    style: AppStyles.styleMedium14(context).copyWith(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                "جنيه",
-                style: AppStyles.styleMedium12(context).copyWith(
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
+                const SizedBox(width: 6),
+                Text(
+                  "جنيه",
+                  style: AppStyles.styleMedium12(
+                    context,
+                  ).copyWith(color: Colors.grey[600]),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

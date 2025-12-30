@@ -9,7 +9,6 @@ class MockContactService implements ContactService {
 
     // Simulate success/failure (you can add logic here)
     // For demo purposes, always return true
-    print('Submitting contact form: ${data.toString()}');
     return true;
   }
 }

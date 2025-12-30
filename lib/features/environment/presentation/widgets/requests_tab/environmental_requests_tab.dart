@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/environment/data/cubits/requests_cubit/requests_cubit.dart';
 import 'package:supercycle/features/environment/presentation/widgets/requests_tab/enviromental_request_card.dart';
-import 'package:supercycle/features/trader_main_profile/data/models/environmental_redeem_model.dart';
+import 'package:supercycle/features/environment/data/models/environmental_redeem_model.dart';
 
 class EnvironmentalRequestsTab extends StatefulWidget {
   const EnvironmentalRequestsTab({super.key});
@@ -20,10 +22,12 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
   List<EnvironmentalRedeemModel> _requests = [];
   bool _isLoadingMore = false;
   bool _hasMoreData = true;
+  int totalPages = 1;
 
   @override
   void initState() {
     super.initState();
+    _getTotalPages();
     // Fetch requests when tab is opened
     _fetchRequests(_currentPage);
   }
@@ -33,7 +37,7 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
   }
 
   void _loadNextPage() {
-    if (!_isLoadingMore && _hasMoreData) {
+    if (!_isLoadingMore && _currentPage < totalPages) {
       setState(() {
         _isLoadingMore = true;
         _currentPage++;
@@ -52,6 +56,13 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
     }
   }
 
+  void _getTotalPages() async {
+    final pages = await StorageServices.readData("totalRequests");
+    setState(() {
+      totalPages = pages ?? 1;
+    });
+  }
+
   Future<void> _onRefresh() async {
     setState(() {
       _currentPage = 1;
@@ -67,26 +78,21 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
           setState(() {
             _requests = state.requests;
             _isLoadingMore = false;
-            // لو الطلبات أقل من 10، معناها مفيش صفحات تانية
-            _hasMoreData = state.requests.length >= 10;
+            _hasMoreData = _currentPage < totalPages;
           });
         }
         if (state is RequestsFailure) {
           setState(() {
             _isLoadingMore = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errMessage),
-              backgroundColor: Colors.red,
-            ),
-          );
+
+          CustomSnackBar.showError(context, state.errMessage);
         }
       },
       builder: (context, state) {
         // Loading state - only for initial load
         if (state is RequestsLoading && _requests.isEmpty) {
-          return Center(child: CustomLoadingIndicator());
+          return const Center(child: CustomLoadingIndicator());
         }
 
         // Success state or has cached data
@@ -121,7 +127,7 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                'صفحة $_currentPage',
+                                'صفحة $_currentPage من $totalPages',
                                 style: AppStyles.styleSemiBold12(
                                   context,
                                 ).copyWith(color: const Color(0xFF10B981)),
@@ -201,7 +207,7 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
 
               const SizedBox(width: 16),
 
-              // Page Number
+              // Page Number with Total Pages
               _buildPageIndicator(),
 
               const SizedBox(width: 16),
@@ -209,7 +215,7 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
               // Next button
               _buildNavigationButton(
                 icon: Icons.arrow_forward_ios_rounded,
-                onPressed: _hasMoreData && !_isLoadingMore
+                onPressed: _currentPage < totalPages && !_isLoadingMore
                     ? _loadNextPage
                     : null,
                 tooltip: 'الصفحة التالية',
@@ -235,7 +241,7 @@ class _EnvironmentalRequestsTabState extends State<EnvironmentalRequestsTab> {
       child: FittedBox(
         fit: BoxFit.scaleDown,
         child: Text(
-          '$_currentPage',
+          '$_currentPage / $totalPages',
           style: AppStyles.styleSemiBold16(context).copyWith(
             color: const Color(0xFF10B981),
             fontWeight: FontWeight.bold,

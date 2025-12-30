@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/errors/failures.dart';
 import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/core/helpers/error_handler.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/deliver_segment_model.dart';
@@ -15,226 +14,134 @@ import 'package:supercycle/features/representative_shipment_review/data/repos/re
 
 class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   final ApiServices apiServices;
+
   RepShipmentReviewRepoImp({required this.apiServices});
-
-  @override
-  Future<Either<Failure, String>> deliverSegment({
-    required DeliverSegmentModel deliverModel,
-  }) async {
-    // TODO: implement deliverSegment
-    try {
-      FormData formData = await _deliverFormData(deliverModel: deliverModel);
-      final response = await apiServices.postFormData(
-        endPoint: ApiEndpoints.deliverShipmentSegment
-            .replaceFirst('{shipmentId}', deliverModel.shipmentID)
-            .replaceFirst('{segmentId}', deliverModel.segmentID),
-        data: formData,
-      );
-      String message = response["message"];
-      return right(message);
-    } on DioException catch (dioError) {
-      Logger().i("DioException ${dioError.toString()}");
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, String>> failSegment({
-    required FailSegmentModel failModel,
-  }) async {
-    // TODO: implement failSegment
-    try {
-      FormData formData = await _failFormData(failModel: failModel);
-
-      final response = await apiServices.postFormData(
-        endPoint: ApiEndpoints.failShipmentSegment
-            .replaceFirst('{shipmentId}', failModel.shipmentID)
-            .replaceFirst('{segmentId}', failModel.segmentID),
-        data: formData,
-      );
-      String message = response["message"];
-      return right(message);
-    } on DioException catch (dioError) {
-      Logger().i("DioException ${dioError.toString()}");
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
-  }
 
   @override
   Future<Either<Failure, String>> startSegment({
     required StartSegmentModel startModel,
-  }) async {
-    // TODO: implement startSegment
-    try {
-      final response = await apiServices.post(
-        endPoint: ApiEndpoints.startShipmentSegment
-            .replaceFirst('{shipmentId}', startModel.shipmentID)
-            .replaceFirst('{segmentId}', startModel.segmentID),
-        data: {},
-      );
-      String message = response["message"];
-      return right(message);
-    } on DioException catch (dioError) {
-      Logger().i("DioException ${dioError.toString()}");
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e, stackTrace) {
-      // أي أخطاء أخرى غير متوقعة
-      Logger().e("START REPO $stackTrace");
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
+  }) {
+    return ErrorHandler.handleApiCall<String>(
+      apiCall: () async {
+        final response = await apiServices.post(
+          endPoint: ApiEndpoints.startShipmentSegment
+              .replaceFirst('{shipmentId}', startModel.shipmentID)
+              .replaceFirst('{segmentId}', startModel.segmentID),
+          data: {},
+        );
+
+        if (response['message'] == null) {
+          throw ServerFailure('Invalid response: Missing message', 422);
+        }
+
+        return response['message'];
+      },
+      errorContext: 'start shipment segment',
+    );
   }
 
   @override
   Future<Either<Failure, String>> weighSegment({
     required WeighSegmentModel weighModel,
-  }) async {
-    // TODO: implement weighSegment
-    try {
-      FormData formData = await _weighFormData(weighModel: weighModel);
+  }) {
+    return ErrorHandler.handleApiCall<String>(
+      apiCall: () async {
+        final formData = await _weighFormData(weighModel: weighModel);
 
-      final response = await apiServices.postFormData(
-        endPoint: ApiEndpoints.weighShipmentSegment
-            .replaceFirst('{shipmentId}', weighModel.shipmentID)
-            .replaceFirst('{segmentId}', weighModel.segmentID),
-        data: formData,
-      );
-      String message = response["message"];
-      return right(message);
-    } on DioException catch (dioError) {
-      Logger().i("DioException ${dioError.toString()}");
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
+        final response = await apiServices.postFormData(
+          endPoint: ApiEndpoints.weighShipmentSegment
+              .replaceFirst('{shipmentId}', weighModel.shipmentID)
+              .replaceFirst('{segmentId}', weighModel.segmentID),
+          data: formData,
+        );
+
+        if (response['message'] == null) {
+          throw ServerFailure('Invalid response: Missing message', 422);
+        }
+
+        return response['message'];
+      },
+      errorContext: 'weigh shipment segment',
+    );
   }
+
+  @override
+  Future<Either<Failure, String>> deliverSegment({
+    required DeliverSegmentModel deliverModel,
+  }) {
+    return ErrorHandler.handleApiCall<String>(
+      apiCall: () async {
+        final formData = await _deliverFormData(deliverModel: deliverModel);
+
+        final response = await apiServices.postFormData(
+          endPoint: ApiEndpoints.deliverShipmentSegment
+              .replaceFirst('{shipmentId}', deliverModel.shipmentID)
+              .replaceFirst('{segmentId}', deliverModel.segmentID),
+          data: formData,
+        );
+
+        if (response['message'] == null) {
+          throw ServerFailure('Invalid response: Missing message', 422);
+        }
+
+        return response['message'];
+      },
+      errorContext: 'deliver shipment segment',
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> failSegment({
+    required FailSegmentModel failModel,
+  }) {
+    return ErrorHandler.handleApiCall<String>(
+      apiCall: () async {
+        final formData = await _failFormData(failModel: failModel);
+
+        final response = await apiServices.postFormData(
+          endPoint: ApiEndpoints.failShipmentSegment
+              .replaceFirst('{shipmentId}', failModel.shipmentID)
+              .replaceFirst('{segmentId}', failModel.segmentID),
+          data: formData,
+        );
+
+        if (response['message'] == null) {
+          throw ServerFailure('Invalid response: Missing message', 422);
+        }
+
+        return response['message'];
+      },
+      errorContext: 'fail shipment segment',
+    );
+  }
+
+  // =======================
+  // FormData Helpers
+  // =======================
 
   Future<FormData> _weighFormData({
     required WeighSegmentModel weighModel,
   }) async {
-    List<File> images = weighModel.images;
-    List<MultipartFile> imagesFiles =
-        await ShipmentManager.createMultipartImages(images: images);
+    final imagesFiles = await _mapImagesToMultipart(weighModel.images);
 
-    // Create FormData
-    final formData = FormData.fromMap({
-      ...weighModel.toMap(),
-      'images': imagesFiles, // Add the converted MultipartFiles
-    });
-    return formData;
+    return FormData.fromMap({...weighModel.toMap(), 'images': imagesFiles});
   }
 
   Future<FormData> _deliverFormData({
     required DeliverSegmentModel deliverModel,
   }) async {
-    List<File> images = deliverModel.images;
-    List<MultipartFile> imagesFiles =
-        await ShipmentManager.createMultipartImages(images: images);
+    final imagesFiles = await _mapImagesToMultipart(deliverModel.images);
 
-    // Create FormData
-    final formData = FormData.fromMap({
-      ...deliverModel.toMap(),
-      'images': imagesFiles, // Add the converted MultipartFiles
-    });
-    return formData;
+    return FormData.fromMap({...deliverModel.toMap(), 'images': imagesFiles});
   }
 
   Future<FormData> _failFormData({required FailSegmentModel failModel}) async {
-    List<File> images = failModel.images;
-    List<MultipartFile> imagesFiles =
-        await ShipmentManager.createMultipartImages(images: images);
+    final imagesFiles = await _mapImagesToMultipart(failModel.images);
 
-    // Create FormData
-    final formData = FormData.fromMap({
-      ...failModel.toMap(),
-      'images': imagesFiles, // Add the converted MultipartFiles
-    });
-    return formData;
+    return FormData.fromMap({...failModel.toMap(), 'images': imagesFiles});
+  }
+
+  Future<List<MultipartFile>> _mapImagesToMultipart(List<File> images) async {
+    return ShipmentManager.createMultipartImages(images: images);
   }
 }

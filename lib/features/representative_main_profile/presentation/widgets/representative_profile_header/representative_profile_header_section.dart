@@ -6,7 +6,6 @@ import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/representative_main_profile/data/models/representative_profile_data.dart';
 import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_image.dart';
 
 class RepresentativeProfileHeaderSection extends StatelessWidget {

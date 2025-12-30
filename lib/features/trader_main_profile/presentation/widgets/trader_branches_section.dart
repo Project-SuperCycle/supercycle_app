@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:supercycle/features/trader_main_profile/presentation/widgets/trader_branchs_section/trader_branchs_chart.dart';
 
 class TraderBranchesSection extends StatefulWidget {

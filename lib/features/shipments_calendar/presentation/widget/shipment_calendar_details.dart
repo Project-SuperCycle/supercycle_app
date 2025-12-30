@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/helpers/shipments_calender_helper.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
@@ -40,7 +39,7 @@ class ShipmentsCalendarDetails extends StatelessWidget {
       borderColor = Colors.green[300]!;
     } else {
       // Red if there are shipments that are not all delivered
-      borderColor = Colors.red[300]!;
+      borderColor = Colors.deepOrange.shade500;
     }
 
     return Container(

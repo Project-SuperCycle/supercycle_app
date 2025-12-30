@@ -42,18 +42,18 @@ class ShipmentTraderModel {
 
   // Optional: copyWith method for creating modified copies
   ShipmentTraderModel copyWith({
-    String? businessName,
+    String? bussinessName,
     String? rawBusinessType,
-    String? businessAddress,
-    String? doshManagerName,
-    String? doshManagerPhone,
+    String? bussinessAdress,
+    String? doshMangerName,
+    String? doshMangerPhone,
   }) {
     return ShipmentTraderModel(
-      bussinessName: businessName ?? this.bussinessName,
+      bussinessName: bussinessName ?? this.bussinessName,
       rawBusinessType: rawBusinessType ?? this.rawBusinessType,
-      bussinessAdress: businessAddress ?? this.bussinessAdress,
-      doshMangerName: doshManagerName ?? this.doshMangerName,
-      doshMangerPhone: doshManagerPhone ?? this.doshMangerPhone,
+      bussinessAdress: bussinessAdress ?? this.bussinessAdress,
+      doshMangerName: doshMangerName ?? this.doshMangerName,
+      doshMangerPhone: doshMangerPhone ?? this.doshMangerPhone,
     );
   }
 }

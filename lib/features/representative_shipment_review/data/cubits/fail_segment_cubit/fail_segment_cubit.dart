@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_state.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/fail_segment_model.dart';
 import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
@@ -23,7 +22,6 @@ class FailSegmentCubit extends Cubit<FailSegmentState> {
           emit(FailSegmentSuccess(message: message));
         },
       );
-      Logger().i("FAIL SEGMENT CUBIT");
     } catch (error) {
       emit(FailSegmentFailure(errorMessage: error.toString()));
     }

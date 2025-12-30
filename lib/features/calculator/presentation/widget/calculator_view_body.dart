@@ -30,7 +30,6 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
       typesList.sort();
       return typesList;
     } catch (e) {
-      print('Error getting type options: $e');
       return [];
     }
   }
@@ -43,7 +42,6 @@ class _CalculatorViewBodyState extends State<CalculatorViewBody> {
           .price;
       return price;
     } catch (e) {
-      print('Error getting price for $name: $e');
       return 0;
     }
   }

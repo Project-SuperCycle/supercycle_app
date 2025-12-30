@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
@@ -16,6 +16,7 @@ import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle/core/widgets/custom_text_field.dart';
 import 'package:supercycle/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
+import 'package:supercycle/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_state.dart';
 import 'package:supercycle/features/representative_shipment_details/data/models/update_shipment_model.dart';
 import 'package:supercycle/features/representative_shipment_details/presentation/widgets/representative_shipment_notes_content.dart';
 import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
@@ -53,9 +54,6 @@ class _RepresentativeShipmentEditBodyState
       products = widget.shipment.items;
       selectedDateTime = widget.shipment.requestedPickupAt;
     });
-    BlocProvider.of<AllNotesCubit>(
-      context,
-    ).getAllNotes(shipmentId: widget.shipment.id);
   }
 
   void _getShipmentAddress() async {
@@ -151,39 +149,48 @@ class _RepresentativeShipmentEditBodyState
                         const SizedBox(height: 20),
                         const ProgressBar(completedSteps: 0),
                         const SizedBox(height: 30),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'بيانات جهة التعامل',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isClientDataExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleClientData,
-                            content: const ClientDataContent(),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'تفاصيل الشحنة',
-                            iconPath: AppAssets.boxPerspective,
-                            isExpanded: isShipmentDetailsExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleShipmentDetails,
-                            content: EntryShipmentDetailsContent(
-                              products: products,
-                              onProductsChanged: _onProductsChanged,
+                        Column(
+                          children: [
+                            Container(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ExpandableSection(
+                                title: 'تفاصيل الشحنة',
+                                iconPath: AppAssets.boxPerspective,
+                                isExpanded: isShipmentDetailsExpanded,
+                                maxHeight: 320,
+                                onTap: _toggleShipmentDetails,
+                                content: EntryShipmentDetailsContent(
+                                  products: products,
+                                  onProductsChanged: _onProductsChanged,
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 25),
+                          ],
                         ),
-                        const SizedBox(height: 25),
+
+                        Column(
+                          children: [
+                            Container(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ExpandableSection(
+                                title: 'بيانات جهة التعامل',
+                                iconPath: AppAssets.entityCard,
+                                isExpanded: isClientDataExpanded,
+                                maxHeight: 320,
+                                onTap: _toggleClientData,
+                                content: const ClientDataContent(),
+                              ),
+                            ),
+                            const SizedBox(height: 25),
+                          ],
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -234,11 +241,29 @@ class _RepresentativeShipmentEditBodyState
                           shipmentID: widget.shipment.id,
                         ),
                         const SizedBox(height: 30),
-                        CustomButton(
-                          onPress: () {
-                            _confirmProcess();
+                        BlocConsumer<UpdateShipmentCubit, UpdateShipmentState>(
+                          listener: (context, state) {
+                            // TODO: implement listener
+                            if (state is UpdateRepShipmentFailure) {
+                              CustomSnackBar.showError(
+                                context,
+                                state.errorMessage,
+                              );
+                            }
+                            if (state is UpdateRepShipmentSuccess) {
+                              GoRouter.of(context).pushReplacement(
+                                EndPoints.shipmentsCalendarView,
+                              );
+                            }
                           },
-                          title: S.of(context).shipment_edit,
+                          builder: (context, state) {
+                            return CustomButton(
+                              onPress: () {
+                                _confirmProcess();
+                              },
+                              title: S.of(context).shipment_edit,
+                            );
+                          },
                         ),
                         // مساحة إضافية في النهاية
                         const SizedBox(height: 40),
@@ -278,6 +303,5 @@ class _RepresentativeShipmentEditBodyState
     BlocProvider.of<UpdateShipmentCubit>(
       context,
     ).updateShipmet(updateModel: updateShipmentModel);
-    GoRouter.of(context).pushReplacement(EndPoints.shipmentsCalendarView);
   }
 }

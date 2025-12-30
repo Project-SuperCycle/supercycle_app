@@ -244,8 +244,8 @@ class UserProfileModel {
       repPhone: map['repPhone'],
       repEmail: map['repEmail'],
       repName: map['repName'],
-      mainBranch: map['branch'] != null
-          ? TraderMainBranchModel.fromJson(map['branch'])
+      mainBranch: map['mainBranch'] != null
+          ? TraderMainBranchModel.fromJson(map['mainBranch'])
           : null,
       branchs: map['branches'] != null
           ? List<TraderBranchModel>.from(

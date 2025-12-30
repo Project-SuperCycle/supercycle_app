@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
@@ -52,20 +53,7 @@ class _TypeCardItemState extends State<TypeCardItem> {
       GoRouter.of(context).push(EndPoints.salesProcessView);
     } else {
       // المستخدم غير مسجل - عرض رسالة والانتقال لصفحة تسجيل الدخول
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'يرجى تسجيل الدخول لإتمام عملية البيع',
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: const Color(0xFF10B981),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      CustomSnackBar.showError(context, 'يرجى تسجيل الدخول لإتمام عملية البيع');
 
       // الانتقال لصفحة تسجيل الدخول
       GoRouter.of(context).push(EndPoints.signInView);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_state.dart';
 import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
@@ -30,14 +31,10 @@ class ShipmentSegmentStep1 extends StatelessWidget {
           BlocConsumer<StartSegmentCubit, StartSegmentState>(
             listener: (context, state) {
               if (state is StartSegmentSuccess) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
+                CustomSnackBar.showSuccess(context, state.message);
               }
               if (state is StartSegmentFailure) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+                CustomSnackBar.showError(context, state.errorMessage);
               }
             },
             builder: (context, state) {

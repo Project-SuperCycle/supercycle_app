@@ -10,9 +10,7 @@ class DateTimePickerHelper {
     // تحديد نطاق التواريخ المسموحة (من بعد يومين من اليوم الحالي فما فوق)
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
-    final DateTime minDate = today.add(
-      const Duration(days: 3),
-    ); // بعد يومين على الأقل
+    final DateTime minDate = today.add(const Duration(days: 3));
     final DateTime maxDate = today.add(
       const Duration(days: 365),
     ); // حتى سنة من الآن
@@ -72,7 +70,7 @@ class DateTimePickerHelper {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: currentSelectedDateTime != null
-            ? TimeOfDay.fromDateTime(currentSelectedDateTime!)
+            ? TimeOfDay.fromDateTime(currentSelectedDateTime)
             : TimeOfDay.now(),
         builder: (context, child) {
           return Theme(

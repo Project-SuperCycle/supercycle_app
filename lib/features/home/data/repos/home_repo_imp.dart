@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart' show DioException;
 import 'package:supercycle/core/errors/failures.dart';
+import 'package:supercycle/core/helpers/error_handler.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
-import 'package:supercycle/core/services/api_services.dart' show ApiServices;
+import 'package:supercycle/core/services/api_services.dart';
 import 'package:supercycle/features/home/data/models/dosh_data_model.dart';
 import 'package:supercycle/features/home/data/models/dosh_type_model.dart';
 import 'package:supercycle/features/home/data/models/type_history_model.dart';
@@ -11,186 +11,69 @@ import 'package:supercycle/features/shipments_calendar/data/models/shipment_mode
 
 class HomeRepoImp implements HomeRepo {
   final ApiServices apiServices;
+
   HomeRepoImp({required this.apiServices});
 
   @override
-  Future<Either<Failure, List<DoshTypeModel>>> fetchDoshTypes() async {
-    // TODO: implement fetchDoshTypes
-    try {
-      final response = await apiServices.get(
-        endPoint: ApiEndpoints.doshPricesCurrent,
-      );
-      var data = response["data"];
-      List<DoshTypeModel> types = [];
-      for (var type in data) {
-        types.add(DoshTypeModel.fromJson(type));
-      }
-      return right(types);
-    } on DioException catch (dioError) {
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
+  Future<Either<Failure, List<DoshTypeModel>>> fetchDoshTypes() {
+    return ErrorHandler.handleApiResponse<List<DoshTypeModel>>(
+      apiCall: () => apiServices.get(endPoint: ApiEndpoints.doshPricesCurrent),
+      errorContext: 'fetch dosh types',
+      responseParser: (response) {
+        final List data = response['data'];
+        return data.map((e) => DoshTypeModel.fromJson(e)).toList();
+      },
+    );
   }
 
   @override
   Future<Either<Failure, List<TypeHistoryModel>>> fetchTypeHistory({
     required String typeId,
-  }) async {
-    // TODO: implement fetchTypeHistory
-    try {
-      final response = await apiServices.get(
+  }) {
+    return ErrorHandler.handleApiResponse<List<TypeHistoryModel>>(
+      apiCall: () => apiServices.get(
         endPoint: ApiEndpoints.doshPricesHistory,
         query: {"typeId": typeId},
-      );
-
-      var data = response['data']["history"];
-      List<TypeHistoryModel> history = [];
-      for (var month in data) {
-        history.add(TypeHistoryModel.fromJson(month));
-      }
-
-      return right(history);
-    } on DioException catch (dioError) {
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
+      ),
+      errorContext: 'fetch type history',
+      responseParser: (response) {
+        final List history = response['data']?['history'];
+        return history.map((e) => TypeHistoryModel.fromJson(e)).toList();
+      },
+    );
   }
 
   @override
-  Future<Either<Failure, List<DoshDataModel>>> fetchTypesData() async {
-    // TODO: implement fetchTypesData
-    try {
-      final response = await apiServices.get(
-        endPoint: ApiEndpoints.doshTypesData,
-      );
-
-      var data = response['data'];
-      List<DoshDataModel> typesData = [];
-      for (var type in data) {
-        typesData.add(DoshDataModel.fromJson(type));
-      }
-
-      return right(typesData);
-    } on DioException catch (dioError) {
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
+  Future<Either<Failure, List<DoshDataModel>>> fetchTypesData() {
+    return ErrorHandler.handleApiResponse<List<DoshDataModel>>(
+      apiCall: () => apiServices.get(endPoint: ApiEndpoints.doshTypesData),
+      errorContext: 'fetch dosh types data',
+      responseParser: (response) {
+        final List data = response['data'];
+        return data.map((e) => DoshDataModel.fromJson(e)).toList();
+      },
+    );
   }
 
   @override
   Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipmets({
     required Map<String, dynamic> query,
-  }) async {
-    // TODO: implement fetchTodayShipmets
-    try {
-      final response = await apiServices.get(
-        endPoint: ApiEndpoints.getAllShipments,
-        query: query,
-      );
+  }) {
+    return ErrorHandler.handleApiResponse<List<ShipmentModel>>(
+      apiCall: () =>
+          apiServices.get(endPoint: ApiEndpoints.getAllShipments, query: query),
+      errorContext: 'fetch today shipments',
+      responseParser: (response) {
+        final List data = response['data'];
+        final shipments = data.map((e) => ShipmentModel.fromJson(e)).toList();
 
-      var data = response['data'];
-      List<ShipmentModel> shipments = [];
-      for (var type in data) {
-        shipments.add(ShipmentModel.fromJson(type));
-      }
-
-      List<ShipmentModel> todayShipments = getTodayShipments(shipments);
-      return right(todayShipments);
-    } on DioException catch (dioError) {
-      return left(ServerFailure.fromDioError(dioError));
-    } on FormatException catch (formatError) {
-      return left(
-        ServerFailure(
-          formatError.toString(),
-          422, // Unprocessable Entity
-        ),
-      );
-    } on TypeError catch (typeError) {
-      // أخطاء النوع (مثل null safety)
-      return left(
-        ServerFailure(
-          'Data parsing error: ${typeError.toString()}',
-          422, // Unprocessable Entity
-        ),
-      );
-    } catch (e) {
-      // أي أخطاء أخرى غير متوقعة
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-          520, // Unknown Error
-        ),
-      );
-    }
+        return _getTodayShipments(shipments);
+      },
+    );
   }
 
-  List<ShipmentModel> getTodayShipments(List<ShipmentModel> shipments) {
+  /// 🔹 فلترة شحنات اليوم فقط
+  List<ShipmentModel> _getTodayShipments(List<ShipmentModel> shipments) {
     final now = DateTime.now();
 
     return shipments.where((shipment) {

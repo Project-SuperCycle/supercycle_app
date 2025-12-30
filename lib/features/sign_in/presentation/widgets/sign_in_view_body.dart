@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/core/services/social_auth_services.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/auth/auth_main_header.dart';
@@ -19,7 +18,6 @@ import 'package:supercycle/features/sign_in/data/models/signin_credentials_model
 import 'package:supercycle/features/sign_in/presentation/widgets/horizontal_labeled_divider.dart';
 import 'package:supercycle/generated/l10n.dart';
 import 'package:supercycle/core/widgets/auth/social_auth_row.dart';
-
 
 class SignInViewBody extends StatefulWidget {
   const SignInViewBody({super.key});
@@ -125,9 +123,7 @@ class _SignInViewBodyState extends State<SignInViewBody> {
           GoRouter.of(context).pushReplacement(EndPoints.homeView);
         }
         if (state is SignInFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          CustomSnackBar.showError(context, state.message);
 
           if (state.statusCode == 200) {
             GoRouter.of(context).pushReplacement(EndPoints.signUpDetailsView);

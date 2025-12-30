@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/services/storage_services.dart';
@@ -40,7 +39,6 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
 
   void loadUserCalender() async {
     LoginedUserModel? user = await StorageServices.getUserData();
-    Logger().d("USER: $user");
     if (user != null) {
       setState(() {
         userRole = user.role;
@@ -63,8 +61,6 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
         "${lastDayOfMonth.year}-${lastDayOfMonth.month.toString().padLeft(2, '0')}-${lastDayOfMonth.day.toString().padLeft(2, '0')}";
 
     final query = {"from": fromDate, "to": toDate};
-
-    Logger().d("Fetching shipments for month: $fromDate to $toDate");
 
     if (userRole == "representative") {
       BlocProvider.of<ShipmentsCalendarCubit>(
@@ -114,7 +110,6 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
                           setState(() {
                             shipments = [];
                           });
-                          Logger().e(state.errorMessage);
                         }
                       },
                       builder: (context, state) {

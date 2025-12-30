@@ -16,7 +16,7 @@ class SegmentCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
         borderRadius: BorderRadius.only(
@@ -25,60 +25,52 @@ class SegmentCardHeader extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Info button
-          Container(
-            width: 35,
-            height: 35,
-            decoration: const BoxDecoration(
-              color: Color(0xFFD32F2F),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: const Icon(
-                Icons.info_outline,
-                color: Colors.white,
-                size: 25,
-              ),
-              onPressed: onInfoPressed,
-              padding: EdgeInsets.zero,
-            ),
-          ),
-
           // Driver info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  driverName,
-                  style: AppStyles.styleBold20(
-                    context,
-                  ).copyWith(color: Colors.white),
-                  textAlign: TextAlign.right,
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      phoneNumber,
-                      style: AppStyles.styleMedium14(context),
-                      textDirection: TextDirection.ltr,
-                      textAlign: TextAlign.right,
-                    ),
-                    const SizedBox(width: 10),
-                    // Call button
-                    const Icon(
-                      Icons.phone_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    driverName,
+                    style: AppStyles.styleBold20(
+                      context,
+                    ).copyWith(color: Colors.white),
+                    textAlign: TextAlign.right,
+                  ),
+                  const SizedBox(width: 10),
+                  // Call button
+                  const Icon(
+                    Icons.person_2_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    phoneNumber,
+                    style: AppStyles.styleMedium14(context),
+                    textDirection: TextDirection.ltr,
+                    textAlign: TextAlign.right,
+                  ),
+                  const SizedBox(width: 10),
+                  // Call button
+                  const Icon(
+                    Icons.phone_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

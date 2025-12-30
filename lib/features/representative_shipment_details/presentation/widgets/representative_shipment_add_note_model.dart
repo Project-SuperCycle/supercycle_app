@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supercycle/core/cubits/add_notes_cubit/add_notes_cubit.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/models/create_notes_model.dart';
@@ -31,8 +31,6 @@ class _RepresentativeShipmentAddNoteModelState
     BlocProvider.of<AddNotesCubit>(
       context,
     ).addNotes(notes: note, shipmentId: shipmentId);
-
-    BlocProvider.of<AllNotesCubit>(context).getAllNotes(shipmentId: shipmentId);
   }
 
   @override
@@ -152,21 +150,15 @@ class _RepresentativeShipmentAddNoteModelState
                           Navigator.pop(context);
 
                           // Show success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('تم حفظ الملاحظة بنجاح'),
-                              backgroundColor: Colors.green,
-                              behavior: SnackBarBehavior.floating,
-                            ),
+                          CustomSnackBar.showSuccess(
+                            context,
+                            'تم حفظ الملاحظة بنجاح',
                           );
                         } else {
                           // Show error for empty note
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('يرجى كتابة الملاحظة أولاً'),
-                              backgroundColor: Colors.red,
-                              behavior: SnackBarBehavior.floating,
-                            ),
+                          CustomSnackBar.showWarning(
+                            context,
+                            'يرجى كتابة الملاحظة أولاً',
                           );
                         }
                       },

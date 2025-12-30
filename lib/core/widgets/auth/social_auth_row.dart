@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/social_auth_request_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/social_auth_services.dart';
@@ -17,9 +17,7 @@ class SocialAuthRow extends StatelessWidget {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
       final accessToken = await SocialAuthService.signInWithGoogle();
@@ -27,16 +25,10 @@ class SocialAuthRow extends StatelessWidget {
       // إغلاق مؤشر التحميل
       if (context.mounted) Navigator.of(context).pop();
 
-      if (accessToken == null) {
-        return; // المستخدم ألغى العملية
-      }
-
       final SocialAuthRequestModel credentials = SocialAuthRequestModel(
         provider: "google",
         accessToken: accessToken,
       );
-
-      Logger().i("GOOGLE SIGN IN -> ${credentials.toJson()}");
 
       if (context.mounted) {
         BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
@@ -44,14 +36,8 @@ class SocialAuthRow extends StatelessWidget {
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('فشل تسجيل الدخول: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        CustomSnackBar.showError(context, 'فشل تسجيل الدخول: ${e.toString()}');
       }
-      Logger().e("خطأ في Google Sign In: $e");
     }
   }
 
@@ -61,9 +47,7 @@ class SocialAuthRow extends StatelessWidget {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
       final accessToken = await SocialAuthService.signInWithFacebook();
@@ -71,16 +55,10 @@ class SocialAuthRow extends StatelessWidget {
       // إغلاق مؤشر التحميل
       if (context.mounted) Navigator.of(context).pop();
 
-      if (accessToken == null) {
-        return; // المستخدم ألغى العملية
-      }
-
       final SocialAuthRequestModel credentials = SocialAuthRequestModel(
         provider: "facebook",
         accessToken: accessToken,
       );
-
-      Logger().i("FACEBOOK SIGN IN -> ${credentials.toJson()}");
 
       if (context.mounted) {
         BlocProvider.of<SocialAuthCubit>(context).socialAuth(credentials);
@@ -88,14 +66,8 @@ class SocialAuthRow extends StatelessWidget {
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('فشل تسجيل الدخول: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        CustomSnackBar.showError(context, 'فشل تسجيل الدخول: ${e.toString()}');
       }
-      Logger().e("خطأ في Facebook Sign In: $e");
     }
   }
 
@@ -104,9 +76,11 @@ class SocialAuthRow extends StatelessWidget {
     return BlocConsumer<SocialAuthCubit, SocialAuthState>(
       listener: (context, state) {
         if (state is SocialAuthSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.socialAuth.message ?? "NO MESSAGE")),
+          CustomSnackBar.showSuccess(
+            context,
+            state.socialAuth.message ?? "NO MESSAGE",
           );
+
           if (state.socialAuth.status == 201) {
             GoRouter.of(context).push(EndPoints.signUpDetailsView);
           } else if (state.socialAuth.status == 200) {
@@ -114,10 +88,7 @@ class SocialAuthRow extends StatelessWidget {
           }
         }
         if (state is SocialAuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-          Logger().w(state.message);
+          CustomSnackBar.showError(context, state.message);
         }
       },
       builder: (context, state) {

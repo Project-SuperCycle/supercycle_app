@@ -87,7 +87,8 @@ class _TraderShipmentDetailsViewBodyState
                       child: Column(
                         children: [
                           // Settings Icon (إذا كانت pending)
-                          if (widget.shipment.status == 'pending')
+                          if (widget.shipment.status == 'pending' ||
+                              widget.shipment.isExtra == true)
                             Padding(
                               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                               child: Align(
@@ -171,9 +172,7 @@ class _TraderShipmentDetailsViewBodyState
                                     ],
                                   ),
                                 // تقارير الوزنة
-                                if (widget.shipment.status == "delivered" ||
-                                    widget.shipment.status ==
-                                        "complete_weighted")
+                                if (widget.shipment.isFullyWeighted)
                                   Column(
                                     children: [
                                       _buildExpandableCard(

@@ -40,7 +40,7 @@ class _ShipmentCalendarDayState extends State<ShipmentCalendarDay> {
     }
 
     if (shipmentsHelper.hasAnyPendingShipmentsWithTime(dateKey)) {
-      return Color(0xffC70B0B);
+      return Colors.deepOrange.shade500;
     }
 
     if (shipmentsHelper.areAllShipmentsDeliveredWithTime(dateKey)) {

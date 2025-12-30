@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -284,23 +285,16 @@ class SalesLineChartState extends State<SalesLineChart> {
   }
 
   void _handleDropdownChange(String? value) {
-    Logger().i("_handleDropdownChange | VALUE: $value");
-    Logger().i("_doshData length: ${_doshData.length}");
-
     if (value == null || value.isEmpty) {
-      Logger().w("Value is null or empty");
       return;
     }
 
     // إذا كانت _doshData فارغة، استخدم DoshTypesManager
     if (_doshData.isEmpty) {
-      Logger().w("_doshData is empty, trying to get from DoshTypesManager");
       try {
         final typesList = getIt<DoshTypesManager>().typesList;
-        Logger().i("DoshTypesManager types count: ${typesList.length}");
 
         if (typesList.isEmpty) {
-          Logger().e("DoshTypesManager is also empty, cannot proceed");
           return;
         }
 
@@ -308,13 +302,8 @@ class SalesLineChartState extends State<SalesLineChart> {
         final selectedType = typesList.firstWhere(
           (e) => e.name == value,
           orElse: () {
-            Logger().e("Type not found in DoshTypesManager: $value");
             return typesList.first;
           },
-        );
-
-        Logger().d(
-          "SELECTED TYPE from DoshTypesManager: ${selectedType.name} | ID: ${selectedType.id}",
         );
 
         setState(() {
@@ -335,13 +324,8 @@ class SalesLineChartState extends State<SalesLineChart> {
       final selectedType = _doshData.firstWhere(
         (e) => e.name == value,
         orElse: () {
-          Logger().e("Type not found in _doshData: $value");
           return _doshData.first;
         },
-      );
-
-      Logger().d(
-        "SELECTED TYPE from _doshData: ${selectedType.name} | ID: ${selectedType.id}",
       );
 
       setState(() {
@@ -453,14 +437,14 @@ class SalesLineChartState extends State<SalesLineChart> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withAlpha(25),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
             ],
           ),
           child: DropdownButtonFormField<String>(
-            value: currentValue,
+            initialValue: currentValue,
             isExpanded: true,
             items: options.map((String value) {
               return DropdownMenuItem<String>(
@@ -486,7 +470,6 @@ class SalesLineChartState extends State<SalesLineChart> {
               );
             }).toList(),
             onChanged: (value) {
-              Logger().i("Dropdown value changed to: $value");
               _handleDropdownChange(value);
             },
             icon: const Icon(Icons.arrow_drop_down_rounded, color: Colors.grey),
@@ -644,12 +627,6 @@ class SalesLineChartState extends State<SalesLineChart> {
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    CustomSnackBar.showError(context, message);
   }
 }

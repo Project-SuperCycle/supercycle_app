@@ -2,17 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/cubits/all_notes_cubit/all_notes_cubit.dart';
 import 'package:supercycle/core/functions/shipment_manager.dart';
+import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/single_shipment_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/custom_button.dart';
-import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle/core/helpers/custom_back_button.dart';
 import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
@@ -52,9 +51,6 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
       products = widget.shipment.items;
       selectedDateTime = widget.shipment.requestedPickupAt;
     });
-    BlocProvider.of<AllNotesCubit>(
-      context,
-    ).getAllNotes(shipmentId: widget.shipment.id);
   }
 
   void _getShipmentAddress() async {
@@ -143,21 +139,25 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
                         const SizedBox(height: 20),
                         const ProgressBar(completedSteps: 0),
                         const SizedBox(height: 30),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ExpandableSection(
-                            title: 'بيانات جهة التعامل',
-                            iconPath: AppAssets.entityCard,
-                            isExpanded: isClientDataExpanded,
-                            maxHeight: 320,
-                            onTap: _toggleClientData,
-                            content: const ClientDataContent(),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
+                        // Column(
+                        //   children: [
+                        //     Container(
+                        //       clipBehavior: Clip.antiAliasWithSaveLayer,
+                        //       decoration: BoxDecoration(
+                        //         borderRadius: BorderRadius.circular(8),
+                        //       ),
+                        //       child: ExpandableSection(
+                        //         title: 'بيانات جهة التعامل',
+                        //         iconPath: AppAssets.entityCard,
+                        //         isExpanded: isClientDataExpanded,
+                        //         maxHeight: 320,
+                        //         onTap: _toggleClientData,
+                        //         content: const ClientDataContent(),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(height: 25),
+                        //   ],
+                        // ),
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -209,11 +209,38 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
                           shipmentID: widget.shipment.id,
                         ),
                         const SizedBox(height: 30),
-                        CustomButton(
-                          onPress: () {
-                            _confirmProcess();
+                        BlocConsumer<ShipmentEditCubit, ShipmentEditState>(
+                          listener: (context, state) {
+                            // TODO: implement listener
+                            if (state is EditShipmentSuccess) {
+                              GoRouter.of(context).pushReplacement(
+                                EndPoints.shipmentsCalendarView,
+                              );
+                            }
+
+                            if (state is EditShipmentFailure) {
+                              CustomSnackBar.showError(
+                                context,
+                                state.errorMessage,
+                              );
+                            }
                           },
-                          title: S.of(context).shipment_edit,
+                          builder: (context, state) {
+                            return (state is EditShipmentLoading)
+                                ? Center(
+                                    child: SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  )
+                                : CustomButton(
+                                    onPress: () {
+                                      _confirmProcess();
+                                    },
+                                    title: S.of(context).shipment_edit,
+                                  );
+                          },
                         ),
                         // مساحة إضافية في النهاية
                         const SizedBox(height: 40),
@@ -227,12 +254,6 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
         ),
       ),
     );
-  }
-
-  void _toggleClientData() {
-    setState(() {
-      isClientDataExpanded = !isClientDataExpanded;
-    });
   }
 
   void _toggleShipmentDetails() {
@@ -254,16 +275,12 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
 
     FormData updatedShipment = await _createFormData(shipment);
 
-    Logger().i("SHIPMENT: ${updatedShipment.fields}");
-
     BlocProvider.of<ShipmentEditCubit>(
       context,
     ).editShipment(shipment: updatedShipment, id: widget.shipment.id);
-    GoRouter.of(context).pushReplacement(EndPoints.homeView);
   }
 
   Future<FormData> _createFormData(EditShipmentModel shipment) async {
-    Logger().i("EDIT-SHIPMENT: ${shipment.toMap()}");
     List<File> images = widget.shipment.images;
     List<MultipartFile> imagesFiles =
         await ShipmentManager.createMultipartImages(images: images);

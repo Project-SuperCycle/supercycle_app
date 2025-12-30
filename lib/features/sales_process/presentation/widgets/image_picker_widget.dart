@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'dart:io';
 
 import 'package:supercycle/core/utils/app_colors.dart';
@@ -199,19 +200,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
         // إظهار رسالة نجاح
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                source == ImageSource.camera
-                    ? 'تم التقاط الصورة بنجاح'
-                    : 'تم اختيار الصورة بنجاح',
-                style: AppStyles.styleSemiBold14(
-                  context,
-                ).copyWith(color: Colors.white),
-              ),
-              backgroundColor: AppColors.primaryColor,
-              duration: const Duration(seconds: 2),
-            ),
+          CustomSnackBar.showSuccess(
+            context,
+            source == ImageSource.camera
+                ? 'تم التقاط الصورة بنجاح'
+                : 'تم اختيار الصورة بنجاح',
           );
         }
       } else {
@@ -225,12 +218,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ في اختيار الصورة: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
+        CustomSnackBar.showError(
+          context,
+          'حدث خطأ في اختيار الصورة: ${e.toString()}',
         );
       }
     }
@@ -242,18 +232,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     });
     widget.onImageChanged?.call(null);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'تم حذف الصورة',
-          style: AppStyles.styleSemiBold14(
-            context,
-          ).copyWith(color: Colors.white),
-        ),
-        backgroundColor: AppColors.primaryColor,
-        duration: Duration(seconds: 2),
-      ),
-    );
+    CustomSnackBar.showInfo(context, 'تم حذف الصورة');
   }
 
   Widget _buildPlaceholderImage() {

@@ -13,7 +13,7 @@ class ShipmentSegmentStep2 extends StatefulWidget {
   final String shipmentID;
   final ShipmentSegmentModel segment;
   final bool isWeighted;
-  final VoidCallback onWeightedPressed;
+  final Function(WeighSegmentModel) onWeightedPressed; // Updated signature
 
   const ShipmentSegmentStep2({
     super.key,
@@ -38,8 +38,7 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
   }
 
   void onWeightedPressed() {
-    widget.onWeightedPressed();
-
+    // Create the weight model
     WeighSegmentModel weighModel = WeighSegmentModel(
       shipmentID: widget.shipmentID,
       segmentID: widget.segment.id,
@@ -47,9 +46,13 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
       actualWeightKg: double.tryParse(weightController.text) ?? 0.0,
     );
 
+    // Call the API
     BlocProvider.of<WeighSegmentCubit>(
       context,
     ).weighSegment(weighModel: weighModel);
+
+    // Pass the weight model to parent
+    widget.onWeightedPressed(weighModel);
   }
 
   @override

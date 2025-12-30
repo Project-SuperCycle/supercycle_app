@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/helpers/custom_dropdown.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/models/trader_branch_model.dart';
 import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
@@ -116,115 +117,114 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.only(top: 50),
         decoration: const BoxDecoration(gradient: kGradientBackground),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header Section - ثابت في الأعلى
-              _buildHeader(),
+        child: Column(
+          children: [
+            // Header Section - ثابت في الأعلى
+            _buildHeader(),
 
-              // المحتوى القابل للتمرير
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(35),
-                      topRight: Radius.circular(35),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(50),
-                        blurRadius: 20,
-                        offset: const Offset(0, -5),
-                      ),
-                    ],
+            // المحتوى القابل للتمرير
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(35),
+                    topRight: Radius.circular(35),
                   ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(35),
-                      topRight: Radius.circular(35),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(50),
+                      blurRadius: 20,
+                      offset: const Offset(0, -5),
                     ),
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          // Progress Bar
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
-                            child: const ProgressBar(completedSteps: 0),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(35),
+                    topRight: Radius.circular(35),
+                  ),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        // Progress Bar
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
+                          child: const ProgressBar(completedSteps: 0),
+                        ),
+
+                        // المحتوى الرئيسي
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+
+                              // قسم الصور والتاريخ
+                              _buildImageAndDateSection(),
+
+                              const SizedBox(height: 20),
+
+                              // بياناتي
+                              _buildExpandableCard(
+                                title: 'بياناتي',
+                                icon: AppAssets.entityCard,
+                                isExpanded: isClientDataExpanded,
+                                onTap: _toggleClientData,
+                                content: const ClientDataContent(),
+                                maxHeight: 320,
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // تفاصيل الشحنة
+                              _buildExpandableCard(
+                                title: 'تفاصيل الشحنة',
+                                icon: AppAssets.boxPerspective,
+                                isExpanded: isShipmentDetailsExpanded,
+                                onTap: _toggleShipmentDetails,
+                                content: EntryShipmentDetailsContent(
+                                  products: products,
+                                  onProductsChanged: _onProductsChanged,
+                                ),
+                                maxHeight: 320,
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              // عنوان الاستلام
+                              (userRole == "trader_contracted")
+                                  ? _buildBranchSection()
+                                  : _buildAddressSection(),
+
+                              const SizedBox(height: 20),
+
+                              // الملاحظات
+                              _buildNotesCard(),
+
+                              const SizedBox(height: 25),
+
+                              // زر المراجعة
+                              CustomButton(
+                                onPress: _handleSubmit,
+                                title: S.of(context).shipment_review,
+                              ),
+
+                              const SizedBox(height: 30),
+                            ],
                           ),
-
-                          // المحتوى الرئيسي
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10),
-
-                                // قسم الصور والتاريخ
-                                _buildImageAndDateSection(),
-
-                                const SizedBox(height: 20),
-
-                                // بياناتي
-                                _buildExpandableCard(
-                                  title: 'بياناتي',
-                                  icon: AppAssets.entityCard,
-                                  isExpanded: isClientDataExpanded,
-                                  onTap: _toggleClientData,
-                                  content: const ClientDataContent(),
-                                  maxHeight: 320,
-                                ),
-
-                                const SizedBox(height: 16),
-
-                                // تفاصيل الشحنة
-                                _buildExpandableCard(
-                                  title: 'تفاصيل الشحنة',
-                                  icon: AppAssets.boxPerspective,
-                                  isExpanded: isShipmentDetailsExpanded,
-                                  onTap: _toggleShipmentDetails,
-                                  content: EntryShipmentDetailsContent(
-                                    products: products,
-                                    onProductsChanged: _onProductsChanged,
-                                  ),
-                                  maxHeight: 320,
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                // عنوان الاستلام
-                                (userRole == "trader_contracted")
-                                    ? _buildBranchSection()
-                                    : _buildAddressSection(),
-
-                                const SizedBox(height: 20),
-
-                                // الملاحظات
-                                _buildNotesCard(),
-
-                                const SizedBox(height: 25),
-
-                                // زر المراجعة
-                                CustomButton(
-                                  onPress: _handleSubmit,
-                                  title: S.of(context).shipment_review,
-                                ),
-
-                                const SizedBox(height: 30),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -443,17 +443,8 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
       String? validationError = _getValidationError(shipment);
 
       if (validationError != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(validationError),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        CustomSnackBar.showError(context, validationError);
+
         return;
       }
 
@@ -463,16 +454,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
         builder: (context) => ShipmentReviewDialog(
           shipment: shipment,
           onConfirm: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('تم تأكيد الشحنة بنجاح'),
-                backgroundColor: Colors.green,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            );
+            CustomSnackBar.showSuccess(context, 'تم تأكيد الشحنة بنجاح');
           },
           onUpdate: (updatedShipment) {
             setState(() {
@@ -481,35 +463,16 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
               products = updatedShipment.items;
               selectedImages = updatedShipment.images;
               notes = [updatedShipment.userNotes];
-              // تحديث بيانات الفرع المختار
               selectedBranchId = selectedBranchId;
               selectedBranchName = selectedBranchName;
             });
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('تم حفظ التعديلات بنجاح'),
-                backgroundColor: Colors.green,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            );
+            CustomSnackBar.showSuccess(context, 'تم حفظ التعديلات بنجاح');
           },
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      );
+      CustomSnackBar.showSuccess(context, 'حدث خطأ: ${e.toString()}');
     }
   }
 

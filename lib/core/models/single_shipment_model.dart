@@ -25,6 +25,9 @@ class SingleShipmentModel {
   final List<ShipmentNoteModel> repNotes;
   final List<ShipmentSegmentModel> segments;
   final ShipmentBranchModel? branch;
+  final String? type;
+  final bool isExtra;
+  final bool isFullyWeighted;
 
   SingleShipmentModel({
     required this.id,
@@ -41,6 +44,9 @@ class SingleShipmentModel {
     required this.mainNotes,
     required this.repNotes,
     required this.segments,
+    required this.isExtra,
+    required this.isFullyWeighted,
+    required this.type,
     this.branch,
     this.representitive,
     this.trader,
@@ -103,6 +109,9 @@ class SingleShipmentModel {
               json['segments'].map((x) => ShipmentSegmentModel.fromJson(x)),
             )
           : [],
+      type: json['type'],
+      isExtra: json['isExtra'] ?? false,
+      isFullyWeighted: json['isFullyWeighted'] ?? false,
     );
   }
 
@@ -127,6 +136,9 @@ class SingleShipmentModel {
       'trader': trader?.toJson(),
       'notes': allNotes.map((note) => note.toJson()).toList(),
       'segments': segments.map((segment) => segment.toJson()).toList(),
+      'type': type,
+      'isExtra': isExtra,
+      'isFullyWeighted': isFullyWeighted,
     };
   }
 
@@ -140,6 +152,9 @@ class SingleShipmentModel {
       ),
       'userNotes': userNotes,
       'sourceLocationId': branch?.toJson(),
+      'type': type,
+      'isExtra': isExtra,
+      'isFullyWeighted': isFullyWeighted,
     };
   }
 
@@ -167,6 +182,9 @@ class SingleShipmentModel {
     List<ShipmentNoteModel>? repNotes,
     List<ShipmentSegmentModel>? segments,
     ShipmentBranchModel? branch,
+    String? type,
+    bool? isExtra,
+    bool? isFullyWeighted,
   }) {
     return SingleShipmentModel(
       id: id ?? this.id,
@@ -187,6 +205,9 @@ class SingleShipmentModel {
       repNotes: repNotes ?? this.repNotes,
       segments: segments ?? this.segments,
       branch: branch ?? this.branch,
+      type: type ?? this.type,
+      isExtra: isExtra ?? this.isExtra,
+      isFullyWeighted: isFullyWeighted ?? this.isFullyWeighted,
     );
   }
 }

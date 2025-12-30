@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
+import 'package:supercycle/core/helpers/custom_snack_bar.dart';
+import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
@@ -21,10 +23,12 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
   int currentPage = 1;
   bool hasMoreData = true;
   bool isLoadingMore = false;
+  int totalPages = 1;
 
   @override
   void initState() {
     super.initState();
+    _getTotalPages();
     _fetchShipments(currentPage);
   }
 
@@ -32,6 +36,11 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
     BlocProvider.of<ShipmentsCalendarCubit>(
       context,
     ).getShipmentsHistory(page: page);
+  }
+
+  void _getTotalPages() async {
+    totalPages = await StorageServices.readData("totalShipmentsHistoryPages");
+    setState(() {});
   }
 
   void _loadNextPage() {
@@ -94,9 +103,8 @@ class _TraderProfileInfoCard2State extends State<TraderProfileInfoCard2> {
                   setState(() {
                     isLoadingMore = false;
                   });
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+
+                  CustomSnackBar.showError(context, state.errorMessage);
                 }
               },
               builder: (context, state) {

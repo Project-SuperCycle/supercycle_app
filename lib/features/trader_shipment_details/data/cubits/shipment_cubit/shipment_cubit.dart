@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:supercycle/features/trader_shipment_details/data/repos/shipment_details_repo_imp.dart';
 
 part 'shipment_state.dart';
@@ -24,7 +23,6 @@ class ShipmentCubit extends Cubit<ShipmentState> {
           // Store user globally
         },
       );
-      Logger().i("CANCEL SHIPMENT CUBIT");
     } catch (error) {
       emit(CancelShipmentFailure(errorMessage: error.toString()));
     }

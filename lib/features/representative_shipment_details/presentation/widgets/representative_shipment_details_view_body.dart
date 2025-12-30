@@ -1,6 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
@@ -51,7 +50,6 @@ class _RepresentativeShipmentDetailsViewBodyState
   void initState() {
     super.initState();
     _loadActionState();
-    Logger().i("STATUS ${widget.shipment.status}");
   }
 
   Future<void> _loadActionState() async {
@@ -462,13 +460,8 @@ class _RepresentativeShipmentDetailsViewBodyState
   Widget _buildShipmentButtons() {
     final status = widget.shipment.status;
 
-    // إذا الحالة 'approved' وتم اتخاذ إجراء، اعرض زر "مراجعة الشحنة"
-    if (status == 'approved' && hasActionBeenTaken) {
-      return RepresentativeShipmentReviewButton(shipment: widget.shipment);
-    }
-
     // إذا الحالة 'approved' ولم يتم اتخاذ إجراء واليوم هو تاريخ الاستلام
-    if (status == 'approved' && !hasActionBeenTaken && _isPickupDateToday()) {
+    if (status == 'approved' && !hasActionBeenTaken) {
       // إذا لم يتم الضغط على زر "بدأ المعاينة"، اعرض الزر
       if (!showInspectionActions) {
         return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');
