@@ -24,9 +24,7 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
         );
 
         final data = response['data'];
-        final meta = response['meta']['totalPages'];
         List<dynamic> shipmentsData = _extractShipmentsData(data);
-        StorageServices.storeData("totalTraderShipmentsPages", meta);
 
         return shipmentsData.map((e) => ShipmentModel.fromJson(e)).toList();
       },
@@ -67,9 +65,7 @@ class ShipmentsCalendarRepoImp implements ShipmentsCalendarRepo {
         );
 
         final data = response['data'];
-        final meta = response['meta']['totalPages'];
         List<dynamic> shipmentsData = _extractShipmentsData(data);
-        StorageServices.storeData("totalRepShipmentsPages", meta);
 
         return shipmentsData.map((e) => ShipmentModel.fromJson(e)).toList();
       },

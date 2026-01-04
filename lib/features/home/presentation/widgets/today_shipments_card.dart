@@ -26,7 +26,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
   void initState() {
     super.initState();
     getUserData();
-    _loadTodayShipments();
+    // _loadTodayShipments();
 
     // عند فتح الـ widget، اعرض الداتا المخزنة لو موجودة
     WidgetsBinding.instance.addPostFrameCallback((_) {

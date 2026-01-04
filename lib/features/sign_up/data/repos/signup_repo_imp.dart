@@ -19,13 +19,21 @@ class SignUpRepoImp implements SignUpRepo {
   Future<Either<Failure, String>> initiateSignup({
     required SignupCredentialsModel credentials,
   }) async {
-    return await ErrorHandler.handleApiResponse<String>(
-      apiCall: () => apiServices.post(
-        endPoint: ApiEndpoints.signup,
-        data: credentials.toJson(),
-      ),
+    return await ErrorHandler.simpleApiCall<String>(
+      apiCall: () async {
+        final response = await apiServices.post(
+          endPoint: ApiEndpoints.signup,
+          data: credentials.toJson(),
+        );
+        return response['message'] as String;
+      },
       errorContext: 'initiating signup',
-      responseParser: (response) => response['message'] as String,
+      errorMessage: 'Failed to initiate signup. Please try again.',
+      specificErrorMessages: {
+        'email already exists': 'This email is already registered',
+        'invalid email': 'Please enter a valid email address',
+        'weak password': 'Password is too weak',
+      },
     );
   }
 
