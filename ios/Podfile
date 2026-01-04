@@ -1,5 +1,8 @@
 platform :ios, '15.0'
 
+# ✅ الحل الأساسي
+use_modular_headers!
+
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', {
