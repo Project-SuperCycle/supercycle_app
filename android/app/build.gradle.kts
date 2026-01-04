@@ -1,14 +1,12 @@
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
     id("com.google.gms.google-services")
-    // END: FlutterFire Configuration
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
+
     namespace = "com.example.supercycle_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -31,25 +29,34 @@ android {
         multiDexEnabled = true
     }
 
-    buildTypes {
-        release {
-            // Signing with the debug keys for now
-            signingConfig = signingConfigs.getByName("debug")
-
-            // Enable code shrinking and obfuscation
-            isMinifyEnabled = true
-            isShrinkResources = true
-
-            // ProGuard rules
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    // ✅ توقيع الـ Release الصحيح
+    signingConfigs {
+        create("release") {
+            storeFile = file("release-key.jks")
+            storePassword = "supercycle2025"
+            keyAlias = "release"
+            keyPassword = "supercycle2025"
         }
+    }
+
+    buildTypes {
 
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
+        }
+
+        release {
+            // ✅ أهم سطر
+            signingConfig = signingConfigs.getByName("release")
+
+            isMinifyEnabled = true
+            isShrinkResources = true
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

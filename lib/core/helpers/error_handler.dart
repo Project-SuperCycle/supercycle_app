@@ -28,10 +28,6 @@ class ErrorHandler {
       final result = await apiCall();
       return right(result);
     } on DioException catch (dioError) {
-      _logger.e('❌ DioException during $errorContext: ${dioError.message}');
-      _logger.w(
-        '❌ DioException during $errorContext: ${dioError.response!.data}',
-      );
       return left(ServerFailure.fromDioError(dioError));
     } on FormatException catch (formatError) {
       _logger.e('❌ FormatException during $errorContext: $formatError');
@@ -42,7 +38,7 @@ class ErrorHandler {
         ServerFailure('Data parsing error: ${typeError.toString()}', 422),
       );
     } catch (e) {
-      _logger.e('❌ Unexpected error during $errorContext: $e');
+      _logger.e('❌ Unexpected error during $errorContext: ${e.toString()}');
 
       // معالجة أخطاء مخصصة إضافية
       if (additionalErrorHandling != null) {
