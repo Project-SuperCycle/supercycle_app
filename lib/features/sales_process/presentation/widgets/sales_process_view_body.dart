@@ -1,4 +1,3 @@
-// ===== sales_process_view_body.dart =====
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/services/storage_services.dart';
@@ -433,6 +432,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
             selectedImages: selectedImages,
             onImagesChanged: _onImagesChanged,
             onDateTimeChanged: _onDateTimeChanged,
+            initialDateTime: selectedDateTime,
           ),
         ),
       ],
@@ -456,6 +456,7 @@ class _SalesProcessViewBodyState extends State<SalesProcessViewBody> {
             selectedImages: selectedImages,
             onImagesChanged: _onImagesChanged,
             onDateTimeChanged: _onDateTimeChanged,
+            initialDateTime: selectedDateTime,
           ),
         ),
         const SizedBox(height: 16),

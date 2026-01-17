@@ -10,12 +10,14 @@ class SalesProcessShipmentHeader extends StatefulWidget {
   final List<File> selectedImages;
   final Function(List<File>) onImagesChanged;
   final Function(DateTime?) onDateTimeChanged;
+  final DateTime? initialDateTime;
 
   const SalesProcessShipmentHeader({
     super.key,
     required this.selectedImages,
     required this.onImagesChanged,
     required this.onDateTimeChanged,
+    this.initialDateTime,
   });
 
   @override
@@ -26,6 +28,22 @@ class SalesProcessShipmentHeader extends StatefulWidget {
 class _SalesProcessShipmentHeaderState
     extends State<SalesProcessShipmentHeader> {
   DateTime? selectedDateTime;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDateTime = widget.initialDateTime;
+  }
+
+  @override
+  void didUpdateWidget(SalesProcessShipmentHeader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialDateTime != oldWidget.initialDateTime) {
+      setState(() {
+        selectedDateTime = widget.initialDateTime;
+      });
+    }
+  }
 
   void _onImageChanged(File? image) {
     if (image == null) return;

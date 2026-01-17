@@ -4,7 +4,6 @@ import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/widgets/custom_text_form_field.dart';
 import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 import 'package:supercycle/features/sales_process/data/models/unit.dart';
 import 'package:supercycle/generated/l10n.dart';
@@ -31,10 +30,12 @@ class _EditableProductCardState extends State<EditableProductCard> {
   String averagePrice = '0.00';
   bool _isInitializing = true;
   bool _isUpdating = false;
+  String? _currentUnit;
 
   @override
   void initState() {
     super.initState();
+    _currentUnit = widget.product.unit;
     _initializeController();
     _setInitialTypeName();
 
@@ -96,7 +97,35 @@ class _EditableProductCardState extends State<EditableProductCard> {
 
   void _onUnitChanged(String? value) {
     if (value == null || !mounted || _isUpdating) return;
-    _safeUpdateProduct(widget.product.copyWith(unit: value));
+
+    final currentQuantity = double.tryParse(quantityController.text) ?? 0.0;
+    final previousUnit = _currentUnit;
+
+    if (currentQuantity > 0) {
+      double newQuantity = currentQuantity;
+
+      if (value == Unit.ton.abbreviation && previousUnit == Unit.kg.abbreviation) {
+        newQuantity = currentQuantity * 1000;
+      }
+      else if (value == Unit.kg.abbreviation && previousUnit == Unit.ton.abbreviation) {
+        newQuantity = currentQuantity / 1000;
+      }
+
+      setState(() {
+        quantityController.text = newQuantity.toString();
+        _currentUnit = value;
+      });
+
+      _safeUpdateProduct(widget.product.copyWith(
+        unit: value,
+        quantity: newQuantity,
+      ));
+    } else {
+      setState(() {
+        _currentUnit = value;
+      });
+      _safeUpdateProduct(widget.product.copyWith(unit: value));
+    }
   }
 
   void _clearQuantity() {
@@ -203,8 +232,8 @@ class _EditableProductCardState extends State<EditableProductCard> {
   String _getValidUnitInitialValue() {
     final options = _getUnitOptions();
 
-    if (options.contains(widget.product.unit)) {
-      return widget.product.unit ?? "";
+    if (options.contains(_currentUnit)) {
+      return _currentUnit ?? "";
     }
 
     return options.first;
